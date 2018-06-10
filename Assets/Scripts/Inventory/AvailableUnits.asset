@@ -1,0 +1,458 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb49472baaac6c4f9557c06ae2494c1, type: 3}
+  m_Name: AvailableUnits
+  m_EditorClassIdentifier: 
+  values:
+  - _stats: {fileID: 11400000, guid: 80984132b4ca9bd44867c1d117b82d8a, type: 2}
+    boosts: []
+    id: 5
+    statsID: 4
+    charName: Oswin
+    portrait: {fileID: 21300000, guid: d1b2e6b6f8a993c4d9b296b34821d919, type: 3}
+    battleSprite: {fileID: 21300000, guid: 2894551f57f95d742b0fde738dbe8880, type: 3}
+    charClass: {fileID: 11400000, guid: 2b766c32f1c09c649af030e4bb2e2f1e, type: 2}
+    level: 2
+    currentExp: 43
+    currentSp: 3
+    weaponLevel: 0
+    supportLevel: 0
+    skillLevel: 0
+    skillALevel: 0
+    skillBLevel: 0
+    skillCLevel: -1
+    hp: 20
+    atk: 4
+    spd: 11
+    def: 2
+    res: 3
+    iHp: 0.44531825
+    iAtk: 0.71042764
+    iSpd: 0.90776056
+    iDef: 0.032623965
+    iRes: 0.16395079
+    eHp: 0
+    eAtk: 0
+    eSpd: 0
+    eDef: 0
+    eRes: 0
+    bHp: 0
+    bAtk: 0
+    bSpd: 0
+    bDef: 0
+    bRes: 0
+  - _stats: {fileID: 11400000, guid: 26d32c23c7e485143a592e6a192c8b80, type: 2}
+    boosts: []
+    id: 6
+    statsID: 5
+    charName: Florina
+    portrait: {fileID: 21300000, guid: 283f52c1a268a45499222a2891e5a82e, type: 3}
+    battleSprite: {fileID: 21300000, guid: 32b45a3df3ece6c45a4e2a171b5b36e6, type: 3}
+    charClass: {fileID: 11400000, guid: 89cbee707e8512249add395c2624f0b3, type: 2}
+    level: 2
+    currentExp: 5
+    currentSp: 7
+    weaponLevel: 0
+    supportLevel: 0
+    skillLevel: 0
+    skillALevel: 0
+    skillBLevel: -1
+    skillCLevel: 0
+    hp: 20
+    atk: 3
+    spd: 10
+    def: 2
+    res: 3
+    iHp: 0.40669334
+    iAtk: 0.17772387
+    iSpd: 0.14623688
+    iDef: 0.13183737
+    iRes: 0.32931006
+    eHp: 0
+    eAtk: 0
+    eSpd: 0
+    eDef: 0
+    eRes: 0
+    bHp: 0
+    bAtk: 0
+    bSpd: 0
+    bDef: 0
+    bRes: 0
+  - _stats: {fileID: 11400000, guid: 4109739a3fdf63e4dac4fb7d0c49b22f, type: 2}
+    boosts: []
+    id: 3
+    statsID: 2
+    charName: Wil
+    portrait: {fileID: 21300000, guid: b7fd0a8b40ce10b4cab770e0a927a5fb, type: 3}
+    battleSprite: {fileID: 21300000, guid: 1982659d54858354586758aa4bbb1246, type: 3}
+    charClass: {fileID: 11400000, guid: c19e1c8c2f3b4684e8c0c603405c6a52, type: 2}
+    level: 1
+    currentExp: 30
+    currentSp: 5
+    weaponLevel: 0
+    supportLevel: 0
+    skillLevel: 0
+    skillALevel: 0
+    skillBLevel: 0
+    skillCLevel: -1
+    hp: 10
+    atk: 6
+    spd: 6
+    def: 3
+    res: 3
+    iHp: 0.76161313
+    iAtk: 0.25589332
+    iSpd: 0.77071095
+    iDef: 0.27590492
+    iRes: 0.4609998
+    eHp: 0
+    eAtk: 0
+    eSpd: 0
+    eDef: 0
+    eRes: 0
+    bHp: 0
+    bAtk: 0
+    bSpd: 0
+    bDef: 0
+    bRes: 0
+  - _stats: {fileID: 11400000, guid: ae86d015d235f1c4c8956ecbcaeb2ba4, type: 2}
+    boosts: []
+    id: 1
+    statsID: 0
+    charName: Sain
+    portrait: {fileID: 21300000, guid: 698d303178e5b3f49b7ee9a93ba3543a, type: 3}
+    battleSprite: {fileID: 21300000, guid: 145e100d7193c474aa2541edcb2d71d1, type: 3}
+    charClass: {fileID: 11400000, guid: 2f7a88298f4c1c34db14c3ccd176d8a4, type: 2}
+    level: 2
+    currentExp: 43
+    currentSp: 3
+    weaponLevel: 0
+    supportLevel: 0
+    skillLevel: 0
+    skillALevel: 0
+    skillBLevel: -1
+    skillCLevel: -1
+    hp: 20
+    atk: 4
+    spd: 11
+    def: 2
+    res: 3
+    iHp: 0.44531825
+    iAtk: 0.71042764
+    iSpd: 0.90776056
+    iDef: 0.032623965
+    iRes: 0.16395079
+    eHp: 0
+    eAtk: 0
+    eSpd: 0
+    eDef: 0
+    eRes: 0
+    bHp: 0
+    bAtk: 0
+    bSpd: 0
+    bDef: 0
+    bRes: 0
+  - _stats: {fileID: 11400000, guid: 72a2d02ee6ce0294ca703575517ab2aa, type: 2}
+    boosts: []
+    id: 4
+    statsID: 3
+    charName: Serra
+    portrait: {fileID: 21300000, guid: 11d3c358e7298774bb935f07c2f81204, type: 3}
+    battleSprite: {fileID: 21300000, guid: d4b01391f9d66a947b05f40f80779ab8, type: 3}
+    charClass: {fileID: 11400000, guid: c19e1c8c2f3b4684e8c0c603405c6a52, type: 2}
+    level: 3
+    currentExp: 1
+    currentSp: 0
+    weaponLevel: 0
+    supportLevel: 0
+    skillLevel: 0
+    skillALevel: -1
+    skillBLevel: -1
+    skillCLevel: -1
+    hp: 16
+    atk: 8
+    spd: 7
+    def: 2
+    res: 3
+    iHp: 0.02318259
+    iAtk: 0.7581709
+    iSpd: 0.93623465
+    iDef: 0.3864574
+    iRes: 0.14247096
+    eHp: 0
+    eAtk: 0
+    eSpd: 0
+    eDef: 0
+    eRes: 0
+    bHp: 0
+    bAtk: 0
+    bSpd: 0
+    bDef: 0
+    bRes: 0
+  - _stats: {fileID: 11400000, guid: 973fd53084d53964687847aec39cce79, type: 2}
+    boosts: []
+    id: 2
+    statsID: 1
+    charName: Erk
+    portrait: {fileID: 21300000, guid: 7c1c119cc577d4846a0ceede9abe046e, type: 3}
+    battleSprite: {fileID: 21300000, guid: cba79d82dd4b47240acd2164be15c91f, type: 3}
+    charClass: {fileID: 11400000, guid: c19e1c8c2f3b4684e8c0c603405c6a52, type: 2}
+    level: 2
+    currentExp: 5
+    currentSp: 107
+    weaponLevel: 1
+    supportLevel: -1
+    skillLevel: -1
+    skillALevel: 0
+    skillBLevel: 1
+    skillCLevel: 0
+    hp: 15
+    atk: 7
+    spd: 6
+    def: 1
+    res: 3
+    iHp: 0.40669334
+    iAtk: 0.17772387
+    iSpd: 0.14623688
+    iDef: 0.13183737
+    iRes: 0.32931006
+    eHp: 0
+    eAtk: 0
+    eSpd: 0
+    eDef: 0
+    eRes: 0
+    bHp: 0
+    bAtk: 0
+    bSpd: 0
+    bDef: 0
+    bRes: 0
+  - _stats: {fileID: 0}
+    boosts: []
+    id: -1
+    statsID: -1
+    charName: 
+    portrait: {fileID: 0}
+    battleSprite: {fileID: 0}
+    charClass: {fileID: 0}
+    level: -1
+    currentExp: 0
+    currentSp: 0
+    weaponLevel: 0
+    supportLevel: 0
+    skillLevel: 0
+    skillALevel: -1
+    skillBLevel: -1
+    skillCLevel: -1
+    hp: 0
+    atk: 0
+    spd: 0
+    def: 0
+    res: 0
+    iHp: 0
+    iAtk: 0
+    iSpd: 0
+    iDef: 0
+    iRes: 0
+    eHp: 0
+    eAtk: 0
+    eSpd: 0
+    eDef: 0
+    eRes: 0
+    bHp: 0
+    bAtk: 0
+    bSpd: 0
+    bDef: 0
+    bRes: 0
+  - _stats: {fileID: 0}
+    boosts: []
+    id: -1
+    statsID: -1
+    charName: 
+    portrait: {fileID: 0}
+    battleSprite: {fileID: 0}
+    charClass: {fileID: 0}
+    level: -1
+    currentExp: 0
+    currentSp: 0
+    weaponLevel: 0
+    supportLevel: 0
+    skillLevel: 0
+    skillALevel: -1
+    skillBLevel: -1
+    skillCLevel: -1
+    hp: 0
+    atk: 0
+    spd: 0
+    def: 0
+    res: 0
+    iHp: 0
+    iAtk: 0
+    iSpd: 0
+    iDef: 0
+    iRes: 0
+    eHp: 0
+    eAtk: 0
+    eSpd: 0
+    eDef: 0
+    eRes: 0
+    bHp: 0
+    bAtk: 0
+    bSpd: 0
+    bDef: 0
+    bRes: 0
+  - _stats: {fileID: 0}
+    boosts: []
+    id: -1
+    statsID: -1
+    charName: 
+    portrait: {fileID: 0}
+    battleSprite: {fileID: 0}
+    charClass: {fileID: 0}
+    level: -1
+    currentExp: 0
+    currentSp: 0
+    weaponLevel: 0
+    supportLevel: 0
+    skillLevel: 0
+    skillALevel: -1
+    skillBLevel: -1
+    skillCLevel: -1
+    hp: 0
+    atk: 0
+    spd: 0
+    def: 0
+    res: 0
+    iHp: 0
+    iAtk: 0
+    iSpd: 0
+    iDef: 0
+    iRes: 0
+    eHp: 0
+    eAtk: 0
+    eSpd: 0
+    eDef: 0
+    eRes: 0
+    bHp: 0
+    bAtk: 0
+    bSpd: 0
+    bDef: 0
+    bRes: 0
+  - _stats: {fileID: 0}
+    boosts: []
+    id: -1
+    statsID: -1
+    charName: 
+    portrait: {fileID: 0}
+    battleSprite: {fileID: 0}
+    charClass: {fileID: 0}
+    level: -1
+    currentExp: 0
+    currentSp: 0
+    weaponLevel: 0
+    supportLevel: 0
+    skillLevel: 0
+    skillALevel: -1
+    skillBLevel: -1
+    skillCLevel: -1
+    hp: 0
+    atk: 0
+    spd: 0
+    def: 0
+    res: 0
+    iHp: 0
+    iAtk: 0
+    iSpd: 0
+    iDef: 0
+    iRes: 0
+    eHp: 0
+    eAtk: 0
+    eSpd: 0
+    eDef: 0
+    eRes: 0
+    bHp: 0
+    bAtk: 0
+    bSpd: 0
+    bDef: 0
+    bRes: 0
+  - _stats: {fileID: 0}
+    boosts: []
+    id: -1
+    statsID: -1
+    charName: 
+    portrait: {fileID: 0}
+    battleSprite: {fileID: 0}
+    charClass: {fileID: 0}
+    level: -1
+    currentExp: 0
+    currentSp: 0
+    weaponLevel: 0
+    supportLevel: 0
+    skillLevel: 0
+    skillALevel: -1
+    skillBLevel: -1
+    skillCLevel: -1
+    hp: 0
+    atk: 0
+    spd: 0
+    def: 0
+    res: 0
+    iHp: 0
+    iAtk: 0
+    iSpd: 0
+    iDef: 0
+    iRes: 0
+    eHp: 0
+    eAtk: 0
+    eSpd: 0
+    eDef: 0
+    eRes: 0
+    bHp: 0
+    bAtk: 0
+    bSpd: 0
+    bDef: 0
+    bRes: 0
+  - _stats: {fileID: 0}
+    boosts: []
+    id: -1
+    statsID: -1
+    charName: 
+    portrait: {fileID: 0}
+    battleSprite: {fileID: 0}
+    charClass: {fileID: 0}
+    level: -1
+    currentExp: 0
+    currentSp: 0
+    weaponLevel: 0
+    supportLevel: 0
+    skillLevel: 0
+    skillALevel: -1
+    skillBLevel: -1
+    skillCLevel: -1
+    hp: 0
+    atk: 0
+    spd: 0
+    def: 0
+    res: 0
+    iHp: 0
+    iAtk: 0
+    iSpd: 0
+    iDef: 0
+    iRes: 0
+    eHp: 0
+    eAtk: 0
+    eSpd: 0
+    eDef: 0
+    eRes: 0
+    bHp: 0
+    bAtk: 0
+    bSpd: 0
+    bDef: 0
+    bRes: 0

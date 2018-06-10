@@ -1,0 +1,122 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1697261231692124}
+  m_IsPrefabParent: 1
+--- !u!1 &1697261231692124
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4575758833937932}
+  - component: {fileID: 114229465209009738}
+  - component: {fileID: 114095220548718822}
+  - component: {fileID: 114932910106586066}
+  m_Layer: 0
+  m_Name: SaveController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4575758833937932
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1697261231692124}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1, y: 7, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114095220548718822
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1697261231692124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14602ab6441821f43883d0b13d4f57c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  evnt: {fileID: 11400000, guid: 9da13ea6e94bca5459d02b4d7168e111, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114229465209009738}
+        m_MethodName: Save
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+--- !u!114 &114229465209009738
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1697261231692124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f90b197ba2e52f4491503deb11c4d8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentOrbs: {fileID: 11400000, guid: 51498950df8a8664fa50b66b130dbd65, type: 2}
+  equippedUnits: {fileID: 11400000, guid: 25b8eb6286346eb4fa99d6f74ece6b53, type: 2}
+  availableUnits: {fileID: 11400000, guid: cf29fce9ee9388e4290741fe2d10bab5, type: 2}
+  enemyUnits: {fileID: 11400000, guid: f3088abe61b627947aacdf6d70b2afbb, type: 2}
+  charList:
+  - {fileID: 11400000, guid: ae86d015d235f1c4c8956ecbcaeb2ba4, type: 2}
+  - {fileID: 11400000, guid: 973fd53084d53964687847aec39cce79, type: 2}
+  - {fileID: 11400000, guid: 4109739a3fdf63e4dac4fb7d0c49b22f, type: 2}
+  - {fileID: 11400000, guid: 72a2d02ee6ce0294ca703575517ab2aa, type: 2}
+  - {fileID: 11400000, guid: 80984132b4ca9bd44867c1d117b82d8a, type: 2}
+  - {fileID: 11400000, guid: 26d32c23c7e485143a592e6a192c8b80, type: 2}
+--- !u!114 &114932910106586066
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1697261231692124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14602ab6441821f43883d0b13d4f57c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  evnt: {fileID: 11400000, guid: 3748c4418bc02044789323cb407e6843, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114229465209009738}
+        m_MethodName: Load
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
