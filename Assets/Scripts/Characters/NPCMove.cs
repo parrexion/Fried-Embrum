@@ -8,11 +8,9 @@ public class NPCMove : TacticsMove {
 	public MapTileVariable targetTile;
 
 
-	// Use this for initialization
 	protected override void SetupLists() {
-		stats = enemyChars.values[id];
 		enemyList.values.Add(this);
-		Debug.Log(stats.charName);
+		Debug.Log(stats.charData.charName);
 	}
 	
 	protected override void EndMovement() {
@@ -22,16 +20,16 @@ public class NPCMove : TacticsMove {
 		currentTile.current = true;
 		if (faction == Faction.PLAYER)
 			currentMode.value = ActionMode.ATTACK;
-		TurnController.busy = false;
+		lockControls.value = false;
 		characterClicked.Invoke();
 	}
 
 	public override void CalculateMovement() {
 		MapTile tileA = null, tileB = null, tileC = null, tileD = null;
-		if (GetWeapon() != null) {
+		if (GetWeapon(ItemCategory.WEAPON) != null) {
 			FindBestTile(true, out tileA, out tileB);
 		}
-		if (tileA == null && GetSupport() != null) {
+		if (tileA == null && GetWeapon(ItemCategory.STAFF) != null) {
 			FindBestTile(false, out tileC, out tileD);
 		}
 
@@ -52,7 +50,7 @@ public class NPCMove : TacticsMove {
 		GenerateHitTiles(isAttack);
 		BFS();
 
-		int moveSpeed = stats.GetMove();
+		int moveSpeed = stats.classData.movespeed;
 		MapTile bestTile = null;
 		MapTile goodTile = null;
 
@@ -60,19 +58,17 @@ public class NPCMove : TacticsMove {
 			bestTile = currentTile;
 		}
 		else {
-			for (int i = 0; i < ConstValues.MAP_SIZE_X; i++) {
-				for (int j = 0; j < ConstValues.MAP_SIZE_Y; j++) {
-					MapTile tempTile = mapCreator.GetTile(i,j);
-					if (tempTile.selectable && (tempTile.attackable || tempTile.supportable)) {
-						tempTile.target = true;
-						if (tempTile.distance <= moveSpeed) {
-							if (IsBetterTile(bestTile, tempTile))
-								bestTile = tempTile;
-						}
-						else {
-							if (IsBetterTile(goodTile, tempTile))
-								goodTile = tempTile;
-						}
+			for (int i = 0; i < mapCreator.tiles.Length; i++) {
+				MapTile tempTile = mapCreator.tiles[i];
+				if (tempTile.selectable && (tempTile.attackable || tempTile.supportable)) {
+					tempTile.target = true;
+					if (tempTile.distance <= moveSpeed) {
+						if (IsBetterTile(bestTile, tempTile))
+							bestTile = tempTile;
+					}
+					else {
+						if (IsBetterTile(goodTile, tempTile))
+							goodTile = tempTile;
 					}
 				}
 			}
@@ -106,8 +102,8 @@ public class NPCMove : TacticsMove {
 
 	private void GenerateHitTiles(bool isAttack) {
 		mapCreator.ResetMap();
-		bool range1 = (isAttack) ? GetWeapon().InRange(1) : GetSupport().InRange(1);
-		bool range2 = (isAttack) ? GetWeapon().InRange(2) : GetSupport().InRange(2);
+		bool range1 = (isAttack) ? GetWeapon(ItemCategory.WEAPON).InRange(1) : GetWeapon(ItemCategory.STAFF).InRange(1);
+		bool range2 = (isAttack) ? GetWeapon(ItemCategory.WEAPON).InRange(2) : GetWeapon(ItemCategory.STAFF).InRange(2);
 		if (isAttack) {
 			for (int i = 0; i < playerList.values.Count; i++) {
 				playerList.values[i].ShowAttackTiles(range1, range2);
@@ -117,7 +113,7 @@ public class NPCMove : TacticsMove {
 			for (int i = 0; i < enemyList.values.Count; i++) {
 				if (this == enemyList.values[i])
 					continue;
-				bool isBuff = (GetSupport().supportType == SupportType.BUFF);
+				bool isBuff = (GetWeapon(ItemCategory.STAFF).itemType == ItemType.BUFF);
 				if (isBuff || enemyList.values[i].IsInjured())
 					enemyList.values[i].ShowSupportTiles(range1, range2);
 			}
@@ -126,29 +122,29 @@ public class NPCMove : TacticsMove {
 
 	public override void CalculateAttacks() {
 		if (currentMode.value != ActionMode.ATTACK && currentMode.value != ActionMode.HEAL) {
-			TurnController.busy = false;
+			lockControls.value = false;
 			return;
 		}
 
 		if (currentMode.value == ActionMode.ATTACK) {
 			attackTarget.value = FindNearestTarget(playerList);
 			int distance = MapCreator.DistanceTo(this, attackTarget.value);
-			if (GetWeapon().InRange(distance)) {
+			if (GetWeapon(ItemCategory.WEAPON).InRange(distance)) {
 				mapCreator.GetTile(posx,posy).current = true;
 				Attack(attackTarget.value.currentCharacter);
 			}
 			else
-				TurnController.busy = false;
+				lockControls.value = false;
 		}
 		else {
 			attackTarget.value = FindNearestTarget(enemyList);
 			int distance = MapCreator.DistanceTo(this, attackTarget.value.currentCharacter);
-			if (GetSupport().InRange(distance)) {
+			if (GetWeapon(ItemCategory.STAFF).InRange(distance)) {
 				mapCreator.GetTile(posx,posy).current = true;
 				Heal(attackTarget.value.currentCharacter);
 			}
 			else
-				TurnController.busy = false;
+				lockControls.value = false;
 		}
 	}
 

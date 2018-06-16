@@ -7,11 +7,12 @@ using UnityEngine.UI;
 
 public class NPCDragHandler : MonoBehaviour, IPointerDownHandler {
 
+    public BoolVariable lockControls;
     public MapClicker mapClicker;
 
 
     public void OnPointerDown(PointerEventData eventData) {
-        if (TurnController.busy)
+        if (lockControls.value)
             return;
         int x = Mathf.FloorToInt(0.5f + transform.position.x);
         int y = Mathf.FloorToInt(0.5f + transform.position.y);

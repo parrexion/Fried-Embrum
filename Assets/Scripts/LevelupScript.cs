@@ -15,8 +15,6 @@ public class LevelupScript : MonoBehaviour {
 	public Text spdText;
 	public Text defText;
 	public Text resText;
-	public Text spText;
-	public Text spGainText;
 
 	[Header("Levelup objects")]
 	public GameObject levelLevel;
@@ -33,7 +31,6 @@ public class LevelupScript : MonoBehaviour {
 	private int _spd;
 	private int _def;
 	private int _res;
-	private int _sp;
 
 	
 	// Update is called once per frame
@@ -44,7 +41,6 @@ public class LevelupScript : MonoBehaviour {
 		spdText.text = _spd.ToString();
 		defText.text = _def.ToString();
 		resText.text = _res.ToString();
-		spText.text = _sp.ToString();
 	}
 
 	public void SetupStats(int playerLevel, StatsContainer characterStats) {
@@ -57,7 +53,6 @@ public class LevelupScript : MonoBehaviour {
 		_spd = characterStats.spd;
 		_def = characterStats.def;
 		_res = characterStats.res;
-		_sp = characterStats.currentSp;
 
 		levelLevel.SetActive(false);
 		levelHp.SetActive(false);
@@ -78,7 +73,6 @@ public class LevelupScript : MonoBehaviour {
 
 		_level++;
 		stats.level++;
-		stats.currentSp += 4;
 		levelLevel.SetActive(true);
 		stats.CalculateStats();
 		yield return new WaitForSeconds(0.2f);
@@ -106,13 +100,6 @@ public class LevelupScript : MonoBehaviour {
 		if (stats.res > _res) {
 			_res++;
 			levelRes.SetActive(true);
-			yield return new WaitForSeconds(0.2f);
-		}
-		if (stats.currentSp > _sp) {
-			int diff = stats.currentSp - _sp;
-			_sp = stats.currentSp;
-			spGainText.text = "+" + diff;
-			levelSp.SetActive(true);
 			yield return new WaitForSeconds(0.2f);
 		}
 

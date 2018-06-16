@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu]
 public class CharacterStats : ScriptableObject {
 
-	public int statsID;
+	public string id;
 
 	[Header("Character Info")]
 	public string charName;
@@ -14,12 +14,7 @@ public class CharacterStats : ScriptableObject {
 	public CharClass charClass;
 
 	[Header("Skills")]
-	public WeaponSkill[] weapons;
-	public SupportSkill[] supports;
-	public SkillSkill[] skills;
-	public PassiveSkill[] skillsA;
-	public PassiveSkill[] skillsB;
-	public PassiveSkill[] skillsC;
+	public CharacterSkill personalSkill;
 
 	[Header("Base Stats")]
 	public int hp = 10;
@@ -28,11 +23,11 @@ public class CharacterStats : ScriptableObject {
 	public int def = 3;
 	public int res = 3;
 
-	[Header("Growths")]
-	public float gHp = 0.5f;
-	public float gAtk = 0.35f;
-	public float gSpd = 0.35f;
-	public float gDef = 0.35f;
-	public float gRes = 0.35f;
+	[Header("Personal Growths")]
+	public float gHp = 0.1f;
+	public float gAtk = 0.1f;
+	public float gSpd = 0.1f;
+	public float gDef = 0.1f;
+	public float gRes = 0.1f;
 
 }

@@ -5,14 +5,13 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class TurnController : MonoBehaviour {
-
-	public static bool busy;
 	
 	[Header("Objects")]
 	public MapCreator mapCreator;
 	public CharacterListVariable playerList;
 	public CharacterListVariable enemyList;
 
+	public BoolVariable lockControls;
 	public FactionVariable currentTurn;
 	public ActionModeVariable currentMode;
 	public TacticsMoveVariable selectCharacter;
@@ -94,18 +93,18 @@ public class TurnController : MonoBehaviour {
 	}
 
 	private void UpdateUI() {
-		turnText.text = currentTurn.value + " TURN\n" + currentMode.value;
+//		turnText.text = currentTurn.value + " TURN\n" + currentMode.value;
 	}
 
 	public void CheckEndTurn() {
 		for (int i = 0; i < playerList.values.Count; i++) {
 			if (playerList.values[i].IsAlive() && !playerList.values[i].hasMoved) {
-				busy = false;
+				lockControls.value = false;
 				return;
 			}
 		}
 		ChangeTurn();
-		busy = true;
+		lockControls.value = true;
 	}
 
 	public void CheckGameFinished() {
@@ -151,7 +150,7 @@ public class TurnController : MonoBehaviour {
 
 	public bool CheckRange(TacticsMove player, bool isAttack) {
 		if (isAttack) {
-			WeaponSkill weapon = player.GetWeapon();
+			WeaponItem weapon = player.GetWeapon(ItemCategory.WEAPON);
 			if (weapon == null)
 				return false;
 			for (int i = 0; i < enemyList.values.Count; i++) {
@@ -162,7 +161,7 @@ public class TurnController : MonoBehaviour {
 			}
 		}
 		else {
-			SupportSkill support = player.GetSupport();
+			WeaponItem support = player.GetWeapon(ItemCategory.STAFF);
 			if (support == null)
 				return false;
 			for (int i = 0; i < playerList.values.Count; i++) {
@@ -188,15 +187,15 @@ public class TurnController : MonoBehaviour {
 			mapCreator.ResetMap();
 			enemyList.values[i].FindAllMoveTiles(false);
 			yield return new WaitForSeconds(1f);
-			busy = true;
+			lockControls.value = true;
 			enemyList.values[i].CalculateMovement();
 			Debug.Log("Move");
-			while (busy)
+			while (lockControls.value)
 				yield return null;
-			busy = true;
+			lockControls.value = true;
 			enemyList.values[i].CalculateAttacks();
 			Debug.Log("Attack");
-			while (busy)
+			while (lockControls.value)
 				yield return null;
 			enemyList.values[i].End();
 			Debug.Log("End");
@@ -206,20 +205,21 @@ public class TurnController : MonoBehaviour {
 	}
 
 	private IEnumerator DisplayTurnChange(float duration) {
-		busy = true;
-		currentMode.value = ActionMode.NONE;
-		selectCharacter.value = null;
-		turnChangeText.text = currentTurn.value + " TURN";
-		turnChangeDisplay.SetActive(true);
-		charClicked.Invoke();
-		yield return new WaitForSeconds(duration);
-		turnChangeDisplay.SetActive(false);
-		StartTurn();
-		busy = false;
-		charClicked.Invoke();
+//		lockControls.value = true;
+//		currentMode.value = ActionMode.NONE;
+//		selectCharacter.value = null;
+//		turnChangeText.text = currentTurn.value + " TURN";
+//		turnChangeDisplay.SetActive(true);
+//		charClicked.Invoke();
+//		yield return new WaitForSeconds(duration);
+//		turnChangeDisplay.SetActive(false);
+//		StartTurn();
+//		lockControls.value = false;
+//		charClicked.Invoke();
+		yield break;
 	}
 
 	public void SetBusy(bool bbusy) {
-		busy = bbusy;
+		lockControls.value = bbusy;
 	}
 }

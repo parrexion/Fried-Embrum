@@ -22,14 +22,11 @@ public class SaveController : MonoBehaviour {
 	}
 	#endregion
 
-	public static int highestID;
-
-	public IntVariable currentOrbs;
-	public SaveListVariable equippedUnits;
+	public ItemLibrary itemLibrary;
+	public CharacterLibrary characterLibrary;
+	public ClassLibrary classLibrary;
+	
 	public SaveListVariable availableUnits;
-	public SaveListVariable enemyUnits;
-
-	public CharacterStats[] charList;
 	
 	private string _savePath = "";
 
@@ -41,10 +38,17 @@ public class SaveController : MonoBehaviour {
 	}
 
 	public void Save() {
-//		UpdateData();
-		SaveData data = new SaveData {currentObrs = currentOrbs.value};
-		data.StoreData(equippedUnits.values, availableUnits.values);
+		// Setup save data
+		SaveData data = new SaveData();
+		for (int i = 0; i < availableUnits.values.Length; i++) {
+			if (availableUnits.values[i].charData == null)
+				continue;
+			CharacterSaveData c = new CharacterSaveData();
+			c.StoreData(availableUnits.values[i]);
+			data.characters.Add(c);
+		}
 		
+		//Write to file
 		XmlWriterSettings xmlWriterSettings = new XmlWriterSettings() { Indent = true };
 		XmlSerializer serializer = new XmlSerializer(typeof(SaveData));
 		using (XmlWriter xmlWriter = XmlWriter.Create(_savePath, xmlWriterSettings)) {
@@ -54,7 +58,7 @@ public class SaveController : MonoBehaviour {
 	}
 
 	public void Load() {
-		//Load save data
+		//Read save data file
 		if (File.Exists(_savePath)){
 			XmlSerializer serializer = new XmlSerializer(typeof(SaveData));
 			FileStream file = File.Open(_savePath,FileMode.Open);
@@ -64,12 +68,18 @@ public class SaveController : MonoBehaviour {
 			if (loadedData == null) {
 				Debug.LogWarning("Could not open the file: " + _savePath);
 				Save();
+				return;
 			}
-			else {
-				currentOrbs.value = loadedData.currentObrs;
-				availableUnits.values = loadedData.ReadData(charList);
-				Debug.Log("Successfully loaded the save data!");
+			
+			// Read data in save file
+			Debug.Log("Characters:  " + loadedData.characters.Count);
+			availableUnits.values = new StatsContainer[loadedData.characters.Count];
+			for (int i = 0; i < loadedData.characters.Count; i++) {
+				CharacterStats cStats = characterLibrary.GetEntry(loadedData.characters[i].id);
+				CharClass cClass = classLibrary.GetEntry(loadedData.characters[i].classID);
+				availableUnits.values[i] = new StatsContainer(itemLibrary, loadedData.characters[i], cStats, cClass);
 			}
+			Debug.Log("Successfully loaded the save data!");
 		}
 		else {
 			Debug.LogWarning("Could not open the file: " + _savePath);
@@ -81,39 +91,6 @@ public class SaveController : MonoBehaviour {
 [System.Serializable]
 public class SaveData {
 
-	public int currentObrs;
-	public List<CharacterSave> characters = new List<CharacterSave>();
-	
-	public void StoreData(StatsContainer[] data, StatsContainer[] data2) {
-		characters.Clear();
-		for (int i = 0; i < data.Length; i++) {
-			if (data[i].id == -1)
-				continue;
-			CharacterSave c = new CharacterSave();
-			c.LoadData(data[i]);
-			characters.Add(c);
-		}
-		for (int i = 0; i < data2.Length; i++) {
-			if (data2[i].id == -1)
-				continue;
-			CharacterSave c = new CharacterSave();
-			c.LoadData(data2[i]);
-			characters.Add(c);
-		}
+	public List<CharacterSaveData> characters = new List<CharacterSaveData>();
 
-		while (characters.Count < ConstValues.AVAILABLE_SIZE) {
-			characters.Add(new CharacterSave());
-		}
-	}
-
-	public StatsContainer[] ReadData(CharacterStats[] charList) {
-		StatsContainer[] stats = new StatsContainer[characters.Count];
-		for (int i = 0; i < characters.Count; i++) {
-			CharacterStats cStats = (characters[i].statsID != -1) ? charList[characters[i].statsID] : null;
-			stats[i] = new StatsContainer(characters[i], cStats);
-			SaveController.highestID = Mathf.Max(SaveController.highestID, stats[i].statsID);
-		}
-
-		return stats;
-	}
 }

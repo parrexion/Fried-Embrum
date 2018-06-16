@@ -5,29 +5,15 @@ using Random = UnityEngine.Random;
 [System.Serializable]
 public class StatsContainer {
 
-	[SerializeField]
-	private CharacterStats _stats;
-	public List<Boost> boosts = new List<Boost>();
-
-	public int id;
-	public int statsID;
-
 	[Header("Character Info")]
-	public string charName;
-	public Sprite portrait;
-	public Sprite battleSprite;
-	public CharClass charClass;
+	public CharacterStats charData;
+	public CharClass classData;
 	
 	[Header("Player stuff")]
 	public int level;
 	public int currentExp;
-	public int currentSp;
-	public int weaponLevel;
-	public int supportLevel;
-	public int skillLevel;
-	public int skillALevel = -1;
-	public int skillBLevel = -1;
-	public int skillCLevel = -1;
+	public WeaponItem[] inventory;
+	public CharacterSkill[] skills;
 
 	[Header("Current Stats")]
 	public int hp;
@@ -57,58 +43,45 @@ public class StatsContainer {
 	public int bDef;
 	public int bRes;
 
+	[SerializeField]
+	public List<Boost> boosts = new List<Boost>();
 
-	public StatsContainer(CharacterSave save, CharacterStats stats) {
-		if (save == null) {
-			id = -1;
-			statsID = -1;
-			level = -1;
-		}
-		else
-			SetupValues(save, stats);
+
+	public StatsContainer(ItemLibrary iLib, CharacterSaveData saveData, CharacterStats cStats, CharClass charClass) {
+		SetupValues(iLib, saveData, cStats, charClass);
 	}
 
-	private void SetupValues(CharacterSave save, CharacterStats stats) {
-		id = save.id;
-		statsID = save.statsID;
-		_stats = stats;
-		level = save.level;
+	private void SetupValues(ItemLibrary iLib, CharacterSaveData saveData, CharacterStats cStats, CharClass charClass) {
+		charData = cStats;
+		classData = charClass;
+		
+		level = saveData.level;
 		if (level == -1)
 			return;
-		currentExp = save.currentExp;
-		currentSp = save.currentSp;
-		weaponLevel = save.weaponLevel;
-		supportLevel = save.supportLevel;
-		skillLevel = save.skillLevel;
-		skillALevel = save.skillALevel;
-		skillBLevel = save.skillBLevel;
-		skillCLevel = save.skillCLevel;
+		currentExp = saveData.currentExp;
+
+		inventory = new WeaponItem[saveData.inventory.Length];
+		for (int i = 0; i < saveData.inventory.Length; i++) {
+			inventory[i] = (WeaponItem) iLib.GetEntry(saveData.inventory[i]);
+		}
+		skills = new CharacterSkill[saveData.skills.Length];
+		for (int i = 0; i < saveData.skills.Length; i++) {
+			skills[i] = (CharacterSkill) iLib.GetEntry(saveData.skills[i]);
+		}
 		
-		iHp = save.iHp;
-		iAtk = save.iAtk;
-		iSpd = save.iSpd;
-		iDef = save.iDef;
-		iRes = save.iRes;
+		iHp = saveData.iHp;
+		iAtk = saveData.iAtk;
+		iSpd = saveData.iSpd;
+		iDef = saveData.iDef;
+		iRes = saveData.iRes;
 	
-		eHp = save.eHp;
-		eAtk = save.eAtk;
-		eSpd = save.eSpd;
-		eDef = save.eDef;
-		eRes = save.eRes;
-		
-		charName = stats.charName;
-		portrait = stats.portrait;
-		battleSprite = stats.battleSprite;
-		charClass = stats.charClass;
+		eHp = saveData.eHp;
+		eAtk = saveData.eAtk;
+		eSpd = saveData.eSpd;
+		eDef = saveData.eDef;
+		eRes = saveData.eRes;
 		
 		CalculateStats();
-	}
-
-	public void ReadCharValues() {
-		charName = _stats.charName;
-		portrait = _stats.portrait;
-		battleSprite = _stats.battleSprite;
-		charClass = _stats.charClass;
 	}
 
 	private void GenerateBoosts() {
@@ -128,31 +101,25 @@ public class StatsContainer {
 	}
 
 	public void CalculateStats() {
-		if (_stats == null)
+		if (charData == null)
 			return;
 		GenerateBoosts();
 		int calcLevel = level - 1;
-		hp = (int)(_stats.hp + iHp + calcLevel * _stats.gHp + bHp + eHp);
-		atk = (int)(_stats.atk + iAtk + calcLevel * _stats.gAtk + bAtk + eAtk);
-		spd = (int)(_stats.spd + iSpd + calcLevel * _stats.gSpd + bSpd + eSpd);
-		def = (int)(_stats.def + iDef + calcLevel * _stats.gDef + bDef + eDef);
-		res = (int)(_stats.res + iRes + calcLevel * _stats.gRes + bRes + eRes);
+		hp = charData.hp + classData.hp + bHp + (int)(calcLevel * (classData.hp+charData.gHp) + iHp + eHp);
+		atk = charData.atk + classData.atk + bAtk + (int)(calcLevel * (classData.atk+charData.gAtk) + iAtk + eAtk);
+		spd = charData.spd + classData.spd + bSpd + (int)(calcLevel * (classData.spd+charData.gSpd) + iSpd + eSpd);
+		def = charData.def + classData.def + bDef + (int)(calcLevel * (classData.def+charData.gDef) + iDef + eDef);
+		res = charData.res + classData.res + bRes + (int)(calcLevel * (classData.res+charData.gRes) + iRes + eRes);
 	}
 
-	public int GetMove() {
-		return _stats.charClass.movespeed;
-	}
-
-	public WeaponSkill GetWeapon() {
-		return (weaponLevel != -1 && weaponLevel < _stats.weapons.Length) ? _stats.weapons[weaponLevel] : null;
-	}
-
-	public SupportSkill GetSupport() {
-		return (supportLevel != -1 && supportLevel < _stats.supports.Length) ? _stats.supports[supportLevel] : null;
-	}
-
-	public SkillSkill GetSkill() {
-		return (skillLevel != -1 && skillLevel < _stats.skills.Length) ? _stats.skills[skillLevel] : null;
+	public WeaponItem GetItem(ItemCategory category) {
+		for (int i = 0; i < inventory.Length; i++) {
+			if (inventory[i] == null)
+				continue;
+			if (inventory[i].itemCategory == category)
+				return inventory[i];
+		}
+		return null;
 	}
 
 	public void ClearBoosts(bool isStartTurn) {
@@ -169,48 +136,39 @@ public class StatsContainer {
 	}
 
 	public void ActivateSkills(Activation activation, TacticsMove user, TacticsMove enemy) {
-		if (skillALevel >= 0) _stats.skillsA[skillALevel].ActivateSkill(activation, user, enemy);
-		if (skillBLevel >= 0) _stats.skillsB[skillBLevel].ActivateSkill(activation, user, enemy);
-		if (skillCLevel >= 0) _stats.skillsC[skillCLevel].ActivateSkill(activation, user, enemy);
+		for (int i = 0; i < skills.Length; i++) {
+			skills[i].ActivateSkill(activation, user, enemy);
+		}
 	}
 
 	public void EndSkills(Activation activation, TacticsMove user, TacticsMove enemy) {
-		if (skillALevel >= 0) _stats.skillsA[skillALevel].EndSkill(activation, user, enemy);
-		if (skillBLevel >= 0) _stats.skillsB[skillBLevel].EndSkill(activation, user, enemy);
-		if (skillCLevel >= 0) _stats.skillsC[skillCLevel].EndSkill(activation, user, enemy);
+		for (int i = 0; i < skills.Length; i++) {
+			skills[i].EndSkill(activation, user, enemy);
+		}
 	}
 
 	public int EditValueSkills(Activation activation, TacticsMove user, int value) {
-		if (skillALevel >= 0) value = _stats.skillsA[skillALevel].EditValue(activation, value, user);
-		if (skillBLevel >= 0) value = _stats.skillsB[skillBLevel].EditValue(activation, value, user);
-		if (skillCLevel >= 0) value = _stats.skillsC[skillCLevel].EditValue(activation, value, user);
+		for (int i = 0; i < skills.Length; i++) {
+			skills[i].EditValue(activation, value, user);
+		}
 		return value;
 	}
 
 	public void ForEachSkills(Activation activation, TacticsMove user, CharacterListVariable list) {
-		if (skillALevel >= 0) _stats.skillsA[skillALevel].ActivateForEach(activation, user, list);
-		if (skillBLevel >= 0) _stats.skillsB[skillBLevel].ActivateForEach(activation, user, list);
-		if (skillCLevel >= 0) _stats.skillsC[skillCLevel].ActivateForEach(activation, user, list);
-	}
-
-	public PassiveSkill GetPassive(SkillSlot slot) {
-		switch (slot)
-		{
-			case SkillSlot.SLOTA:
-				return (skillALevel >= 0) ? _stats.skillsA[skillALevel] : null;
-			case SkillSlot.SLOTB:
-				return (skillBLevel >= 0) ? _stats.skillsB[skillBLevel] : null;
-			case SkillSlot.SLOTC:
-				return (skillCLevel >= 0) ? _stats.skillsC[skillCLevel] : null;
-				
-			default:
-				return null;
+		for (int i = 0; i < skills.Length; i++) {
+			skills[i].ActivateForEach(activation, user, list);
 		}
 	}
 
-	public bool IsWeakAgainst(WeaponSkill weapon) {
+	public bool IsWeakAgainst(WeaponItem weapon) {
 		if (weapon == null)
 			return false;
-		return (weapon.advantageType == charClass.classType);
+		
+		for (int i = 0; i < weapon.advantageType.Length; i++) {
+			if (weapon.advantageType[i] == classData.classType)
+				return true;
+		}
+
+		return false;
 	}
 }

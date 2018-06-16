@@ -11,7 +11,7 @@ public class Slot : MonoBehaviour {
 	public void AddItem(StatsContainer charItem) {
 		item = charItem;
 
-		icon.sprite = item.portrait;
+		icon.sprite = item.charData.portrait;
 	}
 
 	public void ClearSlot() {

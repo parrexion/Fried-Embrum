@@ -18,27 +18,31 @@ public class BattleAction {
 	}
 
 	public int GetDamage() {
-		int wpn = attacker.GetWeapon().power;
+		int wpn = attacker.GetWeapon(ItemCategory.WEAPON).power;
 		int atk = attacker.stats.atk;
 		int def = defender.stats.def;
 		int adv = GetAdvantage();
 		float bonus = (adv == 1) ? 1.2f : (adv == -1) ? 0.8f : 1f;
-		float weakness = GetWeaknessBonus(attacker.GetWeapon().advantageType, defender.stats.charClass.classType);
+		float weakness = GetWeaknessBonus(attacker.GetWeapon(ItemCategory.WEAPON).advantageType, defender.stats.classData.classType);
 
 		int damage = Mathf.Max(0, Mathf.FloorToInt((wpn + atk) * weakness * bonus) - def);
 		return damage;
 	}
 
 	public int GetHeals() {
-		return attacker.GetSupport().power + (int)(attacker.stats.atk * attacker.GetSupport().statsMultiplier);
+		return attacker.GetWeapon(ItemCategory.STAFF).power;
 	}
 
 	public int GetAdvantage() {
-		return attacker.GetWeapon().GetAdvantage(defender.GetWeapon());
+		return attacker.GetWeapon(ItemCategory.WEAPON).GetAdvantage(defender.GetWeapon(ItemCategory.WEAPON));
 	}
 
-	public float GetWeaknessBonus(ClassType atkType, ClassType defType) {
-		return (atkType == defType) ? 1.5f : 1f;
+	public float GetWeaknessBonus(ClassType[] atkType, ClassType defType) {
+		for (int i = 0; i < atkType.Length; i++) {
+			if (atkType[i] == defType)
+				return 1.5f;
+		}
+		return 1f;
 	}
 
 	public int GetExperience() {
@@ -49,7 +53,7 @@ public class BattleAction {
 
 		//Exp for support skills
 		if (!isDamage) {
-			return (player.GetSupport().supportType == SupportType.HEAL) ? 10 : 0;
+			return (player.GetWeapon(ItemCategory.STAFF).itemType == ItemType.HEAL) ? 10 : 0;
 		}
 
 		//Exp for fights

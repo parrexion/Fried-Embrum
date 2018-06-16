@@ -13,6 +13,7 @@ public class BattleContainer : MonoBehaviour {
 		instance = this;
 	}
 
+	public BoolVariable lockControls;
 	public UIExpMeter expMeter;
 	public LevelupScript levelupScript;
 	public List<BattleAction> actions = new List<BattleAction>();
@@ -47,7 +48,7 @@ public class BattleContainer : MonoBehaviour {
 		actions.Clear();
 		actions.Add(new BattleAction(true, true, attacker, defender));
 		int range = Mathf.Abs(attacker.posx - defender.posx) + Mathf.Abs(attacker.posy - defender.posy);
-		if (defender.GetWeapon() != null && defender.GetWeapon().InRange(range)) {
+		if (defender.GetWeapon(ItemCategory.WEAPON) != null && defender.GetWeapon(ItemCategory.WEAPON).InRange(range)) {
 			actions.Add(new BattleAction(false, true, defender, attacker));
 		}
 		//Compare speeds
@@ -56,7 +57,7 @@ public class BattleContainer : MonoBehaviour {
 			actions.Add(new BattleAction(true, true, attacker, defender));
 		}
 		else if (spdDiff <= -5) {
-			if (defender.GetWeapon() != null && defender.GetWeapon().InRange(range)) {
+			if (defender.GetWeapon(ItemCategory.WEAPON) != null && defender.GetWeapon(ItemCategory.WEAPON).InRange(range)) {
 				actions.Add(new BattleAction(false, true, defender, attacker));
 			}
 		}
@@ -75,8 +76,8 @@ public class BattleContainer : MonoBehaviour {
 	private IEnumerator ActionLoop() {
 		leftDamageObject.SetActive(false);
 		rightDamageObject.SetActive(false);
-		leftTransform.GetComponent<SpriteRenderer>().sprite = actions[0].attacker.stats.battleSprite;
-		rightTransform.GetComponent<SpriteRenderer>().sprite = actions[0].defender.stats.battleSprite;
+		leftTransform.GetComponent<SpriteRenderer>().sprite = actions[0].attacker.stats.charData.battleSprite;
+		rightTransform.GetComponent<SpriteRenderer>().sprite = actions[0].defender.stats.charData.battleSprite;
 		leftTransform.GetComponent<SpriteRenderer>().color = Color.white;
 		rightTransform.GetComponent<SpriteRenderer>().color = Color.white;
 		
@@ -106,23 +107,9 @@ public class BattleContainer : MonoBehaviour {
 			// Deal damage
 			if (act.isDamage) {
 				int damage = act.GetDamage();
-				if (act.attacker.SkillReady(SkillType.DAMAGE)) {
-					damage = act.attacker.GetSkill().GenerateDamage(damage);
-					act.attacker.skillCharge = -1;
-					Debug.Log("Bonus damage!");
-				}
 				act.defender.TakeDamage(damage);
 				StartCoroutine(DamageDisplay(act.leftSide, damage, true));
-				
 				Debug.Log(i + " Dealt damage :  " + damage);
-				if (act.attacker.SkillReady(SkillType.HEAL)) {
-					int health = act.attacker.GetSkill().GenerateHeal(damage);
-					act.attacker.skillCharge = -1;
-					act.attacker.TakeHeals(health);
-					rightDamageText.text = damage.ToString();
-					StartCoroutine(DamageDisplay(!act.leftSide, damage, false));
-					Debug.Log(i + " Healt damage :  " + health);
-				}
 				
 				if (!act.defender.IsAlive()) {
 					if (act.leftSide)
@@ -130,22 +117,16 @@ public class BattleContainer : MonoBehaviour {
 					else
 						leftTransform.GetComponent<SpriteRenderer>().color = new Color(0.4f,0.4f,0.4f);
 				}
-			
-				//Add skill charges
-				act.attacker.IncreaseSkill();
-				act.defender.IncreaseSkill();
 			}
 			else {
-				if (act.attacker.GetSupport().supportType == SupportType.HEAL) {
+				if (act.attacker.GetWeapon(ItemCategory.STAFF).itemType == ItemType.HEAL) {
 					int health = act.GetHeals();
 					act.defender.TakeHeals(health);
 					StartCoroutine(DamageDisplay(act.leftSide, health, false));
 					Debug.Log(i + " Healt damage :  " + health);
-					if (act.attacker.faction == Faction.PLAYER)
-						act.attacker.GainSP(1, true);
 				}
-				else if (act.attacker.GetSupport().supportType == SupportType.BUFF) {
-					act.defender.ReceiveBuff(act.attacker.GetSupport().boost, true, true);
+				else if (act.attacker.GetWeapon(ItemCategory.WEAPON).itemType == ItemType.BUFF) {
+					act.defender.ReceiveBuff(act.attacker.GetWeapon(ItemCategory.STAFF).boost, true, true);
 					Debug.Log("Boost them up!");
 				}
 			}
@@ -164,8 +145,6 @@ public class BattleContainer : MonoBehaviour {
 			//Check Death
 			Debug.Log("Check death");
 			if (!act.defender.IsAlive()) {
-				if (act.attacker.faction == Faction.PLAYER)
-					act.attacker.GainSP(3, true);
 				yield return new WaitForSeconds(1f);
 				break;
 			}
@@ -191,7 +170,7 @@ public class BattleContainer : MonoBehaviour {
 		actions[0].attacker.EndSkills(Activation.PRECOMBAT, actions[0].defender);
 		actions[0].defender.EndSkills(Activation.PRECOMBAT, actions[0].attacker);
 		actions.Clear();
-		TurnController.busy = false;
+		lockControls.value = false;
 		_currentCharacter.End();
 		_currentCharacter = null;
 	}

@@ -6,15 +6,14 @@ public class PlayerMove : TacticsMove {
 
 	// Use this for initialization
 	protected override void SetupLists() {
-		stats = playerChars.values[id];
 		playerList.values.Add(this);
-		Debug.Log(stats.charName);
+		Debug.Log(stats.charData.charName);
 	}
 	
 	protected override void EndMovement() {
 		Debug.Log("Finished move");
 		isMoving = false;
-		TurnController.busy = false;
+		lockControls.value = false;
 		characterClicked.Invoke();
 		Debug.Log("CURREnt mode:  " + currentMode.value);
 		if (currentMode.value == ActionMode.MOVE)

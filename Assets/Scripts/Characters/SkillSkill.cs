@@ -5,7 +5,7 @@ using UnityEngine;
 public enum SkillType { DAMAGE, HEAL }
 
 [System.Serializable]
-public class SkillSkill : BaseSkill {
+public class SkillSkill : Item {
 
 	public float power = 0.5f;
 	public int maxCharge = 0;

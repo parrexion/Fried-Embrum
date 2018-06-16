@@ -7,12 +7,13 @@ using UnityEngine.UI;
 
 public class PlayerDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerDownHandler {
 
+    public BoolVariable lockControls;
     public MapClicker mapClicker;
     public PlayerMove tactics;
 
 
     public void OnBeginDrag(PointerEventData eventData) {
-        if (TurnController.busy || tactics.hasMoved)
+        if (lockControls.value || tactics.hasMoved)
             return;
 
         int x = Mathf.FloorToInt(0.5f + transform.position.x);
@@ -21,7 +22,7 @@ public class PlayerDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
     }
 
     public void OnDrag(PointerEventData eventData) {
-        if (TurnController.busy || tactics.hasMoved)
+        if (lockControls.value || tactics.hasMoved)
             return;
         transform.position = new Vector3(eventData.pointerCurrentRaycast.worldPosition.x, 
                                     eventData.pointerCurrentRaycast.worldPosition.y, -0.1f);
@@ -31,7 +32,7 @@ public class PlayerDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
     }
 
     public void OnEndDrag(PointerEventData eventData) {
-        if (TurnController.busy || tactics.hasMoved)
+        if (lockControls.value || tactics.hasMoved)
             return;
 
         transform.localPosition = new Vector3(tactics.posx, tactics.posy, -0.1f);
@@ -39,7 +40,7 @@ public class PlayerDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,
     }
 
     public void OnPointerDown(PointerEventData eventData) {
-        if (TurnController.busy)
+        if (lockControls.value)
             return;
         int x = Mathf.FloorToInt(0.5f + transform.position.x);
         int y = Mathf.FloorToInt(0.5f + transform.position.y);

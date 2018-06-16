@@ -14,8 +14,8 @@ public class PreaparationController : MonoBehaviour {
     [Header("Data")]
     public SaveListVariable equippedUnits;
     public SaveListVariable availableUnits;
-    public CharacterSave noPlayer;
-    public CharacterSave[] characters;
+    public CharacterSaveData noPlayer;
+    public CharacterSaveData[] charactersSave;
     
     [Header("Other")]
     public Button startButton;
@@ -34,26 +34,24 @@ public class PreaparationController : MonoBehaviour {
 
 
     private void SetupCharacter() {
-        for (int i = 0; i < equippedUnits.values.Length; i++) {
-            equippedUnits.values[i] = new StatsContainer(null,null);
-        }
 //        for (int i = 0; i < availableUnits.values.Length; i++) {
-//            availableUnits.values[i] = new StatsContainer((i < characters.Length) ? characters[i] : noPlayer);
+//            availableUnits.values[i] = new StatsContainer(null, null);
 //        }
     }
 
     public void CheckButton() {
-        if (startButton == null)
-            return;
+        //TODO
+//        if (startButton == null)
+//            return;
         
-        bool available = false;
-        for (int i = 0; i < equippedUnits.values.Length; i++) {
-            if (equippedUnits.values[i].id != -1) {
-                available = true;
-                break;
-            }
-        }
+//        bool available = false;
+//        for (int i = 0; i < equippedUnits.values.Length; i++) {
+//            if (equippedUnits.values[i].id != -1) {
+//                available = true;
+//                break;
+//            }
+//        }
 
-        startButton.interactable = available;
+//        startButton.interactable = available;
     }
 }

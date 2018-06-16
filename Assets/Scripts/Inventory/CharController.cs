@@ -13,7 +13,7 @@ public class CharController : MonoBehaviour {
     [Header("Data")]
     public SaveListVariable equippedUnits;
     public SaveListVariable enemyUnits;
-    public CharacterSave noPlayer;
+    public CharacterSaveData noPlayer;
     
     
     private void Awake() {
