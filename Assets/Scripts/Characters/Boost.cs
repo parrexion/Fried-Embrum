@@ -7,17 +7,20 @@ public enum BoostType { SINGLE, PASSIVE, DECREASE, ENDTURN }
 [System.Serializable]
 public class Boost {
 
-	private bool active;
 	public BoostType boostType;
 	public int hp;
 	public int atk;
 	public int spd;
+	public int skl;
+	public int lck;
 	public int def;
 	public int res;
+	
+	private bool _active;
 
 
 	public void ActivateBoost() {
-		active = true;
+		_active = true;
 	}
 	
 	public Boost InvertStats() {
@@ -25,6 +28,8 @@ public class Boost {
 			hp = -hp,
 			atk = -atk,
 			spd = -spd,
+			skl = -skl,
+			lck = -lck,
 			def = -def,
 			res = -res
 		};
@@ -32,7 +37,7 @@ public class Boost {
 	}
 
 	public bool IsActive() {
-		return active;
+		return _active;
 	}
 
 	public void StartTurn() {
@@ -46,17 +51,19 @@ public class Boost {
 			if (hp > 0) hp--;
 			if (atk > 0) atk--;
 			if (spd > 0) spd--;
+			if (skl > 0) skl--;
+			if (lck > 0) lck--;
 			if (def > 0) def--;
 			if (res > 0) res--;
 			break;
 		case BoostType.SINGLE:
-			active = false;
+			_active = false;
 			break;
 		}
 	}
 
 	public void EndTurn() {
 		if (boostType == BoostType.ENDTURN)
-			active = false;
+			_active = false;
 	}
 }

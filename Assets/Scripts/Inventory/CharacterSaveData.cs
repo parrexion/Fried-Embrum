@@ -17,6 +17,8 @@ public class CharacterSaveData {
 	public float iHp;
 	public float iAtk;
 	public float iSpd;
+	public float iSkl;
+	public float iLck;
 	public float iDef;
 	public float iRes;
 
@@ -24,6 +26,8 @@ public class CharacterSaveData {
 	public float eHp;
 	public float eAtk;
 	public float eSpd;
+	public float eSkl;
+	public float eLck;
 	public float eDef;
 	public float eRes;
 	
@@ -52,12 +56,16 @@ public class CharacterSaveData {
 		iHp = cont.iHp;
 		iAtk = cont.iAtk;
 		iSpd = cont.iSpd;
+		iSkl = cont.iSkl;
+		iLck = cont.iLck;
 		iDef = cont.iDef;
 		iRes = cont.iRes;
 		
 		eHp = cont.eHp;
 		eAtk = cont.eAtk;
 		eSpd = cont.eSpd;
+		eSkl = cont.eSkl;
+		eLck = cont.eLck;
 		eDef = cont.eDef;
 		eRes = cont.eRes;
 	}
@@ -66,6 +74,8 @@ public class CharacterSaveData {
 		iHp = Random.Range(0.01f,0.99f);
 		iAtk = Random.Range(0.01f,0.99f);
 		iSpd = Random.Range(0.01f,0.99f);
+		iSkl = Random.Range(0.01f,0.99f);
+		iLck = Random.Range(0.01f,0.99f);
 		iDef = Random.Range(0.01f,0.99f);
 		iRes = Random.Range(0.01f,0.99f);
 	}

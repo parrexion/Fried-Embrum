@@ -14,14 +14,20 @@ public class BattleContainer : MonoBehaviour {
 	}
 
 	public BoolVariable lockControls;
+	
+	[Header("Experience")]
 	public UIExpMeter expMeter;
 	public LevelupScript levelupScript;
+	
+	[Header("Battle Actions")]
 	public List<BattleAction> actions = new List<BattleAction>();
 	public float speed = 1.5f;
 	public BoolVariable useBattleAnimations;
 
 	[Header("Battle Animations")]
 	public GameObject battleAnimationObject;
+	public GameObject uiCanvas;
+	public ForecastUI forecastUI;
 	[Space(5)]
 	public Transform leftTransform;
 	public Image leftHealth;
@@ -33,9 +39,12 @@ public class BattleContainer : MonoBehaviour {
 	public GameObject rightDamageObject;
 	public Text rightDamageText;
 
+	public UnityEvent updateHealthEvent;
 	public UnityEvent battleFinishedEvent;
 	
 	private TacticsMove _currentCharacter;
+	private bool _attackerDealtDamage;
+	private bool _defenderDealtDamage;
 
 
 	public void GenerateActions(TacticsMove attacker, TacticsMove defender) {
@@ -80,6 +89,8 @@ public class BattleContainer : MonoBehaviour {
 		rightTransform.GetComponent<SpriteRenderer>().sprite = actions[0].defender.stats.charData.battleSprite;
 		leftTransform.GetComponent<SpriteRenderer>().color = Color.white;
 		rightTransform.GetComponent<SpriteRenderer>().color = Color.white;
+		_attackerDealtDamage = false;
+		_defenderDealtDamage = false;
 		
 		for (int i = 0; i < actions.Count; i++) {
 			BattleAction act = actions[i];
@@ -90,11 +101,14 @@ public class BattleContainer : MonoBehaviour {
 			enemyPos = startPos + (enemyPos - startPos).normalized;
 			
 			battleAnimationObject.SetActive(useBattleAnimations.value);
+			uiCanvas.SetActive(!useBattleAnimations.value);
+			forecastUI.UpdateUI();
 			if (useBattleAnimations.value) {
 				leftHealth.fillAmount = actions[0].attacker.GetHealthPercent();
 				rightHealth.fillAmount = actions[0].defender.GetHealthPercent();
-				yield return new WaitForSeconds(1f);
 			}
+			
+			yield return new WaitForSeconds(1f);
 			
 			//Move forward
 			float f = 0;
@@ -105,11 +119,22 @@ public class BattleContainer : MonoBehaviour {
 				yield return null;
 			}
 			// Deal damage
+			bool isCrit = false;
 			if (act.isDamage) {
-				int damage = act.GetDamage();
+				int damage = (GenerateHitNumber(act.GetHitRate())) ? act.GetDamage() : -1;
+				if (damage != -1 && SingleNumberCheck(act.GetCritRate())) {
+					damage *= 3;
+					isCrit = true;
+				}
 				act.defender.TakeDamage(damage);
-				StartCoroutine(DamageDisplay(act.leftSide, damage, true));
+				StartCoroutine(DamageDisplay(act.leftSide, damage, true, isCrit));
 				Debug.Log(i + " Dealt damage :  " + damage);
+				
+				if (damage > 0)
+					if (act.leftSide)
+						_attackerDealtDamage = true;
+					else
+						_defenderDealtDamage = true;
 				
 				if (!act.defender.IsAlive()) {
 					if (act.leftSide)
@@ -122,7 +147,7 @@ public class BattleContainer : MonoBehaviour {
 				if (act.attacker.GetWeapon(ItemCategory.STAFF).itemType == ItemType.HEAL) {
 					int health = act.GetHeals();
 					act.defender.TakeHeals(health);
-					StartCoroutine(DamageDisplay(act.leftSide, health, false));
+					StartCoroutine(DamageDisplay(act.leftSide, health, false, false));
 					Debug.Log(i + " Healt damage :  " + health);
 				}
 				else if (act.attacker.GetWeapon(ItemCategory.WEAPON).itemType == ItemType.BUFF) {
@@ -133,7 +158,14 @@ public class BattleContainer : MonoBehaviour {
 			//Update health
 			leftHealth.fillAmount = (act.leftSide) ? act.attacker.GetHealthPercent() : act.defender.GetHealthPercent();
 			rightHealth.fillAmount = (act.leftSide) ? act.defender.GetHealthPercent() : act.attacker.GetHealthPercent();
-
+			updateHealthEvent.Invoke();
+			
+			//Extra crit animation
+			if (isCrit) {
+				defenseTransform.GetComponent<ParticleSystem>().Play();
+				yield return new WaitForSeconds(0.2f);
+			}
+			
 			// Move back
 			Debug.Log("Moving back");
 			while(f > 0f) {
@@ -158,12 +190,10 @@ public class BattleContainer : MonoBehaviour {
 			actions[0].attacker.ActivateSkills(Activation.POSTCOMBAT, actions[0].defender);
 			actions[0].defender.ActivateSkills(Activation.POSTCOMBAT, actions[0].attacker);
 		}
-		
-		//Check game finished
-		battleFinishedEvent.Invoke();
 
 		//Clean up
 		battleAnimationObject.SetActive(false);
+		uiCanvas.SetActive(true);
 		leftDamageObject.SetActive(false);
 		rightDamageObject.SetActive(false);
 		actions[0].attacker.EndSkills(Activation.INITCOMBAT, actions[0].defender);
@@ -173,13 +203,17 @@ public class BattleContainer : MonoBehaviour {
 		lockControls.value = false;
 		_currentCharacter.End();
 		_currentCharacter = null;
+		
+		//Send game finished
+		battleFinishedEvent.Invoke();
 	}
 
-	private IEnumerator DamageDisplay(bool leftSide, int damage, bool isDamage) {
+	private IEnumerator DamageDisplay(bool leftSide, int damage, bool isDamage, bool isCrit) {
 		GameObject damageObject = (leftSide) ? rightDamageObject : leftDamageObject;
 		Text damageText = (leftSide) ? rightDamageText : leftDamageText;
 		damageText.color = (isDamage) ? Color.black : Color.white;
-		damageText.text = damage.ToString();
+		damageText.text = (damage != -1) ? damage.ToString() : "Miss";
+		damageObject.transform.localScale = (isCrit) ? new Vector3(2, 2, 2) : new Vector3(1, 1, 1);
 		damageObject.gameObject.SetActive(true);
 		
 		yield return new WaitForSeconds(1f);
@@ -190,10 +224,15 @@ public class BattleContainer : MonoBehaviour {
 		TacticsMove player = null;
 		for (int i = 0; i < actions.Count; i++) {
 			if (actions[i].attacker.faction == Faction.PLAYER) {
-				player = actions[i].attacker;
-				break;
+				if ((actions[i].leftSide && _attackerDealtDamage) || (!actions[i].leftSide && _defenderDealtDamage)) {
+					player = actions[i].attacker;
+					break;
+				}
 			}
 		}
+		
+		yield return new WaitForSeconds(0.5f);
+		
 		if (player == null) {
 			Debug.Log("Nothing to give exp for");
 			yield break;
@@ -205,7 +244,6 @@ public class BattleContainer : MonoBehaviour {
 			expMeter.gameObject.SetActive(true);
 			expMeter.currentExp = player.stats.currentExp;
 			Debug.Log("Exp is currently: " + player.stats.currentExp);
-			yield return new WaitForSeconds(0.5f);
 			while(exp > 0) {
 				exp--;
 				expMeter.currentExp++;
@@ -214,10 +252,8 @@ public class BattleContainer : MonoBehaviour {
 					yield return new WaitForSeconds(1f);
 					expMeter.gameObject.SetActive(false);
 					levelupScript.SetupStats(player.stats.level,player.stats);
-					levelupScript.gameObject.SetActive(true);
 					Debug.Log("LEVELUP!");
 					yield return StartCoroutine(levelupScript.RunLevelup(player.stats));
-					levelupScript.gameObject.SetActive(false);
 					expMeter.gameObject.SetActive(true);
 				}
 				yield return null;
@@ -227,5 +263,17 @@ public class BattleContainer : MonoBehaviour {
 			player.stats.currentExp = expMeter.currentExp;
 			Debug.Log("Exp is now: " + player.stats.currentExp);
 		}
+	}
+
+	private bool GenerateHitNumber(int hit) {
+		int nr = Random.Range(0, 100);
+		Debug.Log("HIT:  " + nr + " -> " + hit);
+		return (nr < hit);
+	}
+
+	private bool SingleNumberCheck(int hit) {
+		int nr = Random.Range(0, 100);
+		Debug.Log("SINGLE:  " + nr + " -> " + hit);
+		return (nr < hit);
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.WSA;
 
 public class MapCreator : MonoBehaviour {
 
@@ -47,8 +48,8 @@ public class MapCreator : MonoBehaviour {
 		_tMountain = mapInfo.value.mountain;
 		_tBlocked = mapInfo.value.blocked;
 		
-		cameraBox.size = new Vector2(_sizeX+2, _sizeY+2);
-		cameraBox.transform.position = new Vector3((_sizeX-1)/2.0f, (_sizeY-1)/2.0f, 0);
+		cameraBox.size = new Vector2(_sizeX+5, _sizeY+2);
+		cameraBox.transform.position = new Vector3((_sizeX+2)/2.0f, (_sizeY-1)/2.0f, 0);
 		
 		GenerateMap(mapInfo.value.mapSprite);
 		SpawnCharacters();
@@ -179,6 +180,8 @@ public class MapCreator : MonoBehaviour {
 
 				MapTile tempTile = tile.GetComponent<MapTile>();
 				tempTile.mapCreator = this;
+				tempTile.posx = i;
+				tempTile.posy = j;
 				tempTile.SetTerrain(GetTerrainFromPixel(colorData[pos]));
 				mappus.Add(tempTile);
 				pos++;

@@ -20,6 +20,8 @@ public class CharacterStats : ScriptableObject {
 	public int hp = 10;
 	public int atk = 6;
 	public int spd = 6;
+	public int skl = 5;
+	public int lck = 4;
 	public int def = 3;
 	public int res = 3;
 
@@ -27,6 +29,8 @@ public class CharacterStats : ScriptableObject {
 	public float gHp = 0.1f;
 	public float gAtk = 0.1f;
 	public float gSpd = 0.1f;
+	public float gSkl = 0.1f;
+	public float gLck = 0.1f;
 	public float gDef = 0.1f;
 	public float gRes = 0.1f;
 

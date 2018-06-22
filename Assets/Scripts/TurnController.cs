@@ -17,14 +17,12 @@ public class TurnController : MonoBehaviour {
 	public TacticsMoveVariable selectCharacter;
 
 	[Header("UI")]
-	public Text turnText;
 	public GameObject turnChangeDisplay;
 	public Text turnChangeText;
 
 	[Header("Game Finished")]
 	public GameObject gameFinishObject;
 	public Text gameFinishText;
-	public IntVariable currentOrbs;
 
 	public UnityEvent charClicked;
 	public UnityEvent saveGameEvent;
@@ -38,11 +36,6 @@ public class TurnController : MonoBehaviour {
 		playerList.values.Clear();
 		enemyList.values.Clear();
 		StartCoroutine(DisplayTurnChange(1.5f));
-		UpdateUI();
-	}
-
-	private void Update() {
-		UpdateUI();
 	}
 
 	public void ButtonClickChangeTurn() {
@@ -69,7 +62,6 @@ public class TurnController : MonoBehaviour {
 			Debug.LogError("Wrong state!");
 		}
 		StartCoroutine(DisplayTurnChange(1.5f));
-		UpdateUI();
 	}
 
 	private void StartTurn() {
@@ -90,10 +82,6 @@ public class TurnController : MonoBehaviour {
 		else {
 			Debug.LogError("Wrong state!");
 		}
-	}
-
-	private void UpdateUI() {
-//		turnText.text = currentTurn.value + " TURN\n" + currentMode.value;
 	}
 
 	public void CheckEndTurn() {
@@ -137,7 +125,6 @@ public class TurnController : MonoBehaviour {
 			gameFinishText.text = "BATTLE WON";
 			gameFinishText.gameObject.SetActive(true);
 			gameFinishObject.SetActive(true);
-			currentOrbs.value += 3;
 			saveGameEvent.Invoke();
 			StartCoroutine(EndGame());
 		}
@@ -205,18 +192,17 @@ public class TurnController : MonoBehaviour {
 	}
 
 	private IEnumerator DisplayTurnChange(float duration) {
-//		lockControls.value = true;
-//		currentMode.value = ActionMode.NONE;
-//		selectCharacter.value = null;
-//		turnChangeText.text = currentTurn.value + " TURN";
-//		turnChangeDisplay.SetActive(true);
-//		charClicked.Invoke();
-//		yield return new WaitForSeconds(duration);
-//		turnChangeDisplay.SetActive(false);
-//		StartTurn();
-//		lockControls.value = false;
-//		charClicked.Invoke();
-		yield break;
+		lockControls.value = true;
+		currentMode.value = ActionMode.NONE;
+		selectCharacter.value = null;
+		turnChangeText.text = currentTurn.value + " TURN";
+		turnChangeDisplay.SetActive(true);
+		charClicked.Invoke();
+		yield return new WaitForSeconds(duration);
+		turnChangeDisplay.SetActive(false);
+		StartTurn();
+		lockControls.value = false;
+		charClicked.Invoke();
 	}
 
 	public void SetBusy(bool bbusy) {

@@ -13,22 +13,27 @@ public class LevelupScript : MonoBehaviour {
 	public Text hpText;
 	public Text atkText;
 	public Text spdText;
+	public Text sklText;
+	public Text lckText;
 	public Text defText;
 	public Text resText;
 
 	[Header("Levelup objects")]
-	public GameObject levelLevel;
-	public GameObject levelHp;
-	public GameObject levelAtk;
-	public GameObject levelSpd;
-	public GameObject levelDef;
-	public GameObject levelRes;
-	public GameObject levelSp;
+	public Text levelLevel;
+	public Text levelHp;
+	public Text levelAtk;
+	public Text levelSpd;
+	public Text levelSkl;
+	public Text levelLck;
+	public Text levelDef;
+	public Text levelRes;
 
 	private int _level;
 	private int _hp;
 	private int _atk;
 	private int _spd;
+	private int _skl;
+	private int _lck;
 	private int _def;
 	private int _res;
 
@@ -39,6 +44,8 @@ public class LevelupScript : MonoBehaviour {
 		hpText.text = _hp.ToString();
 		atkText.text = _atk.ToString();
 		spdText.text = _spd.ToString();
+		sklText.text = _skl.ToString();
+		lckText.text = _lck.ToString();
 		defText.text = _def.ToString();
 		resText.text = _res.ToString();
 	}
@@ -51,19 +58,23 @@ public class LevelupScript : MonoBehaviour {
 		_hp = characterStats.hp;
 		_atk = characterStats.atk;
 		_spd = characterStats.spd;
+		_skl = characterStats.skl;
+		_lck = characterStats.lck;
 		_def = characterStats.def;
 		_res = characterStats.res;
 
-		levelLevel.SetActive(false);
-		levelHp.SetActive(false);
-		levelAtk.SetActive(false);
-		levelSpd.SetActive(false);
-		levelDef.SetActive(false);
-		levelRes.SetActive(false);
-		levelSp.SetActive(false);
+		levelLevel.text = "";
+		levelHp.text = "";
+		levelAtk.text = "";
+		levelSpd.text = "";
+		levelSkl.text = "";
+		levelLck.text = "";
+		levelDef.text = "";
+		levelRes.text = "";
 	}
 
 	public IEnumerator RunLevelup(StatsContainer stats) {
+
 		yield return new WaitForSeconds(2f);
 
 		levelupCongrats.SetActive(false);
@@ -73,36 +84,48 @@ public class LevelupScript : MonoBehaviour {
 
 		_level++;
 		stats.level++;
-		levelLevel.SetActive(true);
+		levelLevel.text = "+1";
 		stats.CalculateStats();
 		yield return new WaitForSeconds(0.2f);
 
 		if (stats.hp > _hp) {
 			_hp++;
-			levelHp.SetActive(true);
+			levelHp.text = "+1";
 			yield return new WaitForSeconds(0.2f);
 		}
 		if (stats.atk > _atk) {
 			_atk++;
-			levelAtk.SetActive(true);
+			levelAtk.text = "+1";
 			yield return new WaitForSeconds(0.2f);
 		}
 		if (stats.spd > _spd) {
 			_spd++;
-			levelSpd.SetActive(true);
+			levelSpd.text = "+1";
+			yield return new WaitForSeconds(0.2f);
+		}
+		if (stats.skl > _skl) {
+			_skl++;
+			levelSkl.text = "+1";
+			yield return new WaitForSeconds(0.2f);
+		}
+		if (stats.lck > _lck) {
+			_lck++;
+			levelLck.text = "+1";
 			yield return new WaitForSeconds(0.2f);
 		}
 		if (stats.def > _def) {
 			_def++;
-			levelDef.SetActive(true);
+			levelDef.text = "+1";
 			yield return new WaitForSeconds(0.2f);
 		}
 		if (stats.res > _res) {
 			_res++;
-			levelRes.SetActive(true);
+			levelRes.text = "+1";
 			yield return new WaitForSeconds(0.2f);
 		}
 
 		yield return new WaitForSeconds(1f);
+		
+		levelupStats.SetActive(false);
 	}
 }

@@ -103,6 +103,7 @@ public class MapClicker : MonoBehaviour, IPointerDownHandler {
 		}
 
 		characterClicked.Invoke();
+		hideTooltipEvent.Invoke();
 	}
 
 	public void BeginDrag(int x, int y) {
@@ -197,7 +198,7 @@ public class MapClicker : MonoBehaviour, IPointerDownHandler {
 	public void OnPointerDown(PointerEventData eventData) {
 		hideTooltipEvent.Invoke();
 	
-		if (lockControls.value)
+		if (lockControls.value || Input.GetMouseButton(1))
 			return;
 		
 		Debug.Log("Click");

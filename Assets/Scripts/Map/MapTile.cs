@@ -92,8 +92,10 @@ public class MapTile : MonoBehaviour {
 
 	public int GetRoughness(ClassType type) {
 		for (int i = 0; i < terrain.canMoveTypes.Length; i++) {
-			if (terrain.canMoveTypes[i].type == type)
+			if (terrain.canMoveTypes[i].type == type) {
+//				Debug.Log("Movespeed:  " + terrain.canMoveTypes[i].roughness);
 				return terrain.canMoveTypes[i].roughness;
+			}
 		}
 		Debug.LogError("Forgot to add type " + type);
 		return 1;
@@ -129,7 +131,7 @@ public class MapTile : MonoBehaviour {
 	public bool CheckTile(MapTile checkTile, int currentDistance, int moveSpeed, Faction faction, ClassType classType, WeaponItem weapon, WeaponItem support, bool showAttack, bool isDanger) {
 		if (checkTile == null)
 			return false;
-
+		
 		if (checkTile.currentCharacter != null) {
 			if (checkTile.currentCharacter.faction != faction)
 				return false;

@@ -12,6 +12,8 @@ public class WeaponItem : Item {
     public ItemType itemType = ItemType.NONE;
     public int power = 5;
     public int cost;
+    public int hitRate;
+    public int critRate;
     public int range;
     public int maxCharge;
     public bool variableRange;

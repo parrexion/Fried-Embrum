@@ -33,6 +33,23 @@ public class BattleAction {
 		return attacker.GetWeapon(ItemCategory.STAFF).power;
 	}
 
+	public int GetHitRate() {
+		float statsBoost = attacker.stats.skl * 1.5f + attacker.stats.lck * 0.5f;
+		return attacker.GetWeapon(ItemCategory.WEAPON).hitRate + (int)statsBoost - GetAvoid();
+	}
+
+	private int GetAvoid() {
+		return (int)(defender.stats.spd * 1.5f + defender.stats.lck * 0.5f);
+	}
+
+	public int GetCritRate() {
+		return attacker.GetWeapon(ItemCategory.WEAPON).critRate + (int)(attacker.stats.skl * 0.5f) - GetCritAvoid();
+	}
+
+	private int GetCritAvoid() {
+		return defender.stats.lck;
+	}
+
 	public int GetAdvantage() {
 		return attacker.GetWeapon(ItemCategory.WEAPON).GetAdvantage(defender.GetWeapon(ItemCategory.WEAPON));
 	}

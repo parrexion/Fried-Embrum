@@ -19,6 +19,8 @@ public class StatsContainer {
 	public int hp;
 	public int atk;
 	public int spd;
+	public int skl;
+	public int lck;
 	public int def;
 	public int res;
 
@@ -26,6 +28,8 @@ public class StatsContainer {
 	public float iHp;
 	public float iAtk;
 	public float iSpd;
+	public float iSkl;
+	public float iLck;
 	public float iDef;
 	public float iRes;
 
@@ -33,6 +37,8 @@ public class StatsContainer {
 	public float eHp;
 	public float eAtk;
 	public float eSpd;
+	public float eSkl;
+	public float eLck;
 	public float eDef;
 	public float eRes;
 
@@ -40,6 +46,8 @@ public class StatsContainer {
 	public int bHp;
 	public int bAtk;
 	public int bSpd;
+	public int bSkl;
+	public int bLck;
 	public int bDef;
 	public int bRes;
 
@@ -72,12 +80,16 @@ public class StatsContainer {
 		iHp = saveData.iHp;
 		iAtk = saveData.iAtk;
 		iSpd = saveData.iSpd;
+		iSkl = saveData.iSkl;
+		iLck = saveData.iLck;
 		iDef = saveData.iDef;
 		iRes = saveData.iRes;
 	
 		eHp = saveData.eHp;
 		eAtk = saveData.eAtk;
 		eSpd = saveData.eSpd;
+		eSkl = saveData.eSkl;
+		eLck = saveData.eLck;
 		eDef = saveData.eDef;
 		eRes = saveData.eRes;
 		
@@ -88,6 +100,8 @@ public class StatsContainer {
 		bHp = 0;
 		bAtk = 0;
 		bSpd = 0;
+		bSkl = 0;
+		bLck = 0;
 		bDef = 0;
 		bRes = 0;
 
@@ -95,6 +109,8 @@ public class StatsContainer {
 			bHp += boosts[i].hp;
 			bAtk += boosts[i].atk;
 			bSpd += boosts[i].spd;
+			bSkl += boosts[i].skl;
+			bLck += boosts[i].lck;
 			bDef += boosts[i].def;
 			bRes += boosts[i].res;
 		}
@@ -105,11 +121,13 @@ public class StatsContainer {
 			return;
 		GenerateBoosts();
 		int calcLevel = level - 1;
-		hp = charData.hp + classData.hp + bHp + (int)(calcLevel * (classData.hp+charData.gHp) + iHp + eHp);
-		atk = charData.atk + classData.atk + bAtk + (int)(calcLevel * (classData.atk+charData.gAtk) + iAtk + eAtk);
-		spd = charData.spd + classData.spd + bSpd + (int)(calcLevel * (classData.spd+charData.gSpd) + iSpd + eSpd);
-		def = charData.def + classData.def + bDef + (int)(calcLevel * (classData.def+charData.gDef) + iDef + eDef);
-		res = charData.res + classData.res + bRes + (int)(calcLevel * (classData.res+charData.gRes) + iRes + eRes);
+		hp = charData.hp + classData.hp + bHp + (int)(calcLevel * (classData.gHp+charData.gHp) + iHp + eHp);
+		atk = charData.atk + classData.atk + bAtk + (int)(calcLevel * (classData.gAtk+charData.gAtk) + iAtk + eAtk);
+		spd = charData.spd + classData.spd + bSpd + (int)(calcLevel * (classData.gSpd+charData.gSpd) + iSpd + eSpd);
+		skl = charData.skl + classData.skl + bSkl + (int)(calcLevel * (classData.gSkl+charData.gSkl) + iSkl + eSkl);
+		lck = charData.lck + classData.lck + bLck + (int)(calcLevel * (classData.gLck+charData.gLck) + iLck + eLck);
+		def = charData.def + classData.def + bDef + (int)(calcLevel * (classData.gDef+charData.gDef) + iDef + eDef);
+		res = charData.res + classData.res + bRes + (int)(calcLevel * (classData.gRes+charData.gRes) + iRes + eRes);
 	}
 
 	public WeaponItem GetItem(ItemCategory category) {
@@ -120,6 +138,23 @@ public class StatsContainer {
 				return inventory[i];
 		}
 		return null;
+	}
+
+	public WeaponItem GetItem(int index) {
+		return (index >= inventory.Length) ? null : inventory[index];
+	}
+
+	public void EquipItem(int index) {
+		WeaponItem equip = inventory[index];
+		for (int i = 0; i < index+1; i++) {
+			WeaponItem temp = inventory[i];
+			inventory[i] = equip;
+			equip = temp;
+		}
+	}
+
+	public void UseItem(int index) {
+		
 	}
 
 	public void ClearBoosts(bool isStartTurn) {

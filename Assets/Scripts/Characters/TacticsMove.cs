@@ -232,8 +232,9 @@ public abstract class TacticsMove : MonoBehaviour {
 	}
 
 	public void TakeDamage(int damage) {
-		currentHealth -= damage;
-		damageNumber.text = damage.ToString();
+		if (damage > 0)
+			currentHealth -= damage;
+		damageNumber.text = (damage == -1) ? "Miss" : damage.ToString();
 		damageNumber.color = Color.black;
 		StartCoroutine(DamageDisplay());
 		if (currentHealth <= 0)

@@ -15,6 +15,8 @@ public class CharClass : ScriptableObject {
 	public int hp;
 	public int atk;
 	public int spd;
+	public int skl;
+	public int lck;
 	public int def;
 	public int res;
 
@@ -22,6 +24,8 @@ public class CharClass : ScriptableObject {
 	public float gHp;
 	public float gAtk;
 	public float gSpd;
+	public float gSkl;
+	public float gLck;
 	public float gDef;
 	public float gRes;
 
