@@ -30,7 +30,7 @@ public class BattleAction {
 	}
 
 	public int GetHeals() {
-		return attacker.GetWeapon(ItemCategory.STAFF).power;
+		return attacker.GetWeapon(ItemCategory.STAFF).power + attacker.stats.atk;
 	}
 
 	public int GetHitRate() {

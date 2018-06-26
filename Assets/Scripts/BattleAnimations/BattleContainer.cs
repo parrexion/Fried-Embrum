@@ -39,6 +39,12 @@ public class BattleContainer : MonoBehaviour {
 	public GameObject rightDamageObject;
 	public Text rightDamageText;
 
+	[Header("Broken Tooltip")]
+	public GameObject brokenTooltip;
+	public Image brokenIcon;
+	public Text brokenText;
+	
+	[Header("Events")]
 	public UnityEvent updateHealthEvent;
 	public UnityEvent battleFinishedEvent;
 	
@@ -62,7 +68,7 @@ public class BattleContainer : MonoBehaviour {
 		}
 		//Compare speeds
 		int spdDiff = attacker.stats.spd - defender.stats.spd;
-		if (spdDiff >= 5){
+		if (spdDiff >= 5) {
 			actions.Add(new BattleAction(true, true, attacker, defender));
 		}
 		else if (spdDiff <= -5) {
@@ -94,6 +100,13 @@ public class BattleContainer : MonoBehaviour {
 		
 		for (int i = 0; i < actions.Count; i++) {
 			BattleAction act = actions[i];
+			if (act.isDamage && act.attacker.GetInventoryTuple(ItemCategory.WEAPON).charge <= 0) {
+				continue; //Broken weapon
+			}
+			if (!act.isDamage && act.attacker.GetInventoryTuple(ItemCategory.STAFF).charge <= 0) {
+				continue; //Broken staff
+			}
+			
 			Transform attackTransform = (!useBattleAnimations.value) ? act.attacker.transform : (act.leftSide) ? leftTransform : rightTransform;
 			Transform defenseTransform = (!useBattleAnimations.value) ? act.defender.transform : (act.leftSide) ? rightTransform : leftTransform;
 			Vector3 startPos = attackTransform.localPosition;
@@ -142,6 +155,7 @@ public class BattleContainer : MonoBehaviour {
 					else
 						leftTransform.GetComponent<SpriteRenderer>().color = new Color(0.4f,0.4f,0.4f);
 				}
+				act.attacker.ReduceWeaponCharge(ItemCategory.WEAPON);
 			}
 			else {
 				if (act.attacker.GetWeapon(ItemCategory.STAFF).itemType == ItemType.HEAL) {
@@ -154,6 +168,8 @@ public class BattleContainer : MonoBehaviour {
 					act.defender.ReceiveBuff(act.attacker.GetWeapon(ItemCategory.STAFF).boost, true, true);
 					Debug.Log("Boost them up!");
 				}
+				act.attacker.ReduceWeaponCharge(ItemCategory.STAFF);
+				_attackerDealtDamage = true;
 			}
 			//Update health
 			leftHealth.fillAmount = (act.leftSide) ? act.attacker.GetHealthPercent() : act.defender.GetHealthPercent();
@@ -185,6 +201,52 @@ public class BattleContainer : MonoBehaviour {
 		//Handle exp
 		yield return StartCoroutine(ShowExpGain());
 		
+		//Broken weapons
+		if (actions[0].isDamage) {
+			InventoryTuple invTup = actions[0].attacker.GetInventoryTuple(ItemCategory.WEAPON);
+			if (invTup != null && invTup.charge <= 0) {
+				brokenIcon.sprite = invTup.item.icon;
+				brokenText.text = invTup.item.itemName + " broke!";
+				brokenTooltip.SetActive(true);
+				yield return new WaitForSeconds(2f);
+				brokenTooltip.SetActive(false);
+				yield return new WaitForSeconds(0.5f);
+				actions[0].attacker.stats.CleanupInventory();
+			}
+			invTup = actions[0].defender.GetInventoryTuple(ItemCategory.WEAPON);
+			if (invTup != null && invTup.charge <= 0) {
+				brokenIcon.sprite = invTup.item.icon;
+				brokenText.text = invTup.item.itemName + " broke!";
+				brokenTooltip.SetActive(true);
+				yield return new WaitForSeconds(2f);
+				brokenTooltip.SetActive(false);
+				yield return new WaitForSeconds(0.5f);
+				actions[0].defender.stats.CleanupInventory();
+			}
+		}
+		else {
+			InventoryTuple invTup = actions[0].attacker.GetInventoryTuple(ItemCategory.STAFF);
+			if (invTup != null && invTup.charge <= 0) {
+				brokenIcon.sprite = invTup.item.icon;
+				brokenText.text = invTup.item.itemName + " broke!";
+				brokenTooltip.SetActive(true);
+				yield return new WaitForSeconds(2f);
+				brokenTooltip.SetActive(false);
+				yield return new WaitForSeconds(0.5f);
+				actions[0].attacker.stats.CleanupInventory();
+			}
+			invTup = actions[0].defender.GetInventoryTuple(ItemCategory.STAFF);
+			if (invTup != null && invTup.charge <= 0) {
+				brokenIcon.sprite = invTup.item.icon;
+				brokenText.text = invTup.item.itemName + " broke!";
+				brokenTooltip.SetActive(true);
+				yield return new WaitForSeconds(2f);
+				brokenTooltip.SetActive(false);
+				yield return new WaitForSeconds(0.5f);
+				actions[0].defender.stats.CleanupInventory();
+			}
+		}
+		
 		//Give debuffs
 		if (actions[0].isDamage) {
 			actions[0].attacker.ActivateSkills(Activation.POSTCOMBAT, actions[0].defender);
@@ -211,7 +273,7 @@ public class BattleContainer : MonoBehaviour {
 	private IEnumerator DamageDisplay(bool leftSide, int damage, bool isDamage, bool isCrit) {
 		GameObject damageObject = (leftSide) ? rightDamageObject : leftDamageObject;
 		Text damageText = (leftSide) ? rightDamageText : leftDamageText;
-		damageText.color = (isDamage) ? Color.black : Color.white;
+		damageText.color = (isDamage) ? Color.black : new Color(0,0.5f,0);
 		damageText.text = (damage != -1) ? damage.ToString() : "Miss";
 		damageObject.transform.localScale = (isCrit) ? new Vector3(2, 2, 2) : new Vector3(1, 1, 1);
 		damageObject.gameObject.SetActive(true);
@@ -231,10 +293,9 @@ public class BattleContainer : MonoBehaviour {
 			}
 		}
 		
-		yield return new WaitForSeconds(0.5f);
-		
 		if (player == null) {
 			Debug.Log("Nothing to give exp for");
+			yield return new WaitForSeconds(0.5f);
 			yield break;
 		}
 
@@ -244,6 +305,8 @@ public class BattleContainer : MonoBehaviour {
 			expMeter.gameObject.SetActive(true);
 			expMeter.currentExp = player.stats.currentExp;
 			Debug.Log("Exp is currently: " + player.stats.currentExp);
+			yield return new WaitForSeconds(0.5f);
+			
 			while(exp > 0) {
 				exp--;
 				expMeter.currentExp++;

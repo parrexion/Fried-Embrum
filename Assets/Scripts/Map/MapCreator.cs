@@ -17,11 +17,6 @@ public class MapCreator : MonoBehaviour {
 	public Transform playerParent;
 	public Transform playerPrefab;
 	public SaveListVariable availableCharacters;
-	
-	[Header("Libraries")]
-	public ItemLibrary itemLibrary;
-	public ClassLibrary classLibrary;
-	public CharacterLibrary characterLibrary;
 
 	public MapTile[] tiles;
 
@@ -118,6 +113,7 @@ public class MapCreator : MonoBehaviour {
 	}
 	
 	public void ShowSupportTiles(MapTile startTile, WeaponItem item, Faction faction, bool isDanger) {
+
 		if (isDanger)
 			return;
 		
@@ -228,7 +224,13 @@ public class MapCreator : MonoBehaviour {
 			tactics.stats.level = pos.level;
 			tactics.stats.charData = pos.stats;
 			tactics.stats.classData = pos.stats.charClass;
-			tactics.stats.inventory = pos.inventory;
+			tactics.stats.inventory = new InventoryTuple[StatsContainer.INVENTORY_SIZE];
+			for (int j = 0; j < pos.inventory.Length; j++) {
+				tactics.stats.inventory[j] = new InventoryTuple() {
+					item = pos.inventory[j],
+					charge = pos.inventory[j].maxCharge
+				};
+			}
 			tactics.stats.skills = pos.skills;
 			tactics.Setup();
 			

@@ -5,6 +5,8 @@ using Random = UnityEngine.Random;
 [System.Serializable]
 public class StatsContainer {
 
+	public const int INVENTORY_SIZE = 5;
+	
 	[Header("Character Info")]
 	public CharacterStats charData;
 	public CharClass classData;
@@ -12,7 +14,7 @@ public class StatsContainer {
 	[Header("Player stuff")]
 	public int level;
 	public int currentExp;
-	public WeaponItem[] inventory;
+	public InventoryTuple[] inventory;
 	public CharacterSkill[] skills;
 
 	[Header("Current Stats")]
@@ -68,9 +70,12 @@ public class StatsContainer {
 			return;
 		currentExp = saveData.currentExp;
 
-		inventory = new WeaponItem[saveData.inventory.Length];
+		inventory = new InventoryTuple[INVENTORY_SIZE];
 		for (int i = 0; i < saveData.inventory.Length; i++) {
-			inventory[i] = (WeaponItem) iLib.GetEntry(saveData.inventory[i]);
+			inventory[i] = new InventoryTuple {
+				item = (WeaponItem) iLib.GetEntry(saveData.inventory[i]),
+				charge = saveData.invCharges[i]
+			};
 		}
 		skills = new CharacterSkill[saveData.skills.Length];
 		for (int i = 0; i < saveData.skills.Length; i++) {
@@ -134,27 +139,89 @@ public class StatsContainer {
 		for (int i = 0; i < inventory.Length; i++) {
 			if (inventory[i] == null)
 				continue;
-			if (inventory[i].itemCategory == category)
+			if (inventory[i].item.itemCategory == category)
+				return inventory[i].item;
+		}
+		return null;
+	}
+
+	public InventoryTuple GetItemTuple(ItemCategory category) {
+		for (int i = 0; i < inventory.Length; i++) {
+			if (inventory[i] == null)
+				continue;
+			if (inventory[i].item.itemCategory == category)
 				return inventory[i];
 		}
 		return null;
 	}
 
+	public void ReduceItemCharge(ItemCategory category) {
+		for (int i = 0; i < inventory.Length; i++) {
+			if (inventory[i] == null)
+				continue;
+			if (inventory[i].item.itemCategory == category)
+				inventory[i].charge--;
+			return;
+		}
+	}
+
+	public void CleanupInventory() {
+		int pos = 0;
+		for (int i = 0; i < inventory.Length; i++) {
+			if (inventory[i] == null)
+				continue;
+			if (inventory[i].charge <= 0) {
+				inventory[i] = null;
+				Debug.Log("Weapon broke!");
+			}
+			else {
+				inventory[pos] = inventory[i];
+				inventory[i] = null;
+				pos++;
+			}
+		}
+		Debug.Log("Cleaned up inventory");
+	}
+
 	public WeaponItem GetItem(int index) {
-		return (index >= inventory.Length) ? null : inventory[index];
+		return (index >= inventory.Length) ? null : inventory[index].item;
 	}
 
 	public void EquipItem(int index) {
-		WeaponItem equip = inventory[index];
+		InventoryTuple equip = inventory[index];
 		for (int i = 0; i < index+1; i++) {
-			WeaponItem temp = inventory[i];
+			InventoryTuple temp = inventory[i];
 			inventory[i] = equip;
 			equip = temp;
 		}
 	}
 
-	public void UseItem(int index) {
+	public void UseItem(int index, TacticsMove player) {
+		InventoryTuple useItem = inventory[index];
+		if (useItem.item.itemType == ItemType.CHEAL) {
+			player.TakeHeals(useItem.item.power);
+		}
+		else if (useItem.item.itemType == ItemType.CSTATS) {
+			Boost boost = useItem.item.boost;
+			iHp += boost.hp;
+			iAtk += boost.atk;
+			iSpd += boost.spd;
+			iSkl += boost.skl;
+			iLck += boost.lck;
+			iDef += boost.def;
+			iRes += boost.res;
+			CalculateStats();
+		}
+		else {
+			Debug.LogWarning("WTF!?");
+			return;
+		}
+
+		useItem.charge--;
+		if (useItem.charge <= 0)
+			inventory[index] = null;
 		
+		player.End();
 	}
 
 	public void ClearBoosts(bool isStartTurn) {
@@ -206,4 +273,10 @@ public class StatsContainer {
 
 		return false;
 	}
+}
+
+
+public class InventoryTuple {
+	public WeaponItem item;
+	public int charge;
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum BoostType { SINGLE, PASSIVE, DECREASE, ENDTURN }
+public enum BoostType { SINGLE, PASSIVE, DECREASE, ENDTURN, OTHER = 99 }
 
 [System.Serializable]
 public class Boost {

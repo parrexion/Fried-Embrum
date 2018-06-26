@@ -11,6 +11,7 @@ public class CharacterSaveData {
 
 	[Header("Inventory and skills")]
 	public string[] inventory;
+	public int[] invCharges;
 	public string[] skills;
 	
 	[Header("IV values")]
@@ -45,9 +46,11 @@ public class CharacterSaveData {
 		currentExp = cont.currentExp;
 
 		inventory = new string[cont.inventory.Length];
+		invCharges = new int[cont.inventory.Length];
 		skills = new string[cont.skills.Length];
 		for (int i = 0; i < cont.inventory.Length; i++) {
-			inventory[i] = cont.inventory[i].id;
+			inventory[i] = cont.inventory[i].item.id;
+			invCharges[i] = cont.inventory[i].charge;
 		}
 		for (int i = 0; i < cont.skills.Length; i++) {
 			skills[i] = cont.skills[i].id;

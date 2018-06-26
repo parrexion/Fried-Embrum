@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum ItemCategory { WEAPON, STAFF, CONSUME }
-public enum ItemType {NONE, SWORD, LANCE, AXE, MAGIC, THROW, BOW, HEAL, BUFF, CONSUME}
+public enum ItemType {NONE, SWORD, LANCE, AXE, MAGIC, THROW, BOW, HEAL, BUFF, CHEAL, CSTATS}
 
 [CreateAssetMenu]
 public class WeaponItem : Item {

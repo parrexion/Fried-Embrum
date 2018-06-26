@@ -126,12 +126,15 @@ public class SimpleCharacterUI : MonoBehaviour {
 			if (i >= stats.inventory.Length || stats.inventory[i] == null) {
 				inventoryFields[i].color = Color.black;
 				inventoryFields[i].text = "---";
-				inventoryValues[i].text = "";
+				inventoryValues[i].text = " ";
 			}
 			else {
-				inventoryFields[i].color = (stats.inventory[i].droppable) ? Color.green : Color.black;
-				inventoryFields[i].text = stats.inventory[i].itemName;
-				inventoryValues[i].text = stats.inventory[i].maxCharge.ToString();
+				InventoryTuple tuple = stats.inventory[i];
+				inventoryFields[i].color = (tuple.item.droppable) ? Color.green : Color.black;
+				inventoryFields[i].text = tuple.item.itemName;
+				inventoryValues[i].text = (tuple.item.maxCharge >= 0) ? tuple.charge.ToString() : " ";
+				if (tuple.item.itemCategory == ItemCategory.CONSUME && tuple.item.maxCharge == 1)
+					inventoryValues[i].text = " ";
 			}
 		}
 	}

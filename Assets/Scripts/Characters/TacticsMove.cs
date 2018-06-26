@@ -310,12 +310,12 @@ public abstract class TacticsMove : MonoBehaviour {
 	}
 
 	public bool CanAttack() {
-		WeaponItem weapon = GetWeapon(ItemCategory.WEAPON);
-		if (weapon == null)
+		WeaponItem invItem = GetWeapon(ItemCategory.WEAPON);
+		if (invItem == null)
 			return false;
 		for (int i = 0; i < enemyList.values.Count; i++) {
 			int distance = MapCreator.DistanceTo(this, enemyList.values[i]);
-			if (weapon.InRange(distance)) {
+			if (invItem.InRange(distance)) {
 				return true;
 			}
 		}
@@ -323,15 +323,15 @@ public abstract class TacticsMove : MonoBehaviour {
 	}
 
 	public bool CanSupport() {
-		WeaponItem support = GetWeapon(ItemCategory.STAFF);
-		if (support == null)
+		WeaponItem invItem = GetWeapon(ItemCategory.STAFF);
+		if (invItem == null)
 			return false;
 		for (int i = 0; i < playerList.values.Count; i++) {
-			bool usable = (playerList.values[i].IsInjured() || GetWeapon(ItemCategory.STAFF).itemType == ItemType.BUFF);
+			bool usable = (playerList.values[i].IsInjured() || invItem.itemType == ItemType.BUFF);
 			if (playerList.values[i] == this || !usable)
 				continue;
 			int distance = MapCreator.DistanceTo(this, playerList.values[i]);
-			if (support.InRange(distance)) {
+			if (invItem.InRange(distance)) {
 				return true;
 			}
 		}
@@ -408,6 +408,14 @@ public abstract class TacticsMove : MonoBehaviour {
 
 	public WeaponItem GetWeapon(ItemCategory category) {
 		return stats.GetItem(category);
+	}
+	
+	public InventoryTuple GetInventoryTuple(ItemCategory category) {
+		return stats.GetItemTuple(category);
+	}
+	
+	public void ReduceWeaponCharge(ItemCategory category) {
+		stats.ReduceItemCharge(category);
 	}
 
 	public void ActivateSkills(Activation activation, TacticsMove enemy) {
