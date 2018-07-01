@@ -125,7 +125,7 @@ public class LevelupScript : MonoBehaviour {
 		}
 
 		yield return new WaitForSeconds(1f);
-		
+
 		levelupStats.SetActive(false);
 	}
 }

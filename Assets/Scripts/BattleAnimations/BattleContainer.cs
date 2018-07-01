@@ -156,6 +156,7 @@ public class BattleContainer : MonoBehaviour {
 						leftTransform.GetComponent<SpriteRenderer>().color = new Color(0.4f,0.4f,0.4f);
 				}
 				act.attacker.ReduceWeaponCharge(ItemCategory.WEAPON);
+				act.attacker.stats.GiveWpnExp(act.attacker.GetWeapon(ItemCategory.WEAPON));
 			}
 			else {
 				if (act.attacker.GetWeapon(ItemCategory.STAFF).itemType == ItemType.HEAL) {
@@ -169,6 +170,7 @@ public class BattleContainer : MonoBehaviour {
 					Debug.Log("Boost them up!");
 				}
 				act.attacker.ReduceWeaponCharge(ItemCategory.STAFF);
+				act.attacker.stats.GiveWpnExp(act.attacker.GetWeapon(ItemCategory.STAFF));
 				_attackerDealtDamage = true;
 			}
 			//Update health
@@ -202,51 +204,16 @@ public class BattleContainer : MonoBehaviour {
 		yield return StartCoroutine(ShowExpGain());
 		
 		//Broken weapons
-		if (actions[0].isDamage) {
-			InventoryTuple invTup = actions[0].attacker.GetInventoryTuple(ItemCategory.WEAPON);
-			if (invTup != null && invTup.charge <= 0) {
-				brokenIcon.sprite = invTup.item.icon;
-				brokenText.text = invTup.item.itemName + " broke!";
-				brokenTooltip.SetActive(true);
-				yield return new WaitForSeconds(2f);
-				brokenTooltip.SetActive(false);
-				yield return new WaitForSeconds(0.5f);
-				actions[0].attacker.stats.CleanupInventory();
-			}
-			invTup = actions[0].defender.GetInventoryTuple(ItemCategory.WEAPON);
-			if (invTup != null && invTup.charge <= 0) {
-				brokenIcon.sprite = invTup.item.icon;
-				brokenText.text = invTup.item.itemName + " broke!";
-				brokenTooltip.SetActive(true);
-				yield return new WaitForSeconds(2f);
-				brokenTooltip.SetActive(false);
-				yield return new WaitForSeconds(0.5f);
-				actions[0].defender.stats.CleanupInventory();
-			}
-		}
-		else {
-			InventoryTuple invTup = actions[0].attacker.GetInventoryTuple(ItemCategory.STAFF);
-			if (invTup != null && invTup.charge <= 0) {
-				brokenIcon.sprite = invTup.item.icon;
-				brokenText.text = invTup.item.itemName + " broke!";
-				brokenTooltip.SetActive(true);
-				yield return new WaitForSeconds(2f);
-				brokenTooltip.SetActive(false);
-				yield return new WaitForSeconds(0.5f);
-				actions[0].attacker.stats.CleanupInventory();
-			}
-			invTup = actions[0].defender.GetInventoryTuple(ItemCategory.STAFF);
-			if (invTup != null && invTup.charge <= 0) {
-				brokenIcon.sprite = invTup.item.icon;
-				brokenText.text = invTup.item.itemName + " broke!";
-				brokenTooltip.SetActive(true);
-				yield return new WaitForSeconds(2f);
-				brokenTooltip.SetActive(false);
-				yield return new WaitForSeconds(0.5f);
-				actions[0].defender.stats.CleanupInventory();
-			}
-		}
+		yield return StartCoroutine(HandleBrokenWeapons());
 		
+		//Drop Items
+		if (!actions[0].attacker.IsAlive() && actions[0].attacker.faction == Faction.ENEMY) {
+			yield return StartCoroutine(DropItems(actions[0].attacker, actions[0].defender));
+		}
+		else if (!actions[0].defender.IsAlive() && actions[0].defender.faction == Faction.ENEMY) {
+			yield return StartCoroutine(DropItems(actions[0].defender, actions[0].attacker));
+		}
+
 		//Give debuffs
 		if (actions[0].isDamage) {
 			actions[0].attacker.ActivateSkills(Activation.POSTCOMBAT, actions[0].defender);
@@ -317,6 +284,11 @@ public class BattleContainer : MonoBehaviour {
 					levelupScript.SetupStats(player.stats.level,player.stats);
 					Debug.Log("LEVELUP!");
 					yield return StartCoroutine(levelupScript.RunLevelup(player.stats));
+					CharacterSkill skill = player.stats.classData.AwardSkills(player.stats.level);
+					if (skill) {
+						player.stats.GainSkill(skill);
+						yield return StartCoroutine(ShowPopup(skill.icon,  "gained: " + skill.itemName));
+					}
 					expMeter.gameObject.SetActive(true);
 				}
 				yield return null;
@@ -326,6 +298,58 @@ public class BattleContainer : MonoBehaviour {
 			player.stats.currentExp = expMeter.currentExp;
 			Debug.Log("Exp is now: " + player.stats.currentExp);
 		}
+	}
+
+	private IEnumerator HandleBrokenWeapons() {
+		//Broken weapons
+		if (actions[0].isDamage) {
+			InventoryTuple invTup = actions[0].attacker.GetInventoryTuple(ItemCategory.WEAPON);
+			if (invTup != null && invTup.charge <= 0) {
+				yield return StartCoroutine(ShowPopup(invTup.item.icon, invTup.item.itemName + " broke!"));
+				actions[0].attacker.stats.CleanupInventory();
+			}
+			invTup = actions[0].defender.GetInventoryTuple(ItemCategory.WEAPON);
+			if (invTup != null && invTup.charge <= 0) {
+				yield return StartCoroutine(ShowPopup(invTup.item.icon, invTup.item.itemName + " broke!"));
+				actions[0].defender.stats.CleanupInventory();
+			}
+		}
+		else {
+			InventoryTuple invTup = actions[0].attacker.GetInventoryTuple(ItemCategory.STAFF);
+			if (invTup != null && invTup.charge <= 0) {
+				yield return StartCoroutine(ShowPopup(invTup.item.icon, invTup.item.itemName + " broke!"));
+				actions[0].attacker.stats.CleanupInventory();
+			}
+			invTup = actions[0].defender.GetInventoryTuple(ItemCategory.STAFF);
+			if (invTup != null && invTup.charge <= 0) {
+				yield return StartCoroutine(ShowPopup(invTup.item.icon, invTup.item.itemName + " broke!"));
+				actions[0].defender.stats.CleanupInventory();
+			}
+		}
+	}
+
+	private IEnumerator DropItems(TacticsMove dropper, TacticsMove receiver) {
+		InventoryTuple[] inventory = dropper.stats.inventory;
+		for (int i = 0; i < inventory.Length; i++) {
+			if (inventory[i] == null || !inventory[i].droppable)
+				continue;
+			
+			Debug.Log("Dropped item:  " + inventory[i].item.itemName);
+			inventory[i].droppable = false;
+			receiver.stats.GainItem(inventory[i]);
+
+			yield return StartCoroutine(ShowPopup(inventory[i].item.icon, "Gained " + inventory[i].item.itemName));
+		}
+		yield break;
+	}
+
+	private IEnumerator ShowPopup(Sprite icon, string text) {
+		brokenIcon.sprite = icon;
+		brokenText.text = text;
+		brokenTooltip.SetActive(true);
+		yield return new WaitForSeconds(2f);
+		brokenTooltip.SetActive(false);
+		yield return new WaitForSeconds(0.5f);
 	}
 
 	private bool GenerateHitNumber(int hit) {

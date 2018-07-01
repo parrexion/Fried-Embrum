@@ -11,13 +11,13 @@ public class WeaponItem : Item {
     public ItemCategory itemCategory = ItemCategory.WEAPON;
     public ItemType itemType = ItemType.NONE;
     public int power = 5;
-    public int cost;
+    public int maxCharge;
+    public int skillReq;
     public int hitRate;
     public int critRate;
     public int range;
-    public int maxCharge;
     public bool variableRange;
-    public bool droppable;
+    public int cost;
     
     [Space(10)]
     
@@ -27,6 +27,19 @@ public class WeaponItem : Item {
 
     public bool InRange(int distance) {
         return (distance == range || (distance < range && variableRange));
+    }
+
+    public bool CanUse(StatsContainer stats) {
+        if (itemCategory == ItemCategory.WEAPON) {
+            int skill = stats.wpnSkills[(int)itemType];
+            return (skill != 0 && skill >= skillReq);
+        }
+        else if (itemCategory == ItemCategory.STAFF) {
+            int skill = stats.wpnSkills[stats.wpnSkills.Length-1];
+            return (skill != 0 && skill >= skillReq);
+        }
+
+        return true;
     }
 
     public int GetAdvantage(WeaponItem otherWeapon) {
@@ -62,7 +75,7 @@ public class WeaponItem : Item {
         return 0;
     }
 
-    public Color GetTypeColor() {
+    public static Color GetTypeColor(ItemType itemType) {
         switch (itemType)
         {
             case ItemType.SWORD:
@@ -75,6 +88,31 @@ public class WeaponItem : Item {
             case ItemType.BOW:
                 return Color.green;
             default: return Color.white;
+        }
+    }
+
+    public static string GetRankLetter(int level) {
+        if (level == -1) {
+            return "-";
+        }
+        else if (level == 0) {
+            Debug.LogWarning("Weapon skill is 0");
+                return "yo man!";
+        }
+        else if (level >= 400) {
+            return "A";
+        }
+        else if (level >= 300) {
+            return "B";
+        }
+        else if (level >= 200) {
+            return "C";
+        }
+        else if (level >= 100) {
+            return "D";
+        }
+        else {
+            return "E";
         }
     }
 }

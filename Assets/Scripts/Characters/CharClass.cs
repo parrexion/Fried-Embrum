@@ -29,8 +29,27 @@ public class CharClass : ScriptableObject {
 	public float gDef;
 	public float gRes;
 
-	[Header("Skill Gains")]
+	[Header("Skills")]
+	public ItemType[] weaponSkills;
 	public SkillTuple[] skillGains;
+	
+
+	public int[] GenerateBaseWpnSkill() {
+		int[] res = new int[StatsContainer.WPN_SKILLS];
+		for (int i = 0; i < weaponSkills.Length; i++) {
+			res[(int)weaponSkills[i]] = 1;
+		}
+		return res;
+	}
+
+	public CharacterSkill AwardSkills(int level) {
+		for (int i = 0; i < skillGains.Length; i++) {
+			if (skillGains[i].level == level) {
+				return skillGains[i].skill;
+			}
+		}
+		return null;
+	}
 }
 
 [System.Serializable]

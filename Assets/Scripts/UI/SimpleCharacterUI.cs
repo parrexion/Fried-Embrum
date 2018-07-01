@@ -16,7 +16,10 @@ public class SimpleCharacterUI : MonoBehaviour {
 	
 	public StatsType currentStats;
 	public GameObject background;
-	
+	public Sprite noSkillImage;
+	public Sprite[] weaknessImages;
+	public Sprite[] weaponSkillImages;
+
 	[Header("Basic Stats")]
 	public GameObject basicObject;
 	public Image colorBackground;
@@ -24,13 +27,20 @@ public class SimpleCharacterUI : MonoBehaviour {
 	public Text characterName;
 	public Text currentHpText;
 	public Image healthBar;
+	public Image weakIcon1;
+	public Image weakIcon2;
 	public Image wpnIcon;
 	public Text wpnName;
 	public Image[] skillImages;
+	public Text hitText;
+	public Text pwrText;
+	public Text critText;
+	public Text avoidText;
 
 	[Header("Stats Stats")]
 	public GameObject statsObject;
 	public Text levelText;
+	public Text expText;
 	public Text hpText;
 	public Text atkText;
 	public Text spdText;
@@ -38,9 +48,12 @@ public class SimpleCharacterUI : MonoBehaviour {
 	public Text lckText;
 	public Text defText;
 	public Text resText;
+	public Text movText;
 
 	[Header("Inventory Stats")]
 	public GameObject inventoryObject;
+	public Image[] weaponSkillIcons;
+	public Text[] weaponSkillRating;
 	public Text[] inventoryFields;
 	public Text[] inventoryValues;
 
@@ -73,19 +86,28 @@ public class SimpleCharacterUI : MonoBehaviour {
 		portrait.sprite = stats.charData.portrait;
 		currentHpText.text = tactics.currentHealth + " / " + stats.hp;
 		healthBar.fillAmount = tactics.GetHealthPercent();
-
-		for (int i = 0; i < skillImages.Length; i++) {
-			if (i >= stats.skills.Length) {
-				skillImages[i].enabled = false;
-			}
-			else {
-				skillImages[i].sprite = stats.skills[i].icon;
-				skillImages[i].enabled = true;
-			}
-		}
+		weakIcon1.sprite = weaknessImages[(int)stats.classData.classType];
+		weakIcon1.enabled = (weakIcon1.sprite != null);
 
 		wpnIcon.sprite = (stats.GetItem(ItemCategory.WEAPON) != null) ? stats.GetItem(ItemCategory.WEAPON).icon : null;
 		wpnName.text = (stats.GetItem(ItemCategory.WEAPON) != null) ? stats.GetItem(ItemCategory.WEAPON).itemName : "";
+		
+		for (int i = 0; i < skillImages.Length; i++) {
+			if (i >= stats.skills.Length || stats.skills[i] == null) {
+				skillImages[i].sprite = noSkillImage;
+			}
+			else {
+				skillImages[i].sprite = stats.skills[i].icon;
+			}
+		}
+
+		int hitrate = stats.GetHitRate();
+		pwrText.text = (hitrate != -1) ? "Hit:  " + hitrate : "Hit:  --";
+		int pwer = stats.GetAttackPower();
+		hitText.text = (pwer != -1) ? "Pwr:  " + pwer : "Pwr:  --";
+		int critrate = stats.GetCriticalRate();
+		critText.text = (critrate != -1) ? "Crit:   " + stats.GetCriticalRate() : "Crit:   --";
+		avoidText.text = "Avo:  " + stats.GetAvoid();
 		
 		statsObject.SetActive(false);
 		basicObject.SetActive(true);
@@ -107,6 +129,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 		resText.color = (stats.bRes != 0) ? Color.green : Color.black;
 		
 		levelText.text = stats.level.ToString();
+		expText.text = stats.currentExp.ToString();
 		hpText.text = stats.hp.ToString();
 		atkText.text = stats.atk.ToString();
 		spdText.text = stats.spd.ToString();
@@ -114,6 +137,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 		lckText.text = stats.lck.ToString();
 		defText.text = stats.def.ToString();
 		resText.text = stats.res.ToString();
+		movText.text = stats.classData.movespeed.ToString();
 	}
 
 	private void ShowInventoryStats(TacticsMove tactics) {
@@ -121,6 +145,17 @@ public class SimpleCharacterUI : MonoBehaviour {
 		statsObject.SetActive(false);
 		basicObject.SetActive(false);
 		inventoryObject.SetActive(true);
+
+		for (int i = 0; i < weaponSkillIcons.Length; i++) {
+			if (i >= stats.classData.weaponSkills.Length){
+				weaponSkillIcons[i].transform.parent.gameObject.SetActive(false);
+			}
+			else {
+				weaponSkillIcons[i].transform.parent.gameObject.SetActive(true);
+				weaponSkillIcons[i].sprite = weaponSkillImages[(int)stats.classData.weaponSkills[i]];
+				weaponSkillRating[i].text = WeaponItem.GetRankLetter(stats.wpnSkills[(int)stats.classData.weaponSkills[i]]);
+			}
+		}
 		
 		for (int i = 0; i < 5; i++) {
 			if (i >= stats.inventory.Length || stats.inventory[i] == null) {
@@ -130,7 +165,8 @@ public class SimpleCharacterUI : MonoBehaviour {
 			}
 			else {
 				InventoryTuple tuple = stats.inventory[i];
-				inventoryFields[i].color = (tuple.item.droppable) ? Color.green : Color.black;
+				inventoryFields[i].color = (tuple.droppable) ? Color.green : 
+							(tuple.item.CanUse(stats)) ? Color.black : Color.grey;
 				inventoryFields[i].text = tuple.item.itemName;
 				inventoryValues[i].text = (tuple.item.maxCharge >= 0) ? tuple.charge.ToString() : " ";
 				if (tuple.item.itemCategory == ItemCategory.CONSUME && tuple.item.maxCharge == 1)
@@ -145,6 +181,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 			nextPage = nextPage + 3;
 		
 		currentStats = (StatsType) (nextPage % 3);
+		invController.HideTooltip();
 		UpdateUI();
 	}
 }

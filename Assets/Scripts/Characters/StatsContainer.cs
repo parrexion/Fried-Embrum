@@ -6,6 +6,8 @@ using Random = UnityEngine.Random;
 public class StatsContainer {
 
 	public const int INVENTORY_SIZE = 5;
+	public const int SKILL_SIZE = 5;
+	public const int WPN_SKILLS = 8;
 	
 	[Header("Character Info")]
 	public CharacterStats charData;
@@ -14,6 +16,7 @@ public class StatsContainer {
 	[Header("Player stuff")]
 	public int level;
 	public int currentExp;
+	public int[] wpnSkills = new int[WPN_SKILLS];
 	public InventoryTuple[] inventory;
 	public CharacterSkill[] skills;
 
@@ -70,18 +73,22 @@ public class StatsContainer {
 			return;
 		currentExp = saveData.currentExp;
 
+		wpnSkills = new int[WPN_SKILLS];
+		for (int i = 0; i < saveData.wpnSkills.Length; i++) {
+			wpnSkills[i] = saveData.wpnSkills[i];
+		}
 		inventory = new InventoryTuple[INVENTORY_SIZE];
-		for (int i = 0; i < saveData.inventory.Length; i++) {
+		for (int i = 0; i < saveData.inventory.Count; i++) {
 			inventory[i] = new InventoryTuple {
 				item = (WeaponItem) iLib.GetEntry(saveData.inventory[i]),
 				charge = saveData.invCharges[i]
 			};
 		}
-		skills = new CharacterSkill[saveData.skills.Length];
-		for (int i = 0; i < saveData.skills.Length; i++) {
+		skills = new CharacterSkill[SKILL_SIZE];
+		for (int i = 0; i < saveData.skills.Count; i++) {
 			skills[i] = (CharacterSkill) iLib.GetEntry(saveData.skills[i]);
 		}
-		
+
 		iHp = saveData.iHp;
 		iAtk = saveData.iAtk;
 		iSpd = saveData.iSpd;
@@ -135,11 +142,41 @@ public class StatsContainer {
 		res = charData.res + classData.res + bRes + (int)(calcLevel * (classData.gRes+charData.gRes) + iRes + eRes);
 	}
 
+	public int GetHitRate() {
+		WeaponItem item = GetItem(ItemCategory.WEAPON);
+		if (!item)
+			return -1;
+		float statsBoost = skl * 1.5f + lck * 0.5f;
+		return (int)statsBoost + item.hitRate;
+	}
+	
+	public int GetAttackPower() {
+		WeaponItem item = GetItem(ItemCategory.WEAPON);
+		if (!item)
+			return -1;
+		return item.power + atk;
+	}
+
+	public int GetCriticalRate() {
+		WeaponItem item = GetItem(ItemCategory.WEAPON);
+		if (!item)
+			return -1;
+		return item.critRate + (int)(skl * 0.5f);
+	}
+	
+	public int GetAvoid() {
+		return (int)(spd * 1.5f + lck * 0.5f);
+	}
+
+	public int GetCritAvoid() {
+		return lck;
+	}
+
 	public WeaponItem GetItem(ItemCategory category) {
 		for (int i = 0; i < inventory.Length; i++) {
 			if (inventory[i] == null)
 				continue;
-			if (inventory[i].item.itemCategory == category)
+			if (inventory[i].item.itemCategory == category && inventory[i].item.CanUse(this))
 				return inventory[i].item;
 		}
 		return null;
@@ -149,7 +186,7 @@ public class StatsContainer {
 		for (int i = 0; i < inventory.Length; i++) {
 			if (inventory[i] == null)
 				continue;
-			if (inventory[i].item.itemCategory == category)
+			if (inventory[i].item.itemCategory == category && inventory[i].item.CanUse(this))
 				return inventory[i];
 		}
 		return null;
@@ -175,8 +212,9 @@ public class StatsContainer {
 				Debug.Log("Weapon broke!");
 			}
 			else {
-				inventory[pos] = inventory[i];
-				inventory[i] = null;
+				InventoryTuple temp = inventory[i];
+				inventory[i] = inventory[pos];
+				inventory[pos] = temp;
 				pos++;
 			}
 		}
@@ -218,10 +256,37 @@ public class StatsContainer {
 		}
 
 		useItem.charge--;
-		if (useItem.charge <= 0)
+		if (useItem.charge <= 0) {
 			inventory[index] = null;
+			CleanupInventory();
+		}
 		
 		player.End();
+	}
+
+	public void DropItem(int index) {
+		inventory[index] = null;
+		CleanupInventory();
+	}
+
+	public bool GainItem(InventoryTuple pickup) {
+		for (int i = 0; i < inventory.Length; i++) {
+			if (inventory[i] == null) {
+				inventory[i] = pickup;
+				Debug.Log("Added the item to position " + i);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void GiveWpnExp(WeaponItem usedItem) {
+		if (usedItem.itemCategory == ItemCategory.WEAPON) {
+            wpnSkills[(int)usedItem.itemType] += 3;
+		}
+		else if (usedItem.itemCategory == ItemCategory.STAFF) {
+            wpnSkills[(int)ItemType.HEAL] += 3;
+		}
 	}
 
 	public void ClearBoosts(bool isStartTurn) {
@@ -237,20 +302,43 @@ public class StatsContainer {
 		CalculateStats();
 	}
 
+	
+
+	public bool GainSkill(CharacterSkill skill) {
+		
+		Debug.Log("Adding skill " + skill.itemName);
+		for (int i = 0; i < skills.Length; i++) {
+			if (skills[i] == null) {
+				skills[i] = skill;
+				Debug.Log("Added the skill to position " + i);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	//Skill activations
+
 	public void ActivateSkills(Activation activation, TacticsMove user, TacticsMove enemy) {
 		for (int i = 0; i < skills.Length; i++) {
+			if (!skills[i])
+				continue;
 			skills[i].ActivateSkill(activation, user, enemy);
 		}
 	}
 
 	public void EndSkills(Activation activation, TacticsMove user, TacticsMove enemy) {
 		for (int i = 0; i < skills.Length; i++) {
+			if (!skills[i])
+				continue;
 			skills[i].EndSkill(activation, user, enemy);
 		}
 	}
 
 	public int EditValueSkills(Activation activation, TacticsMove user, int value) {
 		for (int i = 0; i < skills.Length; i++) {
+			if (!skills[i])
+				continue;
 			skills[i].EditValue(activation, value, user);
 		}
 		return value;
@@ -258,6 +346,8 @@ public class StatsContainer {
 
 	public void ForEachSkills(Activation activation, TacticsMove user, CharacterListVariable list) {
 		for (int i = 0; i < skills.Length; i++) {
+			if (!skills[i])
+				continue;
 			skills[i].ActivateForEach(activation, user, list);
 		}
 	}
@@ -279,4 +369,5 @@ public class StatsContainer {
 public class InventoryTuple {
 	public WeaponItem item;
 	public int charge;
+	public bool droppable;
 }

@@ -30,6 +30,11 @@ public class PlayerPosition {
 	public int y;
 }
 
+[System.Serializable]
+public class WeaponTuple {
+	public WeaponItem item;
+	public bool droppable;
+}
 
 [System.Serializable]
 public class EnemyPosition {
@@ -37,6 +42,6 @@ public class EnemyPosition {
 	public int y;
 	public int level;
 	public CharacterStats stats;
-	public WeaponItem[] inventory;
+	public WeaponTuple[] inventory;
 	public CharacterSkill[] skills;
 }

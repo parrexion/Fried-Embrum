@@ -13,6 +13,11 @@ public class ForecastUI : MonoBehaviour {
 	public MapTileVariable attackTile;
 	public ActionModeVariable currentMode;
 
+	[Header("Arrows")]
+	public Sprite advArrow;
+	public Sprite disArrow;
+
+	[Header("Objects")]
 	public GameObject backgroundFight;
 	public GameObject backgroundHeal;
 	public GameObject backgroundInBattle;
@@ -21,6 +26,7 @@ public class ForecastUI : MonoBehaviour {
 //	public Image colorBackground;
 	public Image portrait;
 	public Text characterName;
+	public Image wpnAdvantage;
 	public Image wpnIcon;
 	public Text wpnName;
 	public Text wpnCharge;
@@ -35,6 +41,7 @@ public class ForecastUI : MonoBehaviour {
 //	public Image colorBackground;
 	public Image ePortrait;
 	public Text eCharacterName;
+	public Image eWpnAdvantage;
 	public Image eWpnIcon;
 	public Text eWpnName;
 	public Text eWpnCharge;
@@ -90,11 +97,12 @@ public class ForecastUI : MonoBehaviour {
 			int hit2 = (def != -1) ? act2.GetHitRate() : -1;
 			int crit = (atk != -1) ? act1.GetCritRate() : -1;
 			int crit2 = (def != -1) ? act2.GetCritRate() : -1;
-//			bool atkWeak = attacker.stats.IsWeakAgainst(defender.stats.GetItem(ItemCategory.WEAPON));
-//			bool defWeak = defender.stats.IsWeakAgainst(attacker.stats.GetItem(ItemCategory.WEAPON));
-//			ShowForecast(attacker, defender, atk, def, spd, act1.GetAdvantage(), atkWeak, defWeak);
-			ShowAttackerStats(attacker, atk, spd, hit, crit);
-			ShowDefenderStats(defender, def, spd, hit2, crit2);
+			bool atkWeak = attacker.stats.IsWeakAgainst(defender.stats.GetItem(ItemCategory.WEAPON));
+			bool defWeak = defender.stats.IsWeakAgainst(attacker.stats.GetItem(ItemCategory.WEAPON));
+			int atkAdv = act1.GetAdvantage();
+			int defAdv = act2.GetAdvantage();
+			ShowAttackerStats(attacker, atk, spd, hit, crit, atkAdv, atkWeak);
+			ShowDefenderStats(defender, def, spd, hit2, crit2, defAdv, defWeak);
 			if (!inBattle) {
 				backgroundFight.SetActive(true);
 				backgroundHeal.SetActive(false);
@@ -109,13 +117,15 @@ public class ForecastUI : MonoBehaviour {
 		}
 	}
 	
-	private void ShowAttackerStats(TacticsMove tactics, int damage, int speed, int hit, int crit) {
+	private void ShowAttackerStats(TacticsMove tactics, int damage, int speed, int hit, int crit, int atkAdv, bool defWeak) {
 		_attackerTactics = tactics;
 		StatsContainer stats = tactics.stats;
 //		colorBackground.color = (tactics.faction == Faction.PLAYER) ? new Color(0.5f,0.8f,1f) : new Color(1f,0.5f,0.8f);
 		
 		characterName.text = stats.charData.charName;
 		portrait.sprite = stats.charData.portrait;
+		wpnAdvantage.enabled = (atkAdv != 0);
+		wpnAdvantage.sprite = (atkAdv == 1) ? advArrow : disArrow;
 		InventoryTuple weapon = stats.GetItemTuple(ItemCategory.WEAPON);
 		wpnIcon.sprite = (weapon != null) ? weapon.item.icon : null;
 		wpnName.text = (weapon != null) ? weapon.item.itemName : "";
@@ -124,18 +134,21 @@ public class ForecastUI : MonoBehaviour {
 
 		hpText.text = tactics.currentHealth.ToString();
 		dmgText.text = (damage != -1) ? damage.ToString() : "--";
+		dmgText.color = (damage != -1 && defWeak) ? Color.green : Color.black;
 		doubleDamage.SetActive(speed >= 5);
 		hitText.text = hit.ToString();
 		critText.text = crit.ToString();
 	}
 	
-	private void ShowDefenderStats(TacticsMove tactics, int damage, int speed, int hit, int crit) {
+	private void ShowDefenderStats(TacticsMove tactics, int damage, int speed, int hit, int crit, int defAdv, bool atkWeak) {
 		_defenderTactics = tactics;
 		StatsContainer stats = tactics.stats;
 //		colorBackground.color = (tactics.faction == Faction.PLAYER) ? new Color(0.5f,0.8f,1f) : new Color(1f,0.5f,0.8f);
 		
 		eCharacterName.text = stats.charData.charName;
 		ePortrait.sprite = stats.charData.portrait;
+		eWpnAdvantage.enabled = (defAdv != 0);
+		eWpnAdvantage.sprite = (defAdv == 1) ? advArrow : disArrow;
 		InventoryTuple weapon = stats.GetItemTuple(ItemCategory.WEAPON);
 		eWpnIcon.sprite = (weapon != null) ? weapon.item.icon : null;
 		eWpnName.text = (weapon != null) ? weapon.item.itemName : "";
@@ -144,6 +157,7 @@ public class ForecastUI : MonoBehaviour {
 
 		eHpText.text = tactics.currentHealth.ToString();
 		eDmgText.text = (damage != -1) ? damage.ToString() : "--";
+		dmgText.color = (damage != -1 && atkWeak) ? Color.green : Color.black;
 		eDoubleDamage.SetActive(speed <= -5);
 		eHitText.text = hit.ToString();
 		eCritText.text = crit.ToString();

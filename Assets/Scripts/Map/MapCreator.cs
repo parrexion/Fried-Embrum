@@ -224,11 +224,13 @@ public class MapCreator : MonoBehaviour {
 			tactics.stats.level = pos.level;
 			tactics.stats.charData = pos.stats;
 			tactics.stats.classData = pos.stats.charClass;
+			tactics.stats.wpnSkills = pos.stats.charClass.GenerateBaseWpnSkill();
 			tactics.stats.inventory = new InventoryTuple[StatsContainer.INVENTORY_SIZE];
 			for (int j = 0; j < pos.inventory.Length; j++) {
 				tactics.stats.inventory[j] = new InventoryTuple() {
-					item = pos.inventory[j],
-					charge = pos.inventory[j].maxCharge
+					item = pos.inventory[j].item,
+					charge = pos.inventory[j].item.maxCharge,
+					droppable = pos.inventory[j].droppable
 				};
 			}
 			tactics.stats.skills = pos.skills;

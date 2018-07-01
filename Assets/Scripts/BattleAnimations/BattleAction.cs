@@ -18,14 +18,13 @@ public class BattleAction {
 	}
 
 	public int GetDamage() {
-		int wpn = attacker.GetWeapon(ItemCategory.WEAPON).power;
-		int atk = attacker.stats.atk;
+		int pwr = attacker.stats.GetAttackPower();
 		int def = defender.stats.def;
 		int adv = GetAdvantage();
 		float bonus = (adv == 1) ? 1.2f : (adv == -1) ? 0.8f : 1f;
 		float weakness = GetWeaknessBonus(attacker.GetWeapon(ItemCategory.WEAPON).advantageType, defender.stats.classData.classType);
 
-		int damage = Mathf.Max(0, Mathf.FloorToInt((wpn + atk) * weakness * bonus) - def);
+		int damage = Mathf.Max(0, Mathf.FloorToInt(pwr * weakness * bonus) - def);
 		return damage;
 	}
 
@@ -34,20 +33,11 @@ public class BattleAction {
 	}
 
 	public int GetHitRate() {
-		float statsBoost = attacker.stats.skl * 1.5f + attacker.stats.lck * 0.5f;
-		return attacker.GetWeapon(ItemCategory.WEAPON).hitRate + (int)statsBoost - GetAvoid();
-	}
-
-	private int GetAvoid() {
-		return (int)(defender.stats.spd * 1.5f + defender.stats.lck * 0.5f);
+		return attacker.stats.GetHitRate() - defender.stats.GetAvoid();
 	}
 
 	public int GetCritRate() {
-		return attacker.GetWeapon(ItemCategory.WEAPON).critRate + (int)(attacker.stats.skl * 0.5f) - GetCritAvoid();
-	}
-
-	private int GetCritAvoid() {
-		return defender.stats.lck;
+		return attacker.stats.GetCriticalRate() - defender.stats.GetCritAvoid();
 	}
 
 	public int GetAdvantage() {

@@ -21,6 +21,7 @@ public class InventoryController : MonoBehaviour {
 	public StringVariable tooltipMessage;
 
 	public UnityEvent showTooltipEvent;
+	public UnityEvent hideTooltipEvent;
 	public UnityEvent inventoryChangedEvent;
 
 	private StatsContainer _stats;
@@ -36,7 +37,7 @@ public class InventoryController : MonoBehaviour {
 		inventoryMenuObject.SetActive(false);
 		_stats = selectedCharacter.value.stats;
 		TooltipType position = (TooltipType) selectedItem.value;
-		WeaponItem item;
+		Item item = null;
 		switch (position) {
 			case TooltipType.NONE:
 				break;
@@ -49,8 +50,8 @@ public class InventoryController : MonoBehaviour {
 				tooltipMessage.value = (item != null) ? _stats.inventory[0].item.description : "";
 				inventoryMenuObject.SetActive(item != null);
 				if (item != null) {
-					equipButton.interactable = (item.itemCategory == ItemCategory.WEAPON);
-					useButton.interactable = (item.itemCategory == ItemCategory.CONSUME);
+					equipButton.interactable = (((WeaponItem)(item)).itemCategory == ItemCategory.WEAPON && ((WeaponItem)(item)).CanUse(_stats));
+					useButton.interactable = (((WeaponItem)(item)).itemCategory == ItemCategory.CONSUME);
 					dropButton.interactable = true;
 				}
 				break;
@@ -59,8 +60,8 @@ public class InventoryController : MonoBehaviour {
 				tooltipMessage.value = (item != null) ? _stats.inventory[1].item.description : "";
 				inventoryMenuObject.SetActive(item != null);
 				if (item != null) {
-					equipButton.interactable = (item.itemCategory == ItemCategory.WEAPON);
-					useButton.interactable = (item.itemCategory == ItemCategory.CONSUME);
+					equipButton.interactable = (((WeaponItem)(item)).itemCategory == ItemCategory.WEAPON && ((WeaponItem)(item)).CanUse(_stats));
+					useButton.interactable = (((WeaponItem)(item)).itemCategory == ItemCategory.CONSUME);
 					dropButton.interactable = true;
 				}
 				break;
@@ -69,8 +70,8 @@ public class InventoryController : MonoBehaviour {
 				tooltipMessage.value = (item != null) ? _stats.inventory[2].item.description : "";
 				inventoryMenuObject.SetActive(item != null);
 				if (item != null) {
-					equipButton.interactable = (item.itemCategory == ItemCategory.WEAPON);
-					useButton.interactable = (item.itemCategory == ItemCategory.CONSUME);
+					equipButton.interactable = (((WeaponItem)(item)).itemCategory == ItemCategory.WEAPON && ((WeaponItem)(item)).CanUse(_stats));
+					useButton.interactable = (((WeaponItem)(item)).itemCategory == ItemCategory.CONSUME);
 					dropButton.interactable = true;
 				}
 				break;
@@ -79,8 +80,8 @@ public class InventoryController : MonoBehaviour {
 				tooltipMessage.value = (item != null) ? _stats.inventory[3].item.description : "";
 				inventoryMenuObject.SetActive(item != null);
 				if (item != null) {
-					equipButton.interactable = (item.itemCategory == ItemCategory.WEAPON);
-					useButton.interactable = (item.itemCategory == ItemCategory.CONSUME);
+					equipButton.interactable = (((WeaponItem)(item)).itemCategory == ItemCategory.WEAPON && ((WeaponItem)(item)).CanUse(_stats));
+					useButton.interactable = (((WeaponItem)(item)).itemCategory == ItemCategory.CONSUME);
 					dropButton.interactable = true;
 				}
 				break;
@@ -89,20 +90,25 @@ public class InventoryController : MonoBehaviour {
 				tooltipMessage.value = (item != null) ? _stats.inventory[4].item.description : "";
 				inventoryMenuObject.SetActive(item != null);
 				if (item != null) {
-					equipButton.interactable = (item.itemCategory == ItemCategory.WEAPON);
-					useButton.interactable = (item.itemCategory == ItemCategory.CONSUME);
+					equipButton.interactable = (((WeaponItem)(item)).itemCategory == ItemCategory.WEAPON && ((WeaponItem)(item)).CanUse(_stats));
+					useButton.interactable = (((WeaponItem)(item)).itemCategory == ItemCategory.CONSUME);
 					dropButton.interactable = true;
 				}
 				break;
 			case TooltipType.SKL1:
+				tooltipMessage.value = (_stats.skills[0]) ? _stats.skills[0].description : "";
 				break;
 			case TooltipType.SKL2:
+				tooltipMessage.value = (_stats.skills[1]) ? _stats.skills[1].description : "";
 				break;
 			case TooltipType.SKL3:
+				tooltipMessage.value = (_stats.skills[2]) ? _stats.skills[2].description : "";
 				break;
 			case TooltipType.SKL4:
+				tooltipMessage.value = (_stats.skills[3]) ? _stats.skills[3].description : "";
 				break;
 			case TooltipType.SKL5:
+				tooltipMessage.value = (_stats.skills[4]) ? _stats.skills[4].description : "";
 				break;
 			default:
 				Debug.LogError("WTF!?");
@@ -162,9 +168,34 @@ public class InventoryController : MonoBehaviour {
 		inventoryChangedEvent.Invoke();
 	}
 
+	public void DropItem() {
+		TooltipType position = (TooltipType) selectedItem.value;
+		int index = 0;
+		switch (position) {
+			case TooltipType.INV1:
+				index = 0;
+				break;
+			case TooltipType.INV2:
+				index = 1;
+				break;
+			case TooltipType.INV3:
+				index = 2;
+				break;
+			case TooltipType.INV4:
+				index = 3;
+				break;
+			case TooltipType.INV5:
+				index = 4;
+				break;
+		}
+		_stats.DropItem(index);
+		inventoryChangedEvent.Invoke();
+		showTooltipEvent.Invoke();
+	}
+
 	private void ShowTooltip() {
 		if (string.IsNullOrEmpty(tooltipMessage.value)) {
-			tooltipObject.SetActive(false);
+			hideTooltipEvent.Invoke();
 			return;
 		}
 		tooltipObject.SetActive(true);
@@ -172,6 +203,7 @@ public class InventoryController : MonoBehaviour {
 	}
 
 	public void HideTooltip() {
+		selectedItem.value = -1;
 		tooltipObject.SetActive(false);
 		inventoryMenuObject.SetActive(false);
 	}
