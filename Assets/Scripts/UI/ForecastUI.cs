@@ -92,7 +92,7 @@ public class ForecastUI : MonoBehaviour {
 			int distance = MapCreator.DistanceTo(defender, walkTile.value);
 			int atk = (attacker.GetWeapon(ItemCategory.WEAPON).InRange(distance)) ? act1.GetDamage() : -1;
 			int def = (defender.GetWeapon(ItemCategory.WEAPON) != null && defender.GetWeapon(ItemCategory.WEAPON).InRange(distance)) ? act2.GetDamage() : -1;
-			int spd = attacker.stats.spd - defender.stats.spd;
+			int spd = attacker.stats.GetAttackSpeed() - defender.stats.GetAttackSpeed();
 			int hit = (atk != -1) ? act1.GetHitRate() : -1;
 			int hit2 = (def != -1) ? act2.GetHitRate() : -1;
 			int crit = (atk != -1) ? act1.GetCritRate() : -1;

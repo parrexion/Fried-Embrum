@@ -99,10 +99,10 @@ public abstract class TacticsMove : MonoBehaviour {
 
 		while(process.Count > 0) {
 			MapTile tile = process.Dequeue();
-			if (tile.distance >= (stats.classData.movespeed))
+			if (tile.distance >= (stats.GetMovespeed()))
 				continue;
 
-			tile.FindNeighbours(process, tile.distance, this, stats.classData.movespeed, true, isDanger);
+			tile.FindNeighbours(process, tile.distance, this, stats.GetMovespeed(), true, isDanger);
 		}
 	}
 

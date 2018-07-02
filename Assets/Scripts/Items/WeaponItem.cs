@@ -12,11 +12,13 @@ public class WeaponItem : Item {
     public ItemType itemType = ItemType.NONE;
     public int power = 5;
     public int maxCharge;
-    public int skillReq;
     public int hitRate;
     public int critRate;
     public int range;
     public bool variableRange;
+
+    public int skillReq;
+    public int weight;
     public int cost;
     
     [Space(10)]

@@ -49,6 +49,10 @@ public class SimpleCharacterUI : MonoBehaviour {
 	public Text defText;
 	public Text resText;
 	public Text movText;
+	public Image weighDownSpdIcon;
+	public Text weighDownSpdValue;
+	public Image weighDownSklIcon;
+	public Text weighDownSklValue;
 
 	[Header("Inventory Stats")]
 	public GameObject inventoryObject;
@@ -56,6 +60,8 @@ public class SimpleCharacterUI : MonoBehaviour {
 	public Text[] weaponSkillRating;
 	public Text[] inventoryFields;
 	public Text[] inventoryValues;
+	public Text conText;
+	public Text weighDownValue2;
 
 
 	public void UpdateUI() {
@@ -128,16 +134,32 @@ public class SimpleCharacterUI : MonoBehaviour {
 		defText.color = (stats.bDef != 0) ? Color.green : Color.black;
 		resText.color = (stats.bRes != 0) ? Color.green : Color.black;
 		
+		int penalty = stats.GetConPenalty();
+		if (penalty > 0) {
+			spdText.text = stats.GetAttackSpeed().ToString();
+			weighDownSpdIcon.enabled = true;
+			weighDownSpdValue.text = (-penalty).ToString();
+			sklText.text = (stats.skl - penalty).ToString();
+			weighDownSklIcon.enabled = true;
+			weighDownSklValue.text = (-penalty).ToString();
+		}
+		else {
+			spdText.text = stats.spd.ToString();
+			sklText.text = stats.skl.ToString();
+			weighDownSpdIcon.enabled = false;
+			weighDownSpdValue.text = "";
+			weighDownSklIcon.enabled = false;
+			weighDownSklValue.text = "";
+		}
+
 		levelText.text = stats.level.ToString();
 		expText.text = stats.currentExp.ToString();
 		hpText.text = stats.hp.ToString();
 		atkText.text = stats.atk.ToString();
-		spdText.text = stats.spd.ToString();
-		sklText.text = stats.skl.ToString();
 		lckText.text = stats.lck.ToString();
 		defText.text = stats.def.ToString();
 		resText.text = stats.res.ToString();
-		movText.text = stats.classData.movespeed.ToString();
+		movText.text = stats.GetMovespeed().ToString();
 	}
 
 	private void ShowInventoryStats(TacticsMove tactics) {
@@ -145,6 +167,15 @@ public class SimpleCharacterUI : MonoBehaviour {
 		statsObject.SetActive(false);
 		basicObject.SetActive(false);
 		inventoryObject.SetActive(true);
+
+		conText.text = stats.GetConstitution().ToString();
+		int atkSpeed = stats.GetAttackSpeed();
+		if (atkSpeed < stats.spd) {
+			weighDownValue2.text = "Penalty:  " + (atkSpeed - stats.spd).ToString();
+		}
+		else {
+			weighDownValue2.text = "";
+		}
 
 		for (int i = 0; i < weaponSkillIcons.Length; i++) {
 			if (i >= stats.classData.weaponSkills.Length){

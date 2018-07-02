@@ -24,6 +24,7 @@ public class CharacterStats : ScriptableObject {
 	public int lck = 4;
 	public int def = 3;
 	public int res = 3;
+	public int con = 5;
 
 	[Header("Personal Growths")]
 	public float gHp = 0.1f;

@@ -14,7 +14,8 @@ public class BattleContainer : MonoBehaviour {
 	}
 
 	public BoolVariable lockControls;
-	
+	public BoolVariable useTrueHit;
+
 	[Header("Experience")]
 	public UIExpMeter expMeter;
 	public LevelupScript levelupScript;
@@ -67,7 +68,7 @@ public class BattleContainer : MonoBehaviour {
 			actions.Add(new BattleAction(false, true, defender, attacker));
 		}
 		//Compare speeds
-		int spdDiff = attacker.stats.spd - defender.stats.spd;
+		int spdDiff = attacker.stats.GetAttackSpeed() - defender.stats.GetAttackSpeed();
 		if (spdDiff >= 5) {
 			actions.Add(new BattleAction(true, true, attacker, defender));
 		}
@@ -355,6 +356,10 @@ public class BattleContainer : MonoBehaviour {
 	private bool GenerateHitNumber(int hit) {
 		int nr = Random.Range(0, 100);
 		Debug.Log("HIT:  " + nr + " -> " + hit);
+		if (useTrueHit.value) {
+			nr += Random.Range(0, 100);
+			nr /= 2;
+		}
 		return (nr < hit);
 	}
 

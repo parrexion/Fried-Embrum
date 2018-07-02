@@ -50,7 +50,7 @@ public class NPCMove : TacticsMove {
 		GenerateHitTiles(isAttack);
 		BFS();
 
-		int moveSpeed = stats.classData.movespeed;
+		int moveSpeed = stats.GetMovespeed();
 		MapTile bestTile = null;
 		MapTile goodTile = null;
 

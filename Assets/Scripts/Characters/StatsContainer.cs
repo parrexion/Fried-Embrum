@@ -142,11 +142,16 @@ public class StatsContainer {
 		res = charData.res + classData.res + bRes + (int)(calcLevel * (classData.gRes+charData.gRes) + iRes + eRes);
 	}
 
+	public int GetAttackSpeed() {
+		return spd - GetConPenalty();
+	}
+
 	public int GetHitRate() {
 		WeaponItem item = GetItem(ItemCategory.WEAPON);
 		if (!item)
 			return -1;
-		float statsBoost = skl * 1.5f + lck * 0.5f;
+		int trueSkl = skl - GetConPenalty();
+		float statsBoost = trueSkl * 1.5f + lck * 0.5f;
 		return (int)statsBoost + item.hitRate;
 	}
 	
@@ -161,7 +166,8 @@ public class StatsContainer {
 		WeaponItem item = GetItem(ItemCategory.WEAPON);
 		if (!item)
 			return -1;
-		return item.critRate + (int)(skl * 0.5f);
+		int trueSkl = skl - GetConPenalty();
+		return item.critRate + (int)(trueSkl * 0.5f);
 	}
 	
 	public int GetAvoid() {
@@ -170,6 +176,19 @@ public class StatsContainer {
 
 	public int GetCritAvoid() {
 		return lck;
+	}
+
+	public int GetMovespeed() {
+		return classData.movespeed;
+	}
+
+	public int GetConstitution() {
+		return charData.con + classData.con;
+	}
+
+	public int GetConPenalty() {
+		WeaponItem item = GetItem(ItemCategory.WEAPON);
+		return (item) ? Mathf.Max(item.weight - GetConstitution()) : 0;
 	}
 
 	public WeaponItem GetItem(ItemCategory category) {
@@ -222,7 +241,7 @@ public class StatsContainer {
 	}
 
 	public WeaponItem GetItem(int index) {
-		return (index >= inventory.Length) ? null : inventory[index].item;
+		return (inventory[index] == null) ? null : inventory[index].item;
 	}
 
 	public void EquipItem(int index) {
@@ -301,8 +320,6 @@ public class StatsContainer {
 		
 		CalculateStats();
 	}
-
-	
 
 	public bool GainSkill(CharacterSkill skill) {
 		

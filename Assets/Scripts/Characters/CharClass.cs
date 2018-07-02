@@ -19,6 +19,7 @@ public class CharClass : ScriptableObject {
 	public int lck;
 	public int def;
 	public int res;
+	public int con;
 
 	[Header("Growths")]
 	public float gHp;

@@ -21,10 +21,10 @@ public class BattleAction {
 		int pwr = attacker.stats.GetAttackPower();
 		int def = defender.stats.def;
 		int adv = GetAdvantage();
-		float bonus = (adv == 1) ? 1.2f : (adv == -1) ? 0.8f : 1f;
+		int bonus = (adv == 1) ? 2 : (adv == -1) ? -2 : 0;
 		float weakness = GetWeaknessBonus(attacker.GetWeapon(ItemCategory.WEAPON).advantageType, defender.stats.classData.classType);
 
-		int damage = Mathf.Max(0, Mathf.FloorToInt(pwr * weakness * bonus) - def);
+		int damage = Mathf.Max(0, Mathf.FloorToInt(pwr * weakness) + bonus - def);
 		return damage;
 	}
 
@@ -33,11 +33,13 @@ public class BattleAction {
 	}
 
 	public int GetHitRate() {
-		return attacker.stats.GetHitRate() - defender.stats.GetAvoid();
+		int adv = GetAdvantage();
+		int bonus = (adv == 1) ? 15 : (adv == -1) ? -15 : 0;
+		return Mathf.Clamp(attacker.stats.GetHitRate() - defender.stats.GetAvoid() + bonus, 0, 100);
 	}
 
 	public int GetCritRate() {
-		return attacker.stats.GetCriticalRate() - defender.stats.GetCritAvoid();
+		return Mathf.Clamp(attacker.stats.GetCriticalRate() - defender.stats.GetCritAvoid(), 0, 100);
 	}
 
 	public int GetAdvantage() {
