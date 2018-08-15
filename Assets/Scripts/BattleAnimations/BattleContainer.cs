@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Net.Mime;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -13,6 +12,7 @@ public class BattleContainer : MonoBehaviour {
 		instance = this;
 	}
 
+	public FactionVariable currentTurn;
 	public BoolVariable lockControls;
 	public BoolVariable useTrueHit;
 
@@ -64,16 +64,16 @@ public class BattleContainer : MonoBehaviour {
 		actions.Clear();
 		actions.Add(new BattleAction(true, true, attacker, defender));
 		int range = Mathf.Abs(attacker.posx - defender.posx) + Mathf.Abs(attacker.posy - defender.posy);
-		if (defender.GetWeapon(ItemCategory.WEAPON) != null && defender.GetWeapon(ItemCategory.WEAPON).InRange(range)) {
+		if (defender.GetEquippedWeapon(ItemCategory.WEAPON) != null && defender.GetEquippedWeapon(ItemCategory.WEAPON).InRange(range)) {
 			actions.Add(new BattleAction(false, true, defender, attacker));
 		}
 		//Compare speeds
-		int spdDiff = attacker.stats.GetAttackSpeed() - defender.stats.GetAttackSpeed();
+		int spdDiff = actions[0].GetSpeedDifference();
 		if (spdDiff >= 5) {
 			actions.Add(new BattleAction(true, true, attacker, defender));
 		}
 		else if (spdDiff <= -5) {
-			if (defender.GetWeapon(ItemCategory.WEAPON) != null && defender.GetWeapon(ItemCategory.WEAPON).InRange(range)) {
+			if (defender.GetEquippedWeapon(ItemCategory.WEAPON) != null && defender.GetEquippedWeapon(ItemCategory.WEAPON).InRange(range)) {
 				actions.Add(new BattleAction(false, true, defender, attacker));
 			}
 		}
@@ -101,10 +101,10 @@ public class BattleContainer : MonoBehaviour {
 		
 		for (int i = 0; i < actions.Count; i++) {
 			BattleAction act = actions[i];
-			if (act.isDamage && act.attacker.GetInventoryTuple(ItemCategory.WEAPON).charge <= 0) {
+			if (act.isDamage && act.attacker.GetFirstUsableInventoryTuple(ItemCategory.WEAPON).charge <= 0) {
 				continue; //Broken weapon
 			}
-			if (!act.isDamage && act.attacker.GetInventoryTuple(ItemCategory.STAFF).charge <= 0) {
+			if (!act.isDamage && act.attacker.GetFirstUsableInventoryTuple(ItemCategory.STAFF).charge <= 0) {
 				continue; //Broken staff
 			}
 			
@@ -116,7 +116,7 @@ public class BattleContainer : MonoBehaviour {
 			
 			battleAnimationObject.SetActive(useBattleAnimations.value);
 			uiCanvas.SetActive(!useBattleAnimations.value);
-			forecastUI.UpdateUI();
+			forecastUI.UpdateUI(true);
 			if (useBattleAnimations.value) {
 				leftHealth.fillAmount = actions[0].attacker.GetHealthPercent();
 				rightHealth.fillAmount = actions[0].defender.GetHealthPercent();
@@ -157,21 +157,21 @@ public class BattleContainer : MonoBehaviour {
 						leftTransform.GetComponent<SpriteRenderer>().color = new Color(0.4f,0.4f,0.4f);
 				}
 				act.attacker.ReduceWeaponCharge(ItemCategory.WEAPON);
-				act.attacker.stats.GiveWpnExp(act.attacker.GetWeapon(ItemCategory.WEAPON));
+				act.attacker.stats.GiveWpnExp(act.attacker.GetEquippedWeapon(ItemCategory.WEAPON));
 			}
 			else {
-				if (act.attacker.GetWeapon(ItemCategory.STAFF).itemType == ItemType.HEAL) {
+				if (act.staffAtk.item.itemType == ItemType.HEAL) {
 					int health = act.GetHeals();
 					act.defender.TakeHeals(health);
 					StartCoroutine(DamageDisplay(act.leftSide, health, false, false));
 					Debug.Log(i + " Healt damage :  " + health);
 				}
-				else if (act.attacker.GetWeapon(ItemCategory.WEAPON).itemType == ItemType.BUFF) {
-					act.defender.ReceiveBuff(act.attacker.GetWeapon(ItemCategory.STAFF).boost, true, true);
+				else if (act.staffAtk.item.itemType == ItemType.BUFF) {
+					act.defender.ReceiveBuff(act.attacker.GetEquippedWeapon(ItemCategory.STAFF).boost, true, true);
 					Debug.Log("Boost them up!");
 				}
 				act.attacker.ReduceWeaponCharge(ItemCategory.STAFF);
-				act.attacker.stats.GiveWpnExp(act.attacker.GetWeapon(ItemCategory.STAFF));
+				act.attacker.stats.GiveWpnExp(act.attacker.GetEquippedWeapon(ItemCategory.STAFF));
 				_attackerDealtDamage = true;
 			}
 			//Update health
@@ -230,10 +230,13 @@ public class BattleContainer : MonoBehaviour {
 		actions[0].attacker.EndSkills(Activation.PRECOMBAT, actions[0].defender);
 		actions[0].defender.EndSkills(Activation.PRECOMBAT, actions[0].attacker);
 		actions.Clear();
-		lockControls.value = false;
+		if (currentTurn.value == Faction.PLAYER)
+			lockControls.value = false;
 		_currentCharacter.End();
 		_currentCharacter = null;
 		
+		yield return new WaitForSeconds(0.5f);
+
 		//Send game finished
 		battleFinishedEvent.Invoke();
 	}
@@ -304,40 +307,40 @@ public class BattleContainer : MonoBehaviour {
 	private IEnumerator HandleBrokenWeapons() {
 		//Broken weapons
 		if (actions[0].isDamage) {
-			InventoryTuple invTup = actions[0].attacker.GetInventoryTuple(ItemCategory.WEAPON);
-			if (invTup != null && invTup.charge <= 0) {
+			InventoryTuple invTup = actions[0].weaponAtk;
+			if (invTup.item != null && invTup.charge <= 0) {
 				yield return StartCoroutine(ShowPopup(invTup.item.icon, invTup.item.itemName + " broke!"));
-				actions[0].attacker.stats.CleanupInventory();
+				actions[0].attacker.inventory.CleanupInventory();
 			}
-			invTup = actions[0].defender.GetInventoryTuple(ItemCategory.WEAPON);
+			invTup = actions[0].weaponDef;
 			if (invTup != null && invTup.charge <= 0) {
 				yield return StartCoroutine(ShowPopup(invTup.item.icon, invTup.item.itemName + " broke!"));
-				actions[0].defender.stats.CleanupInventory();
+				actions[0].defender.inventory.CleanupInventory();
 			}
 		}
 		else {
-			InventoryTuple invTup = actions[0].attacker.GetInventoryTuple(ItemCategory.STAFF);
+			InventoryTuple invTup = actions[0].staffAtk;
 			if (invTup != null && invTup.charge <= 0) {
 				yield return StartCoroutine(ShowPopup(invTup.item.icon, invTup.item.itemName + " broke!"));
-				actions[0].attacker.stats.CleanupInventory();
+				actions[0].attacker.inventory.CleanupInventory();
 			}
-			invTup = actions[0].defender.GetInventoryTuple(ItemCategory.STAFF);
-			if (invTup != null && invTup.charge <= 0) {
-				yield return StartCoroutine(ShowPopup(invTup.item.icon, invTup.item.itemName + " broke!"));
-				actions[0].defender.stats.CleanupInventory();
-			}
+			// invTup = actions[0].defender.GetFirstUsableInventoryTuple(ItemCategory.STAFF);
+			// if (invTup != null && invTup.charge <= 0) {
+			// 	yield return StartCoroutine(ShowPopup(invTup.item.icon, invTup.item.itemName + " broke!"));
+			// 	actions[0].defender.inventory.CleanupInventory();
+			// }
 		}
 	}
 
 	private IEnumerator DropItems(TacticsMove dropper, TacticsMove receiver) {
-		InventoryTuple[] inventory = dropper.stats.inventory;
+		InventoryTuple[] inventory = dropper.inventory.inventory;
 		for (int i = 0; i < inventory.Length; i++) {
 			if (inventory[i] == null || !inventory[i].droppable)
 				continue;
 			
 			Debug.Log("Dropped item:  " + inventory[i].item.itemName);
 			inventory[i].droppable = false;
-			receiver.stats.GainItem(inventory[i]);
+			receiver.inventory.GainItem(inventory[i]);
 
 			yield return StartCoroutine(ShowPopup(inventory[i].item.icon, "Gained " + inventory[i].item.itemName));
 		}

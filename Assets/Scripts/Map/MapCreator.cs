@@ -43,8 +43,8 @@ public class MapCreator : MonoBehaviour {
 		_tMountain = mapInfo.value.mountain;
 		_tBlocked = mapInfo.value.blocked;
 		
-		cameraBox.size = new Vector2(_sizeX+5, _sizeY+2);
-		cameraBox.transform.position = new Vector3((_sizeX+2)/2.0f, (_sizeY-1)/2.0f, 0);
+		cameraBox.size = new Vector2(_sizeX+2, _sizeY+2);
+		cameraBox.transform.position = new Vector3((_sizeX-1)/2.0f, (_sizeY-1)/2.0f, 0);
 		
 		GenerateMap(mapInfo.value.mapSprite);
 		SpawnCharacters();
@@ -105,7 +105,7 @@ public class MapCreator : MonoBehaviour {
 				if (isDanger) {
 					tiles[i].reachable = true;
 				}
-				else if (tiles[i].currentCharacter == null || tiles[i].currentCharacter.faction != faction) {
+				else if (tiles[i].IsEmpty() || tiles[i].currentCharacter.faction != faction) {
 					tiles[i].attackable = true;
 				}
 			}
@@ -122,7 +122,7 @@ public class MapCreator : MonoBehaviour {
 			if (!item.InRange(tempDist))
 				continue;
 
-			if (tiles[i].currentCharacter == null) {
+			if (tiles[i].IsEmpty()) {
 				tiles[i].supportable = true;
 			}
 			else if(tiles[i].currentCharacter.faction == faction) {
@@ -193,7 +193,7 @@ public class MapCreator : MonoBehaviour {
 		//Players
 		for (int i = 0; i < mapInfo.value.spawnPoints.Length; i++) {
 			PlayerPosition pos = mapInfo.value.spawnPoints[i];
-			if (i >= availableCharacters.values.Length) {
+			if (i >= availableCharacters.stats.Length) {
 				GetTile(pos.x, pos.y).selectable = true;
 				continue;
 			}
@@ -205,10 +205,9 @@ public class MapCreator : MonoBehaviour {
 			tactics.mapCreator = this;
 			tactics.posx = pos.x;
 			tactics.posy = pos.y;
-			tactics.stats = availableCharacters.values[i];
+			tactics.stats = availableCharacters.stats[i];
+			tactics.inventory = availableCharacters.inventory[i];
 			tactics.Setup();
-
-			playerTransform.GetComponent<PlayerDragHandler>().mapClicker = mapClicker;
 		}
 		
 		//Enemies
@@ -225,18 +224,26 @@ public class MapCreator : MonoBehaviour {
 			tactics.stats.charData = pos.stats;
 			tactics.stats.classData = pos.stats.charClass;
 			tactics.stats.wpnSkills = pos.stats.charClass.GenerateBaseWpnSkill();
-			tactics.stats.inventory = new InventoryTuple[StatsContainer.INVENTORY_SIZE];
-			for (int j = 0; j < pos.inventory.Length; j++) {
-				tactics.stats.inventory[j] = new InventoryTuple() {
-					item = pos.inventory[j].item,
-					charge = pos.inventory[j].item.maxCharge,
-					droppable = pos.inventory[j].droppable
-				};
+			tactics.inventory.inventory = new InventoryTuple[InventoryContainer.INVENTORY_SIZE];
+			for (int j = 0; j < InventoryContainer.INVENTORY_SIZE; j++) {
+				if (j < pos.inventory.Length) {
+					tactics.inventory.inventory[j] = new InventoryTuple() {
+						index = j,
+						item = pos.inventory[j].item,
+						charge = pos.inventory[j].item.maxCharge,
+						droppable = pos.inventory[j].droppable
+					};
+				}
+				else {
+					tactics.inventory.inventory[j] = new InventoryTuple() {
+						index = j,
+						charge = 0,
+						droppable = false
+					};
+				}
 			}
 			tactics.stats.skills = pos.skills;
 			tactics.Setup();
-			
-			enemyTransform.GetComponent<NPCDragHandler>().mapClicker = mapClicker;
 		}
 	}
 

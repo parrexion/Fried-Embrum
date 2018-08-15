@@ -2,37 +2,65 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Camera class which keeps track of the action in the game by following cursor 
+/// and characters around the map.
+/// </summary>
 public class TacticsCamera : MonoBehaviour {
 
 	public BoxCollider2D boxCollider;
+	public TacticsMoveVariable selectedCharacter;
+
+	[Header("Cursor Position")]
+	public IntVariable cursorX;
+	public IntVariable cursorY;
+	public int moveWidth;
+	public int moveHeight;
 	
 	private Vector3 _origin;
 	private Vector3 _diff;
 	private bool _drag;
 	private Camera _camera;
 
+
 	private void Start() {
 		_camera = GetComponent<Camera>();
 	}
 
-	private void LateUpdate() {
-		if (Input.GetMouseButton(1)) {
-			_diff = Camera.main.ScreenToWorldPoint(Input.mousePosition) - Camera.main.transform.position;
-			if (!_drag) {
-				_drag = true;
-				_origin = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			}
-		} else {
-			_drag = false;
-		}
-		if (_drag) {
-			Camera.main.transform.position = AdjustPosition(_origin-_diff);
-		}
+	/// <summary>
+	/// Sets the camera position in such a wat that the map cursor appears in the camera box.
+	/// </summary>
+	public void UpdateCameraPositionCursor() {
+		Vector3 currentPosition = Camera.main.transform.localPosition;
+		Vector3 nextPosition = new Vector3(
+			Mathf.Clamp(currentPosition.x, cursorX.value-moveWidth, cursorX.value+moveWidth),
+			Mathf.Clamp(currentPosition.y, cursorY.value-moveHeight, cursorY.value+moveHeight),
+			currentPosition.z
+		);
+		Camera.main.transform.localPosition = AdjustPosition(nextPosition);
 	}
 
+	/// <summary>
+	/// Sets the camera position in such a wat that the selected character appears in the camera box.
+	/// </summary>
+	public void UpdateCameraPositionFollow() {
+		Vector3 currentPosition = Camera.main.transform.localPosition;
+		Vector3 nextPosition = new Vector3(
+			Mathf.Clamp(currentPosition.x, selectedCharacter.value.posx-moveWidth, selectedCharacter.value.posx+moveWidth),
+			Mathf.Clamp(currentPosition.y, selectedCharacter.value.posy-moveHeight, selectedCharacter.value.posy+moveHeight),
+			currentPosition.z
+		);
+		Camera.main.transform.localPosition = AdjustPosition(nextPosition);
+	}
+
+	/// <summary>
+	/// Adjusts the position to make sure that the camera position stays inside the camera box.
+	/// </summary>
+	/// <param name="input"></param>
+	/// <returns></returns>
 	private Vector3 AdjustPosition(Vector3 input) {
 		float vertExtent = _camera.orthographicSize;
-		float horizExtent = vertExtent * Screen.width / Screen.height;
+		float horizExtent = vertExtent * Screen.width * _camera.rect.width / Screen.height;
  
 		Bounds areaBounds = boxCollider.bounds;
  

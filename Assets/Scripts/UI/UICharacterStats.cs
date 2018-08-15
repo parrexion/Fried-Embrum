@@ -70,8 +70,8 @@ public class UICharacterStats : MonoBehaviour {
 		targetStatsObject.SetActive(false);
 
 		if (currentTurn.value == Faction.NONE) {
-			if (clickCharacter.value != null) {
-				ShowPrep(clickCharacter.value);
+			if (clickCharacter.stats != null) {
+				ShowPrep();
 			}
 		}
 		else if (selectCharacter != null) {
@@ -96,12 +96,12 @@ public class UICharacterStats : MonoBehaviour {
 			return;
 		
 		ShowStats(selectCharacter.value);
-		if (attackTile.value != null && attackTile.value.currentCharacter != null)
+		if (attackTile.value != null && !attackTile.value.IsEmpty())
 			ShowStats(attackTile.value.currentCharacter);
 	}
 
 	private void ShowAttack() {
-		if (attackTile.value != null && attackTile.value.currentCharacter != null) {
+		if (attackTile.value != null && !attackTile.value.IsEmpty()) {
 			CalculateShowForecast(selectCharacter.value, attackTile.value.currentCharacter);
 		}
 		else {
@@ -109,7 +109,8 @@ public class UICharacterStats : MonoBehaviour {
 		}
 	}
 
-	private void ShowPrep(StatsContainer stats) {
+	private void ShowPrep() {
+		StatsContainer stats = clickCharacter.stats;
 		if (stats.level == -1)
 			return;
 		
@@ -144,7 +145,8 @@ public class UICharacterStats : MonoBehaviour {
 			}
 		}
 		
-		wpnName.text = (stats.GetItem(ItemCategory.WEAPON) != null) ? stats.GetItem(ItemCategory.WEAPON).itemName : "";
+		WeaponItem weapon = clickCharacter.inventory.GetFirstUsableItem(ItemCategory.WEAPON, stats);
+		wpnName.text = (weapon != null) ? weapon.itemName : "";
 
 		playerStatsObject.SetActive(true);
 	}
@@ -183,7 +185,7 @@ public class UICharacterStats : MonoBehaviour {
 			}
 		}
 
-		wpnName.text = (stats.GetItem(ItemCategory.WEAPON) != null) ? stats.GetItem(ItemCategory.WEAPON).itemName : "";
+		wpnName.text = (tactics.GetFirstUsableItem(ItemCategory.WEAPON) != null) ? tactics.GetFirstUsableItem(ItemCategory.WEAPON).itemName : "";
 		
 		playerStatsObject.SetActive(true);
 	}
@@ -272,12 +274,14 @@ public class UICharacterStats : MonoBehaviour {
 
 		if (isDamage) {
 			BattleAction act2 = new BattleAction(false, true, defender, attacker);
+			WeaponItem weaponAtk = attacker.GetEquippedWeapon(ItemCategory.WEAPON);
+			WeaponItem weaponDef = defender.GetEquippedWeapon(ItemCategory.WEAPON);
 			int distance = MapCreator.DistanceTo(defender, walkTile.value);
-			int atk = (attacker.GetWeapon(ItemCategory.WEAPON).InRange(distance)) ? act1.GetDamage() : -1;
-			int def = (defender.GetWeapon(ItemCategory.WEAPON) != null && defender.GetWeapon(ItemCategory.WEAPON).InRange(distance)) ? act2.GetDamage() : -1;
+			int atk = (weaponAtk.InRange(distance)) ? act1.GetDamage() : -1;
+			int def = (weaponDef != null && weaponDef.InRange(distance)) ? act2.GetDamage() : -1;
 			int spd = attacker.stats.spd - defender.stats.spd;
-			bool atkWeak = attacker.stats.IsWeakAgainst(defender.stats.GetItem(ItemCategory.WEAPON));
-			bool defWeak = defender.stats.IsWeakAgainst(attacker.stats.GetItem(ItemCategory.WEAPON));
+			bool atkWeak = BattleCalc.CheckWeaponWeakness(weaponAtk, defender.stats);
+			bool defWeak = BattleCalc.CheckWeaponWeakness(weaponDef, attacker.stats);
 			ShowForecast(attacker, defender, atk, def, spd, act1.GetAdvantage(), atkWeak, defWeak);
 		}
 		else {

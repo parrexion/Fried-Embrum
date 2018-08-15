@@ -18,7 +18,8 @@ public class CharController : MonoBehaviour {
     
     private void Awake() {
         selectCharacter.value = null;
-        clickCharacter.value = null;
+        clickCharacter.stats = null;
+        clickCharacter.inventory = null;
         targetTile.value = null;
         currentMode.value = ActionMode.NONE;
         currentTurn.value = Faction.NONE;

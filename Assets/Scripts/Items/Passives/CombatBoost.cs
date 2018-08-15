@@ -6,12 +6,12 @@ using UnityEngine;
 public class CombatBoost : CharacterSkill {
     
     protected override void UseSkill(TacticsMove user, TacticsMove enemy) {
-        if (enemy.GetWeapon(ItemCategory.WEAPON) != null && enemy.GetWeapon(ItemCategory.WEAPON).itemType == activationItemType)
+        if (enemy.GetEquippedWeapon(ItemCategory.WEAPON) != null && enemy.GetEquippedWeapon(ItemCategory.WEAPON).itemType == activationItemType)
             user.ReceiveBuff(boost, true, false);
     }
 
     protected override void RemoveEffect(TacticsMove user, TacticsMove enemy) {
-        if (enemy.GetWeapon(ItemCategory.WEAPON) != null && enemy.GetWeapon(ItemCategory.WEAPON).itemType == activationItemType)
+        if (enemy.GetEquippedWeapon(ItemCategory.WEAPON) != null && enemy.GetEquippedWeapon(ItemCategory.WEAPON).itemType == activationItemType)
             user.ReceiveBuff(boost.InvertStats(), true, false);
     }
 }

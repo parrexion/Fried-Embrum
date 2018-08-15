@@ -107,8 +107,6 @@ GameObject:
   - component: {fileID: 4715137784424608}
   - component: {fileID: 212879195976866692}
   - component: {fileID: 114000722185224704}
-  - component: {fileID: 61787273318166670}
-  - component: {fileID: 114068520277908866}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -198,31 +196,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &61787273318166670
-BoxCollider2D:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1571631439779500}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.16, y: 0.16}
-    newSize: {x: 0.16, y: 0.16}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.2, y: 0.2}
-  m_EdgeRadius: 0
 --- !u!114 &114000722185224704
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -237,9 +210,10 @@ MonoBehaviour:
   lockControls: {fileID: 11400000, guid: b8d06aee0ad3bce4daa463a8433439f4, type: 2}
   mapCreator: {fileID: 0}
   currentMode: {fileID: 11400000, guid: b0e392ad086e2ab4e9c4feb871cf0d41, type: 2}
-  attackTarget: {fileID: 11400000, guid: aa06961cf307a814a87dd50d84f2f4e4, type: 2}
+  targetCharacter: {fileID: 11400000, guid: 3bf3d9dea0a4b724a921b8d7c25399c4, type: 2}
   playerList: {fileID: 11400000, guid: 8943adc57d10eb547a5f30311d9c9f90, type: 2}
   enemyList: {fileID: 11400000, guid: 267060ebaf58f1a45bfa555220142569, type: 2}
+  battleWeaponIndex: {fileID: 11400000, guid: b325086f4f856bb42b4a1d6407137bfe, type: 2}
   movementVelocity: {fileID: 11400000, guid: 208d37ab76bc94c4c849779521ed5319, type: 2}
   isMoving: 0
   hasMoved: 0
@@ -251,29 +225,39 @@ MonoBehaviour:
     classData: {fileID: 0}
     level: 0
     currentExp: 0
-    inventory: []
+    wpnSkills: 
     skills: []
     hp: 0
     atk: 0
     spd: 0
+    skl: 0
+    lck: 0
     def: 0
     res: 0
     iHp: 0
     iAtk: 0
     iSpd: 0
+    iSkl: 0
+    iLck: 0
     iDef: 0
     iRes: 0
     eHp: 0
     eAtk: 0
     eSpd: 0
+    eSkl: 0
+    eLck: 0
     eDef: 0
     eRes: 0
     bHp: 0
     bAtk: 0
     bSpd: 0
+    bSkl: 0
+    bLck: 0
     bDef: 0
     bRes: 0
     boosts: []
+  inventory:
+    inventory: []
   currentHealth: 0
   deadMaterial: {fileID: 2100000, guid: a0d4a628f94a1be47bb7325e15805d00, type: 2}
   healthImage: {fileID: 114925322311367406}
@@ -285,6 +269,22 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11400000, guid: 16a3512aa67bf99418d1b01a306af157, type: 2}
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  cameraFollowEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 59c221644bba7d445a7984aee8b1207c, type: 2}
         m_MethodName: Raise
         m_Mode: 1
         m_Arguments:
@@ -315,19 +315,6 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   aggressive: 1
   targetTile: {fileID: 11400000, guid: 3a98548c39c09914ba5bd9f128964722, type: 2}
---- !u!114 &114068520277908866
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1571631439779500}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11ae921a882852549a42beeb8d8fa497, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lockControls: {fileID: 11400000, guid: b8d06aee0ad3bce4daa463a8433439f4, type: 2}
-  mapClicker: {fileID: 0}
 --- !u!114 &114078750439624710
 MonoBehaviour:
   m_ObjectHideFlags: 1

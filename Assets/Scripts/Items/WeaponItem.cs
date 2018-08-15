@@ -14,8 +14,7 @@ public class WeaponItem : Item {
     public int maxCharge;
     public int hitRate;
     public int critRate;
-    public int range;
-    public bool variableRange;
+    public WeaponRange range;
 
     public int skillReq;
     public int weight;
@@ -27,17 +26,17 @@ public class WeaponItem : Item {
     public Boost boost;
 
 
+    /// <summary>
+    /// Returns true if the given distance is within the range of the weapon.
+    /// </summary>
+    /// <param name="distance"></param>
+    /// <returns></returns>
     public bool InRange(int distance) {
-        return (distance == range || (distance < range && variableRange));
+        return (distance == -1 || range.InRange(distance));
     }
 
-    public bool CanUse(StatsContainer stats) {
-        if (itemCategory == ItemCategory.WEAPON) {
-            int skill = stats.wpnSkills[(int)itemType];
-            return (skill != 0 && skill >= skillReq);
-        }
-        else if (itemCategory == ItemCategory.STAFF) {
-            int skill = stats.wpnSkills[stats.wpnSkills.Length-1];
+    public bool CanUse(int skill) {
+        if (itemCategory != ItemCategory.CONSUME) {
             return (skill != 0 && skill >= skillReq);
         }
 

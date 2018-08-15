@@ -29,7 +29,8 @@ public class DragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         _image.raycastTarget = false;
         transform.parent.transform.SetAsLastSibling();
         _invParent.SetAsLastSibling();
-        clickCharacter.value = slot.item;
+        clickCharacter.stats = slot.stats;
+        clickCharacter.inventory = slot.inventory;
         prepUpdateEvent.Invoke();
     }
 
@@ -44,7 +45,8 @@ public class DragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     }
 
     public void OnPointerClick(PointerEventData eventData) {
-        clickCharacter.value = slot.item;
+        clickCharacter.stats = slot.stats;
+        clickCharacter.inventory = slot.inventory;
         prepUpdateEvent.Invoke();
     }
 }

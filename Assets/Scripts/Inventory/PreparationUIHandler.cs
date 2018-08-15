@@ -39,8 +39,8 @@ public class PreparationUIHandler : MonoBehaviour {
 
 		//Update the equipment
 		for (int i = 0; i < _equipSlots.Length; i++) {
-			if (invItemEquip.values[i] != null) {
-				_equipSlots[i].AddItem(invItemEquip.values[i]);
+			if (invItemEquip.stats[i] != null) {
+				_equipSlots[i].AddItem(invItemEquip.stats[i], invItemEquip.inventory[i]);
 			}
 			else {
 				_equipSlots[i].ClearSlot();
@@ -48,8 +48,8 @@ public class PreparationUIHandler : MonoBehaviour {
 		}
 
 		for (int i = 0; i < _bagSlots.Length; i++) {
-			if (invItemBag.values[i] != null) {
-				_bagSlots[i].AddItem(invItemBag.values[i]);
+			if (invItemBag.stats[i] != null) {
+				_bagSlots[i].AddItem(invItemBag.stats[i], invItemBag.inventory[i]);
 			}
 			else {
 				_bagSlots[i].ClearSlot();

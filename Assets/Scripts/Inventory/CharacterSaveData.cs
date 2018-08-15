@@ -39,47 +39,47 @@ public class CharacterSaveData {
 		level = -1;
 	}
 
-	public void StoreData(StatsContainer cont) {
-		id = cont.charData.id;
-		classID = cont.classData.id;
+	public void StoreData(StatsContainer stats, InventoryContainer invCont) {
+		id = stats.charData.id;
+		classID = stats.classData.id;
 		
-		level = cont.level;
-		currentExp = cont.currentExp;
+		level = stats.level;
+		currentExp = stats.currentExp;
 
 		wpnSkills = new int[StatsContainer.WPN_SKILLS];
-		for (int i = 0; i < cont.wpnSkills.Length; i++) {
-			wpnSkills[i] = cont.wpnSkills[i];
+		for (int i = 0; i < stats.wpnSkills.Length; i++) {
+			wpnSkills[i] = stats.wpnSkills[i];
 		}
 		inventory = new List<string>();
 		invCharges = new List<int>();
 		skills = new List<string>();
-		for (int i = 0; i < cont.inventory.Length; i++) {
-			if (cont.inventory[i] == null)
+		for (int i = 0; i < invCont.inventory.Length; i++) {
+			if (invCont.inventory[i] == null)
 				continue;
-			inventory.Add(cont.inventory[i].item.id);
-			invCharges.Add(cont.inventory[i].charge);
+			inventory.Add(invCont.inventory[i].item.id);
+			invCharges.Add(invCont.inventory[i].charge);
 		}
-		for (int i = 0; i < cont.skills.Length; i++) {
-			if (!cont.skills[i])
+		for (int i = 0; i < stats.skills.Length; i++) {
+			if (!stats.skills[i])
 				continue;
-			skills.Add(cont.skills[i].id);
+			skills.Add(stats.skills[i].id);
 		}
 
-		iHp = cont.iHp;
-		iAtk = cont.iAtk;
-		iSpd = cont.iSpd;
-		iSkl = cont.iSkl;
-		iLck = cont.iLck;
-		iDef = cont.iDef;
-		iRes = cont.iRes;
+		iHp = stats.iHp;
+		iAtk = stats.iAtk;
+		iSpd = stats.iSpd;
+		iSkl = stats.iSkl;
+		iLck = stats.iLck;
+		iDef = stats.iDef;
+		iRes = stats.iRes;
 		
-		eHp = cont.eHp;
-		eAtk = cont.eAtk;
-		eSpd = cont.eSpd;
-		eSkl = cont.eSkl;
-		eLck = cont.eLck;
-		eDef = cont.eDef;
-		eRes = cont.eRes;
+		eHp = stats.eHp;
+		eAtk = stats.eAtk;
+		eSpd = stats.eSpd;
+		eSkl = stats.eSkl;
+		eLck = stats.eLck;
+		eDef = stats.eDef;
+		eRes = stats.eRes;
 	}
 
 	public void GenerateIV() {

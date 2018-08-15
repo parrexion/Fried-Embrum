@@ -5,9 +5,8 @@ using Random = UnityEngine.Random;
 [System.Serializable]
 public class StatsContainer {
 
-	public const int INVENTORY_SIZE = 5;
-	public const int SKILL_SIZE = 5;
 	public const int WPN_SKILLS = 8;
+	public const int SKILL_SIZE = 5;
 	
 	[Header("Character Info")]
 	public CharacterStats charData;
@@ -17,7 +16,6 @@ public class StatsContainer {
 	public int level;
 	public int currentExp;
 	public int[] wpnSkills = new int[WPN_SKILLS];
-	public InventoryTuple[] inventory;
 	public CharacterSkill[] skills;
 
 	[Header("Current Stats")]
@@ -77,13 +75,6 @@ public class StatsContainer {
 		for (int i = 0; i < saveData.wpnSkills.Length; i++) {
 			wpnSkills[i] = saveData.wpnSkills[i];
 		}
-		inventory = new InventoryTuple[INVENTORY_SIZE];
-		for (int i = 0; i < saveData.inventory.Count; i++) {
-			inventory[i] = new InventoryTuple {
-				item = (WeaponItem) iLib.GetEntry(saveData.inventory[i]),
-				charge = saveData.invCharges[i]
-			};
-		}
 		skills = new CharacterSkill[SKILL_SIZE];
 		for (int i = 0; i < saveData.skills.Count; i++) {
 			skills[i] = (CharacterSkill) iLib.GetEntry(saveData.skills[i]);
@@ -142,42 +133,10 @@ public class StatsContainer {
 		res = charData.res + classData.res + bRes + (int)(calcLevel * (classData.gRes+charData.gRes) + iRes + eRes);
 	}
 
-	public int GetAttackSpeed() {
-		return spd - GetConPenalty();
-	}
-
-	public int GetHitRate() {
-		WeaponItem item = GetItem(ItemCategory.WEAPON);
-		if (!item)
-			return -1;
-		int trueSkl = skl - GetConPenalty();
-		float statsBoost = trueSkl * 1.5f + lck * 0.5f;
-		return (int)statsBoost + item.hitRate;
-	}
-	
-	public int GetAttackPower() {
-		WeaponItem item = GetItem(ItemCategory.WEAPON);
-		if (!item)
-			return -1;
-		return item.power + atk;
-	}
-
-	public int GetCriticalRate() {
-		WeaponItem item = GetItem(ItemCategory.WEAPON);
-		if (!item)
-			return -1;
-		int trueSkl = skl - GetConPenalty();
-		return item.critRate + (int)(trueSkl * 0.5f);
-	}
-	
-	public int GetAvoid() {
-		return (int)(spd * 1.5f + lck * 0.5f);
-	}
-
-	public int GetCritAvoid() {
-		return lck;
-	}
-
+	/// <summary>
+	/// The character's current move speed.
+	/// </summary>
+	/// <returns></returns>
 	public int GetMovespeed() {
 		return classData.movespeed;
 	}
@@ -186,117 +145,8 @@ public class StatsContainer {
 		return charData.con + classData.con;
 	}
 
-	public int GetConPenalty() {
-		WeaponItem item = GetItem(ItemCategory.WEAPON);
+	public int GetConPenalty(WeaponItem item) {
 		return (item) ? Mathf.Max(item.weight - GetConstitution()) : 0;
-	}
-
-	public WeaponItem GetItem(ItemCategory category) {
-		for (int i = 0; i < inventory.Length; i++) {
-			if (inventory[i] == null)
-				continue;
-			if (inventory[i].item.itemCategory == category && inventory[i].item.CanUse(this))
-				return inventory[i].item;
-		}
-		return null;
-	}
-
-	public InventoryTuple GetItemTuple(ItemCategory category) {
-		for (int i = 0; i < inventory.Length; i++) {
-			if (inventory[i] == null)
-				continue;
-			if (inventory[i].item.itemCategory == category && inventory[i].item.CanUse(this))
-				return inventory[i];
-		}
-		return null;
-	}
-
-	public void ReduceItemCharge(ItemCategory category) {
-		for (int i = 0; i < inventory.Length; i++) {
-			if (inventory[i] == null)
-				continue;
-			if (inventory[i].item.itemCategory == category)
-				inventory[i].charge--;
-			return;
-		}
-	}
-
-	public void CleanupInventory() {
-		int pos = 0;
-		for (int i = 0; i < inventory.Length; i++) {
-			if (inventory[i] == null)
-				continue;
-			if (inventory[i].charge <= 0) {
-				inventory[i] = null;
-				Debug.Log("Weapon broke!");
-			}
-			else {
-				InventoryTuple temp = inventory[i];
-				inventory[i] = inventory[pos];
-				inventory[pos] = temp;
-				pos++;
-			}
-		}
-		Debug.Log("Cleaned up inventory");
-	}
-
-	public WeaponItem GetItem(int index) {
-		return (inventory[index] == null) ? null : inventory[index].item;
-	}
-
-	public void EquipItem(int index) {
-		InventoryTuple equip = inventory[index];
-		for (int i = 0; i < index+1; i++) {
-			InventoryTuple temp = inventory[i];
-			inventory[i] = equip;
-			equip = temp;
-		}
-	}
-
-	public void UseItem(int index, TacticsMove player) {
-		InventoryTuple useItem = inventory[index];
-		if (useItem.item.itemType == ItemType.CHEAL) {
-			player.TakeHeals(useItem.item.power);
-		}
-		else if (useItem.item.itemType == ItemType.CSTATS) {
-			Boost boost = useItem.item.boost;
-			iHp += boost.hp;
-			iAtk += boost.atk;
-			iSpd += boost.spd;
-			iSkl += boost.skl;
-			iLck += boost.lck;
-			iDef += boost.def;
-			iRes += boost.res;
-			CalculateStats();
-		}
-		else {
-			Debug.LogWarning("WTF!?");
-			return;
-		}
-
-		useItem.charge--;
-		if (useItem.charge <= 0) {
-			inventory[index] = null;
-			CleanupInventory();
-		}
-		
-		player.End();
-	}
-
-	public void DropItem(int index) {
-		inventory[index] = null;
-		CleanupInventory();
-	}
-
-	public bool GainItem(InventoryTuple pickup) {
-		for (int i = 0; i < inventory.Length; i++) {
-			if (inventory[i] == null) {
-				inventory[i] = pickup;
-				Debug.Log("Added the item to position " + i);
-				return true;
-			}
-		}
-		return false;
 	}
 
 	public void GiveWpnExp(WeaponItem usedItem) {
@@ -306,6 +156,29 @@ public class StatsContainer {
 		else if (usedItem.itemCategory == ItemCategory.STAFF) {
             wpnSkills[(int)ItemType.HEAL] += 3;
 		}
+	}
+
+	/// <summary>
+	/// Returns the current weapon skill level for the weapon.
+	/// </summary>
+	/// <param name="weapon"></param>
+	/// <returns></returns>
+	public int GetWpnSkill(WeaponItem weapon) {
+		if (weapon == null)
+			return 0;
+		int skill = Mathf.Clamp((int)weapon.itemType, 0, wpnSkills.Length-1);
+		return wpnSkills[skill] * classData.GetWeaponSkill(skill);
+	}
+
+	public void BoostBaseStats(Boost boost) {
+		iHp += boost.hp;
+		iAtk += boost.atk;
+		iSpd += boost.spd;
+		iSkl += boost.skl;
+		iLck += boost.lck;
+		iDef += boost.def;
+		iRes += boost.res;
+		CalculateStats();
 	}
 
 	public void ClearBoosts(bool isStartTurn) {
@@ -369,21 +242,12 @@ public class StatsContainer {
 		}
 	}
 
-	public bool IsWeakAgainst(WeaponItem weapon) {
-		if (weapon == null)
-			return false;
-		
-		for (int i = 0; i < weapon.advantageType.Length; i++) {
-			if (weapon.advantageType[i] == classData.classType)
-				return true;
-		}
-
-		return false;
-	}
 }
 
 
+[System.Serializable]
 public class InventoryTuple {
+	public int index;
 	public WeaponItem item;
 	public int charge;
 	public bool droppable;

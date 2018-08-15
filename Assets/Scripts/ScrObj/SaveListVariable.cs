@@ -5,6 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Variables/SaveList")]
 public class SaveListVariable : ScriptableObject {
 
-	public StatsContainer[] values = new StatsContainer[0];
+	public StatsContainer[] stats = new StatsContainer[0];
+	public InventoryContainer[] inventory = new InventoryContainer[0];
 
 }

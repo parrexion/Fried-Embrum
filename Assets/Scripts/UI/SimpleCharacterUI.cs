@@ -11,7 +11,9 @@ public class SimpleCharacterUI : MonoBehaviour {
 	public enum StatsType { BASIC, STATS, INVENTORY }
 	
 	public TacticsMoveVariable selectCharacter;
+	public TacticsMoveVariable targetCharacter;
 	public ActionModeVariable currentMode;
+	public IntVariable currentMenuMode;
 	public InventoryController invController;
 	
 	public StatsType currentStats;
@@ -65,19 +67,20 @@ public class SimpleCharacterUI : MonoBehaviour {
 
 
 	public void UpdateUI() {
-		if (selectCharacter.value == null || (currentMode.value != ActionMode.NONE && currentMode.value != ActionMode.MOVE) ) {
+		if (selectCharacter.value == null || currentMenuMode.value == (int)MenuMode.ATTACK || currentMenuMode.value == (int)MenuMode.HEAL) {
 			background.SetActive(false);
 			invController.HideTooltip();
 		}
 		else {
-			characterName.text = selectCharacter.value.stats.charData.charName;	
+			TacticsMove tactics = (currentMode.value != ActionMode.ATTACK && currentMode.value != ActionMode.HEAL) ? selectCharacter.value : targetCharacter.value;
+			characterName.text = tactics.stats.charData.charName;	
 			if (currentStats == StatsType.BASIC)
-				ShowBasicStats(selectCharacter.value);
+				ShowBasicStats(tactics);
 			else if (currentStats == StatsType.STATS) {
-				ShowStatsStats(selectCharacter.value);
+				ShowStatsStats(tactics);
 			}
 			else if (currentStats == StatsType.INVENTORY) {
-				ShowInventoryStats(selectCharacter.value);
+				ShowInventoryStats(tactics);
 			}
 			background.SetActive(true);
 		}
@@ -95,8 +98,9 @@ public class SimpleCharacterUI : MonoBehaviour {
 		weakIcon1.sprite = weaknessImages[(int)stats.classData.classType];
 		weakIcon1.enabled = (weakIcon1.sprite != null);
 
-		wpnIcon.sprite = (stats.GetItem(ItemCategory.WEAPON) != null) ? stats.GetItem(ItemCategory.WEAPON).icon : null;
-		wpnName.text = (stats.GetItem(ItemCategory.WEAPON) != null) ? stats.GetItem(ItemCategory.WEAPON).itemName : "";
+		WeaponItem weapon = tactics.GetFirstUsableItem(ItemCategory.WEAPON);
+		wpnIcon.sprite = (weapon != null) ? weapon.icon : null;
+		wpnName.text = (weapon != null) ? weapon.itemName : "";
 		
 		for (int i = 0; i < skillImages.Length; i++) {
 			if (i >= stats.skills.Length || stats.skills[i] == null) {
@@ -107,13 +111,13 @@ public class SimpleCharacterUI : MonoBehaviour {
 			}
 		}
 
-		int hitrate = stats.GetHitRate();
+		int hitrate = BattleCalc.GetHitRate(weapon, stats);
 		pwrText.text = (hitrate != -1) ? "Hit:  " + hitrate : "Hit:  --";
-		int pwer = stats.GetAttackPower();
+		int pwer = BattleCalc.CalculateDamage(weapon, stats);
 		hitText.text = (pwer != -1) ? "Pwr:  " + pwer : "Pwr:  --";
-		int critrate = stats.GetCriticalRate();
-		critText.text = (critrate != -1) ? "Crit:   " + stats.GetCriticalRate() : "Crit:   --";
-		avoidText.text = "Avo:  " + stats.GetAvoid();
+		int critrate = BattleCalc.GetCritRate(weapon, stats);
+		critText.text = (critrate != -1) ? "Crit:   " + critrate : "Crit:   --";
+		avoidText.text = "Avo:  " + BattleCalc.GetAvoid(stats);
 		
 		statsObject.SetActive(false);
 		basicObject.SetActive(true);
@@ -134,9 +138,10 @@ public class SimpleCharacterUI : MonoBehaviour {
 		defText.color = (stats.bDef != 0) ? Color.green : Color.black;
 		resText.color = (stats.bRes != 0) ? Color.green : Color.black;
 		
-		int penalty = stats.GetConPenalty();
+		WeaponItem weapon = tactics.GetFirstUsableItem(ItemCategory.WEAPON);
+		int penalty = stats.GetConPenalty(weapon);
 		if (penalty > 0) {
-			spdText.text = stats.GetAttackSpeed().ToString();
+			spdText.text = BattleCalc.GetAttackSpeed(weapon, stats).ToString();
 			weighDownSpdIcon.enabled = true;
 			weighDownSpdValue.text = (-penalty).ToString();
 			sklText.text = (stats.skl - penalty).ToString();
@@ -164,12 +169,14 @@ public class SimpleCharacterUI : MonoBehaviour {
 
 	private void ShowInventoryStats(TacticsMove tactics) {
 		StatsContainer stats = tactics.stats;
+		InventoryContainer inventory = tactics.inventory;
 		statsObject.SetActive(false);
 		basicObject.SetActive(false);
 		inventoryObject.SetActive(true);
 
+		WeaponItem weapon = tactics.GetFirstUsableItem(ItemCategory.WEAPON);
 		conText.text = stats.GetConstitution().ToString();
-		int atkSpeed = stats.GetAttackSpeed();
+		int atkSpeed = BattleCalc.GetAttackSpeed(weapon, stats);
 		if (atkSpeed < stats.spd) {
 			weighDownValue2.text = "Penalty:  " + (atkSpeed - stats.spd).ToString();
 		}
@@ -189,15 +196,16 @@ public class SimpleCharacterUI : MonoBehaviour {
 		}
 		
 		for (int i = 0; i < 5; i++) {
-			if (i >= stats.inventory.Length || stats.inventory[i] == null) {
+			if (i >= inventory.inventory.Length || inventory.inventory[i].item == null) {
 				inventoryFields[i].color = Color.black;
 				inventoryFields[i].text = "---";
 				inventoryValues[i].text = " ";
 			}
 			else {
-				InventoryTuple tuple = stats.inventory[i];
+				InventoryTuple tuple = inventory.inventory[i];
+				int skill = stats.GetWpnSkill(tuple.item);
 				inventoryFields[i].color = (tuple.droppable) ? Color.green : 
-							(tuple.item.CanUse(stats)) ? Color.black : Color.grey;
+							(tuple.item.CanUse(skill)) ? Color.black : Color.grey;
 				inventoryFields[i].text = tuple.item.itemName;
 				inventoryValues[i].text = (tuple.item.maxCharge >= 0) ? tuple.charge.ToString() : " ";
 				if (tuple.item.itemCategory == ItemCategory.CONSUME && tuple.item.maxCharge == 1)

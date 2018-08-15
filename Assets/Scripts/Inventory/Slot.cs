@@ -5,17 +5,20 @@ public class Slot : MonoBehaviour {
 
 	public int slotID;
 	public Image icon;
-	public StatsContainer item;
+	public StatsContainer stats;
+	public InventoryContainer inventory;
 
 
-	public void AddItem(StatsContainer charItem) {
-		item = charItem;
+	public void AddItem(StatsContainer charStats, InventoryContainer charInv) {
+		stats = charStats;
+		inventory = charInv;
 
-		icon.sprite = item.charData.portrait;
+		icon.sprite = stats.charData.portrait;
 	}
 
 	public void ClearSlot() {
-		item = null;
+		stats = null;
+		inventory = null;
 		icon.sprite = null;
 		icon.enabled = false;
 	}

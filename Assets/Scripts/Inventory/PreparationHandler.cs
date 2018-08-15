@@ -29,10 +29,10 @@ public class PreparationHandler : MonoBehaviour {
 	private StatsContainer GetItem(int index) {
 		if (index < 0) {
 			index = -(index+1);
-			return (index < equippedUnits.values.Length) ? equippedUnits.values[index] : null;
+			return (index < equippedUnits.stats.Length) ? equippedUnits.stats[index] : null;
 		}
 		else {
-			return (index < availableUnits.values.Length) ? availableUnits.values[index] : null;
+			return (index < availableUnits.stats.Length) ? availableUnits.stats[index] : null;
 		}
 	}
 
@@ -42,18 +42,17 @@ public class PreparationHandler : MonoBehaviour {
 	/// </summary>
 	/// <param name="index"></param>
 	/// <param name="item"></param>
-	/// <returns></returns>
 	private void SetItem(int index, StatsContainer item) {
 
 		if (index < 0) {
 			index = -(index+1);
-			if (index < equippedUnits.values.Length) {
-				equippedUnits.values[index] = item;
+			if (index < equippedUnits.stats.Length) {
+				equippedUnits.stats[index] = item;
 			}
 		}
 		else {
-			if (index < availableUnits.values.Length) {
-				availableUnits.values[index] = item;
+			if (index < availableUnits.stats.Length) {
+				availableUnits.stats[index] = item;
 			}
 		}
 	}

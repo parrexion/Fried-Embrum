@@ -44,6 +44,10 @@ public class MapTile : MonoBehaviour {
 		Debug.Log("Pos - x: " + posx + " , posy: " + posy);
 	}
 
+	public bool IsEmpty() {
+		return (currentCharacter == null);
+	}
+
 	private void SetHighlightColor() {
 		Color tileColor = Color.white;
 		tileColor.a = 0.35f;
@@ -113,18 +117,18 @@ public class MapTile : MonoBehaviour {
 		parent = null;
 	}
 
-	public void FindNeighbours(Queue<MapTile> progress, int currentDistance, TacticsMove tactics, int moveSpeed, bool showAttack, bool isDanger) {
+	public void FindNeighbours(Queue<MapTile> progress, int currentDistance, TacticsMove tactics, int moveSpeed, WeaponItem weapon, WeaponItem staff, bool showAttack, bool isDanger) {
 		MapTile tile = mapCreator.GetTile(posx-1, posy);
-		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.classData.classType, tactics.GetWeapon(ItemCategory.WEAPON), tactics.GetWeapon(ItemCategory.STAFF), showAttack, isDanger))
+		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.classData.classType, weapon, staff, showAttack, isDanger))
 			progress.Enqueue(tile);
 		tile = mapCreator.GetTile(posx+1, posy);
-		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.classData.classType, tactics.GetWeapon(ItemCategory.WEAPON), tactics.GetWeapon(ItemCategory.STAFF), showAttack, isDanger))
+		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.classData.classType, weapon, staff, showAttack, isDanger))
 			progress.Enqueue(tile);
 		tile = mapCreator.GetTile(posx, posy-1);
-		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.classData.classType, tactics.GetWeapon(ItemCategory.WEAPON), tactics.GetWeapon(ItemCategory.STAFF), showAttack, isDanger))
+		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.classData.classType, weapon, staff, showAttack, isDanger))
 			progress.Enqueue(tile);
 		tile = mapCreator.GetTile(posx, posy+1);
-		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.classData.classType, tactics.GetWeapon(ItemCategory.WEAPON), tactics.GetWeapon(ItemCategory.STAFF), showAttack, isDanger))
+		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.classData.classType, weapon, staff, showAttack, isDanger))
 			progress.Enqueue(tile);
 	}
 

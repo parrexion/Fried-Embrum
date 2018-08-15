@@ -10,7 +10,7 @@ public class ForecastUI : MonoBehaviour {
 	public bool inBattle;
 	public TacticsMoveVariable selectCharacter;
 	public MapTileVariable walkTile;
-	public MapTileVariable attackTile;
+	public TacticsMoveVariable defendCharacter;
 	public ActionModeVariable currentMode;
 
 	[Header("Arrows")]
@@ -63,16 +63,18 @@ public class ForecastUI : MonoBehaviour {
 	public Image hPortrait2;
 	public Text hCharacterName2;
 
+	public IntVariable battleWeaponIndex;
 
-	public void UpdateUI() {
-		if (selectCharacter.value == null || currentMode.value == ActionMode.NONE || currentMode.value == ActionMode.MOVE) {
+
+	public void UpdateUI(bool active) {
+		if (!active) {
 			if (!inBattle) {
 				backgroundFight.SetActive(false);
 				backgroundHeal.SetActive(false);
 			}
 		}
 		else {
-			CalculateShowForecast(selectCharacter.value, attackTile.value.currentCharacter);
+			CalculateShowForecast(selectCharacter.value, defendCharacter.value);
 		}
 	}
 
@@ -82,34 +84,39 @@ public class ForecastUI : MonoBehaviour {
 	}
 
 	private void CalculateShowForecast(TacticsMove attacker, TacticsMove defender) {
-		bool isDamage = (currentMode.value == ActionMode.ATTACK);
-		BattleAction act1 = new BattleAction(true, isDamage, attacker, defender);
+		bool attackmode = (currentMode.value == ActionMode.ATTACK);
+		BattleAction act1 = new BattleAction(true, attackmode, attacker, defender);
+		_attackerTactics = attacker;
+		_defenderTactics = defender;
+		act1.weaponAtk = attacker.inventory.GetItem(battleWeaponIndex.value);
 
-		if (isDamage) {
+		if (attackmode) {
 			if (inBattle)
 				backgroundInBattle.SetActive(true);
+
 			BattleAction act2 = new BattleAction(false, true, defender, attacker);
+			act2.weaponDef = attacker.inventory.GetItem(battleWeaponIndex.value);
 			int distance = MapCreator.DistanceTo(defender, walkTile.value);
-			int atk = (attacker.GetWeapon(ItemCategory.WEAPON).InRange(distance)) ? act1.GetDamage() : -1;
-			int def = (defender.GetWeapon(ItemCategory.WEAPON) != null && defender.GetWeapon(ItemCategory.WEAPON).InRange(distance)) ? act2.GetDamage() : -1;
-			int spd = attacker.stats.GetAttackSpeed() - defender.stats.GetAttackSpeed();
+			int atk = (act1.weaponAtk.item.InRange(distance)) ? act1.GetDamage() : -1;
+			int ret = (act1.weaponDef.item != null && act1.weaponDef.item.InRange(distance)) ? act2.GetDamage() : -1;
+			int spd = act1.GetSpeedDifference();
 			int hit = (atk != -1) ? act1.GetHitRate() : -1;
-			int hit2 = (def != -1) ? act2.GetHitRate() : -1;
+			int hit2 = (ret != -1) ? act2.GetHitRate() : -1;
 			int crit = (atk != -1) ? act1.GetCritRate() : -1;
-			int crit2 = (def != -1) ? act2.GetCritRate() : -1;
-			bool atkWeak = attacker.stats.IsWeakAgainst(defender.stats.GetItem(ItemCategory.WEAPON));
-			bool defWeak = defender.stats.IsWeakAgainst(attacker.stats.GetItem(ItemCategory.WEAPON));
+			int crit2 = (ret != -1) ? act2.GetCritRate() : -1;
+			bool atkWeak = BattleCalc.CheckWeaponWeakness(act1.weaponAtk.item, act1.defender.stats);
+			bool defWeak = BattleCalc.CheckWeaponWeakness(act2.weaponAtk.item, act2.defender.stats);
 			int atkAdv = act1.GetAdvantage();
 			int defAdv = act2.GetAdvantage();
-			ShowAttackerStats(attacker, atk, spd, hit, crit, atkAdv, atkWeak);
-			ShowDefenderStats(defender, def, spd, hit2, crit2, defAdv, defWeak);
+			ShowAttackerStats(attacker, act1.weaponAtk, atk, spd, hit, crit, atkAdv, atkWeak);
+			ShowDefenderStats(defender, act2.weaponAtk, ret, spd, hit2, crit2, defAdv, defWeak);
 			if (!inBattle) {
 				backgroundFight.SetActive(true);
 				backgroundHeal.SetActive(false);
 			}
 		}
 		else {
-			ShowHealForecast(attacker, defender, act1.GetHeals());
+			ShowHealForecast(attacker, defender, act1.weaponAtk);
 			if (!inBattle) {
 				backgroundFight.SetActive(false);
 				backgroundHeal.SetActive(true);
@@ -117,20 +124,17 @@ public class ForecastUI : MonoBehaviour {
 		}
 	}
 	
-	private void ShowAttackerStats(TacticsMove tactics, int damage, int speed, int hit, int crit, int atkAdv, bool defWeak) {
-		_attackerTactics = tactics;
-		StatsContainer stats = tactics.stats;
+	private void ShowAttackerStats(TacticsMove tactics, InventoryTuple InvTup, int damage, int speed, int hit, int crit, int atkAdv, bool defWeak) {
 //		colorBackground.color = (tactics.faction == Faction.PLAYER) ? new Color(0.5f,0.8f,1f) : new Color(1f,0.5f,0.8f);
 		
-		characterName.text = stats.charData.charName;
-		portrait.sprite = stats.charData.portrait;
+		characterName.text = tactics.stats.charData.charName;
+		portrait.sprite = tactics.stats.charData.portrait;
 		wpnAdvantage.enabled = (atkAdv != 0);
 		wpnAdvantage.sprite = (atkAdv == 1) ? advArrow : disArrow;
-		InventoryTuple weapon = stats.GetItemTuple(ItemCategory.WEAPON);
-		wpnIcon.sprite = (weapon != null) ? weapon.item.icon : null;
-		wpnName.text = (weapon != null) ? weapon.item.itemName : "";
+		wpnIcon.sprite = (InvTup.item != null) ? InvTup.item.icon : null;
+		wpnName.text = (InvTup.item != null) ? InvTup.item.itemName : "";
 		if (wpnCharge)
-			wpnCharge.text = (weapon != null) ? weapon.charge.ToString() : "";
+			wpnCharge.text = (InvTup.item != null) ? InvTup.charge.ToString() : "";
 
 		hpText.text = tactics.currentHealth.ToString();
 		dmgText.text = (damage != -1) ? damage.ToString() : "--";
@@ -140,43 +144,33 @@ public class ForecastUI : MonoBehaviour {
 		critText.text = crit.ToString();
 	}
 	
-	private void ShowDefenderStats(TacticsMove tactics, int damage, int speed, int hit, int crit, int defAdv, bool atkWeak) {
-		_defenderTactics = tactics;
-		StatsContainer stats = tactics.stats;
+	private void ShowDefenderStats(TacticsMove tactics, InventoryTuple InvTup, int damage, int speed, int hit, int crit, int defAdv, bool atkWeak) {
 //		colorBackground.color = (tactics.faction == Faction.PLAYER) ? new Color(0.5f,0.8f,1f) : new Color(1f,0.5f,0.8f);
 		
-		eCharacterName.text = stats.charData.charName;
-		ePortrait.sprite = stats.charData.portrait;
+		eCharacterName.text = tactics.stats.charData.charName;
+		ePortrait.sprite = tactics.stats.charData.portrait;
 		eWpnAdvantage.enabled = (defAdv != 0);
 		eWpnAdvantage.sprite = (defAdv == 1) ? advArrow : disArrow;
-		InventoryTuple weapon = stats.GetItemTuple(ItemCategory.WEAPON);
-		eWpnIcon.sprite = (weapon != null) ? weapon.item.icon : null;
-		eWpnName.text = (weapon != null) ? weapon.item.itemName : "";
+		eWpnIcon.sprite = (InvTup.item != null) ? InvTup.item.icon : null;
+		eWpnName.text = (InvTup.item != null) ? InvTup.item.itemName : "";
 		if (eWpnCharge)
-			eWpnCharge.text = (weapon != null) ? weapon.charge.ToString() : "";
+			eWpnCharge.text = (InvTup.item != null) ? InvTup.charge.ToString() : "";
 
 		eHpText.text = tactics.currentHealth.ToString();
 		eDmgText.text = (damage != -1) ? damage.ToString() : "--";
-		dmgText.color = (damage != -1 && atkWeak) ? Color.green : Color.black;
+		eDmgText.color = (damage != -1 && atkWeak) ? Color.green : Color.black;
 		eDoubleDamage.SetActive(speed <= -5);
 		eHitText.text = hit.ToString();
 		eCritText.text = crit.ToString();
 	}
 	
-	private void ShowHealForecast(TacticsMove healer, TacticsMove receiver, int heal) {
+	private void ShowHealForecast(TacticsMove healer, TacticsMove receiver, InventoryTuple staff) {
 		if (inBattle)
 			backgroundInBattle.SetActive(false);
-		_attackerTactics = healer;
-		_defenderTactics = receiver;
 		StatsContainer stats = healer.stats;
 		
 		hCharacterName.text = stats.charData.charName;
 		hPortrait.sprite = stats.charData.portrait;
-		InventoryTuple staff = stats.GetItemTuple(ItemCategory.STAFF);
-		hWpnIcon.sprite = (staff != null) ? staff.item.icon : null;
-		hWpnName.text = (staff != null) ? staff.item.itemName : "";
-		if (!inBattle)
-			hWpnCharge.text = (staff != null) ? staff.charge.ToString() : "";
 
 		stats = receiver.stats;
 		hCharacterName2.text = stats.charData.charName;
@@ -185,15 +179,20 @@ public class ForecastUI : MonoBehaviour {
 			hpText.text = healer.currentHealth.ToString();
 			eHpText.text = receiver.currentHealth.ToString();
 
-			InventoryTuple weapon = stats.GetItemTuple(ItemCategory.WEAPON);
-			eWpnIcon.sprite = (weapon != null) ? weapon.item.icon : null;
-			eWpnName.text = (weapon != null) ? weapon.item.itemName : "";
+			eWpnIcon.sprite = null;
+			eWpnName.text = "--";
 		}
-		else {
+
+		hWpnIcon.sprite = (staff.item != null) ? staff.item.icon : null;
+		hWpnName.text = (staff.item != null) ? staff.item.itemName : "";
+
+		if (!inBattle) {
+			hWpnCharge.text = (staff.item != null) ? staff.charge.ToString() : "";
 			hHealText.text = string.Format("{0} → {1} ({2})",
-					receiver.currentHealth,
-					Mathf.Min(receiver.currentHealth + heal, stats.hp),
-					stats.hp);
+					_defenderTactics.currentHealth,
+					Mathf.Min(_defenderTactics.currentHealth + BattleCalc.CalculateHeals(staff.item, _attackerTactics.stats), _defenderTactics.stats.hp),
+					_defenderTactics.stats.hp);
 		}
 	}
+
 }

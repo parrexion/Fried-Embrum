@@ -11,9 +11,11 @@ public abstract class TacticsMove : MonoBehaviour {
 	public BoolVariable lockControls;
 	public MapCreator mapCreator;
 	public ActionModeVariable currentMode;
-	public MapTileVariable attackTarget;
+	// public MapTileVariable attackTarget;
+	public TacticsMoveVariable targetCharacter;
 	public CharacterListVariable playerList;
 	public CharacterListVariable enemyList;
+	public IntVariable battleWeaponIndex;
 
 	[Header("Movement")]
 	public IntVariable movementVelocity;
@@ -28,6 +30,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	[Header("Stats")]
 	public Faction faction = Faction.PLAYER;
 	public StatsContainer stats;
+	public InventoryContainer inventory;
 	public int currentHealth;
 
 	[Header("Materials")]
@@ -40,7 +43,9 @@ public abstract class TacticsMove : MonoBehaviour {
 	public GameObject boostObject;
 	public GameObject debuffObject;
 
+	[Header("Events")]
 	public UnityEvent characterClicked;
+	public UnityEvent cameraFollowEvent;
 	public UnityEvent waitEvent;
 
 
@@ -64,142 +69,16 @@ public abstract class TacticsMove : MonoBehaviour {
 	}
 
 	protected abstract void SetupLists();
-
 	protected abstract void EndMovement();
 
-	public virtual void CalculateMovement() { }
 
-	public virtual void CalculateAttacks() { }
-
+	/// <summary>
+	/// Update loop.
+	/// Updates the healthbar if they are visible.
+	/// </summary>
 	private void Update() {
 		if (healthImage != null)
-			UpdateHealthbar();
-	}
-
-	private void UpdateHealthbar() {
-		healthImage.fillAmount = GetHealthPercent();
-	}
-
-	public void FindAllMoveTiles(bool isDanger) {
-		mapCreator.ResetMap();
-		Queue<MapTile> process = new Queue<MapTile>();
-		process.Enqueue(currentTile);
-		currentTile.distance = 0;
-		currentTile.parent = null;
-		
-		if (isDanger)
-			currentTile.reachable = true;
-		else
-			currentTile.current = true;
-		
-		if (GetWeapon(ItemCategory.WEAPON) != null)
-			mapCreator.ShowAttackTiles(currentTile, GetWeapon(ItemCategory.WEAPON), faction, isDanger);
-		if (GetWeapon(ItemCategory.STAFF) != null)
-			mapCreator.ShowSupportTiles(currentTile, GetWeapon(ItemCategory.STAFF), faction, isDanger);
-
-		while(process.Count > 0) {
-			MapTile tile = process.Dequeue();
-			if (tile.distance >= (stats.GetMovespeed()))
-				continue;
-
-			tile.FindNeighbours(process, tile.distance, this, stats.GetMovespeed(), true, isDanger);
-		}
-	}
-
-	public void ShowMove(MapTile endTile) {
-		mapCreator.ClearMovement();
-		endTile.target = true;
-		path.Clear();
-		MapTile cTile = endTile;
-		while(cTile.parent != null) {
-			path.Push(cTile);
-			cTile.pathable = true;
-			cTile = cTile.parent;
-		}
-	}
-
-	public void Move() {
-		Debug.Log("MOVE   " + path.Count);
-		_heading = transform.position;
-		isMoving = true;
-	}
-
-	public MapTile CalculateCorrectMoveTile(MapTile current, MapTile attackTile) {
-		if (current == null)
-			current = currentTile;
-		int tempDist = MapCreator.DistanceTo(attackTile, current);
-		if ((GetWeapon(ItemCategory.WEAPON) != null && GetWeapon(ItemCategory.WEAPON).InRange(tempDist)) ||
-		    (GetWeapon(ItemCategory.STAFF) != null && GetWeapon(ItemCategory.STAFF).InRange(tempDist))) {
-			return current;
-		}
-
-		for (int i = 0; i < mapCreator.tiles.Length; i++) {
-			MapTile tempTile = mapCreator.tiles[i];
-			if (tempTile.currentCharacter != null || !tempTile.selectable)
-				continue;
-			tempDist = MapCreator.DistanceTo(attackTile, tempTile);
-			if ((GetWeapon(ItemCategory.WEAPON) != null && GetWeapon(ItemCategory.WEAPON).InRange(tempDist)) ||
-				(GetWeapon(ItemCategory.STAFF) != null && GetWeapon(ItemCategory.STAFF).InRange(tempDist))) {
-				return tempTile;
-			}
-		}
-
-		Debug.Log("Something went wrong it seems :/");
-		return null;
-	}
-	
-//
-//	public void FindAllAttackTiles() {
-//		currentTile.current = true;
-//		for (int i = 0; i < ConstValues.MAP_SIZE_X; i++) {
-//			for (int j = 0; j < ConstValues.MAP_SIZE_Y; j++) {
-//				MapTile tempTile = mapCreator.GetTile(i,j);
-//				int tempDist = MapCreator.DistanceTo(this, tempTile);
-//				if (!GetWeapon().InRange(tempDist)) 
-//					continue;
-//				if (!SameFaction(this, tempTile.currentCharacter))
-//					tempTile.attackable = true;
-//			}
-//		}
-//	}
-//
-//	public void FindAllHealTiles() {
-//		currentTile.current = true;
-//		for (int i = 0; i < ConstValues.MAP_SIZE_X; i++) {
-//			for (int j = 0; j < ConstValues.MAP_SIZE_Y; j++) {
-//				MapTile tempTile = mapCreator.GetTile(i,j);
-//				if (tempTile.currentCharacter == null)
-//					continue;
-//				int tempDist = MapCreator.DistanceTo(this, tempTile);
-//				if (!GetSupport().InRange(tempDist)) 
-//					continue;
-//				bool usable = tempTile.currentCharacter.currentHealth != tempTile.currentCharacter.stats.hp;
-//				if (SameFaction(this, tempTile.currentCharacter) && (usable || GetSupport().supportType == SupportType.BUFF))
-//					tempTile.pathable = true;
-//			}
-//		}
-//	}
-
-	protected void Attack(TacticsMove enemy) {
-		lockControls.value = true;
-		characterClicked.Invoke();
-		BattleContainer.instance.GenerateActions(this, enemy);
-		BattleContainer.instance.PlayBattleAnimations();
-	}
-
-	protected void Heal(TacticsMove ally) {
-		lockControls.value = true;
-		characterClicked.Invoke();
-		BattleContainer.instance.GenerateHealAction(this, ally);
-		BattleContainer.instance.PlayBattleAnimations();
-	}
-
-	public void End() {
-		hasMoved = true;
-		GetComponent<SpriteRenderer>().color = new Color(0.66f,0.66f,0.66f);
-		mapCreator.ResetMap();
-		currentTile.current = true;
-		waitEvent.Invoke();
+			healthImage.fillAmount = GetHealthPercent();
 	}
 
 	private void FixedUpdate() {
@@ -215,6 +94,7 @@ public abstract class TacticsMove : MonoBehaviour {
 			_heading = new Vector3(tile.transform.position.x,tile.transform.position.y,0);
 			posx = currentTile.posx;
 			posy = currentTile.posy;
+			cameraFollowEvent.Invoke();
 		}
 		else {
 			currentTile.currentCharacter = null;
@@ -222,8 +102,171 @@ public abstract class TacticsMove : MonoBehaviour {
 			currentTile.currentCharacter = this;
 			posx = currentTile.posx;
 			posy = currentTile.posy;
+			cameraFollowEvent.Invoke();
 			EndMovement();
 		}
+	}
+
+	public void FindAllMoveTiles(bool isDanger) {
+		mapCreator.ResetMap();
+		Queue<MapTile> process = new Queue<MapTile>();
+		process.Enqueue(currentTile);
+		currentTile.distance = 0;
+		currentTile.parent = null;
+		currentTile.selectable = true;
+		currentTile.target = true;
+		
+		WeaponItem weapon = GetEquippedWeapon(ItemCategory.WEAPON);
+		WeaponItem staff = GetEquippedWeapon(ItemCategory.STAFF);
+		
+		if (weapon != null)
+			mapCreator.ShowAttackTiles(currentTile, weapon, faction, isDanger);
+		if (staff != null)
+			mapCreator.ShowSupportTiles(currentTile, staff, faction, isDanger);
+
+		while(process.Count > 0) {
+			MapTile tile = process.Dequeue();
+			if (tile.distance >= (stats.GetMovespeed()))
+				continue;
+
+			tile.FindNeighbours(process, tile.distance, this, stats.GetMovespeed(), weapon, staff, true, isDanger);
+		}
+	}
+
+	/// <summary>
+	/// Show the path the character will take when moving to the endTile.
+	/// </summary>
+	/// <param name="endTile"></param>
+	public void ShowMove(MapTile endTile) {
+		mapCreator.ClearMovement();
+		endTile.target = true;
+		path.Clear();
+		MapTile cTile = endTile;
+		while(cTile.parent != null) {
+			path.Push(cTile);
+			cTile.pathable = true;
+			cTile = cTile.parent;
+		}
+	}
+
+	/// <summary>
+	/// Starts the movement for the character.
+	/// Locks the controls until the target is reached.
+	/// </summary>
+	public void StartMove() {
+		Debug.Log("MOVE   " + path.Count);
+		lockControls.value = true;
+		_heading = transform.position;
+		isMoving = true;
+	}
+
+	/// <summary>
+	/// Undos the movement and returns the character to the starting tile again and updates all references.
+	/// </summary>
+	/// <param name="startTile"></param>
+	public void UndoMove(MapTile startTile) {
+		mapCreator.ClearMovement();
+		currentTile.currentCharacter = null;
+		currentTile = startTile;
+		currentTile.currentCharacter = this;
+		posx = currentTile.posx;
+		posy = currentTile.posy;
+		transform.position = new Vector3(startTile.transform.position.x,startTile.transform.position.y,0);
+	}
+
+	public MapTile CalculateCorrectMoveTile(MapTile current, MapTile attackTile) {
+		if (current == null)
+			current = currentTile;
+		int tempDist = MapCreator.DistanceTo(attackTile, current);
+		if ((GetEquippedWeapon(ItemCategory.WEAPON) != null && GetEquippedWeapon(ItemCategory.WEAPON).InRange(tempDist)) ||
+		    (GetEquippedWeapon(ItemCategory.STAFF) != null && GetEquippedWeapon(ItemCategory.STAFF).InRange(tempDist))) {
+			return current;
+		}
+
+		for (int i = 0; i < mapCreator.tiles.Length; i++) {
+			MapTile tempTile = mapCreator.tiles[i];
+			if (!tempTile.IsEmpty() || !tempTile.selectable)
+				continue;
+			tempDist = MapCreator.DistanceTo(attackTile, tempTile);
+			if ((GetEquippedWeapon(ItemCategory.WEAPON) != null && GetEquippedWeapon(ItemCategory.WEAPON).InRange(tempDist)) ||
+				(GetEquippedWeapon(ItemCategory.STAFF) != null && GetEquippedWeapon(ItemCategory.STAFF).InRange(tempDist))) {
+				return tempTile;
+			}
+		}
+
+		Debug.Log("Something went wrong it seems :/");
+		return null;
+	}
+	
+	/// <summary>
+	/// Takes the current position and makes a list of all enemies which can be reached from 
+	/// there using the character's weapons.
+	/// </summary>
+	/// <returns></returns>
+	public List<TacticsMove> GetEnemiesInRange() {
+		List<InventoryTuple> weaponList = inventory.GetAllUsableItemTuple(ItemCategory.WEAPON, stats);
+		List<TacticsMove> enemies = new List<TacticsMove>();
+		// currentTile.current = true;
+		for (int i = 0; i < enemyList.values.Count; i++) {
+			int tempDist = MapCreator.DistanceTo(this, enemyList.values[i]);
+			for (int w = 0; w < weaponList.Count; w++) {
+				if (weaponList[w].item == null)
+					continue;
+				if (weaponList[w].item.InRange(tempDist) && faction != enemyList.values[i].faction) {
+					enemies.Add(enemyList.values[i]);
+					break;
+				}
+			}
+		}
+		return enemies;
+	}
+
+	/// <summary>
+	/// Finds all the allies around the character which can be supported with the staff.
+	/// </summary>
+	/// <returns></returns>
+	public List<TacticsMove> FindSupportablesInRange() {
+		WeaponItem staff = GetFirstUsableItem(ItemCategory.STAFF);
+		List<TacticsMove> supportables = new List<TacticsMove>();
+		for (int i = 0; i < playerList.values.Count; i++) {
+			if (this == playerList.values[i] || !playerList.values[i].IsInjured())
+				continue;
+
+			int tempDist = MapCreator.DistanceTo(this, playerList.values[i]);
+			if (staff.InRange(tempDist) && faction == playerList.values[i].faction)
+				supportables.Add(playerList.values[i]);
+		}
+		return supportables;
+	}
+
+	public void Attack(TacticsMove enemy) {
+		lockControls.value = true;
+		inventory.EquipItem(battleWeaponIndex.value);
+		characterClicked.Invoke();
+		mapCreator.GetTile(targetCharacter.value.posx,targetCharacter.value.posy).target = true;
+		BattleContainer.instance.GenerateActions(this, enemy);
+		BattleContainer.instance.PlayBattleAnimations();
+	}
+
+	public void Heal(TacticsMove ally) {
+		lockControls.value = true;
+		inventory.EquipItem(battleWeaponIndex.value);
+		characterClicked.Invoke();
+		mapCreator.GetTile(targetCharacter.value.posx,targetCharacter.value.posy).target = true;
+		BattleContainer.instance.GenerateHealAction(this, ally);
+		BattleContainer.instance.PlayBattleAnimations();
+	}
+
+	/// <summary>
+	/// Ends the turn for the character and darkens it.null Also cleans up the map.
+	/// </summary>
+	public void End() {
+		hasMoved = true;
+		GetComponent<SpriteRenderer>().color = new Color(0.66f,0.66f,0.66f);
+		mapCreator.ResetMap();
+		currentTile.current = true;
+		Debug.Log("Wait!");
+		waitEvent.Invoke();
 	}
 
 	private void CalculateVelocity() {
@@ -297,12 +340,18 @@ public abstract class TacticsMove : MonoBehaviour {
 		gameObject.SetActive(false);
 	}
 
+	/// <summary>
+	/// Refreshes the character and removes expired buffs.
+	/// </summary>
 	public void OnStartTurn() {
 		stats.ClearBoosts(true);
 		ForEachSkills(Activation.STARTTURN, playerList);
 		hasMoved = false;
 	}
 
+	/// <summary>
+	/// Ends the turn for the character and restores the color to normal during the enemies' turn.
+	/// </summary>
 	public void OnEndTurn() {
 		hasMoved = false;
 		stats.ClearBoosts(false);
@@ -310,7 +359,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	}
 
 	public bool CanAttack() {
-		WeaponItem invItem = GetWeapon(ItemCategory.WEAPON);
+		WeaponItem invItem = GetEquippedWeapon(ItemCategory.WEAPON);
 		if (invItem == null)
 			return false;
 		for (int i = 0; i < enemyList.values.Count; i++) {
@@ -323,7 +372,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	}
 
 	public bool CanSupport() {
-		WeaponItem invItem = GetWeapon(ItemCategory.STAFF);
+		WeaponItem invItem = GetEquippedWeapon(ItemCategory.STAFF);
 		if (invItem == null)
 			return false;
 		for (int i = 0; i < playerList.values.Count; i++) {
@@ -338,6 +387,11 @@ public abstract class TacticsMove : MonoBehaviour {
 		return false;
 	}
 	
+	/// <summary>
+	/// Adds attackable to all tiles surrounding the character depending on range.
+	/// </summary>
+	/// <param name="range1"></param>
+	/// <param name="range2"></param>
 	public void ShowAttackTiles(bool range1, bool range2) {
 		if (!IsAlive())
 			return;
@@ -372,6 +426,12 @@ public abstract class TacticsMove : MonoBehaviour {
 		}
 	}
 	
+	
+	/// <summary>
+	/// Adds supportable to all tiles surrounding the character depending on range.
+	/// </summary>
+	/// <param name="range1"></param>
+	/// <param name="range2"></param>
 	public void ShowSupportTiles(bool range1, bool range2) {
 		if (!IsAlive())
 			return;
@@ -406,16 +466,21 @@ public abstract class TacticsMove : MonoBehaviour {
 		}
 	}
 
-	public WeaponItem GetWeapon(ItemCategory category) {
-		return stats.GetItem(category);
+	public WeaponItem GetEquippedWeapon(ItemCategory category) {
+		return inventory.GetFirstUsableItem(category, stats);
 	}
 	
-	public InventoryTuple GetInventoryTuple(ItemCategory category) {
-		return stats.GetItemTuple(category);
+	public InventoryTuple GetFirstUsableInventoryTuple(ItemCategory category) {
+		return inventory.GetUsableItemTuple(category, stats);
+	}
+	
+	public WeaponItem GetFirstUsableItem(ItemCategory category) {
+		InventoryTuple inv = inventory.GetUsableItemTuple(category, stats);
+		return (inv != null) ? inv.item : null;
 	}
 	
 	public void ReduceWeaponCharge(ItemCategory category) {
-		stats.ReduceItemCharge(category);
+		inventory.ReduceItemCharge(category);
 	}
 
 	public void ActivateSkills(Activation activation, TacticsMove enemy) {

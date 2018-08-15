@@ -51,6 +51,14 @@ public class CharClass : ScriptableObject {
 		}
 		return null;
 	}
+
+	public int GetWeaponSkill(int skill) {
+		for (int i = 0; i < weaponSkills.Length; i++) {
+			if ((int)weaponSkills[i] == skill)
+				return 1;
+		}
+		return 0;
+	}
 }
 
 [System.Serializable]
