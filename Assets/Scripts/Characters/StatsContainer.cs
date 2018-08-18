@@ -99,6 +99,19 @@ public class StatsContainer {
 		CalculateStats();
 	}
 
+	/// <summary>
+	/// Generates new IV values. Overwrites the previous ones.
+	/// </summary>
+	public void GenerateIV() {
+		iHp = Random.Range(0f,1f);
+		iAtk = Random.Range(0f,1f);
+		iSkl = Random.Range(0f,1f);
+		iSpd = Random.Range(0f,1f);
+		iLck = Random.Range(0f,1f);
+		iDef = Random.Range(0f,1f);
+		iRes = Random.Range(0f,1f);
+	}
+
 	private void GenerateBoosts() {
 		bHp = 0;
 		bAtk = 0;
@@ -146,7 +159,7 @@ public class StatsContainer {
 	}
 
 	public int GetConPenalty(WeaponItem item) {
-		return (item) ? Mathf.Max(item.weight - GetConstitution()) : 0;
+		return (item) ? Mathf.Max(item.weight - GetConstitution(),0) : 0;
 	}
 
 	public void GiveWpnExp(WeaponItem usedItem) {

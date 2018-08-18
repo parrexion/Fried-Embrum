@@ -116,20 +116,25 @@ public abstract class TacticsMove : MonoBehaviour {
 		currentTile.selectable = true;
 		currentTile.target = true;
 		
-		WeaponItem weapon = GetEquippedWeapon(ItemCategory.WEAPON);
-		WeaponItem staff = GetEquippedWeapon(ItemCategory.STAFF);
+		WeaponRange weapon = inventory.GetReach(ItemCategory.WEAPON);
+		WeaponRange staff = inventory.GetReach(ItemCategory.STAFF);
 		
-		if (weapon != null)
+		Debug.Log("Reach:  " + weapon.min + "  ,  " + weapon.max);
+
+		bool isBuff = false;
+		if (weapon.max > 0)
 			mapCreator.ShowAttackTiles(currentTile, weapon, faction, isDanger);
-		if (staff != null)
-			mapCreator.ShowSupportTiles(currentTile, staff, faction, isDanger);
+		if (staff.max > 0) {
+			isBuff = (inventory.GetFirstUsableItem(ItemType.BUFF, stats) != null);
+			mapCreator.ShowSupportTiles(currentTile, staff, faction, isDanger, isBuff);
+		}
 
 		while(process.Count > 0) {
 			MapTile tile = process.Dequeue();
 			if (tile.distance >= (stats.GetMovespeed()))
 				continue;
 
-			tile.FindNeighbours(process, tile.distance, this, stats.GetMovespeed(), weapon, staff, true, isDanger);
+			tile.FindNeighbours(process, tile.distance, this, stats.GetMovespeed(), weapon, staff, true, isDanger, isBuff);
 		}
 	}
 
@@ -274,13 +279,19 @@ public abstract class TacticsMove : MonoBehaviour {
 		_velocity = new Vector3(_velocity.x,_velocity.y,0);
 	}
 
+	/// <summary>
+	/// Reduces the current health by the damage taken and displays the damage in a popup.
+	/// </summary>
+	/// <param name="damage"></param>
 	public void TakeDamage(int damage) {
-		if (damage > 0)
+		if (damage > 0) {
 			currentHealth -= damage;
+			currentHealth = Mathf.Max(0, currentHealth);
+		}
 		damageNumber.text = (damage == -1) ? "Miss" : damage.ToString();
 		damageNumber.color = Color.black;
 		StartCoroutine(DamageDisplay());
-		if (currentHealth <= 0)
+		if (currentHealth == 0)
 			StartCoroutine(OnDeath());
 	}
 
@@ -333,6 +344,10 @@ public abstract class TacticsMove : MonoBehaviour {
 		return currentHealth > 0;
 	}
 
+	public TerrainTile GetTerrain() {
+		return currentTile.terrain;
+	} 
+
 	protected IEnumerator OnDeath() {
 		GetComponent<SpriteRenderer>().color = new Color(0.4f,0.4f,0.4f);
 		currentTile.currentCharacter = null;
@@ -358,29 +373,47 @@ public abstract class TacticsMove : MonoBehaviour {
 		GetComponent<SpriteRenderer>().color = Color.white;
 	}
 
+	/// <summary>
+	/// Takes the range of the character's weapons and checks if any enemy is in range.
+	/// </summary>
+	/// <returns></returns>
 	public bool CanAttack() {
-		WeaponItem invItem = GetEquippedWeapon(ItemCategory.WEAPON);
-		if (invItem == null)
+		WeaponRange range = inventory.GetReach(ItemCategory.WEAPON);
+		if (range.max == 0)
 			return false;
 		for (int i = 0; i < enemyList.values.Count; i++) {
 			int distance = MapCreator.DistanceTo(this, enemyList.values[i]);
-			if (invItem.InRange(distance)) {
+			if (range.InRange(distance)) {
 				return true;
 			}
 		}
 		return false;
 	}
 
+	/// <summary>
+	/// Takes the range of the character's staffs and checks if any supportable is in range.
+	/// </summary>
+	/// <returns></returns>
 	public bool CanSupport() {
-		WeaponItem invItem = GetEquippedWeapon(ItemCategory.STAFF);
-		if (invItem == null)
+		WeaponRange range = inventory.GetReach(ItemCategory.STAFF);
+		if (range.max == 0)
 			return false;
+		
+		List<InventoryTuple> staffs = inventory.GetAllUsableItemTuple(ItemCategory.STAFF, stats);
+		bool isBuff = false;
+		for (int i = 0; i < staffs.Count; i++) {
+			if (staffs[i].item.itemType == ItemType.BUFF){
+				isBuff = true;
+				break;
+			}
+		}
+
 		for (int i = 0; i < playerList.values.Count; i++) {
-			bool usable = (playerList.values[i].IsInjured() || invItem.itemType == ItemType.BUFF);
-			if (playerList.values[i] == this || !usable)
+			bool usable = (playerList.values[i].IsInjured() || isBuff);
+			if (!usable || playerList.values[i] == this)
 				continue;
 			int distance = MapCreator.DistanceTo(this, playerList.values[i]);
-			if (invItem.InRange(distance)) {
+			if (range.InRange(distance)) {
 				return true;
 			}
 		}

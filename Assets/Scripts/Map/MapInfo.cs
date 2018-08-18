@@ -12,6 +12,7 @@ public class MapInfo : ScriptableObject {
 	[Header("Terrain Tiles")]
 	public TerrainTile normal;
 	public TerrainTile forest;
+	public TerrainTile river;
 	public TerrainTile mountain;
 	public TerrainTile blocked;
 
@@ -44,4 +45,5 @@ public class EnemyPosition {
 	public CharacterStats stats;
 	public WeaponTuple[] inventory;
 	public CharacterSkill[] skills;
+	public AggroType aggroType;
 }

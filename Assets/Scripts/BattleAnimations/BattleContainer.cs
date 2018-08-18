@@ -15,6 +15,7 @@ public class BattleContainer : MonoBehaviour {
 	public FactionVariable currentTurn;
 	public BoolVariable lockControls;
 	public BoolVariable useTrueHit;
+	public IntVariable doublingSpeed;
 
 	[Header("Experience")]
 	public UIExpMeter expMeter;
@@ -69,10 +70,10 @@ public class BattleContainer : MonoBehaviour {
 		}
 		//Compare speeds
 		int spdDiff = actions[0].GetSpeedDifference();
-		if (spdDiff >= 5) {
+		if (spdDiff >= doublingSpeed.value) {
 			actions.Add(new BattleAction(true, true, attacker, defender));
 		}
-		else if (spdDiff <= -5) {
+		else if (spdDiff <= - doublingSpeed.value) {
 			if (defender.GetEquippedWeapon(ItemCategory.WEAPON) != null && defender.GetEquippedWeapon(ItemCategory.WEAPON).InRange(range)) {
 				actions.Add(new BattleAction(false, true, defender, attacker));
 			}

@@ -117,22 +117,22 @@ public class MapTile : MonoBehaviour {
 		parent = null;
 	}
 
-	public void FindNeighbours(Queue<MapTile> progress, int currentDistance, TacticsMove tactics, int moveSpeed, WeaponItem weapon, WeaponItem staff, bool showAttack, bool isDanger) {
+	public void FindNeighbours(Queue<MapTile> progress, int currentDistance, TacticsMove tactics, int moveSpeed, WeaponRange weapon, WeaponRange staff, bool showAttack, bool isDanger, bool isBuff) {
 		MapTile tile = mapCreator.GetTile(posx-1, posy);
-		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.classData.classType, weapon, staff, showAttack, isDanger))
+		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.classData.classType, weapon, staff, showAttack, isDanger, isBuff))
 			progress.Enqueue(tile);
 		tile = mapCreator.GetTile(posx+1, posy);
-		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.classData.classType, weapon, staff, showAttack, isDanger))
+		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.classData.classType, weapon, staff, showAttack, isDanger, isBuff))
 			progress.Enqueue(tile);
 		tile = mapCreator.GetTile(posx, posy-1);
-		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.classData.classType, weapon, staff, showAttack, isDanger))
+		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.classData.classType, weapon, staff, showAttack, isDanger, isBuff))
 			progress.Enqueue(tile);
 		tile = mapCreator.GetTile(posx, posy+1);
-		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.classData.classType, weapon, staff, showAttack, isDanger))
+		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.classData.classType, weapon, staff, showAttack, isDanger, isBuff))
 			progress.Enqueue(tile);
 	}
 
-	public bool CheckTile(MapTile checkTile, int currentDistance, int moveSpeed, Faction faction, ClassType classType, WeaponItem weapon, WeaponItem support, bool showAttack, bool isDanger) {
+	public bool CheckTile(MapTile checkTile, int currentDistance, int moveSpeed, Faction faction, ClassType classType, WeaponRange weapon, WeaponRange support, bool showAttack, bool isDanger, bool isBuff) {
 		if (checkTile == null)
 			return false;
 		
@@ -148,10 +148,13 @@ public class MapTile : MonoBehaviour {
 			return false;
 
 		checkTile.distance = currentDistance;
+		if (currentDistance > moveSpeed)
+			return false;
+	
 		if (isDanger) {
 			checkTile.reachable = true;
 		}
-		else if (currentDistance <= moveSpeed && checkTile.currentCharacter == null) {
+		else if (checkTile.currentCharacter == null) {
 			checkTile.selectable = (checkTile.currentCharacter == null);
 		}
 			
@@ -160,7 +163,7 @@ public class MapTile : MonoBehaviour {
 		}
 			
 		if (support != null && showAttack) {
-			mapCreator.ShowSupportTiles(checkTile, support, faction, isDanger);
+			mapCreator.ShowSupportTiles(checkTile, support, faction, isDanger, isBuff);
 		}
 		
 		checkTile.parent = this;

@@ -114,7 +114,7 @@ public class MapCursor : InputReceiver {
 		}
 		else {
 			targetIndex.value = 0;
-			buttonMenuPosition.value = 0;
+			buttonMenuPosition.value = -1;
 			clicker.CursorClick();
 		}
 	}

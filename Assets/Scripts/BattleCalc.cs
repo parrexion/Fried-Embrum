@@ -23,26 +23,50 @@ public static class BattleCalc {
 		return attacker.spd - attacker.GetConPenalty(weaponAtk);
 	}
 
+	/// <summary>
+	/// Hit rate for the character with the given weapon.
+	/// </summary>
+	/// <param name="weaponAtk"></param>
+	/// <param name="attacker"></param>
+	/// <returns></returns>
 	public static int GetHitRate(WeaponItem weaponAtk, StatsContainer attacker) {
 		if (weaponAtk == null)
 			return -1;
 		int trueSkl = attacker.skl - attacker.GetConPenalty(weaponAtk);
-		int statsBoost = (int)(trueSkl * 1.5f + attacker.lck * 0.5f);
-		return Mathf.Clamp(statsBoost + weaponAtk.hitRate, 0, 100);
+		// int statsBoost = (int)(trueSkl * 1.5f + attacker.lck * 0.5f);
+		int statsBoost = (int)(trueSkl * 2 + attacker.lck * 0.5f);
+		return statsBoost + weaponAtk.hitRate;
 	}
 
+	/// <summary>
+	/// Critical hit rate for the character with the given weapon.
+	/// </summary>
+	/// <param name="weaponAtk"></param>
+	/// <param name="attacker"></param>
+	/// <returns></returns>
 	public static int GetCritRate(WeaponItem weaponAtk, StatsContainer attacker) {
 		if (weaponAtk == null)
 			return -1;
 		int trueSkl = attacker.skl - attacker.GetConPenalty(weaponAtk);
 		int calcCrit = weaponAtk.critRate + (int)(trueSkl * 0.5f);
-		return Mathf.Clamp(calcCrit, 0, 100);
+		return calcCrit;
 	}
 	
+	/// <summary>
+	/// Avoid rate for the character.
+	/// </summary>
+	/// <param name="defender"></param>
+	/// <returns></returns>
 	public static int GetAvoid(StatsContainer defender) {
-		return (int)(defender.spd * 1.5f + defender.lck * 0.5f);
+		// return (int)(defender.spd * 1.5f + defender.lck * 0.5f);
+		return defender.spd * 2 + defender.lck;
 	}
 
+	/// <summary>
+	/// Critical avoid rate for the character.
+	/// </summary>
+	/// <param name="defender"></param>
+	/// <returns></returns>
 	public static int GetCritAvoid(StatsContainer defender) {
 		return defender.lck;
 	}
@@ -50,9 +74,9 @@ public static class BattleCalc {
 
 	// Against opponent calculations
 
-	public static int CalculateDamageBattle(WeaponItem weaponAtk, WeaponItem weaponDef, StatsContainer attacker, StatsContainer defender) {
+	public static int CalculateDamageBattle(WeaponItem weaponAtk, WeaponItem weaponDef, StatsContainer attacker, StatsContainer defender, TerrainTile terrain) {
 		int pwr = weaponAtk.power + attacker.atk;
-		int def = defender.def;
+		int def = defender.def + terrain.defense;
 		int bonus = GetDamageAdvantage(weaponAtk, weaponDef);
 		float weakness = GetWeaknessBonus(weaponAtk, defender);
 
@@ -60,9 +84,10 @@ public static class BattleCalc {
 		return damage;
 	}
 
-	public static int GetHitRateBattle(WeaponItem weaponAtk, WeaponItem weaponDef, StatsContainer attacker, StatsContainer defender) {
+	public static int GetHitRateBattle(WeaponItem weaponAtk, WeaponItem weaponDef, StatsContainer attacker, StatsContainer defender, TerrainTile terrain) {
 		int bonus = GetHitAdvantage(weaponAtk, weaponDef);
-		return Mathf.Clamp(GetHitRate(weaponAtk, attacker) - GetAvoid(defender) + bonus, 0, 100);
+		int avoid = GetAvoid(defender) + terrain.avoid;
+		return Mathf.Clamp(GetHitRate(weaponAtk, attacker) + bonus - avoid, 0, 100);
 	}
 
 	public static int GetCritRateBattle(WeaponItem weaponAtk, StatsContainer attacker, StatsContainer defender) {
@@ -80,7 +105,7 @@ public static class BattleCalc {
 
 	public static int GetDamageAdvantage(WeaponItem weaponAtk, WeaponItem weaponDef) {
 		int adv = GetWeaponAdvantage(weaponAtk, weaponDef);
-		return (adv == 1) ? 2 : (adv == -1) ? -2 : 0;
+		return (adv == 1) ? 1 : (adv == -1) ? -1 : 0;
 	}
 
 	public static int GetHitAdvantage(WeaponItem weaponAtk, WeaponItem weaponDef) {

@@ -14,8 +14,8 @@ public class CharClass : ScriptableObject {
 	[Header("Bases")]
 	public int hp;
 	public int atk;
-	public int spd;
 	public int skl;
+	public int spd;
 	public int lck;
 	public int def;
 	public int res;
@@ -24,8 +24,8 @@ public class CharClass : ScriptableObject {
 	[Header("Growths")]
 	public float gHp;
 	public float gAtk;
-	public float gSpd;
 	public float gSkl;
+	public float gSpd;
 	public float gLck;
 	public float gDef;
 	public float gRes;

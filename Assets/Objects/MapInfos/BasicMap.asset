@@ -11,60 +11,64 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ef43daa4e1338c44956284349be9656, type: 3}
   m_Name: BasicMap
   m_EditorClassIdentifier: 
-  sizeX: 16
+  sizeX: 15
   sizeY: 10
-  mapSprite: {fileID: 2800000, guid: d867d147969ea034d90b3d74382f35f2, type: 3}
+  mapSprite: {fileID: 2800000, guid: a75e698ec45c3c24eb526e74823c0324, type: 3}
   normal: {fileID: 11400000, guid: 4b27fdea53660cf4784c5f4ac749c0b4, type: 2}
   forest: {fileID: 11400000, guid: 69f7db223f9dc364f9716d5363d1b9d7, type: 2}
+  river: {fileID: 11400000, guid: 0c85abdced740404f89c54a5a63e8fc3, type: 2}
   mountain: {fileID: 11400000, guid: a7c26c3f90a0e284891015a9f612451e, type: 2}
   blocked: {fileID: 11400000, guid: 2218d56ff5d6d0147b3897d1e93656e6, type: 2}
   spawnPoints:
-  - x: 3
+  - x: 2
     y: 1
-  - x: 4
-    y: 1
-  - x: 4
+  - x: 0
     y: 2
-  - x: 5
-    y: 2
-  enemies:
-  - x: 3
-    y: 8
-    level: 3
-    stats: {fileID: 11400000, guid: 83158ffb154f9f845bdc08cbdb58a1ba, type: 2}
-    inventory:
-    - item: {fileID: 11400000, guid: 70a69ddf23ff8c4479dae28fb5396f18, type: 2}
-      droppable: 0
-    - item: {fileID: 11400000, guid: 82b67a4ae62617c45bbff4bf22961ad9, type: 2}
-      droppable: 1
-    skills:
-    - {fileID: 11400000, guid: f5a20a39fea275b498cd47d2b4474445, type: 2}
-  - x: 4
-    y: 8
-    level: 2
-    stats: {fileID: 11400000, guid: ca3b9e96a1769fc4d9b741afb054bdc2, type: 2}
-    inventory:
-    - item: {fileID: 11400000, guid: bb05e5687c24ee34fb1442b07f3baa22, type: 2}
-      droppable: 0
-    - item: {fileID: 11400000, guid: 4f62fac29e57cf149a77b69982270829, type: 2}
-      droppable: 0
-    skills: []
-  - x: 5
+  - x: 0
     y: 4
-    level: 1
-    stats: {fileID: 11400000, guid: 8a25a07c959badc45ac8fe84f4c1523d, type: 2}
-    inventory:
-    - item: {fileID: 11400000, guid: 70a69ddf23ff8c4479dae28fb5396f18, type: 2}
-      droppable: 0
-    skills:
-    - {fileID: 11400000, guid: 05c57c2505c7e3e4794badc0646cc0d6, type: 2}
-  - x: 6
+  enemies:
+  - x: 4
     y: 3
     level: 1
-    stats: {fileID: 11400000, guid: ffc8eab932eb7dc47955b6bc24131320, type: 2}
+    stats: {fileID: 11400000, guid: 3c62e59d0a22e10499d7722b228fdf6c, type: 2}
     inventory:
     - item: {fileID: 11400000, guid: 44de95ac3ea804a4d805c36c1ac7039e, type: 2}
       droppable: 0
-    - item: {fileID: 11400000, guid: 4f62fac29e57cf149a77b69982270829, type: 2}
-      droppable: 1
     skills: []
+    aggroType: 1
+  - x: 9
+    y: 0
+    level: 1
+    stats: {fileID: 11400000, guid: 3c62e59d0a22e10499d7722b228fdf6c, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 44de95ac3ea804a4d805c36c1ac7039e, type: 2}
+      droppable: 0
+    skills: []
+    aggroType: 1
+  - x: 13
+    y: 4
+    level: 2
+    stats: {fileID: 11400000, guid: 3c62e59d0a22e10499d7722b228fdf6c, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 44de95ac3ea804a4d805c36c1ac7039e, type: 2}
+      droppable: 0
+    skills: []
+    aggroType: 0
+  - x: 12
+    y: 8
+    level: 2
+    stats: {fileID: 11400000, guid: 3c62e59d0a22e10499d7722b228fdf6c, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 44de95ac3ea804a4d805c36c1ac7039e, type: 2}
+      droppable: 0
+    skills: []
+    aggroType: 0
+  - x: 13
+    y: 8
+    level: 4
+    stats: {fileID: 11400000, guid: d97777127cd0d214aa49cb5f8201f6f9, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 44de95ac3ea804a4d805c36c1ac7039e, type: 2}
+      droppable: 0
+    skills: []
+    aggroType: 3

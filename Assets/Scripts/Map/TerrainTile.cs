@@ -15,5 +15,9 @@ public class TerrainTile : ScriptableObject {
 
 	public Sprite sprite;
 	public Color tint = Color.white;
+
+	public int defense;
+	public int avoid;
+
 	public RoughnessTouple[] canMoveTypes;
 }

@@ -157,23 +157,24 @@ public class TurnController : MonoBehaviour {
 	/// </summary>
 	private void StartTurn() {
 		currentMode.value = ActionMode.NONE;
-		currentMenuMode.value = (int)MenuMode.MAP;
-		menuModeChangedEvent.Invoke();
 		if (currentTurn.value == Faction.ENEMY) {
 			for (int i = 0; i < enemyList.values.Count; i++) {
 				enemyList.values[i].OnStartTurn();
 			}
 			enemyController.RunEnemies();
+			currentMenuMode.value = (int)MenuMode.NONE;
 		}
 		else if (currentTurn.value == Faction.PLAYER) {
 			for (int i = 0; i < playerList.values.Count; i++) {
 				playerList.values[i].OnStartTurn();
 			}
 			lockControls.value = false;
+			currentMenuMode.value = (int)MenuMode.MAP;
 		}
 		else {
 			Debug.LogError("Wrong state!");
 		}
+		menuModeChangedEvent.Invoke();
 	}
 
 }

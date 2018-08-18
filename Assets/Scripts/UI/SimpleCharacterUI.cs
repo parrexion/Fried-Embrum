@@ -8,16 +8,13 @@ using UnityEngine.UI;
 
 public class SimpleCharacterUI : MonoBehaviour {
 
-	public enum StatsType { BASIC, STATS, INVENTORY }
-	
+	[Header("References")]
 	public TacticsMoveVariable selectCharacter;
 	public TacticsMoveVariable targetCharacter;
-	public ActionModeVariable currentMode;
+	public IntVariable inventoryIndex;
 	public IntVariable currentMenuMode;
-	public InventoryController invController;
 	
-	public StatsType currentStats;
-	public GameObject background;
+	[Header("Icons")]
 	public Sprite noSkillImage;
 	public Sprite[] weaknessImages;
 	public Sprite[] weaponSkillImages;
@@ -58,39 +55,23 @@ public class SimpleCharacterUI : MonoBehaviour {
 
 	[Header("Inventory Stats")]
 	public GameObject inventoryObject;
-	public Image[] weaponSkillIcons;
-	public Text[] weaponSkillRating;
-	public Text[] inventoryFields;
-	public Text[] inventoryValues;
 	public Text conText;
 	public Text weighDownValue2;
+	public Image[] weaponSkillIcons;
+	public Text[] weaponSkillRating;
+	public GameObject equipIndicator;
+	public Image[] inventoryHighlight;
+	public Text[] inventoryFields;
+	public Text[] inventoryValues;
+	public GameObject helpButtons;
 
-
-	public void UpdateUI() {
-		if (selectCharacter.value == null || currentMenuMode.value == (int)MenuMode.ATTACK || currentMenuMode.value == (int)MenuMode.HEAL) {
-			background.SetActive(false);
-			invController.HideTooltip();
-		}
-		else {
-			TacticsMove tactics = (currentMode.value != ActionMode.ATTACK && currentMode.value != ActionMode.HEAL) ? selectCharacter.value : targetCharacter.value;
-			characterName.text = tactics.stats.charData.charName;	
-			if (currentStats == StatsType.BASIC)
-				ShowBasicStats(tactics);
-			else if (currentStats == StatsType.STATS) {
-				ShowStatsStats(tactics);
-			}
-			else if (currentStats == StatsType.INVENTORY) {
-				ShowInventoryStats(tactics);
-			}
-			background.SetActive(true);
-		}
-	}
 	
-	private void ShowBasicStats(TacticsMove tactics) {
+	public void ShowBasicStats(TacticsMove tactics) {
 		StatsContainer stats = tactics.stats;
 //		colorBackground.color = (tactics.faction == Faction.PLAYER) ? 
 //			new Color(0.2f,0.2f,0.5f) : new Color(0.5f,0.2f,0.2f);
 		
+		characterName.text = stats.charData.charName;
 		portrait.enabled = true;
 		portrait.sprite = stats.charData.portrait;
 		currentHpText.text = tactics.currentHealth + " / " + stats.hp;
@@ -124,11 +105,12 @@ public class SimpleCharacterUI : MonoBehaviour {
 		inventoryObject.SetActive(false);
 	}
 
-	private void ShowStatsStats(TacticsMove tactics) {
+	public void ShowStatsStats(TacticsMove tactics) {
 		StatsContainer stats = tactics.stats;
 		statsObject.SetActive(true);
 		basicObject.SetActive(false);
 		inventoryObject.SetActive(false);
+		characterName.text = stats.charData.charName;
 
 		hpText.color = (stats.bHp != 0) ? Color.green : Color.black;
 		atkText.color = (stats.bAtk != 0) ? Color.green : Color.black;
@@ -167,12 +149,17 @@ public class SimpleCharacterUI : MonoBehaviour {
 		movText.text = stats.GetMovespeed().ToString();
 	}
 
-	private void ShowInventoryStats(TacticsMove tactics) {
+	/// <summary>
+	/// Displays the inventory page. Contains information on the inventory, weaponskills and constitution.
+	/// </summary>
+	/// <param name="tactics"></param>
+	public void ShowInventoryStats(TacticsMove tactics) {
 		StatsContainer stats = tactics.stats;
 		InventoryContainer inventory = tactics.inventory;
 		statsObject.SetActive(false);
 		basicObject.SetActive(false);
 		inventoryObject.SetActive(true);
+		characterName.text = stats.charData.charName;
 
 		WeaponItem weapon = tactics.GetFirstUsableItem(ItemCategory.WEAPON);
 		conText.text = stats.GetConstitution().ToString();
@@ -195,6 +182,11 @@ public class SimpleCharacterUI : MonoBehaviour {
 			}
 		}
 		
+		InventoryTuple first = inventory.inventory[0];
+		bool equipped = (first.item != null && first.item.itemCategory == ItemCategory.WEAPON);
+		equipIndicator.SetActive(equipped);
+
+		// Set up inventory list
 		for (int i = 0; i < 5; i++) {
 			if (i >= inventory.inventory.Length || inventory.inventory[i].item == null) {
 				inventoryFields[i].color = Color.black;
@@ -212,15 +204,19 @@ public class SimpleCharacterUI : MonoBehaviour {
 					inventoryValues[i].text = " ";
 			}
 		}
+
+		helpButtons.SetActive(currentMenuMode.value != (int)MenuMode.STATS &&currentMenuMode.value != (int)MenuMode.INV);
+
+		UpdateSelection();
 	}
 
-	public void ChangeStatsScreen(int dir) {
-		int nextPage = (int) currentStats + dir;
-		if (nextPage < 0)
-			nextPage = nextPage + 3;
-		
-		currentStats = (StatsType) (nextPage % 3);
-		invController.HideTooltip();
-		UpdateUI();
+	/// <summary>
+	/// Updates the highlight for each inventory slot and sets the appropriate color.
+	/// </summary>
+	public void UpdateSelection() {
+		for (int i = 0; i < 5; i++) {
+			inventoryHighlight[i].enabled = (i == inventoryIndex.value);
+			inventoryHighlight[i].color = (currentMenuMode.value == (int)MenuMode.STATS) ? new Color(0.35f,0.7f,1f,0.6f) : new Color(0.35f,1f,1f,0.75f);
+		}
 	}
 }

@@ -7,9 +7,11 @@ using UnityEngine.UI;
 public class EnemyController : MonoBehaviour {
 	
 	[Header("References")]
+	public CharacterListVariable playerList;
 	public CharacterListVariable enemyList;
 	public TacticsMoveVariable selectCharacter;
 	public IntVariable battleWeaponIndex;
+	public IntVariable currentPage;
 	public IntVariable cursorX;
 	public IntVariable cursorY;
 
@@ -38,8 +40,9 @@ public class EnemyController : MonoBehaviour {
 		isRunning = true;
 
 		battleWeaponIndex.value = 0;
+		currentPage.value = 0;
 
-		for (int i = 3; i < enemyList.values.Count; i++) {
+		for (int i = 0; i < enemyList.values.Count; i++) {
 			if (!enemyList.values[i].IsAlive())
 				continue;
 
@@ -71,6 +74,9 @@ public class EnemyController : MonoBehaviour {
 			enemy.End();
 		}
 
+		cursorX.value = playerList.values[0].posx;
+		cursorY.value = playerList.values[0].posy;
+		cursorMovedEvent.Invoke();
 		isRunning = false;
 		endTurnEvent.Invoke();
 	}

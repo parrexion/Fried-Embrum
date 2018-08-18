@@ -68,6 +68,23 @@ public class InventoryContainer {
 	}
 
 	/// <summary>
+	/// Returns the first item in the inventory the player can use matching the item type.
+	/// </summary>
+	/// <param name="category"></param>
+	/// <param name="player"></param>
+	/// <returns></returns>
+	public WeaponItem GetFirstUsableItem(ItemType type, StatsContainer player) {
+		for (int i = 0; i < inventory.Length; i++) {
+			if (inventory[i].item == null)
+				continue;
+			int skill = player.GetWpnSkill(inventory[i].item);
+			if (inventory[i].item.itemType == type && inventory[i].item.CanUse(skill))
+				return inventory[i].item;
+		}
+		return null;
+	}
+
+	/// <summary>
 	/// Returns the first item in the inventory the player can use matching the item category and have
 	/// enough range to be used.
 	/// </summary>
@@ -143,10 +160,19 @@ public class InventoryContainer {
 		Debug.Log("Cleaned up inventory");
 	}
 
+	/// <summary>
+	/// Returns the inventory tuple for the given index.
+	/// </summary>
+	/// <param name="index"></param>
+	/// <returns></returns>
 	public InventoryTuple GetItem(int index) {
 		return inventory[index];
 	}
 
+	/// <summary>
+	/// Equips the item at the given index and moves it to the top.
+	/// </summary>
+	/// <param name="index"></param>
 	public void EquipItem(int index) {
 		if (index == 0)
 			return;
@@ -160,6 +186,11 @@ public class InventoryContainer {
 		Debug.Log("Equipped item index " + index);
 	}
 
+	/// <summary>
+	/// Uses the item at the given index and removes it if there are no more charges left.
+	/// </summary>
+	/// <param name="index"></param>
+	/// <param name="player"></param>
 	public void UseItem(int index, TacticsMove player) {
 		InventoryTuple useItem = inventory[index];
 		if (useItem.item.itemType == ItemType.CHEAL) {
@@ -176,18 +207,28 @@ public class InventoryContainer {
 
 		useItem.charge--;
 		if (useItem.charge <= 0) {
-			inventory[index] = null;
+			inventory[index].item = null;
 			CleanupInventory();
 		}
 		
 		player.End();
 	}
 
+	/// <summary>
+	/// Drops the item at the given index.
+	/// </summary>
+	/// <param name="index"></param>
 	public void DropItem(int index) {
 		inventory[index].charge = 0;
 		CleanupInventory();
 	}
 
+	/// <summary>
+	/// Adds the selected inventory tuple to the inventory if there's room.
+	/// Returns true if there's room, false if there's not.
+	/// </summary>
+	/// <param name="pickup"></param>
+	/// <returns></returns>
 	public bool GainItem(InventoryTuple pickup) {
 		for (int i = 0; i < inventory.Length; i++) {
 			if (inventory[i] == null) {

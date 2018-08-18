@@ -12,6 +12,7 @@ public class ForecastUI : MonoBehaviour {
 	public MapTileVariable walkTile;
 	public TacticsMoveVariable defendCharacter;
 	public ActionModeVariable currentMode;
+	public IntVariable doublingSpeed;
 
 	[Header("Arrows")]
 	public Sprite advArrow;
@@ -139,7 +140,7 @@ public class ForecastUI : MonoBehaviour {
 		hpText.text = tactics.currentHealth.ToString();
 		dmgText.text = (damage != -1) ? damage.ToString() : "--";
 		dmgText.color = (damage != -1 && defWeak) ? Color.green : Color.black;
-		doubleDamage.SetActive(speed >= 5);
+		doubleDamage.SetActive(speed >= doublingSpeed.value);
 		hitText.text = hit.ToString();
 		critText.text = crit.ToString();
 	}
@@ -159,7 +160,7 @@ public class ForecastUI : MonoBehaviour {
 		eHpText.text = tactics.currentHealth.ToString();
 		eDmgText.text = (damage != -1) ? damage.ToString() : "--";
 		eDmgText.color = (damage != -1 && atkWeak) ? Color.green : Color.black;
-		eDoubleDamage.SetActive(speed <= -5);
+		eDoubleDamage.SetActive(speed <= - doublingSpeed.value);
 		eHitText.text = hit.ToString();
 		eCritText.text = crit.ToString();
 	}

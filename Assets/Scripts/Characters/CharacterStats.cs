@@ -16,23 +16,23 @@ public class CharacterStats : ScriptableObject {
 	[Header("Skills")]
 	public CharacterSkill personalSkill;
 
-	[Header("Base Stats")]
-	public int hp = 10;
-	public int atk = 6;
-	public int spd = 6;
-	public int skl = 5;
-	public int lck = 4;
-	public int def = 3;
-	public int res = 3;
-	public int con = 5;
+	[Header("Personal Base Stats")]
+	public int hp;
+	public int atk;
+	public int skl;
+	public int spd;
+	public int lck;
+	public int def;
+	public int res;
+	public int con;
 
 	[Header("Personal Growths")]
-	public float gHp = 0.1f;
-	public float gAtk = 0.1f;
-	public float gSpd = 0.1f;
-	public float gSkl = 0.1f;
-	public float gLck = 0.1f;
-	public float gDef = 0.1f;
-	public float gRes = 0.1f;
+	public float gHp;
+	public float gAtk;
+	public float gSkl;
+	public float gSpd;
+	public float gLck;
+	public float gDef;
+	public float gRes;
 
 }

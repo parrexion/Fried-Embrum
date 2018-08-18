@@ -27,6 +27,7 @@ public class MapCreator : MonoBehaviour {
 	private TerrainTile _tNormal;
 	private TerrainTile _tForest;
 	private TerrainTile _tMountain;
+	private TerrainTile _tRiver;
 	private TerrainTile _tBlocked;
 
 
@@ -40,10 +41,11 @@ public class MapCreator : MonoBehaviour {
 		
 		_tNormal = mapInfo.value.normal;
 		_tForest = mapInfo.value.forest;
+		_tRiver = mapInfo.value.river;
 		_tMountain = mapInfo.value.mountain;
 		_tBlocked = mapInfo.value.blocked;
 		
-		cameraBox.size = new Vector2(_sizeX+2, _sizeY+2);
+		cameraBox.size = new Vector2(_sizeX+1, _sizeY+1);
 		cameraBox.transform.position = new Vector3((_sizeX-1)/2.0f, (_sizeY-1)/2.0f, 0);
 		
 		GenerateMap(mapInfo.value.mapSprite);
@@ -98,35 +100,43 @@ public class MapCreator : MonoBehaviour {
 		return Mathf.Abs(character.posx - other.posx) + Mathf.Abs(character.posy - other.posy);
 	}
 
-	public void ShowAttackTiles(MapTile startTile, WeaponItem item, Faction faction, bool isDanger) {
+	/// <summary>
+	/// Shows which tiles are attackable from the startTile given the weapon range.
+	/// isDanger is used to show the enemy danger area.
+	/// </summary>
+	/// <param name="startTile"></param>
+	/// <param name="range"></param>
+	/// <param name="faction"></param>
+	/// <param name="isDanger"></param>
+	public void ShowAttackTiles(MapTile startTile, WeaponRange range, Faction faction, bool isDanger) {
 		for (int i = 0; i < tiles.Length; i++) {
 			int tempDist = DistanceTo(startTile, tiles[i]);
-			if (item.InRange(tempDist)) {
-				if (isDanger) {
-					tiles[i].reachable = true;
-				}
-				else if (tiles[i].IsEmpty() || tiles[i].currentCharacter.faction != faction) {
-					tiles[i].attackable = true;
-				}
+			if (!range.InRange(tempDist))
+				continue;
+
+			if (isDanger) {
+				tiles[i].reachable = true;
+			}
+			else if (tiles[i].IsEmpty() || tiles[i].currentCharacter.faction != faction) {
+				tiles[i].attackable = true;
 			}
 		}
 	}
 	
-	public void ShowSupportTiles(MapTile startTile, WeaponItem item, Faction faction, bool isDanger) {
-
+	public void ShowSupportTiles(MapTile startTile, WeaponRange range, Faction faction, bool isDanger, bool isBuff) {
 		if (isDanger)
 			return;
 		
 		for (int i = 0; i < tiles.Length; i++) {
 			int tempDist = DistanceTo(startTile, tiles[i]);
-			if (!item.InRange(tempDist))
+			if (!range.InRange(tempDist))
 				continue;
 
 			if (tiles[i].IsEmpty()) {
 				tiles[i].supportable = true;
 			}
 			else if(tiles[i].currentCharacter.faction == faction) {
-				if (item.itemType == ItemType.BUFF || (item.itemType == ItemType.HEAL && tiles[i].currentCharacter.IsInjured()))
+				if (isBuff || tiles[i].currentCharacter.IsInjured())
 					tiles[i].supportable = true;
 			}
 		}
@@ -223,6 +233,7 @@ public class MapCreator : MonoBehaviour {
 			tactics.stats.level = pos.level;
 			tactics.stats.charData = pos.stats;
 			tactics.stats.classData = pos.stats.charClass;
+			tactics.stats.GenerateIV();
 			tactics.stats.wpnSkills = pos.stats.charClass.GenerateBaseWpnSkill();
 			tactics.inventory.inventory = new InventoryTuple[InventoryContainer.INVENTORY_SIZE];
 			for (int j = 0; j < InventoryContainer.INVENTORY_SIZE; j++) {
@@ -243,6 +254,7 @@ public class MapCreator : MonoBehaviour {
 				}
 			}
 			tactics.stats.skills = pos.skills;
+			((NPCMove)tactics).aggroType = pos.aggroType;
 			tactics.Setup();
 		}
 	}
@@ -260,6 +272,9 @@ public class MapCreator : MonoBehaviour {
 			terrain = _tForest;
 		}
 		else if (pixelColor.b == 255) {
+			terrain = _tRiver;
+		}
+		else if (pixelColor.r == 255) {
 			terrain = _tMountain;
 		}
 

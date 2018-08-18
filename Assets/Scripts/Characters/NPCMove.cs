@@ -2,13 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum AggroType { WAIT, CHARGE, GUARD, BOSS }
+
 public class NPCMove : TacticsMove {
 
-	public bool aggressive;
+	public AggroType aggroType;
 	public MapTileVariable targetTile;
+	public SpriteRenderer bossCrest;
 
 
 	protected override void SetupLists() {
+		bossCrest.enabled = (aggroType == AggroType.BOSS);
+
 		enemyList.values.Add(this);
 		Debug.Log(stats.charData.charName);
 	}
@@ -58,7 +63,7 @@ public class NPCMove : TacticsMove {
 		GenerateHitTiles(weapons);
 		BFS();
 
-		int moveSpeed = stats.GetMovespeed();
+		int moveSpeed = (aggroType == AggroType.WAIT || aggroType == AggroType.CHARGE) ? stats.GetMovespeed() : 0;
 		MapTile bestTile = null; // Reachable this turn
 		MapTile goodTile = null; // Reachable in multiple turns
 
@@ -87,7 +92,7 @@ public class NPCMove : TacticsMove {
 			tileBest = bestTile;
 			tileGood = null;
 		}
-		else if (!goodTile || !aggressive) {
+		else if (!goodTile || aggroType != AggroType.CHARGE) {
 			//Have no weapons that can be used
 			Debug.Log("Nothing is good!!");
 			currentMode.value = ActionMode.NONE;
@@ -150,13 +155,17 @@ public class NPCMove : TacticsMove {
 		process.Enqueue(currentTile);
 		currentTile.distance = 0;
 		currentTile.parent = null;
-
-		WeaponItem weapon = GetEquippedWeapon(ItemCategory.WEAPON);
-		WeaponItem staff = GetEquippedWeapon(ItemCategory.STAFF);
+		
+		WeaponRange weapon = inventory.GetReach(ItemCategory.WEAPON);
+		WeaponRange staff = inventory.GetReach(ItemCategory.STAFF);
+		
+		bool isBuff = false;
+		if (staff.max > 0)
+			isBuff = (inventory.GetFirstUsableItem(ItemType.BUFF, stats) != null);
 
 		while(process.Count > 0) {
 			MapTile tile = process.Dequeue();
-			tile.FindNeighbours(process, tile.distance, this, 1000, weapon, staff, false, false);
+			tile.FindNeighbours(process, tile.distance, this, 1000, weapon, staff, false, false, isBuff);
 		}
 	}
 

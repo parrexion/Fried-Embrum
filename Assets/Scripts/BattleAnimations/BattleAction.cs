@@ -11,6 +11,7 @@ public class BattleAction {
 	public InventoryTuple weaponAtk;
 	public InventoryTuple weaponDef;
 	public InventoryTuple staffAtk;
+	public TerrainTile terrainDef;
 
 
 	public BattleAction(bool leftSide, bool damage, TacticsMove atk, TacticsMove def) {
@@ -21,6 +22,7 @@ public class BattleAction {
 		weaponAtk = attacker.GetFirstUsableInventoryTuple(ItemCategory.WEAPON);
 		weaponDef = defender.GetFirstUsableInventoryTuple(ItemCategory.WEAPON);
 		staffAtk = attacker.GetFirstUsableInventoryTuple(ItemCategory.STAFF);
+		terrainDef = defender.GetTerrain();
 	}
 
 	public int GetSpeedDifference() {
@@ -32,7 +34,7 @@ public class BattleAction {
 	}
 
 	public int GetDamage() {
-		return BattleCalc.CalculateDamageBattle(weaponAtk.item, weaponDef.item, attacker.stats, defender.stats);
+		return BattleCalc.CalculateDamageBattle(weaponAtk.item, weaponDef.item, attacker.stats, defender.stats, terrainDef);
 	}
 
 	public int GetHeals() {
@@ -40,7 +42,7 @@ public class BattleAction {
 	}
 
 	public int GetHitRate() {
-		return BattleCalc.GetHitRateBattle(weaponAtk.item, weaponDef.item, attacker.stats, defender.stats);
+		return BattleCalc.GetHitRateBattle(weaponAtk.item, weaponDef.item, attacker.stats, defender.stats, terrainDef);
 	}
 
 	public int GetCritRate() {
