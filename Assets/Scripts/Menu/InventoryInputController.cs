@@ -25,22 +25,6 @@ public class InventoryInputController : InputReceiver {
 		inventoryIndex.value = -1;
 	}
 
-	/// <summary>
-	/// Updates the information in the UI whenever the state or character changes.
-	/// </summary>
-	public void UpdateUI() {
-		TacticsMove tactics = (currentMode.value != ActionMode.ATTACK && currentMode.value != ActionMode.HEAL) ? selectCharacter.value : targetCharacter.value;
-		
-		if (currentPage.value == (int)StatsType.INVENTORY || currentMenuMode.value == (int)MenuMode.STATS || currentMenuMode.value == (int)MenuMode.INV) {
-			ui.ShowInventoryStats(tactics);
-		}
-		else if (currentPage.value == (int)StatsType.STATS) {
-			ui.ShowStatsStats(tactics);
-		}
-		else if (currentPage.value == (int)StatsType.BASIC)
-			ui.ShowBasicStats(tactics);
-	}
-
     public override void OnMenuModeChanged() {
         if (selectCharacter.value == null || currentMenuMode.value == (int)MenuMode.ATTACK || currentMenuMode.value == (int)MenuMode.HEAL) {
 			active = false;
@@ -53,6 +37,22 @@ public class InventoryInputController : InputReceiver {
 			UpdateUI();
 		}
     }
+
+	/// <summary>
+	/// Updates the information in the UI whenever the state or character changes.
+	/// </summary>
+	public void UpdateUI() {
+		TacticsMove tactics = (currentMode.value != ActionMode.ATTACK && currentMode.value != ActionMode.HEAL) ? selectCharacter.value : targetCharacter.value;
+
+		if (currentPage.value == (int)StatsType.INVENTORY || currentMenuMode.value == (int)MenuMode.STATS || currentMenuMode.value == (int)MenuMode.INV) {
+			ui.ShowInventoryStats(tactics);
+		}
+		else if (currentPage.value == (int)StatsType.STATS) {
+			ui.ShowStatsStats(tactics);
+		}
+		else if (currentPage.value == (int)StatsType.BASIC)
+			ui.ShowBasicStats(tactics);
+	}
 
     public override void OnDownArrow() {
 		if (!active)
@@ -109,12 +109,14 @@ public class InventoryInputController : InputReceiver {
     }
 
     public override void OnSp1Button() {
-		if (currentMenuMode.value != (int)MenuMode.STATS && currentMenuMode.value != (int)MenuMode.INV)
+		bool hidden = (selectCharacter.value == null || currentMenuMode.value == (int)MenuMode.ATTACK || currentMenuMode.value == (int)MenuMode.HEAL);
+		if (!hidden && currentMenuMode.value != (int)MenuMode.STATS && currentMenuMode.value != (int)MenuMode.INV)
 			ChangeStatsScreen(-1);
     }
 
     public override void OnSp2Button() {
-		if (currentMenuMode.value != (int)MenuMode.STATS && currentMenuMode.value != (int)MenuMode.INV)
+		bool hidden = (selectCharacter.value == null || currentMenuMode.value == (int)MenuMode.ATTACK || currentMenuMode.value == (int)MenuMode.HEAL);
+		if (!hidden && currentMenuMode.value != (int)MenuMode.STATS && currentMenuMode.value != (int)MenuMode.INV)
 			ChangeStatsScreen(1);
 	}
 

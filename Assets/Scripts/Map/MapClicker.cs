@@ -27,6 +27,7 @@ public class MapClicker : MonoBehaviour {
 	public UnityEvent updateCharacterUI;
 	public UnityEvent hideTooltipEvent;
 	public UnityEvent cursorMovedEvent;
+	public UnityEvent showIngameMenuEvent;
 
 	[Header("Settings")]
 	public BoolVariable alwaysShowMovement;
@@ -121,6 +122,7 @@ public class MapClicker : MonoBehaviour {
 
 	/// <summary>
 	/// Selects the currently hovered character if not doing any other actions.
+	/// If no character is hovered, show the in-game menu instead.
 	/// </summary>
 	private void SelectCharacter() {
 		if (selectTarget.value != null) {
@@ -133,6 +135,7 @@ public class MapClicker : MonoBehaviour {
 		}
 		else {
 			Debug.Log("Show other menu. End turn etc.");
+			showIngameMenuEvent.Invoke();
 		}
 	}
 
@@ -176,6 +179,8 @@ public class MapClicker : MonoBehaviour {
 	/// Resets all the targets.
 	/// </summary>
 	public void ResetTargets() {
+		
+		Debug.Log("Actionmode");
 		selectTarget.value = null;
 		moveTile.value = null;
 		attackTile.value = null;
@@ -197,130 +202,4 @@ public class MapClicker : MonoBehaviour {
 		}
 	}
 
-
-	// public void CharacterClicked(int x, int y) {
-		// MapTile tile = mapCreator.GetTile(x, y);
-		// TacticsMove temp = tile.currentCharacter;
-
-		// switch (currentMode.value) {
-		// 	case ActionMode.NONE:
-		// 		FirstClick(x, y);
-		// 		// lastSelectedCharacter.value = temp;
-		// 		// if (lastSelectedCharacter.value != null) {
-		// 		// 	lastSelectedCharacter.value.FindAllMoveTiles(false);
-		// 		// 	if (lastSelectedCharacter.value.faction == Faction.PLAYER && !lastSelectedCharacter.value.hasMoved) {
-		// 		// 		currentMode.value = ActionMode.MOVE;
-		// 		// 	}
-		// 		// }
-		// 		// else {
-		// 		// 	mapCreator.ResetMap();
-		// 		// }
-		// 		break;
-			
-		// 	case ActionMode.MOVE:
-		// 	case ActionMode.ATTACK:
-		// 	case ActionMode.HEAL:
-		// 		// if (temp == null) {
-		// 		// 	attackTarget.value = null;
-		// 		// 	if (tile.selectable) {
-		// 		// 		if (tile == lastTarget.value) {
-		// 		// 			EndDrag();
-		// 		// 		}
-		// 		// 		else {
-		// 		// 			currentMode.value = ActionMode.MOVE;
-		// 		// 			lastTarget.value = tile;
-		// 		// 			lastSelectedCharacter.value.ShowMove(tile);
-		// 		// 		}
-		// 		// 	}
-		// 		// 	else {
-		// 		// 		currentMode.value = ActionMode.NONE;
-		// 		// 		currentMode.value = ActionMode.NONE;
-		// 		// 		lastSelectedCharacter.value = null;
-		// 		// 		lastTarget.value = null;
-		// 		// 		mapCreator.ResetMap();
-		// 		// 	}
-		// 		// }
-		// 		// else if (temp == lastSelectedCharacter.value) {
-		// 		// 	lastSelectedCharacter.value = null;
-		// 		// 	lastTarget.value = null;
-		// 		// 	attackTarget.value = null;
-		// 		// 	currentMode.value = ActionMode.NONE;
-		// 		// 	mapCreator.ResetMap();
-		// 		// }
-		// 		// else if (tile.attackable && temp.faction == Faction.ENEMY) {
-		// 		// 	if (tile == attackTarget.value) {
-		// 		// 		EndDrag();
-		// 		// 	}
-		// 		// 	else {
-		// 		// 		currentMode.value = ActionMode.ATTACK;
-		// 		// 		attackTarget.value = tile;
-		// 		// 		lastTarget.value = lastSelectedCharacter.value.CalculateCorrectMoveTile(lastTarget.value, attackTarget.value);
-		// 		// 		lastSelectedCharacter.value.ShowMove(lastTarget.value);
-		// 		// 	}
-		// 		// }
-		// 		// else if (tile.supportable && temp.faction == Faction.PLAYER) {
-		// 		// 	if (tile == attackTarget.value) {
-		// 		// 		EndDrag();
-		// 		// 	}
-		// 		// 	else {
-		// 		// 		currentMode.value = ActionMode.HEAL;
-		// 		// 		attackTarget.value = tile;
-		// 		// 		lastTarget.value = lastSelectedCharacter.value.CalculateCorrectMoveTile(lastTarget.value, attackTarget.value);
-		// 		// 		lastSelectedCharacter.value.ShowMove(lastTarget.value);
-		// 		// 	}
-		// 		// }
-		// 		break;
-		// 	default:
-		// 		return;
-		// }
-
-		// characterClicked.Invoke();
-		// hideTooltipEvent.Invoke();
-	// }
-
-	// public void MapClick(int x, int y) {
-	// 	MapTile tile = mapCreator.GetTile(x, y);
-	// 	TacticsMove temp = tile.currentCharacter;
-	// 	if (currentActionMode.value == ActionMode.NONE) {
-	// 		if (selectTarget.value != null) {
-	// 			if (selectTarget.value.faction == Faction.PLAYER && !selectTarget.value.hasMoved) {
-	// 				currentActionMode.value = ActionMode.MOVE;
-	// 				Debug.Log("Click!");
-	// 			}
-	// 		}
-	// 	}
-	// 	else if (currentActionMode.value == ActionMode.MOVE) {
-	// 		if (temp == null) {
-	// 			attackTarget.value = null;
-	// 			if (tile.selectable) {
-	// 				if (moveTarget.value != null) {
-	// 					selectTarget.value.Move();
-	// 				}
-	// 				Debug.Log("OK move");
-	// 			}
-	// 			else {
-	// 				// currentMode.value = ActionMode.NONE;
-	// 				// currentMode.value = ActionMode.NONE;
-	// 				// lastSelectedCharacter.value = null;
-	// 				// lastTarget.value = null;
-	// 				// mapCreator.ResetMap();
-	// 				Debug.Log("No select");
-	// 			}
-	// 		}
-	// 		else if (temp == selectTarget.value) {
-	// 			selectTarget.value = null;
-	// 			moveTarget.value = null;
-	// 			attackTarget.value = null;
-	// 			currentActionMode.value = ActionMode.NONE;
-	// 			mapCreator.ResetMap();
-	// 			Debug.Log("Same!");
-	// 		}
-	// 		else {
-	// 			Debug.Log("What could it be?");
-	// 		}
-	// 	}
-	// 	else {
-	// 		Debug.Log("Hmm :/");
-	// 	}
-	// }
 }

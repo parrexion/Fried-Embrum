@@ -25,16 +25,30 @@ public class BattleAction {
 		terrainDef = defender.GetTerrain();
 	}
 
+	/// <summary>
+	/// Returns the speed difference between the battling characters.
+	/// Positive values mean the attacker is faster, negative for the defender.
+	/// </summary>
+	/// <returns></returns>
 	public int GetSpeedDifference() {
-		return BattleCalc.GetAttackSpeed(weaponAtk.item, attacker.stats) - BattleCalc.GetAttackSpeed(weaponDef.item, defender.stats);
+		WeaponItem wpn = (weaponDef != null) ? weaponDef.item : null;
+		return BattleCalc.GetAttackSpeed(weaponAtk.item, attacker.stats) - BattleCalc.GetAttackSpeed(wpn, defender.stats);
 	}
 
+	/// <summary>
+	/// Returns the weapon advatage for the battle.
+	/// 1 means advatage for the attacker, -1 for the defender, and 0 is neutral.
+	/// </summary>
+	/// <returns></returns>
 	public int GetAdvantage() {
-		return BattleCalc.GetWeaponAdvantage(weaponAtk.item, weaponDef.item);
+		WeaponItem wpn1 = (weaponAtk != null) ? weaponAtk.item : null;
+		WeaponItem wpn2 = (weaponDef != null) ? weaponDef.item : null;
+		return BattleCalc.GetWeaponAdvantage(wpn1, wpn2);
 	}
 
 	public int GetDamage() {
-		return BattleCalc.CalculateDamageBattle(weaponAtk.item, weaponDef.item, attacker.stats, defender.stats, terrainDef);
+		WeaponItem wpn = (weaponDef != null) ? weaponDef.item : null;
+		return BattleCalc.CalculateDamageBattle(weaponAtk.item, wpn, attacker.stats, defender.stats, terrainDef);
 	}
 
 	public int GetHeals() {
@@ -42,11 +56,17 @@ public class BattleAction {
 	}
 
 	public int GetHitRate() {
-		return BattleCalc.GetHitRateBattle(weaponAtk.item, weaponDef.item, attacker.stats, defender.stats, terrainDef);
+		WeaponItem wpn = (weaponDef != null) ? weaponDef.item : null;
+		return BattleCalc.GetHitRateBattle(weaponAtk.item, wpn, attacker.stats, defender.stats, terrainDef);
 	}
 
 	public int GetCritRate() {
 		return BattleCalc.GetCritRateBattle(weaponAtk.item, attacker.stats, defender.stats);
+	}
+
+	public bool CheckWeaponWeakness() {
+		WeaponItem wpn = (weaponAtk != null) ? weaponAtk.item : null;
+		return BattleCalc.CheckWeaponWeakness(wpn, defender.stats);
 	}
 
 	public int GetExperience() {
@@ -66,4 +86,15 @@ public class BattleAction {
 		return BattleCalc.GetExperienceDamage(player.stats, enemy.stats, killed);
 	}
 
+	/// <summary>
+	/// Checks if the defender is in range to retaliate.
+	/// </summary>
+	/// <param name="distance"></param>
+	/// <returns></returns>
+	public bool DefenderInRange(int distance) {
+		if (weaponDef == null)
+			return false;
+
+		return weaponDef.item.InRange(distance);
+	}
 }

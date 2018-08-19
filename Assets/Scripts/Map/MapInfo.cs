@@ -14,7 +14,9 @@ public class MapInfo : ScriptableObject {
 	public TerrainTile forest;
 	public TerrainTile river;
 	public TerrainTile mountain;
-	public TerrainTile blocked;
+	public TerrainTile bridge;
+	public TerrainTile ledge;
+	public TerrainTile wall;
 
 	[Header("Spawn Points")]
 	public PlayerPosition[] spawnPoints;

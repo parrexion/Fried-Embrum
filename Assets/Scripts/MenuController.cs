@@ -4,35 +4,105 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class MenuController : MonoBehaviour {
+public class MenuController : InputReceiver {
 
-	public IntVariable currentOrbs;
-	public Button payButton;
-	
-	
+	public GameObject startMenuObject;
+	public HowToPlayController howTo;
+
+	public Image[] menuButtons;
+
+	private int state;
+	private int menuPosition;
+	private int buttonPosition;
+
+
 	private void Start() {
-		if (payButton != null)
-			payButton.interactable = (currentOrbs.value >= 5);
-	}
-
-	public void BattleClicked() {
-		SceneManager.LoadScene("LoadoutScene");
+		state = 0;
+		startMenuObject.SetActive(true);
+		SetupMenuButtons();
 	}
 
 	public void StartClicked() {
-		SceneManager.LoadScene("BattleScene");
+		SceneManager.LoadScene("NewBattleScene");
 	}
 
-	public void ReturnClicked() {
-		SceneManager.LoadScene("MainMenu");
+	public void ControlsClicked() {
+		state = 1;
+		startMenuObject.SetActive(false);
+		howTo.UpdateState(true);
 	}
 
-	public void EditClicked() {
-		SceneManager.LoadScene("EditScene");
+    public override void OnUpArrow() {
+		if (state != 0)
+			return;
+
+		buttonPosition--;
+		if (buttonPosition < 0)
+			buttonPosition += menuButtons.Length;
+		SetupMenuButtons();	
+    }
+
+    public override void OnDownArrow() {
+		if (state != 0)
+			return;
+
+		buttonPosition++;
+		if (buttonPosition >= menuButtons.Length)
+			buttonPosition = 0;
+		SetupMenuButtons();
+    }
+
+    public override void OnLeftArrow() {
+		if (state != 1)
+			return;
+
+        howTo.MoveLeft();
+    }
+
+    public override void OnRightArrow() {
+		if (state != 1)
+			return;
+
+        howTo.MoveRight();
+    }
+
+    public override void OnOkButton() {
+		if (state == 0) {
+			switch (buttonPosition)
+			{
+				case 0:
+					ControlsClicked();
+					break;
+				case 1:
+					StartClicked();
+					break;
+			}
+		}
+		else if (state == 1 && howTo.CheckOk()) {
+			StartClicked();
+		}
+    }
+
+    public override void OnBackButton() {
+		if (state == 1) {
+			state = 0;
+			howTo.BackClicked();
+			startMenuObject.SetActive(true);
+		}
 	}
 
-	public void CharacterClicked() {
-		currentOrbs.value -= 5;
-		SceneManager.LoadScene("GatchaScene");
+	/// <summary>
+	/// Shows which button is currently selected.
+	/// </summary>
+	private void SetupMenuButtons() {
+		for (int i = 0; i < menuButtons.Length; i++) {
+			menuButtons[i].enabled = (i == buttonPosition);
+		}
 	}
+
+
+    public override void OnMenuModeChanged() { }
+    public override void OnSp1Button() { }
+    public override void OnSp2Button() { }
+    public override void OnStartButton() { }
 }

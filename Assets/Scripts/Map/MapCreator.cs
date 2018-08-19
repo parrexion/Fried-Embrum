@@ -18,7 +18,10 @@ public class MapCreator : MonoBehaviour {
 	public Transform playerPrefab;
 	public SaveListVariable availableCharacters;
 
-	public MapTile[] tiles;
+	public IntVariable cursorX;
+	public IntVariable cursorY;
+
+	[HideInInspector] public MapTile[] tiles;
 
 	
 	//Map Info
@@ -27,8 +30,10 @@ public class MapCreator : MonoBehaviour {
 	private TerrainTile _tNormal;
 	private TerrainTile _tForest;
 	private TerrainTile _tMountain;
+	private TerrainTile _tBridge;
+	private TerrainTile _tLedge;
 	private TerrainTile _tRiver;
-	private TerrainTile _tBlocked;
+	private TerrainTile _tWall;
 
 
 	private void Start() {
@@ -43,7 +48,9 @@ public class MapCreator : MonoBehaviour {
 		_tForest = mapInfo.value.forest;
 		_tRiver = mapInfo.value.river;
 		_tMountain = mapInfo.value.mountain;
-		_tBlocked = mapInfo.value.blocked;
+		_tBridge = mapInfo.value.bridge;
+		_tLedge = mapInfo.value.ledge;
+		_tWall = mapInfo.value.wall;
 		
 		cameraBox.size = new Vector2(_sizeX+1, _sizeY+1);
 		cameraBox.transform.position = new Vector3((_sizeX-1)/2.0f, (_sizeY-1)/2.0f, 0);
@@ -219,6 +226,8 @@ public class MapCreator : MonoBehaviour {
 			tactics.inventory = availableCharacters.inventory[i];
 			tactics.Setup();
 		}
+		cursorX.value = mapInfo.value.spawnPoints[0].x;
+		cursorY.value = mapInfo.value.spawnPoints[0].y;
 		
 		//Enemies
 		for (int i = 0; i < mapInfo.value.enemies.Length; i++) {
@@ -265,17 +274,23 @@ public class MapCreator : MonoBehaviour {
 		if (pixelColor.r == 255 && pixelColor.g == 255 && pixelColor.b == 255) {
 			//Normal empty space
 		}
-		else if (pixelColor.r + pixelColor.g + pixelColor.b == 0) {
-			terrain = _tBlocked;
+		else if (pixelColor == new Color(0f,0f,0f,1f)) {
+			terrain = _tWall;
 		}
-		else if (pixelColor.g == 255) {
+		else if (pixelColor == new Color(0f,1f,0f,1f)) {
 			terrain = _tForest;
 		}
-		else if (pixelColor.b == 255) {
+		else if (pixelColor == new Color(0f,0f,1f,1f)) {
 			terrain = _tRiver;
 		}
-		else if (pixelColor.r == 255) {
+		else if (pixelColor == new Color(1f,0f,0f,1f)) {
 			terrain = _tMountain;
+		}
+		else if (pixelColor == new Color(1f,1f,0f,1f)) {
+			terrain = _tBridge;
+		}
+		else if (pixelColor == new Color(1f,0f,1f,1f)) {
+			terrain = _tLedge;
 		}
 
 		return terrain;

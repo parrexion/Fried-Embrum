@@ -14,6 +14,10 @@ public class BattleContainer : MonoBehaviour {
 
 	public FactionVariable currentTurn;
 	public BoolVariable lockControls;
+	public IntVariable cursorX;
+	public IntVariable cursorY;
+
+	[Header("Settings")]
 	public BoolVariable useTrueHit;
 	public IntVariable doublingSpeed;
 
@@ -116,7 +120,7 @@ public class BattleContainer : MonoBehaviour {
 			enemyPos = startPos + (enemyPos - startPos).normalized;
 			
 			battleAnimationObject.SetActive(useBattleAnimations.value);
-			uiCanvas.SetActive(!useBattleAnimations.value);
+			// uiCanvas.SetActive(!useBattleAnimations.value);
 			forecastUI.UpdateUI(true);
 			if (useBattleAnimations.value) {
 				leftHealth.fillAmount = actions[0].attacker.GetHealthPercent();
@@ -224,7 +228,7 @@ public class BattleContainer : MonoBehaviour {
 
 		//Clean up
 		battleAnimationObject.SetActive(false);
-		uiCanvas.SetActive(true);
+		// uiCanvas.SetActive(true);
 		leftDamageObject.SetActive(false);
 		rightDamageObject.SetActive(false);
 		actions[0].attacker.EndSkills(Activation.INITCOMBAT, actions[0].defender);
@@ -234,6 +238,8 @@ public class BattleContainer : MonoBehaviour {
 		if (currentTurn.value == Faction.PLAYER)
 			lockControls.value = false;
 		_currentCharacter.End();
+		cursorX.value = _currentCharacter.posx;
+		cursorY.value = _currentCharacter.posy;
 		_currentCharacter = null;
 		
 		yield return new WaitForSeconds(0.5f);

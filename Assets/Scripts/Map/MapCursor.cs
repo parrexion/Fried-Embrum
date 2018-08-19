@@ -138,10 +138,17 @@ public class MapCursor : InputReceiver {
 	public void BattleEnd() {
 		currentMenuMode.value = (int)MenuMode.MAP;
 		currentMode.value = ActionMode.NONE;
-		menuModeChangedEvent.Invoke();
 		clicker.ResetTargets();
+		menuModeChangedEvent.Invoke();
 	}
 
+	/// <summary>
+	/// Shows the in-game menu with end turn and options.
+	/// </summary>
+	public void ShowIngameMenu() {
+		currentMenuMode.value = (int)MenuMode.INGAME;
+		StartCoroutine(MenuChangeDelay());
+	}
 
     public override void OnSp1Button() {}
     public override void OnSp2Button() {}

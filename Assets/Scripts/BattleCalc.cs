@@ -84,6 +84,15 @@ public static class BattleCalc {
 		return damage;
 	}
 
+	/// <summary>
+	/// Returns the hit rate for the character given the opponent's weapon.
+	/// </summary>
+	/// <param name="weaponAtk"></param>
+	/// <param name="weaponDef"></param>
+	/// <param name="attacker"></param>
+	/// <param name="defender"></param>
+	/// <param name="terrain"></param>
+	/// <returns></returns>
 	public static int GetHitRateBattle(WeaponItem weaponAtk, WeaponItem weaponDef, StatsContainer attacker, StatsContainer defender, TerrainTile terrain) {
 		int bonus = GetHitAdvantage(weaponAtk, weaponDef);
 		int avoid = GetAvoid(defender) + terrain.avoid;
@@ -99,21 +108,51 @@ public static class BattleCalc {
 
 	// Different types of advantages
 
+	/// <summary>
+	/// Compares the weapon advantage between the two weapons.
+	/// 1 means attack is at advantage, -1 defender, and 0 is neutral.
+	/// </summary>
+	/// <param name="weaponAtk"></param>
+	/// <param name="weaponDef"></param>
+	/// <returns></returns>
 	public static int GetWeaponAdvantage(WeaponItem weaponAtk, WeaponItem weaponDef) {
+		if (weaponAtk == null)
+			return 0;
 		return weaponAtk.GetAdvantage(weaponDef);
 	}
 
+	/// <summary>
+	/// Returns the damage bonus for the weapon given the opponent's weapon.
+	/// </summary>
+	/// <param name="weaponAtk"></param>
+	/// <param name="weaponDef"></param>
+	/// <returns></returns>
 	public static int GetDamageAdvantage(WeaponItem weaponAtk, WeaponItem weaponDef) {
 		int adv = GetWeaponAdvantage(weaponAtk, weaponDef);
 		return (adv == 1) ? 1 : (adv == -1) ? -1 : 0;
 	}
 
+	/// <summary>
+	/// Calculates the weapon's hit rate given the opponent's weapon.
+	/// </summary>
+	/// <param name="weaponAtk"></param>
+	/// <param name="weaponDef"></param>
+	/// <returns></returns>
 	public static int GetHitAdvantage(WeaponItem weaponAtk, WeaponItem weaponDef) {
 		int adv = GetWeaponAdvantage(weaponAtk, weaponDef);
 		return (adv == 1) ? 15 : (adv == -1) ? -15 : 0;
 	}
 
+	/// <summary>
+	/// Checks if the attacking weapon has advantage against the defender.
+	/// </summary>
+	/// <param name="weaponAtk"></param>
+	/// <param name="defender"></param>
+	/// <returns></returns>
 	public static bool CheckWeaponWeakness(WeaponItem weaponAtk, StatsContainer defender) {
+		if (weaponAtk == null)
+			return false;
+
 		for (int i = 0; i < weaponAtk.advantageType.Length; i++) {
 			if (weaponAtk.advantageType[i] == defender.classData.classType)
 				return true;

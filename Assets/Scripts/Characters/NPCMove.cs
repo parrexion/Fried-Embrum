@@ -91,6 +91,8 @@ public class NPCMove : TacticsMove {
 			Debug.Log("That's the best");
 			tileBest = bestTile;
 			tileGood = null;
+			if (aggroType == AggroType.WAIT)
+				aggroType = AggroType.CHARGE;
 		}
 		else if (!goodTile || aggroType != AggroType.CHARGE) {
 			//Have no weapons that can be used

@@ -99,14 +99,14 @@ public class ForecastUI : MonoBehaviour {
 			act2.weaponDef = attacker.inventory.GetItem(battleWeaponIndex.value);
 			int distance = MapCreator.DistanceTo(defender, walkTile.value);
 			int atk = (act1.weaponAtk.item.InRange(distance)) ? act1.GetDamage() : -1;
-			int ret = (act1.weaponDef.item != null && act1.weaponDef.item.InRange(distance)) ? act2.GetDamage() : -1;
+			int ret = (act1.DefenderInRange(distance)) ? act2.GetDamage() : -1;
 			int spd = act1.GetSpeedDifference();
 			int hit = (atk != -1) ? act1.GetHitRate() : -1;
 			int hit2 = (ret != -1) ? act2.GetHitRate() : -1;
 			int crit = (atk != -1) ? act1.GetCritRate() : -1;
 			int crit2 = (ret != -1) ? act2.GetCritRate() : -1;
-			bool atkWeak = BattleCalc.CheckWeaponWeakness(act1.weaponAtk.item, act1.defender.stats);
-			bool defWeak = BattleCalc.CheckWeaponWeakness(act2.weaponAtk.item, act2.defender.stats);
+			bool atkWeak = act1.CheckWeaponWeakness();
+			bool defWeak = act2.CheckWeaponWeakness();
 			int atkAdv = act1.GetAdvantage();
 			int defAdv = act2.GetAdvantage();
 			ShowAttackerStats(attacker, act1.weaponAtk, atk, spd, hit, crit, atkAdv, atkWeak);
@@ -132,10 +132,10 @@ public class ForecastUI : MonoBehaviour {
 		portrait.sprite = tactics.stats.charData.portrait;
 		wpnAdvantage.enabled = (atkAdv != 0);
 		wpnAdvantage.sprite = (atkAdv == 1) ? advArrow : disArrow;
-		wpnIcon.sprite = (InvTup.item != null) ? InvTup.item.icon : null;
-		wpnName.text = (InvTup.item != null) ? InvTup.item.itemName : "";
+		wpnIcon.sprite = (InvTup != null) ? InvTup.item.icon : null;
+		wpnName.text = (InvTup != null) ? InvTup.item.itemName : "";
 		if (wpnCharge)
-			wpnCharge.text = (InvTup.item != null) ? InvTup.charge.ToString() : "";
+			wpnCharge.text = (InvTup != null) ? InvTup.charge.ToString() : "";
 
 		hpText.text = tactics.currentHealth.ToString();
 		dmgText.text = (damage != -1) ? damage.ToString() : "--";
@@ -145,17 +145,17 @@ public class ForecastUI : MonoBehaviour {
 		critText.text = crit.ToString();
 	}
 	
-	private void ShowDefenderStats(TacticsMove tactics, InventoryTuple InvTup, int damage, int speed, int hit, int crit, int defAdv, bool atkWeak) {
+	private void ShowDefenderStats(TacticsMove tactics, InventoryTuple invTup, int damage, int speed, int hit, int crit, int defAdv, bool atkWeak) {
 //		colorBackground.color = (tactics.faction == Faction.PLAYER) ? new Color(0.5f,0.8f,1f) : new Color(1f,0.5f,0.8f);
 		
 		eCharacterName.text = tactics.stats.charData.charName;
 		ePortrait.sprite = tactics.stats.charData.portrait;
 		eWpnAdvantage.enabled = (defAdv != 0);
 		eWpnAdvantage.sprite = (defAdv == 1) ? advArrow : disArrow;
-		eWpnIcon.sprite = (InvTup.item != null) ? InvTup.item.icon : null;
-		eWpnName.text = (InvTup.item != null) ? InvTup.item.itemName : "";
+		eWpnIcon.sprite = (invTup != null) ? invTup.item.icon : null;
+		eWpnName.text = (invTup != null) ? invTup.item.itemName : "";
 		if (eWpnCharge)
-			eWpnCharge.text = (InvTup.item != null) ? InvTup.charge.ToString() : "";
+			eWpnCharge.text = (invTup != null) ? invTup.charge.ToString() : "";
 
 		eHpText.text = tactics.currentHealth.ToString();
 		eDmgText.text = (damage != -1) ? damage.ToString() : "--";

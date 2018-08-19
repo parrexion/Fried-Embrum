@@ -86,7 +86,8 @@ public abstract class TacticsMove : MonoBehaviour {
 			return;
 
 		if (Vector3.Distance(transform.position, _heading) >= 0.05f) {
-			CalculateVelocity();
+			_velocity = Vector3.MoveTowards(transform.position, _heading, movementVelocity.value * Time.deltaTime);
+			_velocity = new Vector3(_velocity.x,_velocity.y,0);
 			transform.position = _velocity;
 		}
 		else if (path.Count > 0) {
@@ -118,8 +119,6 @@ public abstract class TacticsMove : MonoBehaviour {
 		
 		WeaponRange weapon = inventory.GetReach(ItemCategory.WEAPON);
 		WeaponRange staff = inventory.GetReach(ItemCategory.STAFF);
-		
-		Debug.Log("Reach:  " + weapon.min + "  ,  " + weapon.max);
 
 		bool isBuff = false;
 		if (weapon.max > 0)
@@ -244,18 +243,28 @@ public abstract class TacticsMove : MonoBehaviour {
 		return supportables;
 	}
 
+	/// <summary>
+	/// Makes the character attack with the currently selected weapon.
+	/// </summary>
+	/// <param name="enemy"></param>
 	public void Attack(TacticsMove enemy) {
 		lockControls.value = true;
 		inventory.EquipItem(battleWeaponIndex.value);
+		battleWeaponIndex.value = 0;
 		characterClicked.Invoke();
 		mapCreator.GetTile(targetCharacter.value.posx,targetCharacter.value.posy).target = true;
 		BattleContainer.instance.GenerateActions(this, enemy);
 		BattleContainer.instance.PlayBattleAnimations();
 	}
 
+	/// <summary>
+	/// Makes the character use the currently selected staff.
+	/// </summary>
+	/// <param name="ally"></param>
 	public void Heal(TacticsMove ally) {
 		lockControls.value = true;
 		inventory.EquipItem(battleWeaponIndex.value);
+		battleWeaponIndex.value = 0;
 		characterClicked.Invoke();
 		mapCreator.GetTile(targetCharacter.value.posx,targetCharacter.value.posy).target = true;
 		BattleContainer.instance.GenerateHealAction(this, ally);
@@ -274,11 +283,6 @@ public abstract class TacticsMove : MonoBehaviour {
 		waitEvent.Invoke();
 	}
 
-	private void CalculateVelocity() {
-		_velocity = Vector3.MoveTowards(transform.position, _heading, movementVelocity.value * Time.deltaTime);
-		_velocity = new Vector3(_velocity.x,_velocity.y,0);
-	}
-
 	/// <summary>
 	/// Reduces the current health by the damage taken and displays the damage in a popup.
 	/// </summary>
@@ -295,6 +299,10 @@ public abstract class TacticsMove : MonoBehaviour {
 			StartCoroutine(OnDeath());
 	}
 
+	/// <summary>
+	/// Heals the character the given amount up to the maximum health.
+	/// </summary>
+	/// <param name="health"></param>
 	public void TakeHeals(int health) {
 		currentHealth = Mathf.Min(stats.hp, currentHealth + health);
 		damageNumber.text = health.ToString();
@@ -382,6 +390,8 @@ public abstract class TacticsMove : MonoBehaviour {
 		if (range.max == 0)
 			return false;
 		for (int i = 0; i < enemyList.values.Count; i++) {
+			if (!enemyList.values[i].IsAlive())
+				continue;
 			int distance = MapCreator.DistanceTo(this, enemyList.values[i]);
 			if (range.InRange(distance)) {
 				return true;
@@ -409,7 +419,7 @@ public abstract class TacticsMove : MonoBehaviour {
 		}
 
 		for (int i = 0; i < playerList.values.Count; i++) {
-			bool usable = (playerList.values[i].IsInjured() || isBuff);
+			bool usable = (playerList.values[i].IsAlive() && playerList.values[i].IsInjured() || isBuff);
 			if (!usable || playerList.values[i] == this)
 				continue;
 			int distance = MapCreator.DistanceTo(this, playerList.values[i]);
