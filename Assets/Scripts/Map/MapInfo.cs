@@ -5,6 +5,11 @@ using UnityEngine;
 [CreateAssetMenu]
 public class MapInfo : ScriptableObject {
 
+	[Header("Dialogues")]
+	public DialogueEntry preDialogue;
+	public DialogueEntry postDialogue;
+
+	[Header("Map")]
 	public int sizeX;
 	public int sizeY;
 	public Texture2D mapSprite;

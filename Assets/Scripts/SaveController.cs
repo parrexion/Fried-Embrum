@@ -32,7 +32,8 @@ public class SaveController : MonoBehaviour {
 
 
 	private void Initialize() {
-		_savePath = Application.persistentDataPath+"/saveData.xml";
+		// _savePath = Application.persistentDataPath+"/saveData.xml";
+		_savePath = Application.streamingAssetsPath+"/saveData.xml";
 		Load();
 //		Save();
 	}

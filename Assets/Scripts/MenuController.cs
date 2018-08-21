@@ -23,13 +23,17 @@ public class MenuController : InputReceiver {
 	}
 
 	public void StartClicked() {
-		SceneManager.LoadScene("NewBattleScene");
+		SceneManager.LoadScene("Dialogue");
 	}
 
 	public void ControlsClicked() {
 		state = 1;
 		startMenuObject.SetActive(false);
 		howTo.UpdateState(true);
+	}
+
+	public void StartBattle() {
+		SceneManager.LoadScene("NewBattleScene");
 	}
 
     public override void OnUpArrow() {
