@@ -27,6 +27,7 @@ public class HowToPlayController : MonoBehaviour {
     public void UpdateState(bool active) {
         controlsObject.SetActive(active);
 		SetupScreens();
+		Debug.Log("Yo!");
 	}
 
 	/// <summary>

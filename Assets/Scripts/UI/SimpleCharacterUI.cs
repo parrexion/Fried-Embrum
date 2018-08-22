@@ -35,6 +35,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 	public Text pwrText;
 	public Text critText;
 	public Text avoidText;
+	public Image boostAvoid;
 
 	[Header("Stats Stats")]
 	public GameObject statsObject;
@@ -99,6 +100,9 @@ public class SimpleCharacterUI : MonoBehaviour {
 		int critrate = BattleCalc.GetCritRate(weapon, stats);
 		critText.text = (critrate != -1) ? "Crit:   " + critrate : "Crit:   --";
 		avoidText.text = "Avo:  " + BattleCalc.GetAvoid(stats);
+
+		//Terrain
+		boostAvoid.enabled = (tactics.GetTerrain().avoid > 0);
 		
 		statsObject.SetActive(false);
 		basicObject.SetActive(true);

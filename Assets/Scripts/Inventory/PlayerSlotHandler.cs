@@ -16,7 +16,7 @@ public class PlayerSlotHandler : MonoBehaviour, IDropHandler {
 	
 //	public PreparationHandler invContainer;
 
-	private DragHandler _dragHandler;
+	// private DragHandler _dragHandler;
 //	private PlayerSlot _slot;
 
 

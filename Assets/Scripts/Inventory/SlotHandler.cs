@@ -16,18 +16,18 @@ public class SlotHandler : MonoBehaviour, IDropHandler {
 	
 	public PreparationHandler invContainer;
 
-	private DragHandler _dragHandler;
-	private Slot _slot;
+	// private DragHandler _dragHandler;
+	// private Slot _slot;
 
 
-	private void Start() {
-		_slot = GetComponent<Slot>();
-	}
+	// private void Start() {
+	// 	_slot = GetComponent<Slot>();
+	// }
 	
 	public void OnDrop(PointerEventData eventData) {
-		if (DragHandler.itemBeingDragged == null)
-			return;
-		int startID = DragHandler.itemBeingDragged.GetComponent<DragHandler>().startID;
-		invContainer.Swap(startID, _slot.slotID);
+		// if (DragHandler.itemBeingDragged == null)
+		// 	return;
+		// int startID = DragHandler.itemBeingDragged.GetComponent<DragHandler>().startID;
+		// invContainer.Swap(startID, _slot.slotID);
 	}
 }

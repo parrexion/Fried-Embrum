@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-public class DialogueAdvanceFrame : MonoBehaviour, IPointerClickHandler {
+public class DialogueAdvanceFrame : MonoBehaviour {
 
 	public ScrObjLibraryVariable dialogueLibrary;
 	public MapInfoVariable currentMap;
@@ -22,7 +22,4 @@ public class DialogueAdvanceFrame : MonoBehaviour, IPointerClickHandler {
         }
     }
 
-    void IPointerClickHandler.OnPointerClick(PointerEventData eventData) {
-        dialogueClickEvent.Invoke();
-    }
 }
