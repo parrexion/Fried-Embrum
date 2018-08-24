@@ -111,6 +111,7 @@ public class UICharacterStats : MonoBehaviour {
 
 	private void ShowPrep() {
 		StatsContainer stats = clickCharacter.stats;
+		SkillsContainer skills = clickCharacter.skills;
 		if (stats.level == -1)
 			return;
 		
@@ -135,12 +136,12 @@ public class UICharacterStats : MonoBehaviour {
 		resText.text = stats.res.ToString();
 
 		levelText.text = "Lv:  " + stats.level;
-		for (int i = 0; i < stats.skills.Length; i++) {
-			if (stats.skills[i] == null) {
+		for (int i = 0; i < skills.skills.Length; i++) {
+			if (skills.skills[i] == null) {
 				skillImages[i].enabled = false;
 			}
 			else {
-				skillImages[i].sprite = stats.skills[i].icon;
+				skillImages[i].sprite = skills.skills[i].icon;
 				skillImages[i].enabled = true;
 			}
 		}
@@ -153,6 +154,7 @@ public class UICharacterStats : MonoBehaviour {
 
 	private void ShowStats(TacticsMove tactics) {
 		StatsContainer stats = tactics.stats;
+		SkillsContainer skills = tactics.skills;
 		fullBackground.SetActive(true);
 		attackBackground.SetActive(false);
 		playerNormalObject.SetActive(true);
@@ -175,12 +177,12 @@ public class UICharacterStats : MonoBehaviour {
 		resText.text = stats.res.ToString();
 
 		levelText.text = "Lv:  " + stats.level;
-		for (int i = 0; i < stats.skills.Length; i++) {
-			if (stats.skills[i] == null) {
+		for (int i = 0; i < skills.skills.Length; i++) {
+			if (skills.skills[i] == null) {
 				skillImages[i].enabled = false;
 			}
 			else {
-				skillImages[i].sprite = stats.skills[i].icon;
+				skillImages[i].sprite = skills.skills[i].icon;
 				skillImages[i].enabled = true;
 			}
 		}

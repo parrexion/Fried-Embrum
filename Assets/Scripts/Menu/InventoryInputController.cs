@@ -42,9 +42,9 @@ public class InventoryInputController : InputReceiver {
 	/// Updates the information in the UI whenever the state or character changes.
 	/// </summary>
 	public void UpdateUI() {
-		TacticsMove tactics = (currentMode.value != ActionMode.ATTACK && currentMode.value != ActionMode.HEAL) ? selectCharacter.value : targetCharacter.value;
+		TacticsMove tactics = (currentMode.value != ActionMode.ATTACK && currentMode.value != ActionMode.HEAL && currentMode.value != ActionMode.TRADE) ? selectCharacter.value : targetCharacter.value;
 
-		if (currentPage.value == (int)StatsType.INVENTORY || currentMenuMode.value == (int)MenuMode.STATS || currentMenuMode.value == (int)MenuMode.INV) {
+		if (currentPage.value == (int)StatsType.INVENTORY || currentMenuMode.value == (int)MenuMode.STATS || currentMenuMode.value == (int)MenuMode.INV || currentMode.value == ActionMode.TRADE) {
 			ui.ShowInventoryStats(tactics);
 		}
 		else if (currentPage.value == (int)StatsType.STATS) {

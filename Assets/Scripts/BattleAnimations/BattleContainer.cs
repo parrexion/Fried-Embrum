@@ -297,7 +297,7 @@ public class BattleContainer : MonoBehaviour {
 					yield return StartCoroutine(levelupScript.RunLevelup(player.stats));
 					CharacterSkill skill = player.stats.classData.AwardSkills(player.stats.level);
 					if (skill) {
-						player.stats.GainSkill(skill);
+						player.skills.GainSkill(skill);
 						yield return StartCoroutine(ShowPopup(skill.icon,  "gained: " + skill.itemName));
 					}
 					expMeter.gameObject.SetActive(true);

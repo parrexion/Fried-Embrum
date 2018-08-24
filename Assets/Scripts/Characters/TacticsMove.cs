@@ -11,7 +11,6 @@ public abstract class TacticsMove : MonoBehaviour {
 	public BoolVariable lockControls;
 	public MapCreator mapCreator;
 	public ActionModeVariable currentMode;
-	// public MapTileVariable attackTarget;
 	public TacticsMoveVariable targetCharacter;
 	public CharacterListVariable playerList;
 	public CharacterListVariable enemyList;
@@ -20,6 +19,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	[Header("Movement")]
 	public IntVariable movementVelocity;
 	public bool isMoving;
+	public bool canUndoMove;
 	public bool hasMoved;
 	public int posx, posy;
 	public Stack<MapTile> path = new Stack<MapTile>();
@@ -31,6 +31,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	public Faction faction = Faction.PLAYER;
 	public StatsContainer stats;
 	public InventoryContainer inventory;
+	public SkillsContainer skills;
 	public int currentHealth;
 
 	[Header("Materials")]
@@ -244,6 +245,33 @@ public abstract class TacticsMove : MonoBehaviour {
 	}
 
 	/// <summary>
+	/// Finds all the allies around the character which can be supported with the staff.
+	/// </summary>
+	/// <returns></returns>
+	public List<TacticsMove> FindAdjacentCharacters(Faction faction) {
+		List<TacticsMove> supportables = new List<TacticsMove>();
+		if (faction == Faction.NONE || faction == Faction.PLAYER) {
+			for (int i = 0; i < playerList.values.Count; i++) {
+				if (this == playerList.values[i] || !playerList.values[i].IsAlive())
+					continue;
+
+				if (MapCreator.DistanceTo(this, playerList.values[i]) == 1)
+					supportables.Add(playerList.values[i]);
+			}
+		}
+		else if (faction == Faction.NONE || faction == Faction.ENEMY) {
+			for (int i = 0; i < enemyList.values.Count; i++) {
+				if (!enemyList.values[i].IsAlive())
+					continue;
+
+				if (MapCreator.DistanceTo(this, enemyList.values[i]) == 1)
+					supportables.Add(enemyList.values[i]);
+			}
+		}
+		return supportables;
+	}
+
+	/// <summary>
 	/// Makes the character attack with the currently selected weapon.
 	/// </summary>
 	/// <param name="enemy"></param>
@@ -370,6 +398,7 @@ public abstract class TacticsMove : MonoBehaviour {
 		stats.ClearBoosts(true);
 		ForEachSkills(Activation.STARTTURN, playerList);
 		hasMoved = false;
+		canUndoMove = true;
 	}
 
 	/// <summary>
@@ -377,6 +406,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// </summary>
 	public void OnEndTurn() {
 		hasMoved = false;
+		canUndoMove = true;
 		stats.ClearBoosts(false);
 		GetComponent<SpriteRenderer>().color = Color.white;
 	}
@@ -428,6 +458,17 @@ public abstract class TacticsMove : MonoBehaviour {
 			}
 		}
 		return false;
+	}
+
+	/// <summary>
+	/// Checks if the character can trade with anyone.
+	/// </summary>
+	/// <returns></returns>
+	public bool CanTrade() {
+		if (!canUndoMove)
+			return false;
+		List<TacticsMove> traders = FindAdjacentCharacters(Faction.PLAYER);
+		return (traders.Count > 0);
 	}
 	
 	/// <summary>
@@ -527,18 +568,18 @@ public abstract class TacticsMove : MonoBehaviour {
 	}
 
 	public void ActivateSkills(Activation activation, TacticsMove enemy) {
-		stats.ActivateSkills(activation, this, enemy);
+		skills.ActivateSkills(activation, this, enemy);
 	}
 
 	public void EndSkills(Activation activation, TacticsMove enemy) {
-		stats.EndSkills(activation, this, enemy);
+		skills.EndSkills(activation, this, enemy);
 	}
 
 	public int EditValueSkills(Activation activation, int value) {
-		return stats.EditValueSkills(activation, this, value);
+		return skills.EditValueSkills(activation, this, value);
 	}
 
 	public void ForEachSkills(Activation activation, CharacterListVariable list) {
-		stats.ForEachSkills(activation, this, list);
+		skills.ForEachSkills(activation, this, list);
 	}
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public enum MenuMode { NONE, MAP, UNIT, INV, ATTACK, HEAL, STATS, INGAME, HELP }
+public enum MenuMode { NONE, MAP, UNIT, INV, ATTACK, HEAL, STATS, INGAME, HELP, TRADE }
 
 public class InputEventController : MonoBehaviour {
 

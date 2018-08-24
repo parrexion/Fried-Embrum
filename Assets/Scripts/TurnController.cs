@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
@@ -18,6 +19,8 @@ public class TurnController : MonoBehaviour {
 	public FactionVariable currentTurn;
 	public ActionModeVariable currentMode;
 	public IntVariable currentMenuMode;
+	public BoolVariable dialoguePrePost;
+
 	public BoolVariable autoEndTurn;
 
 	[Header("UI")]
@@ -31,8 +34,11 @@ public class TurnController : MonoBehaviour {
 	[Header("Events")]
 	public UnityEvent menuModeChangedEvent;
 	public UnityEvent resetSelections;
-	public UnityEvent returnToMain;
+	public UnityEvent gameWinEvent;
+	public UnityEvent gameLoseEvent;
 	
+	private bool gameover;
+
 
 	/// <summary>
 	/// Clears character lists and starts the player's first turn.
@@ -63,6 +69,9 @@ public class TurnController : MonoBehaviour {
 	/// Changes the turn to the other faction and displays the turn change text box.
 	/// </summary>
 	public void EndChangeTurn() {
+		if (gameover)
+			return;
+
 		if (currentTurn.value == Faction.PLAYER) {
 			currentTurn.value = Faction.ENEMY;
 			for (int i = 0; i < playerList.values.Count; i++) {
@@ -92,10 +101,14 @@ public class TurnController : MonoBehaviour {
 				gameFinished = false;
 				break;
 			}
+			else if (playerList.values[i].stats.charData.mustSurvive) {
+				break;
+			}
 		}
 		if (gameFinished) {
 			Debug.Log("GAME OVER");
-			StartCoroutine(EndGame("GAME OVER"));
+			StartCoroutine(EndGameLose());
+			gameover = true;
 			return;
 		}
 
@@ -109,23 +122,39 @@ public class TurnController : MonoBehaviour {
 		}
 		if (gameFinished) {
 			Debug.Log("BATTLE WON");
-			StartCoroutine(EndGame("BATTLE WON"));
-			// return;
+			StartCoroutine(EndGameWin());
+			gameover = true;
+			return;
 		}
 
 		// Add more win/lose conditions
+
+		gameover = false;
 	}
 
 	/// <summary>
-	/// Short delay before return to the main menu after the map is finished.
+	/// When clearing the map, show win text for a while and then move 
+	/// on to post dialogue.
 	/// </summary>
 	/// <returns></returns>
-	private IEnumerator EndGame(string message) {
-		gameFinishText.text = message;
+	private IEnumerator EndGameWin() {
+		gameFinishText.text = "BATTLE WON";
 		gameFinishText.gameObject.SetActive(true);
 		gameFinishObject.SetActive(true);
 		yield return new WaitForSeconds(2f);
-		returnToMain.Invoke();
+		gameWinEvent.Invoke();
+	}
+
+	/// <summary>
+	/// When losing the map, show lose text and then the game over menu.
+	/// </summary>
+	/// <returns></returns>
+	private IEnumerator EndGameLose() {
+		gameFinishText.text = "GAME OVER";
+		gameFinishText.gameObject.SetActive(true);
+		gameFinishObject.SetActive(true);
+		yield return new WaitForSeconds(2f);
+		gameLoseEvent.Invoke();
 	}
 
 	/// <summary>
@@ -156,6 +185,9 @@ public class TurnController : MonoBehaviour {
 	/// Activates all the characters on the current faction.
 	/// </summary>
 	private void StartTurn() {
+		if (gameover)
+			return;
+		
 		currentMode.value = ActionMode.NONE;
 		if (currentTurn.value == Faction.ENEMY) {
 			for (int i = 0; i < enemyList.values.Count; i++) {
@@ -177,4 +209,12 @@ public class TurnController : MonoBehaviour {
 		menuModeChangedEvent.Invoke();
 	}
 
+	public void MoveToPostDialogue() {
+		dialoguePrePost.value = true;
+		SceneManager.LoadScene("Dialogue");
+	}
+
+	public void MoveToMainMenu() {
+		SceneManager.LoadScene("MainMenu");
+	}
 }

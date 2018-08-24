@@ -25,6 +25,7 @@ public class TacticsCamera : MonoBehaviour {
 
 	private void Start() {
 		_camera = GetComponent<Camera>();
+		transform.localPosition = AdjustPosition(transform.localPosition);
 	}
 
 	/// <summary>
@@ -37,7 +38,7 @@ public class TacticsCamera : MonoBehaviour {
 			Mathf.Clamp(currentPosition.y, cursorY.value-moveHeight, cursorY.value+moveHeight),
 			currentPosition.z
 		);
-		Camera.main.transform.localPosition = AdjustPosition(nextPosition);
+		transform.localPosition = AdjustPosition(nextPosition);
 	}
 
 	/// <summary>
@@ -50,7 +51,7 @@ public class TacticsCamera : MonoBehaviour {
 			Mathf.Clamp(currentPosition.y, selectedCharacter.value.posy-moveHeight, selectedCharacter.value.posy+moveHeight),
 			currentPosition.z
 		);
-		Camera.main.transform.localPosition = AdjustPosition(nextPosition);
+		transform.localPosition = AdjustPosition(nextPosition);
 	}
 
 	/// <summary>
@@ -60,12 +61,15 @@ public class TacticsCamera : MonoBehaviour {
 	/// <returns></returns>
 	private Vector3 AdjustPosition(Vector3 input) {
 		float vertExtent = _camera.orthographicSize;
-		float horizExtent = vertExtent * Screen.width * _camera.rect.width / Screen.height;
+		float horizExtent = vertExtent * _camera.rect.width * (float)Screen.height / (float)Screen.width;
  
 		Bounds areaBounds = boxCollider.bounds;
  
+		Debug.Log(string.Format("Clamp:  {0}  {1}", vertExtent, horizExtent));
+		Debug.Log(string.Format("Clamp:  {0}  {1}", areaBounds.min.x + horizExtent +6, areaBounds.max.x - horizExtent +6));
+		Debug.Log(string.Format("Clamp:  {0}  {1}", areaBounds.min.y + vertExtent, areaBounds.max.y - vertExtent));
 		return new Vector3(
-			Mathf.Clamp(input.x, areaBounds.min.x + horizExtent, areaBounds.max.x - horizExtent),
+			Mathf.Clamp(input.x, areaBounds.min.x + horizExtent +6, areaBounds.max.x - horizExtent +6),
 			Mathf.Clamp(input.y, areaBounds.min.y + vertExtent, areaBounds.max.y - vertExtent),
 			input.z);
 	}

@@ -6,12 +6,17 @@ using UnityEngine.UI;
 
 public class IngameMenuController : InputReceiver {
 
-	[Header("Inventory Menu")]
+	[Header("Ingame Menu")]
 	public GameObject ingameMenu;
 	public Image overlay;
 	public IntVariable ingameMenuPosition;
 	private Image[] ingameButtons = new Image[0];
 	private int state;
+
+	[Header("Objective")]
+	public CharacterListVariable enemyList;
+	public GameObject objectiveObject;
+	public Text enemyCount;
 
 	[Header("How To Play")]
 	public HowToPlayController howTo;
@@ -22,6 +27,7 @@ public class IngameMenuController : InputReceiver {
 
 	private void Start() {
 		ingameMenu.SetActive(false);
+		objectiveObject.SetActive(false);
 		overlay.enabled = false;
 		ingameButtons = ingameMenu.GetComponentsInChildren<Image>(true);
 	}
@@ -30,9 +36,11 @@ public class IngameMenuController : InputReceiver {
 		MenuMode mode = (MenuMode)currentMenuMode.value;
 		active = (mode == MenuMode.INGAME);
 		ingameMenu.SetActive(active);
+		objectiveObject.SetActive(active);
 		overlay.enabled = active;
 		if (active)
 			ingameMenuPosition.value = 0;
+		ShowObjective();
 		ButtonHighlighting();
     }
 
@@ -95,6 +103,18 @@ public class IngameMenuController : InputReceiver {
 			howTo.BackClicked();
 		}
     }
+
+	private void ShowObjective() {
+		if (!active)
+			return;
+
+		int enemies = 0;
+		for (int i = 0; i < enemyList.values.Count; i++) {
+			if (enemyList.values[i].IsAlive())
+				enemies++;
+		}
+		enemyCount.text = enemies.ToString();
+	}
 
 	/// <summary>
 	/// Colors the selected button to show the current selection.

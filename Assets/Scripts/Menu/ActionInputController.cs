@@ -56,10 +56,12 @@ public class ActionInputController : InputReceiver {
 		if (!active)
 			return;
 		
-		currentMenuMode.value = (int)MenuMode.MAP;
-		currentActionMode.value = ActionMode.MOVE;
-		StartCoroutine(MenuChangeDelay());
-		Debug.Log("Oh, not there");
+		if (selectedCharacter.value.canUndoMove) {
+			currentMenuMode.value = (int)MenuMode.MAP;
+			currentActionMode.value = ActionMode.MOVE;
+			StartCoroutine(MenuChangeDelay());
+			Debug.Log("Oh, not there");
+		}
     }
 
     public override void OnOkButton() {
@@ -82,13 +84,20 @@ public class ActionInputController : InputReceiver {
 				Debug.Log("Heal!");
 				StartCoroutine(MenuChangeDelay());
 				break;
-			case 2: // ITEM
+			case 2: // TRADE
+				targetList.values = selectedCharacter.value.FindAdjacentCharacters(Faction.PLAYER);
+				currentMenuMode.value = (int)MenuMode.MAP;
+				currentActionMode.value = ActionMode.TRADE;
+				Debug.Log("Trade!");
+				StartCoroutine(MenuChangeDelay());
+				break;
+			case 3: // ITEM
 				currentMenuMode.value = (int)MenuMode.STATS;
 				inventoryIndex.value = 0;
 				Debug.Log("Item!");
 				StartCoroutine(MenuChangeDelay());
 				break;
-			case 3: // WAIT
+			case 4: // WAIT
 				currentMenuMode.value = (int)MenuMode.MAP;
 				currentActionMode.value = ActionMode.NONE;
 				StartCoroutine(MenuChangeDelay());
@@ -103,8 +112,11 @@ public class ActionInputController : InputReceiver {
 			
 		actionButtons[0].gameObject.SetActive(selectedCharacter.value.CanAttack());
 		actionButtons[1].gameObject.SetActive(selectedCharacter.value.CanSupport());
-		if (actionMenuPosition.value == -1)
+		actionButtons[2].gameObject.SetActive(selectedCharacter.value.CanTrade());
+		if (actionMenuPosition.value == -1 || !actionButtons[actionMenuPosition.value].IsActive()) {
+			actionMenuPosition.value = -1;
 			OnDownArrow();
+		}
 		ButtonHighlighting();
 	}
 

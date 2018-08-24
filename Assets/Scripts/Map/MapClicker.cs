@@ -53,7 +53,7 @@ public class MapClicker : MonoBehaviour {
 			NormalHover(cursorX.value, cursorY.value);
 		else if (currentActionMode.value == ActionMode.MOVE)
 			MoveHover(cursorX.value, cursorY.value);
-		else if (currentActionMode.value == ActionMode.ATTACK || currentActionMode.value == ActionMode.HEAL) {
+		else if (currentActionMode.value == ActionMode.ATTACK || currentActionMode.value == ActionMode.HEAL || currentActionMode.value == ActionMode.TRADE) {
 			updateCharacterUI.Invoke();
 		}
 	}
@@ -74,7 +74,7 @@ public class MapClicker : MonoBehaviour {
 			cursorMovedEvent.Invoke();
 			Debug.Log("Go back to the shadows!");
 		}
-		else if (currentActionMode.value == ActionMode.ATTACK || currentActionMode.value == ActionMode.HEAL) {
+		else if (currentActionMode.value == ActionMode.ATTACK || currentActionMode.value == ActionMode.HEAL || currentActionMode.value == ActionMode.TRADE) {
 			currentActionMode.value = ActionMode.MOVE;
 			MoveCursor();
 			Debug.Log("Let's do something else");
@@ -155,7 +155,7 @@ public class MapClicker : MonoBehaviour {
 	/// Updates the position of the cursor depending on the menu mode.
 	/// </summary>
 	private void MoveCursor() {
-		if (currentActionMode.value == ActionMode.ATTACK || currentActionMode.value == ActionMode.HEAL) {
+		if (currentActionMode.value == ActionMode.ATTACK || currentActionMode.value == ActionMode.HEAL || currentActionMode.value == ActionMode.TRADE) {
 			transform.position = new Vector3(target.value.posx, target.value.posy, zHeight);
 		}
 		else {

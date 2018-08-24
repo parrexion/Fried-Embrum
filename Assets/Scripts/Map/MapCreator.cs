@@ -262,7 +262,7 @@ public class MapCreator : MonoBehaviour {
 					};
 				}
 			}
-			tactics.stats.skills = pos.skills;
+			tactics.skills.skills = pos.skills;
 			((NPCMove)tactics).aggroType = pos.aggroType;
 			tactics.Setup();
 		}

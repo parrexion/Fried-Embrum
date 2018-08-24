@@ -6,7 +6,6 @@ using Random = UnityEngine.Random;
 public class StatsContainer {
 
 	public const int WPN_SKILLS = 8;
-	public const int SKILL_SIZE = 5;
 	
 	[Header("Character Info")]
 	public CharacterStats charData;
@@ -16,7 +15,6 @@ public class StatsContainer {
 	public int level;
 	public int currentExp;
 	public int[] wpnSkills = new int[WPN_SKILLS];
-	public CharacterSkill[] skills;
 
 	[Header("Current Stats")]
 	public int hp;
@@ -74,10 +72,6 @@ public class StatsContainer {
 		wpnSkills = new int[WPN_SKILLS];
 		for (int i = 0; i < saveData.wpnSkills.Length; i++) {
 			wpnSkills[i] = saveData.wpnSkills[i];
-		}
-		skills = new CharacterSkill[SKILL_SIZE];
-		for (int i = 0; i < saveData.skills.Count; i++) {
-			skills[i] = (CharacterSkill) iLib.GetEntry(saveData.skills[i]);
 		}
 
 		iHp = saveData.iHp;
@@ -207,61 +201,4 @@ public class StatsContainer {
 		CalculateStats();
 	}
 
-	public bool GainSkill(CharacterSkill skill) {
-		
-		Debug.Log("Adding skill " + skill.itemName);
-		for (int i = 0; i < skills.Length; i++) {
-			if (skills[i] == null) {
-				skills[i] = skill;
-				Debug.Log("Added the skill to position " + i);
-				return true;
-			}
-		}
-		return false;
-	}
-
-	//Skill activations
-
-	public void ActivateSkills(Activation activation, TacticsMove user, TacticsMove enemy) {
-		for (int i = 0; i < skills.Length; i++) {
-			if (!skills[i])
-				continue;
-			skills[i].ActivateSkill(activation, user, enemy);
-		}
-	}
-
-	public void EndSkills(Activation activation, TacticsMove user, TacticsMove enemy) {
-		for (int i = 0; i < skills.Length; i++) {
-			if (!skills[i])
-				continue;
-			skills[i].EndSkill(activation, user, enemy);
-		}
-	}
-
-	public int EditValueSkills(Activation activation, TacticsMove user, int value) {
-		for (int i = 0; i < skills.Length; i++) {
-			if (!skills[i])
-				continue;
-			skills[i].EditValue(activation, value, user);
-		}
-		return value;
-	}
-
-	public void ForEachSkills(Activation activation, TacticsMove user, CharacterListVariable list) {
-		for (int i = 0; i < skills.Length; i++) {
-			if (!skills[i])
-				continue;
-			skills[i].ActivateForEach(activation, user, list);
-		}
-	}
-
-}
-
-
-[System.Serializable]
-public class InventoryTuple {
-	public int index;
-	public WeaponItem item;
-	public int charge;
-	public bool droppable;
 }

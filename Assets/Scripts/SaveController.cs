@@ -45,7 +45,7 @@ public class SaveController : MonoBehaviour {
 			if (availableUnits.stats[i].charData == null)
 				continue;
 			CharacterSaveData c = new CharacterSaveData();
-			c.StoreData(availableUnits.stats[i], availableUnits.inventory[i]);
+			c.StoreData(availableUnits.stats[i], availableUnits.inventory[i], availableUnits.skills[i]);
 			data.characters.Add(c);
 		}
 		
@@ -76,11 +76,13 @@ public class SaveController : MonoBehaviour {
 			Debug.Log("Characters:  " + loadedData.characters.Count);
 			availableUnits.stats = new StatsContainer[loadedData.characters.Count];
 			availableUnits.inventory = new InventoryContainer[loadedData.characters.Count];
+			availableUnits.skills = new SkillsContainer[loadedData.characters.Count];
 			for (int i = 0; i < loadedData.characters.Count; i++) {
 				CharacterStats cStats = characterLibrary.GetEntry(loadedData.characters[i].id);
 				CharClass cClass = classLibrary.GetEntry(loadedData.characters[i].classID);
 				availableUnits.stats[i] = new StatsContainer(itemLibrary, loadedData.characters[i], cStats, cClass);
 				availableUnits.inventory[i] = new InventoryContainer(itemLibrary, loadedData.characters[i]);
+				availableUnits.skills[i] = new SkillsContainer(itemLibrary, loadedData.characters[i]);
 			}
 			Debug.Log("Successfully loaded the save data!");
 		}

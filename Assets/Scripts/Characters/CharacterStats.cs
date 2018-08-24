@@ -9,6 +9,7 @@ public class CharacterStats : ScriptableObject {
 
 	[Header("Character Info")]
 	public string charName;
+	public Sprite bigPortrait;
 	public Sprite portrait;
 	public Sprite battleSprite;
 	public CharClass charClass;
@@ -35,4 +36,6 @@ public class CharacterStats : ScriptableObject {
 	public float gDef;
 	public float gRes;
 
+	[Header("Other Data")]
+	public bool mustSurvive;
 }

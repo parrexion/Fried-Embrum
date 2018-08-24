@@ -69,6 +69,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 	
 	public void ShowBasicStats(TacticsMove tactics) {
 		StatsContainer stats = tactics.stats;
+		SkillsContainer skills = tactics.skills;
 //		colorBackground.color = (tactics.faction == Faction.PLAYER) ? 
 //			new Color(0.2f,0.2f,0.5f) : new Color(0.5f,0.2f,0.2f);
 		
@@ -85,11 +86,11 @@ public class SimpleCharacterUI : MonoBehaviour {
 		wpnName.text = (weapon != null) ? weapon.itemName : "";
 		
 		for (int i = 0; i < skillImages.Length; i++) {
-			if (i >= stats.skills.Length || stats.skills[i] == null) {
+			if (i >= skills.skills.Length || skills.skills[i] == null) {
 				skillImages[i].sprite = noSkillImage;
 			}
 			else {
-				skillImages[i].sprite = stats.skills[i].icon;
+				skillImages[i].sprite = skills.skills[i].icon;
 			}
 		}
 

@@ -39,7 +39,7 @@ public class CharacterSaveData {
 		level = -1;
 	}
 
-	public void StoreData(StatsContainer stats, InventoryContainer invCont) {
+	public void StoreData(StatsContainer stats, InventoryContainer invCont, SkillsContainer skillCont) {
 		id = stats.charData.id;
 		classID = stats.classData.id;
 		
@@ -59,10 +59,10 @@ public class CharacterSaveData {
 			inventory.Add(invCont.inventory[i].item.id);
 			invCharges.Add(invCont.inventory[i].charge);
 		}
-		for (int i = 0; i < stats.skills.Length; i++) {
-			if (!stats.skills[i])
+		for (int i = 0; i < skillCont.skills.Length; i++) {
+			if (!skillCont.skills[i])
 				continue;
-			skills.Add(stats.skills[i].id);
+			skills.Add(skillCont.skills[i].id);
 		}
 
 		iHp = stats.iHp;
@@ -82,13 +82,4 @@ public class CharacterSaveData {
 		eRes = stats.eRes;
 	}
 
-	public void GenerateIV() {
-		iHp = Random.Range(0.01f,0.99f);
-		iAtk = Random.Range(0.01f,0.99f);
-		iSpd = Random.Range(0.01f,0.99f);
-		iSkl = Random.Range(0.01f,0.99f);
-		iLck = Random.Range(0.01f,0.99f);
-		iDef = Random.Range(0.01f,0.99f);
-		iRes = Random.Range(0.01f,0.99f);
-	}
 }

@@ -25,9 +25,6 @@ public class Character : MonoBehaviour {
 		else {
 			characterSprite.enabled = true;
 			CharacterEntry ce = (CharacterEntry)character.value;
-			Debug.Log("Character: " + name);
-			Debug.Log("Value: " + character.value.name);
-			Debug.Log("Checking index: " + poseIndex.value);
 			characterSprite.sprite = ce.poses[poseIndex.value];
 		}
 	}

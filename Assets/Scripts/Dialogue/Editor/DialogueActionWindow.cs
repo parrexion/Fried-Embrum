@@ -499,6 +499,7 @@ public class DialogueActionWindow: EditorWindow {
 			GUILayout.Label("Screen Flash", EditorStyles.boldLabel);
 			hub.dialogueValues.actions[hub.selAction].values[0] = EditorGUILayout.IntField("Flash startup (ms)",hub.dialogueValues.actions[hub.selAction].values[0]);
 			hub.dialogueValues.actions[hub.selAction].values[1] = EditorGUILayout.IntField("Flash fade (ms)",hub.dialogueValues.actions[hub.selAction].values[1]);
+			hub.dialogueValues.actions[hub.selAction].entries[0] = (ScrObjLibraryEntry)EditorGUILayout.ObjectField("Fade color/background",hub.dialogueValues.actions[hub.selAction].entries[0], typeof(BackgroundEntry),false);
 		}
 		// Shakes
 		else if (hub.dialogueValues.actions[hub.selAction].type == DActionType.SHAKE) {

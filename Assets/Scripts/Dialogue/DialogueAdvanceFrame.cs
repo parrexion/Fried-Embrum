@@ -15,7 +15,8 @@ public class DialogueAdvanceFrame : MonoBehaviour {
 
 
     void Update() {
-        if (Input.GetKeyDown(KeyCode.S) && skippableDialogue.value){
+        if (Input.GetKeyDown(KeyCode.Q) && skippableDialogue.value){
+            Debug.Log("asdjlfasjdflösfja");
             currentFrame.value = currentMap.value.preDialogue.actions.Count-1;
             dialogueClickEvent.Invoke();
             dialogueClickEvent.Invoke();

@@ -30,9 +30,9 @@ public class MapCursor : InputReceiver {
 		if (!active)
 			return;
 		
-		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL) {
+		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL || currentMode.value == ActionMode.TRADE) {
 			target.value = targetList.values[targetIndex.value];
-			Debug.Log("Show attack or heal");
+			Debug.Log("Show attack, heal or trade");
 		}
 		else if (currentMode.value == ActionMode.MOVE) {
 			clicker.UndoMove();
@@ -44,7 +44,7 @@ public class MapCursor : InputReceiver {
 		if (!active)
 			return;
 
-		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL) {
+		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL || currentMode.value == ActionMode.TRADE) {
 			targetIndex.value = (targetIndex.value + 1) % targetList.values.Count;
 			target.value = targetList.values[targetIndex.value];
 		}
@@ -59,7 +59,7 @@ public class MapCursor : InputReceiver {
 		if (!active)
 			return;
 
-		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL) {
+		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL || currentMode.value == ActionMode.TRADE) {
 			targetIndex.value = (targetIndex.value -1 < 0) ? (targetList.values.Count-1) : targetIndex.value -1;
 			target.value = targetList.values[targetIndex.value];
 		}
@@ -74,7 +74,7 @@ public class MapCursor : InputReceiver {
 		if (!active)
 			return;
 
-		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL) {
+		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL || currentMode.value == ActionMode.TRADE) {
 			targetIndex.value = (targetIndex.value -1 < 0) ? (targetList.values.Count-1) : targetIndex.value -1;
 			target.value = targetList.values[targetIndex.value];
 		}
@@ -88,7 +88,7 @@ public class MapCursor : InputReceiver {
 		if (!active)
 			return;
 
-		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL) {
+		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL || currentMode.value == ActionMode.TRADE) {
 			targetIndex.value = (targetIndex.value + 1) % targetList.values.Count;
 			target.value = targetList.values[targetIndex.value];
 		}
@@ -112,6 +112,11 @@ public class MapCursor : InputReceiver {
 			Debug.Log("GO to Staffs");
 			StartCoroutine(MenuChangeDelay());
 		}
+		else if (currentMode.value == ActionMode.TRADE) {
+			currentMenuMode.value = (int)MenuMode.TRADE;
+			Debug.Log("GO to trade");
+			StartCoroutine(MenuChangeDelay());
+		}
 		else {
 			targetIndex.value = 0;
 			buttonMenuPosition.value = -1;
@@ -123,10 +128,9 @@ public class MapCursor : InputReceiver {
 		if (!active)
 			return;
 
-		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL) {
+		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL || currentMode.value == ActionMode.TRADE) {
 			currentMenuMode.value = (int)MenuMode.UNIT;
 			StartCoroutine(MenuChangeDelay());
-			Debug.Log("ohoyo?");
 		}
 		clicker.CursorBack();
 	}

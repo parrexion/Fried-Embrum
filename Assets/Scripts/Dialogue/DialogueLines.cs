@@ -8,27 +8,26 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(DialogueScene))]
 public class DialogueLines : MonoBehaviour {
 
-	public ScrObjLibraryVariable dialogueLibrary;
 	public MapInfoVariable currentMap;
-	private DialogueEntry dialogueEntry;
-
+	public BoolVariable dialoguePrePost;
 	public IntVariable currentAction;
+	public DialogueEntry wpEntry;
 	public BoolVariable overrideActionNumber;
-	private DialogueScene scene;
 
+	private DialogueEntry dialogueEntry;
+	private DialogueScene scene;
 	private bool isWaiting;
 
 
 	void Start() {
 		scene = GetComponent<DialogueScene>();
-		dialogueLibrary.initialized = false;
-		dialogueLibrary.GenerateDictionary();
-		dialogueEntry = currentMap.value.preDialogue;
 		if (!overrideActionNumber.value) {
+			dialogueEntry = (dialoguePrePost.value) ? currentMap.value.postDialogue : currentMap.value.preDialogue;
 			currentAction.value = 0;
 			scene.Reset();
 		}
 		else {
+			dialogueEntry = wpEntry;
 			overrideActionNumber.value = false;
 		}
 		NextFrame();
@@ -104,7 +103,16 @@ public class DialogueLines : MonoBehaviour {
 		}	
 	}
 
-	public void StartBattle() {
-		SceneManager.LoadScene("NewBattleScene");
+	/// <summary>
+	/// Called when thee dialogue ends. Either sends the player to the battle
+	/// or to the main menu if the map has already been beat.
+	/// </summary>
+	public void DialogueEnd() {
+		if (dialoguePrePost.value) {
+			SceneManager.LoadScene("MainMenu");
+		}
+		else
+			SceneManager.LoadScene("BattleScene");
 	}
+
 }

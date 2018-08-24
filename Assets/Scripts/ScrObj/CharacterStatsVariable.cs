@@ -7,4 +7,5 @@ public class CharacterStatsVariable : ScriptableObject {
 
 	public StatsContainer stats;
 	public InventoryContainer inventory;
+	public SkillsContainer skills;
 }

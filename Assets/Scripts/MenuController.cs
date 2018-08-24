@@ -8,6 +8,7 @@ public class MenuController : InputReceiver {
 
 	public GameObject startMenuObject;
 	public HowToPlayController howTo;
+	public BoolVariable dialoguePrePost;
 
 	public Image[] menuButtons;
 
@@ -23,6 +24,7 @@ public class MenuController : InputReceiver {
 	}
 
 	public void StartClicked() {
+		dialoguePrePost.value = false;
 		SceneManager.LoadScene("Dialogue");
 	}
 
@@ -33,7 +35,7 @@ public class MenuController : InputReceiver {
 	}
 
 	public void StartBattle() {
-		SceneManager.LoadScene("NewBattleScene");
+		SceneManager.LoadScene("BattleScene");
 	}
 
     public override void OnUpArrow() {

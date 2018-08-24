@@ -41,7 +41,6 @@ public class DialogueTextHandler : MonoBehaviour {
 	/// Updates the dialogue box when it is clicked.
 	/// </summary>
 	public void DialogueBoxClicked() {
-
 		if (textUpdating) {
 			// Finish the text of this frame
 			cursorBobber.ShowCursor(true);
