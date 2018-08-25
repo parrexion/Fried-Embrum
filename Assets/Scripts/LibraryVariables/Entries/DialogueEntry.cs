@@ -15,7 +15,6 @@ public class DialogueEntry : ScrObjLibraryEntry {
 
 	public List<Frame> frames = new List<Frame>();
 	public List<DialogueActionData> actions = new List<DialogueActionData>();
-	public Constants.CHAPTER TagEnum;
 
 
 	public void CreateBasicActions() {

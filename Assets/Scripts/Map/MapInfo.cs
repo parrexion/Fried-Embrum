@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu]
+[CreateAssetMenu(menuName = "LibraryEntries/MapInfo")]
 public class MapInfo : ScriptableObject {
 
 	[Header("Dialogues")]
@@ -49,7 +49,7 @@ public class EnemyPosition {
 	public int x;
 	public int y;
 	public int level;
-	public CharacterStats stats;
+	public CharData stats;
 	public WeaponTuple[] inventory;
 	public CharacterSkill[] skills;
 	public AggroType aggroType;

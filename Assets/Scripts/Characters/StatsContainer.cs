@@ -8,7 +8,7 @@ public class StatsContainer {
 	public const int WPN_SKILLS = 8;
 	
 	[Header("Character Info")]
-	public CharacterStats charData;
+	public CharData charData;
 	public CharClass classData;
 	
 	[Header("Player stuff")]
@@ -56,11 +56,11 @@ public class StatsContainer {
 	public List<Boost> boosts = new List<Boost>();
 
 
-	public StatsContainer(ItemLibrary iLib, CharacterSaveData saveData, CharacterStats cStats, CharClass charClass) {
+	public StatsContainer(ItemLibrary iLib, CharacterSaveData saveData, CharData cStats, CharClass charClass) {
 		SetupValues(iLib, saveData, cStats, charClass);
 	}
 
-	private void SetupValues(ItemLibrary iLib, CharacterSaveData saveData, CharacterStats cStats, CharClass charClass) {
+	private void SetupValues(ItemLibrary iLib, CharacterSaveData saveData, CharData cStats, CharClass charClass) {
 		charData = cStats;
 		classData = charClass;
 		

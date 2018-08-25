@@ -58,7 +58,6 @@ public class BattleContainer : MonoBehaviour {
 	private TacticsMove _currentCharacter;
 	private bool _attackerDealtDamage;
 	private bool _defenderDealtDamage;
-	private bool waiting;
 
 
 	public void GenerateActions(TacticsMove attacker, TacticsMove defender) {
@@ -254,19 +253,6 @@ public class BattleContainer : MonoBehaviour {
 		battleFinishedEvent.Invoke();
 	}
 
-	private IEnumerator OnelinerDialogue() {
-		OneLiner line = actions[0].attacker.GetOneliner(actions[0].defender);
-		if (line == null)
-			yield break;
-		
-		showDialogueEvent.Invoke();
-
-		waiting = true;
-		while(waiting) {
-			yield return null;
-		}
-	}
-
 	private IEnumerator DamageDisplay(bool leftSide, int damage, bool isDamage, bool isCrit) {
 		GameObject damageObject = (leftSide) ? rightDamageObject : leftDamageObject;
 		Text damageText = (leftSide) ? rightDamageText : leftDamageText;
@@ -380,10 +366,6 @@ public class BattleContainer : MonoBehaviour {
 		yield return new WaitForSeconds(2f);
 		brokenTooltip.SetActive(false);
 		yield return new WaitForSeconds(0.5f);
-	}
-
-	public void OneLinerEnd() {
-		waiting = false;
 	}
 
 	private bool GenerateHitNumber(int hit) {

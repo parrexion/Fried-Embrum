@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum ClassType { NONE, INFANTRY, ARMORED, CAVALRY, FLYING }
 
-[CreateAssetMenu]
+[CreateAssetMenu(menuName = "LibraryEntries/CharClass")]
 public class CharClass : ScriptableObject {
 
 	public string id;

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 public class ItemEditorWindow {
 
 	public ScrObjLibraryVariable itemLibrary;
-	public ItemEquip itemValues;
+	// public ItemEquip itemValues;
 	private GUIContent[] currentEntryList;
 
 	// Selection screen
@@ -33,9 +33,9 @@ public class ItemEditorWindow {
 	/// </summary>
 	/// <param name="entries"></param>
 	/// <param name="container"></param>
-	public ItemEditorWindow(ScrObjLibraryVariable entries, ItemEquip container){
+	public ItemEditorWindow(ScrObjLibraryVariable entries){//, ItemEquip container){
 		itemLibrary = entries;
-		itemValues = container;
+		// itemValues = container;
 		LoadLibrary();
 	}
 
@@ -61,7 +61,7 @@ public class ItemEditorWindow {
 
 		dispOffset.right = 10;
 
-		itemValues.ResetValues();
+		// itemValues.ResetValues();
 		currentEntryList = itemLibrary.GetRepresentations("","");
 		filterStr = "";
 	}
@@ -142,32 +142,32 @@ public class ItemEditorWindow {
 		dispScrollPos = GUILayout.BeginScrollView(dispScrollPos, GUILayout.Width(dispRect.width), 
 							GUILayout.Height(dispRect.height-25));
 
-		GUI.skin.textField.margin.right = 20;
+// 		GUI.skin.textField.margin.right = 20;
 
-		GUILayout.Label("Selected Item", EditorStyles.boldLabel);
-		EditorGUILayout.SelectableLabel("UUID: " + itemValues.uuid);
-		itemValues.repColor = EditorGUILayout.ColorField("List color", itemValues.repColor);
+// 		GUILayout.Label("Selected Item", EditorStyles.boldLabel);
+// 		EditorGUILayout.SelectableLabel("UUID: " + itemValues.uuid);
+// 		itemValues.repColor = EditorGUILayout.ColorField("List color", itemValues.repColor);
 
-		GUILayout.Space(20);
+// 		GUILayout.Space(20);
 
-		itemValues.entryName = EditorGUILayout.TextField("Name", itemValues.entryName);
-		itemValues.icon = (Sprite)EditorGUILayout.ObjectField("Item Icon", itemValues.icon, typeof(Sprite),false);
-		itemValues.tintColor = EditorGUILayout.ColorField("Item Tint Color", itemValues.tintColor);
+// 		itemValues.entryName = EditorGUILayout.TextField("Name", itemValues.entryName);
+// 		itemValues.icon = (Sprite)EditorGUILayout.ObjectField("Item Icon", itemValues.icon, typeof(Sprite),false);
+// 		itemValues.tintColor = EditorGUILayout.ColorField("Item Tint Color", itemValues.tintColor);
 
-		GUILayout.Space(5);
+// 		GUILayout.Space(5);
 
-		itemValues.cost = EditorGUILayout.IntField("Money Value", itemValues.cost);
+// 		itemValues.cost = EditorGUILayout.IntField("Money Value", itemValues.cost);
 
-		GUILayout.Space(20);
+// 		GUILayout.Space(20);
 
-		//Base Stats
-EditorGUIUtility.labelWidth = 150;
-		itemValues.healthModifier = EditorGUILayout.IntField("Health modifier", itemValues.healthModifier);
-		itemValues.attackModifier = EditorGUILayout.IntField("Android Attack modifier", itemValues.attackModifier);
-		itemValues.defenseModifier = EditorGUILayout.IntField("Android Defense modifier", itemValues.defenseModifier);
-		itemValues.sAttackModifier = EditorGUILayout.IntField("Soldier Attack modifier", itemValues.sAttackModifier);
-		itemValues.sDefenseModifier = EditorGUILayout.IntField("Soldier Defense modifier", itemValues.sDefenseModifier);
-EditorGUIUtility.labelWidth = 100;
+// 		//Base Stats
+// EditorGUIUtility.labelWidth = 150;
+// 		itemValues.healthModifier = EditorGUILayout.IntField("Health modifier", itemValues.healthModifier);
+// 		itemValues.attackModifier = EditorGUILayout.IntField("Android Attack modifier", itemValues.attackModifier);
+// 		itemValues.defenseModifier = EditorGUILayout.IntField("Android Defense modifier", itemValues.defenseModifier);
+// 		itemValues.sAttackModifier = EditorGUILayout.IntField("Soldier Attack modifier", itemValues.sAttackModifier);
+// 		itemValues.sDefenseModifier = EditorGUILayout.IntField("Soldier Defense modifier", itemValues.sDefenseModifier);
+// EditorGUIUtility.labelWidth = 100;
 
 
 		GUILayout.EndScrollView();
@@ -176,22 +176,22 @@ EditorGUIUtility.labelWidth = 100;
 
 	void SelectItem() {
 		GUI.FocusControl(null);
-		if (selItem == -1) {
-			// Nothing selected
-			itemValues.ResetValues();
-		}
-		else {
-			// Something selected
-			ItemEquip ce = (ItemEquip)itemLibrary.GetEntryByIndex(selItem);
-			itemValues.CopyValues(ce);
-		}
+		// if (selItem == -1) {
+		// 	// Nothing selected
+		// 	itemValues.ResetValues();
+		// }
+		// else {
+		// 	// Something selected
+		// 	ItemEquip ce = (ItemEquip)itemLibrary.GetEntryByIndex(selItem);
+		// 	itemValues.CopyValues(ce);
+		// }
 	}
 
 	void SaveSelectedItem() {
-		ItemEquip ce = (ItemEquip)itemLibrary.GetEntryByIndex(selItem);
-		ce.CopyValues(itemValues);
-		Undo.RecordObject(ce, "Updated item");
-		EditorUtility.SetDirty(ce);
+		// ItemEquip ce = (ItemEquip)itemLibrary.GetEntryByIndex(selItem);
+		// ce.CopyValues(itemValues);
+		// Undo.RecordObject(ce, "Updated item");
+		// EditorUtility.SetDirty(ce);
 	}
 
 	void InstansiateItem() {
@@ -200,43 +200,43 @@ EditorGUIUtility.labelWidth = 100;
 			Debug.Log("uuid already exists!");
 			return;
 		}
-		ItemEquip c = Editor.CreateInstance<ItemEquip>();
-		c.name = uuid;
-		c.uuid = uuid;
-		c.entryName = uuid;
-		c.repColor = repColor;
-		string path = "Assets/LibraryData/Items/" + uuid + ".asset";
+		// ItemEquip c = Editor.CreateInstance<ItemEquip>();
+		// c.name = uuid;
+		// c.uuid = uuid;
+		// c.entryName = uuid;
+		// c.repColor = repColor;
+		// string path = "Assets/LibraryData/Items/" + uuid + ".asset";
 
-		AssetDatabase.CreateAsset(c, path);
-		itemLibrary.InsertEntry(c, 0);
-		Undo.RecordObject(itemLibrary, "Added item");
-		EditorUtility.SetDirty(itemLibrary);
-		AssetDatabase.SaveAssets();
-		AssetDatabase.Refresh();
+		// AssetDatabase.CreateAsset(c, path);
+		// itemLibrary.InsertEntry(c, 0);
+		// Undo.RecordObject(itemLibrary, "Added item");
+		// EditorUtility.SetDirty(itemLibrary);
+		// AssetDatabase.SaveAssets();
+		// AssetDatabase.Refresh();
 
-		currentEntryList = itemLibrary.GetRepresentations("",filterStr);
-		uuid = "";
-		selItem = 0;
-		SelectItem();
+		// currentEntryList = itemLibrary.GetRepresentations("",filterStr);
+		// uuid = "";
+		// selItem = 0;
+		// SelectItem();
 	}
 
 	void DeleteItem() {
-		GUI.FocusControl(null);
-		ItemEquip c = (ItemEquip)itemLibrary.GetEntryByIndex(selItem);
-		string path = "Assets/LibraryData/Items/" + c.uuid + ".asset";
+		// GUI.FocusControl(null);
+		// ItemEquip c = (ItemEquip)itemLibrary.GetEntryByIndex(selItem);
+		// string path = "Assets/LibraryData/Items/" + c.uuid + ".asset";
 
-		itemLibrary.RemoveEntryByIndex(selItem);
-		Undo.RecordObject(itemLibrary, "Deleted item");
-		EditorUtility.SetDirty(itemLibrary);
-		bool res = AssetDatabase.MoveAssetToTrash(path);
-		AssetDatabase.SaveAssets();
-		AssetDatabase.Refresh();
+		// itemLibrary.RemoveEntryByIndex(selItem);
+		// Undo.RecordObject(itemLibrary, "Deleted item");
+		// EditorUtility.SetDirty(itemLibrary);
+		// bool res = AssetDatabase.MoveAssetToTrash(path);
+		// AssetDatabase.SaveAssets();
+		// AssetDatabase.Refresh();
 
-		currentEntryList = itemLibrary.GetRepresentations("",filterStr);
+		// currentEntryList = itemLibrary.GetRepresentations("",filterStr);
 
-		if (res) {
-			Debug.Log("Removed item: " + c.uuid);
-			selItem = -1;
-		}
+		// if (res) {
+		// 	Debug.Log("Removed item: " + c.uuid);
+		// 	selItem = -1;
+		// }
 	}
 }

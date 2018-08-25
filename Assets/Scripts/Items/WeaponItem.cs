@@ -5,7 +5,7 @@ using UnityEngine;
 public enum ItemCategory { WEAPON, STAFF, CONSUME }
 public enum ItemType {NONE, SWORD, LANCE, AXE, MAGIC, THROW, BOW, HEAL, BUFF, CHEAL, CSTATS}
 
-[CreateAssetMenu]
+[CreateAssetMenu(menuName = "LibraryEntries/WeaponItem")]
 public class WeaponItem : Item {
 
     public ItemCategory itemCategory = ItemCategory.WEAPON;

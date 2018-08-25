@@ -140,7 +140,7 @@ public class DialogueActionWindow: EditorWindow {
 		EditorGUILayout.SelectableLabel("Selected Dialogue    UUID: " + hub.dialogueValues.uuid, EditorStyles.boldLabel, GUILayout.Height(20));
 		if (hub.selAction != -1) {
 			hub.dialogueValues.entryName = EditorGUILayout.TextField("Dialogue name", hub.dialogueValues.entryName, GUILayout.Width(headerRect.width - 30));
-			hub.dialogueValues.TagEnum = (Constants.CHAPTER)EditorGUILayout.EnumPopup("Tag",hub.dialogueValues.TagEnum, GUILayout.Width(headerRect.width - 30));
+			// hub.dialogueValues.TagEnum = (Constants.CHAPTER)EditorGUILayout.EnumPopup("Tag",hub.dialogueValues.TagEnum, GUILayout.Width(headerRect.width - 30));
 		}
 		GUILayout.EndArea();
 	}

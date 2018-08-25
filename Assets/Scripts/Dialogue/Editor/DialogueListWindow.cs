@@ -37,11 +37,10 @@ public class DialogueListWindow : EditorWindow {
 	public Rect actionRect = new Rect();
 
 	//Private stuff
-	string filterEnum;
-	string filterString;
+	// string filterEnum;
+	// string filterString;
 	Vector2 frameScrollPos;
 	Vector2 dialogueScrollPos;
-	Constants.CHAPTER filter = Constants.CHAPTER.DEFAULT;
 
 
 	[MenuItem("Window/Dialogue Editor 2.0")]
@@ -156,19 +155,19 @@ public class DialogueListWindow : EditorWindow {
 
 		GUILayout.Label("Dialogues", EditorStyles.boldLabel);
 
-		//Filter
-		GUILayout.BeginHorizontal();
-		filter = (Constants.CHAPTER)EditorGUILayout.EnumPopup("Filter",filter, GUILayout.Width(dialogueRect.width/2 - 10));
-		filterEnum = (filter == Constants.CHAPTER.DEFAULT) ? "" : filter.ToString();
-		filterString = EditorGUILayout.TextField("Search", filterString, GUILayout.Width(dialogueRect.width/2 - 10));
-		GUILayout.EndHorizontal();
+		// //Filter
+		// GUILayout.BeginHorizontal();
+		// filter = (Constants.CHAPTER)EditorGUILayout.EnumPopup("Filter",filter, GUILayout.Width(dialogueRect.width/2 - 10));
+		// filterEnum = (filter == Constants.CHAPTER.DEFAULT) ? "" : filter.ToString();
+		// filterString = EditorGUILayout.TextField("Search", filterString, GUILayout.Width(dialogueRect.width/2 - 10));
+		// GUILayout.EndHorizontal();
 
 		// Dialogue scroll
 		dialogueScrollPos = GUILayout.BeginScrollView(dialogueScrollPos, GUILayout.Width(dialogueRect.width), 
 					GUILayout.Height(dialogueRect.height-90));
 		
 		int oldSelected = hub.selDialogue;
-		GUIContent[] guic = dialogueLibrary.GetRepresentations(filterEnum, filterString);
+		GUIContent[] guic = dialogueLibrary.GetRepresentations("","");//(filterEnum, filterString);
 		if (guic.Length > 0)
 			hub.selDialogue = GUILayout.SelectionGrid(hub.selDialogue, guic,2);
 
@@ -207,7 +206,7 @@ public class DialogueListWindow : EditorWindow {
 		EditorGUILayout.SelectableLabel("Selected Dialogue    UUID: " + hub.dialogueValues.uuid, EditorStyles.boldLabel, GUILayout.Height(20));
 		if (hub.selAction != -1) {
 			hub.dialogueValues.entryName = EditorGUILayout.TextField("Dialogue name", hub.dialogueValues.entryName, GUILayout.Width(400));
-			hub.dialogueValues.TagEnum = (Constants.CHAPTER)EditorGUILayout.EnumPopup("Tag",hub.dialogueValues.TagEnum);
+			// hub.dialogueValues.TagEnum = (Constants.CHAPTER)EditorGUILayout.EnumPopup("Tag",hub.dialogueValues.TagEnum);
 		}
 		GUILayout.Space(5);
 

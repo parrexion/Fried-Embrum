@@ -6,7 +6,7 @@ public class MapCreator : MonoBehaviour {
 
 	public MapInfoVariable mapInfo;
 	public BoxCollider2D cameraBox;
-	public MapClicker mapClicker;
+	public MapCursor mapClicker;
 	
 	public Transform tilePrefab;
 	

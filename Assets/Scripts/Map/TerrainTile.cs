@@ -5,12 +5,12 @@ using UnityEngine;
 public enum TerrainType { FIELD, FOREST, MOUNTAIN, WALL }
 
 [System.Serializable]
-public class RoughnessTouple {
+public class RoughnessTuple {
 	public ClassType type;
 	public int roughness;
 }
 
-[CreateAssetMenu]
+[CreateAssetMenu(menuName = "LibraryEntries/TerrainTile")]
 public class TerrainTile : ScriptableObject {
 
 	public Sprite sprite;
@@ -19,5 +19,5 @@ public class TerrainTile : ScriptableObject {
 	public int defense;
 	public int avoid;
 
-	public RoughnessTouple[] canMoveTypes;
+	public RoughnessTuple[] canMoveTypes;
 }

@@ -84,6 +84,17 @@ public class InventoryContainer {
 		return null;
 	}
 
+	public InventoryTuple GetFirstUsableItemTuple(ItemCategory category, StatsContainer player) {
+		for (int i = 0; i < inventory.Length; i++) {
+			if (inventory[i].item == null)
+				continue;
+			int skill = player.GetWpnSkill(inventory[i].item);
+			if (inventory[i].item.itemCategory == category && inventory[i].item.CanUse(skill))
+				return inventory[i];
+		}
+		return null;
+	}
+
 	/// <summary>
 	/// Returns the first item in the inventory the player can use matching the item category and have
 	/// enough range to be used.
@@ -102,17 +113,6 @@ public class InventoryContainer {
 				return;
 			}
 		}
-	}
-
-	public InventoryTuple GetUsableItemTuple(ItemCategory category, StatsContainer player) {
-		for (int i = 0; i < inventory.Length; i++) {
-			if (inventory[i].item == null)
-				continue;
-			int skill = player.GetWpnSkill(inventory[i].item);
-			if (inventory[i].item.itemCategory == category && inventory[i].item.CanUse(skill))
-				return inventory[i];
-		}
-		return null;
 	}
 
 	public List<InventoryTuple> GetAllUsableItemTuple(ItemCategory category, StatsContainer player) {
