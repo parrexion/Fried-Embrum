@@ -65,9 +65,6 @@ public class TacticsCamera : MonoBehaviour {
  
 		Bounds areaBounds = boxCollider.bounds;
  
-		Debug.Log(string.Format("Clamp:  {0}  {1}", vertExtent, horizExtent));
-		Debug.Log(string.Format("Clamp:  {0}  {1}", areaBounds.min.x + horizExtent +6, areaBounds.max.x - horizExtent +6));
-		Debug.Log(string.Format("Clamp:  {0}  {1}", areaBounds.min.y + vertExtent, areaBounds.max.y - vertExtent));
 		return new Vector3(
 			Mathf.Clamp(input.x, areaBounds.min.x + horizExtent +6, areaBounds.max.x - horizExtent +6),
 			Mathf.Clamp(input.y, areaBounds.min.y + vertExtent, areaBounds.max.y - vertExtent),

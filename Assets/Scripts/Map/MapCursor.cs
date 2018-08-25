@@ -12,7 +12,6 @@ public class MapCursor : MonoBehaviour {
 	[Header("Targets")]
 	private MapTile startTile;
 	public MapTileVariable moveTile;
-	public MapTileVariable attackTile;
 	public TacticsMoveVariable selectTarget;
 	public TacticsMoveVariable target;
 	public CharacterListVariable enemyCharacters;
@@ -183,7 +182,6 @@ public class MapCursor : MonoBehaviour {
 		Debug.Log("Actionmode");
 		selectTarget.value = null;
 		moveTile.value = null;
-		attackTile.value = null;
 		mapCreator.ResetMap();
 	}
 
