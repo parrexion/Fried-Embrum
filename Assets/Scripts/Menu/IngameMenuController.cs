@@ -18,8 +18,9 @@ public class IngameMenuController : InputReceiver {
 	public GameObject objectiveObject;
 	public Text enemyCount;
 
-	[Header("How To Play")]
+	[Header("Other Menus")]
 	public HowToPlayController howTo;
+	public OptionsController options;
 
 	[Header("Events")]
 	public UnityEvent changeTurnEvent;
@@ -45,25 +46,35 @@ public class IngameMenuController : InputReceiver {
     }
 
     public override void OnUpArrow() {
-		if (!active || state == 1)
+		if (!active)
 			return;
 
-		ingameMenuPosition.value--;
-		if (ingameMenuPosition.value < 0)
-			ingameMenuPosition.value = ingameButtons.Length-1;
+		if (state == 0) {
+			ingameMenuPosition.value--;
+			if (ingameMenuPosition.value < 0)
+				ingameMenuPosition.value = ingameButtons.Length-1;
 
-		ButtonHighlighting();
+			ButtonHighlighting();
+		}
+		else if (state == 2) {
+			options.MoveUp();
+		}
     }
 
     public override void OnDownArrow() {
-		if (!active || state == 1)
+		if (!active)
 			return;
 
-		ingameMenuPosition.value++;
-		if (ingameMenuPosition.value >= ingameButtons.Length)
-			ingameMenuPosition.value = 0;
-			
-		ButtonHighlighting();
+		if (state == 0) {
+			ingameMenuPosition.value++;
+			if (ingameMenuPosition.value >= ingameButtons.Length)
+				ingameMenuPosition.value = 0;
+				
+			ButtonHighlighting();
+		}
+		else if (state == 2) {
+			options.MoveDown();
+		}
     }
 
     public override void OnOkButton() {
@@ -77,16 +88,22 @@ public class IngameMenuController : InputReceiver {
 					Controls();
 					break;
 				case 1:
-					EndTurn();
+					Options();
 					break;
 				case 2:
-					SaveGame();
+					EndTurn();
 					break;
+				// case 3:
+				// 	SaveGame();
+				// 	break;
 			}
 		}
 		else if (state == 1) {
 			if (howTo.CheckOk())
 				OnBackButton();
+		}
+		else if (state == 2) {
+			options.OKClicked();
 		}
     }
 
@@ -101,6 +118,12 @@ public class IngameMenuController : InputReceiver {
 		else if (state == 1) {
 			state = 0;
 			howTo.BackClicked();
+		}
+		else if (state == 2) {
+			state = 0;
+			ingameMenu.SetActive(true);
+			objectiveObject.SetActive(true);
+			options.BackClicked();
 		}
     }
 
@@ -140,6 +163,13 @@ public class IngameMenuController : InputReceiver {
 		howTo.UpdateState(true);
 	}
 
+	private void Options() {
+		state = 2;
+		ingameMenu.SetActive(false);
+		objectiveObject.SetActive(false);
+		options.UpdateState(true);
+	}
+
 	private void SaveGame() {
 
 	}
@@ -147,12 +177,16 @@ public class IngameMenuController : InputReceiver {
     public override void OnLeftArrow() {
 		if (!active)
 			return;
-		howTo.MoveLeft();
+		
+		if (state == 1)
+			howTo.MoveLeft();
 	}
     public override void OnRightArrow() {
 		if (!active)
 			return;
-		howTo.MoveRight();
+		
+		if (state == 1)
+			howTo.MoveRight();
 	}
 
 

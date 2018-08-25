@@ -33,6 +33,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	public InventoryContainer inventory;
 	public SkillsContainer skills;
 	public int currentHealth;
+	public List<EnemyQuote> quotes = new List<EnemyQuote>();
 
 	[Header("Materials")]
 	public Material deadMaterial;
@@ -40,7 +41,9 @@ public abstract class TacticsMove : MonoBehaviour {
 	[Header("Health")]
 	public Image healthImage;
 	public GameObject damageObject;
+	public Image damageNumberBkg;
 	public Text damageNumber;
+	public ParticleSystem critEffect;
 	public GameObject boostObject;
 	public GameObject debuffObject;
 
@@ -315,13 +318,21 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// Reduces the current health by the damage taken and displays the damage in a popup.
 	/// </summary>
 	/// <param name="damage"></param>
-	public void TakeDamage(int damage) {
+	public void TakeDamage(int damage, bool isCrit) {
 		if (damage > 0) {
 			currentHealth -= damage;
 			currentHealth = Mathf.Max(0, currentHealth);
 		}
 		damageNumber.text = (damage == -1) ? "Miss" : damage.ToString();
-		damageNumber.color = Color.black;
+		if (isCrit) {
+			damageNumberBkg.color = Color.black;
+			damageNumber.color = Color.white;
+			critEffect.Play();
+		}
+		else {
+			damageNumberBkg.color = Color.white;
+			damageNumber.color = Color.black;
+		}
 		StartCoroutine(DamageDisplay());
 		if (currentHealth == 0)
 			StartCoroutine(OnDeath());
@@ -382,7 +393,20 @@ public abstract class TacticsMove : MonoBehaviour {
 
 	public TerrainTile GetTerrain() {
 		return currentTile.terrain;
-	} 
+	}
+
+	public OneLiner GetOneliner(TacticsMove otherTactics) {
+		OneLiner line = null;
+		CharacterStats cs = otherTactics.stats.charData;
+		for (int i = 0; i < quotes.Count; i++) {
+			if (cs == quotes[i].triggerCharacter) {
+				line = quotes[i].line;
+				quotes.RemoveAt(i);
+				return line;
+			}
+		}
+		return line;
+	}
 
 	protected IEnumerator OnDeath() {
 		GetComponent<SpriteRenderer>().color = new Color(0.4f,0.4f,0.4f);
@@ -550,6 +574,8 @@ public abstract class TacticsMove : MonoBehaviour {
 		}
 	}
 
+	//Inventory
+
 	public WeaponItem GetEquippedWeapon(ItemCategory category) {
 		return inventory.GetFirstUsableItem(category, stats);
 	}
@@ -566,6 +592,8 @@ public abstract class TacticsMove : MonoBehaviour {
 	public void ReduceWeaponCharge(ItemCategory category) {
 		inventory.ReduceItemCharge(category);
 	}
+
+	//SKills
 
 	public void ActivateSkills(Activation activation, TacticsMove enemy) {
 		skills.ActivateSkills(activation, this, enemy);

@@ -53,10 +53,12 @@ public class BattleContainer : MonoBehaviour {
 	[Header("Events")]
 	public UnityEvent updateHealthEvent;
 	public UnityEvent battleFinishedEvent;
+	public UnityEvent showDialogueEvent;
 	
 	private TacticsMove _currentCharacter;
 	private bool _attackerDealtDamage;
 	private bool _defenderDealtDamage;
+	private bool waiting;
 
 
 	public void GenerateActions(TacticsMove attacker, TacticsMove defender) {
@@ -91,10 +93,11 @@ public class BattleContainer : MonoBehaviour {
 	}
 
 	public void PlayBattleAnimations() {
+		SetupBattle();
 		StartCoroutine(ActionLoop());
 	}
 
-	private IEnumerator ActionLoop() {
+	private void SetupBattle() {
 		leftDamageObject.SetActive(false);
 		rightDamageObject.SetActive(false);
 		leftTransform.GetComponent<SpriteRenderer>().sprite = actions[0].attacker.stats.charData.battleSprite;
@@ -103,6 +106,9 @@ public class BattleContainer : MonoBehaviour {
 		rightTransform.GetComponent<SpriteRenderer>().color = Color.white;
 		_attackerDealtDamage = false;
 		_defenderDealtDamage = false;
+	}
+
+	private IEnumerator ActionLoop() {
 		
 		for (int i = 0; i < actions.Count; i++) {
 			BattleAction act = actions[i];
@@ -145,7 +151,7 @@ public class BattleContainer : MonoBehaviour {
 					damage *= 3;
 					isCrit = true;
 				}
-				act.defender.TakeDamage(damage);
+				act.defender.TakeDamage(damage, isCrit);
 				StartCoroutine(DamageDisplay(act.leftSide, damage, true, isCrit));
 				Debug.Log(i + " Dealt damage :  " + damage);
 				
@@ -246,6 +252,19 @@ public class BattleContainer : MonoBehaviour {
 
 		//Send game finished
 		battleFinishedEvent.Invoke();
+	}
+
+	private IEnumerator OnelinerDialogue() {
+		OneLiner line = actions[0].attacker.GetOneliner(actions[0].defender);
+		if (line == null)
+			yield break;
+		
+		showDialogueEvent.Invoke();
+
+		waiting = true;
+		while(waiting) {
+			yield return null;
+		}
 	}
 
 	private IEnumerator DamageDisplay(bool leftSide, int damage, bool isDamage, bool isCrit) {
@@ -363,13 +382,17 @@ public class BattleContainer : MonoBehaviour {
 		yield return new WaitForSeconds(0.5f);
 	}
 
+	public void OneLinerEnd() {
+		waiting = false;
+	}
+
 	private bool GenerateHitNumber(int hit) {
 		int nr = Random.Range(0, 100);
-		Debug.Log("HIT:  " + nr + " -> " + hit);
 		if (useTrueHit.value) {
 			nr += Random.Range(0, 100);
 			nr /= 2;
 		}
+		Debug.Log("HIT:  " + nr + " -> " + hit);
 		return (nr < hit);
 	}
 

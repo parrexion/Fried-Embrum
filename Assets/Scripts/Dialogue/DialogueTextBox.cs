@@ -26,38 +26,43 @@ public class DialogueTextBox : MonoBehaviour {
 	}
 
 	public void UpdateBubble() {
-		switch (talkingIndex.value)
-		{
-			case 0:
-				bubble.localScale = new Vector3(-1,1,1);
-				bubble.gameObject.SetActive(true);
-				bubbleNoTalk.SetActive(false);
-				transform.localPosition = new Vector3(-150, transform.localPosition.y, 0);
-				break;
-			case 1:
-				bubble.localScale = new Vector3(-1,1,1);
-				bubble.gameObject.SetActive(true);
-				bubbleNoTalk.SetActive(false);
-				transform.localPosition = new Vector3(0, transform.localPosition.y, 0);
-				break;
-			case 2:
-				bubble.localScale = new Vector3(1,1,1);
-				bubble.gameObject.SetActive(true);
-				bubbleNoTalk.SetActive(false);
-				transform.localPosition = new Vector3(0, transform.localPosition.y, 0);
-				break;
-			case 3:
-				bubble.localScale = new Vector3(1,1,1);
-				bubble.gameObject.SetActive(true);
-				bubbleNoTalk.SetActive(false);
-				transform.localPosition = new Vector3(150, transform.localPosition.y, 0);
-				break;
-			case -1:
-			case 4:
-				bubble.gameObject.SetActive(false);
-				bubbleNoTalk.SetActive(true);
-				transform.localPosition = new Vector3(0, transform.localPosition.y, 0);
-				break;
+		if (talkingIndex == null) {
+			bubble.gameObject.SetActive(true);
+		}
+		else {
+			switch (talkingIndex.value)
+			{
+				case 0:
+					bubble.localScale = new Vector3(-1,1,1);
+					bubble.gameObject.SetActive(true);
+					bubbleNoTalk.SetActive(false);
+					transform.localPosition = new Vector3(-150, transform.localPosition.y, 0);
+					break;
+				case 1:
+					bubble.localScale = new Vector3(-1,1,1);
+					bubble.gameObject.SetActive(true);
+					bubbleNoTalk.SetActive(false);
+					transform.localPosition = new Vector3(0, transform.localPosition.y, 0);
+					break;
+				case 2:
+					bubble.localScale = new Vector3(1,1,1);
+					bubble.gameObject.SetActive(true);
+					bubbleNoTalk.SetActive(false);
+					transform.localPosition = new Vector3(0, transform.localPosition.y, 0);
+					break;
+				case 3:
+					bubble.localScale = new Vector3(1,1,1);
+					bubble.gameObject.SetActive(true);
+					bubbleNoTalk.SetActive(false);
+					transform.localPosition = new Vector3(150, transform.localPosition.y, 0);
+					break;
+				case -1:
+				case 4:
+					bubble.gameObject.SetActive(false);
+					bubbleNoTalk.SetActive(true);
+					transform.localPosition = new Vector3(0, transform.localPosition.y, 0);
+					break;
+			}
 		}
 	}
 }

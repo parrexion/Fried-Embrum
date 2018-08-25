@@ -38,4 +38,12 @@ public class CharacterStats : ScriptableObject {
 
 	[Header("Other Data")]
 	public bool mustSurvive;
+	public EnemyQuote[] enemyQuotes = new EnemyQuote[0];
+}
+
+
+[System.Serializable]
+public class EnemyQuote {
+	public CharacterStats triggerCharacter;
+	public OneLiner line;
 }
