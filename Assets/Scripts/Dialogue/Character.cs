@@ -42,9 +42,9 @@ public class Character : MonoBehaviour {
 
 	IEnumerator Animation(Vector3 movePosition, float moveSpeed) {
 		Vector3 startPosition = transform.position;
-		Debug.Log("start     " + startPosition.ToString());
-		Debug.Log("end     " + movePosition.ToString());
-		Debug.Log("char     " + character.value.ToString());
+		// Debug.Log("start     " + startPosition.ToString());
+		// Debug.Log("end     " + movePosition.ToString());
+		// Debug.Log("char     " + character.value.ToString());
 		float dist = 0;
 		while (dist <= moveSpeed) {
 			dist += Time.deltaTime;

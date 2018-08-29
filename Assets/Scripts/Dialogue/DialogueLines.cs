@@ -13,6 +13,7 @@ public class DialogueLines : MonoBehaviour {
 	public IntVariable currentAction;
 	public DialogueEntry wpEntry;
 	public BoolVariable overrideActionNumber;
+    public BoolVariable skippableDialogue;
 
 	private DialogueEntry dialogueEntry;
 	private DialogueScene scene;
@@ -103,13 +104,20 @@ public class DialogueLines : MonoBehaviour {
 		}	
 	}
 
+	public void SkipDialogue() {
+        if (skippableDialogue.value){
+            DialogueEnd();
+        }
+	}
+
 	/// <summary>
 	/// Called when thee dialogue ends. Either sends the player to the battle
 	/// or to the main menu if the map has already been beat.
 	/// </summary>
 	public void DialogueEnd() {
 		if (dialoguePrePost.value) {
-			SceneManager.LoadScene("MainMenu");
+			currentMap.value = currentMap.value.nextLevel;
+			SceneManager.LoadScene("SaveMenu");
 		}
 		else
 			SceneManager.LoadScene("BattleScene");

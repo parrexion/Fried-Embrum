@@ -38,6 +38,7 @@ public class TurnController : MonoBehaviour {
 	public UnityEvent gameLoseEvent;
 	
 	private bool gameover;
+	public BoolVariable autoWin;
 
 
 	/// <summary>
@@ -120,6 +121,11 @@ public class TurnController : MonoBehaviour {
 				break;
 			}
 		}
+
+		// DEBUG
+		if (autoWin.value)
+			gameFinished = true;
+
 		if (gameFinished) {
 			Debug.Log("BATTLE WON");
 			StartCoroutine(EndGameWin());

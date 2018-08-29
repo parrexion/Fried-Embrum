@@ -8,6 +8,7 @@ public class MainMenuController : InputReceiver {
 
 	public GameObject startMenuObject;
 	public HowToPlayController howTo;
+	public SaveFileController saveFileController;
 	public BoolVariable dialoguePrePost;
 
 	public Image[] menuButtons;
@@ -20,12 +21,8 @@ public class MainMenuController : InputReceiver {
 	private void Start() {
 		state = 0;
 		startMenuObject.SetActive(true);
+		saveFileController.HideMenu();
 		SetupMenuButtons();
-	}
-
-	public void StartClicked() {
-		dialoguePrePost.value = false;
-		SceneManager.LoadScene("Dialogue");
 	}
 
 	public void ControlsClicked() {
@@ -34,28 +31,43 @@ public class MainMenuController : InputReceiver {
 		howTo.UpdateState(true);
 	}
 
+	public void LoadClicked() {
+		state = 2;
+		startMenuObject.SetActive(false);
+		saveFileController.ActivateMenu();
+	}
+
+	public void StartClicked() {
+		dialoguePrePost.value = false;
+		SceneManager.LoadScene("Dialogue");
+	}
+
 	public void StartBattle() {
 		SceneManager.LoadScene("BattleScene");
 	}
 
     public override void OnUpArrow() {
-		if (state != 0)
-			return;
-
-		buttonPosition--;
-		if (buttonPosition < 0)
-			buttonPosition += menuButtons.Length;
-		SetupMenuButtons();	
+		if (state == 0) {
+			buttonPosition--;
+			if (buttonPosition < 0)
+				buttonPosition += menuButtons.Length;
+			SetupMenuButtons();	
+		}
+		else if (state == 2 || state == 3) {
+			saveFileController.UpClicked();
+		}
     }
 
     public override void OnDownArrow() {
-		if (state != 0)
-			return;
-
-		buttonPosition++;
-		if (buttonPosition >= menuButtons.Length)
-			buttonPosition = 0;
-		SetupMenuButtons();
+		if (state == 0) {
+			buttonPosition++;
+			if (buttonPosition >= menuButtons.Length)
+				buttonPosition = 0;
+			SetupMenuButtons();
+		}
+		else if (state == 2 || state == 3) {
+			saveFileController.DownClicked();
+		}
     }
 
     public override void OnLeftArrow() {
@@ -80,12 +92,23 @@ public class MainMenuController : InputReceiver {
 					ControlsClicked();
 					break;
 				case 1:
-					StartClicked();
+					LoadClicked();
 					break;
 			}
 		}
 		else if (state == 1 && howTo.CheckOk()) {
 			StartClicked();
+		}
+		else if (state == 2) {
+			bool res = saveFileController.OkClicked();
+			if (res)
+				state = 3;
+		}
+		else if (state == 3) {
+			if (saveFileController.OkClicked())
+				StartClicked();
+			else
+				state = 2;
 		}
     }
 
@@ -94,6 +117,15 @@ public class MainMenuController : InputReceiver {
 			state = 0;
 			howTo.BackClicked();
 			startMenuObject.SetActive(true);
+		}
+		else if (state == 2) {
+			state = 0;
+			saveFileController.BackClicked();
+			startMenuObject.SetActive(true);
+		}
+		else if (state == 3) {
+			state = 2;
+			saveFileController.BackClicked();
 		}
 	}
 

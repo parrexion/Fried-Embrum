@@ -9,18 +9,26 @@ public class MapInfo : ScriptableObject {
 	public DialogueEntry preDialogue;
 	public DialogueEntry postDialogue;
 
+	[Header("Next Level")]
+	public MapInfo nextLevel;
+
 	[Header("Map")]
 	public int sizeX;
 	public int sizeY;
 	public Texture2D mapSprite;
 
 	[Header("Terrain Tiles")]
-	public TerrainTile normal;
-	public TerrainTile forest;
-	public TerrainTile river;
-	public TerrainTile mountain;
+	public TerrainTile breakable;
 	public TerrainTile bridge;
+	public TerrainTile forest;
+	public TerrainTile fort;
+	public TerrainTile house;
 	public TerrainTile ledge;
+	public TerrainTile mountain;
+	public TerrainTile normal;
+	public TerrainTile pillar;
+	public TerrainTile river;
+	public TerrainTile throne;
 	public TerrainTile wall;
 
 	[Header("Spawn Points")]

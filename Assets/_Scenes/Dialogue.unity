@@ -350,7 +350,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -35}
-  m_SizeDelta: {x: 750, y: 250}
+  m_SizeDelta: {x: 1000, y: 320}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &230058045
 MonoBehaviour:
@@ -418,7 +418,6 @@ GameObject:
   m_Component:
   - component: {fileID: 424849424}
   - component: {fileID: 424849423}
-  - component: {fileID: 424849427}
   - component: {fileID: 424849425}
   - component: {fileID: 424849422}
   - component: {fileID: 424849426}
@@ -587,37 +586,6 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 424849423}
         m_MethodName: DialogueBoxClicked
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
---- !u!114 &424849427
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 424849421}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 858f64e68c02e3b4f8622d8d1bea7dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dialogueLibrary: {fileID: 11400000, guid: 81638be706d6e734c8573fd18a978b3c, type: 2}
-  currentMap: {fileID: 11400000, guid: c3bc96eadab1cd74c83d0cb1cbebc279, type: 2}
-  currentFrame: {fileID: 11400000, guid: e039e1b1cd579d147ab502c13d3c1592, type: 2}
-  skippableDialogue: {fileID: 11400000, guid: aeff2b2b7751f6345928b6e1e8989137, type: 2}
-  dialogueClickEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11400000, guid: b63210f67148b1f499b2cde02b933d85, type: 2}
-        m_MethodName: Raise
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1055,7 +1023,7 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 1200, y: 525}
+  m_ReferenceResolution: {x: 1600, y: 900}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -1199,11 +1167,11 @@ RectTransform:
   m_Father: {fileID: 230058044}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 50, y: 80}
-  m_SizeDelta: {x: 480, y: 50}
-  m_Pivot: {x: 0, y: 0.5}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 50, y: -20}
+  m_SizeDelta: {x: 480, y: 60}
+  m_Pivot: {x: 0, y: 1}
 --- !u!114 &857067390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1225,11 +1193,11 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 40
+    m_FontSize: 50
     m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 2
-    m_MaxSize: 40
+    m_MaxSize: 50
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -1724,7 +1692,7 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 1200, y: 525}
+  m_ReferenceResolution: {x: 1600, y: 900}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -1952,8 +1920,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -20, y: 75}
-  m_SizeDelta: {x: 32, y: 24}
+  m_AnchoredPosition: {x: -27.4, y: 100}
+  m_SizeDelta: {x: 48, y: 36}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &1213502508
 MonoBehaviour:
@@ -2001,7 +1969,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cycleLength: 1
   dipDuration: 0.25
-  dipLength: 5
+  dipLength: 8
 --- !u!1 &1233699383
 GameObject:
   m_ObjectHideFlags: 0
@@ -2110,7 +2078,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 30, y: 0}
-  m_SizeDelta: {x: 650, y: 105}
+  m_SizeDelta: {x: 880, y: 105}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1253105047
 MonoBehaviour:
@@ -2133,11 +2101,11 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 40
+    m_FontSize: 50
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 1
-    m_MaxSize: 40
+    m_MaxSize: 50
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -2163,6 +2131,7 @@ GameObject:
   - component: {fileID: 1269839789}
   - component: {fileID: 1269839786}
   - component: {fileID: 1269839790}
+  - component: {fileID: 1269839791}
   m_Layer: 0
   m_Name: DialogueLines
   m_TagString: Untagged
@@ -2358,6 +2327,7 @@ MonoBehaviour:
   wpEntry: {fileID: 11400000, guid: 1579d75f9bb57c04883265255931a16b, type: 2}
   overrideActionNumber: {fileID: 11400000, guid: 37c0a4afb88a5c44eb9349e82e5db61d,
     type: 2}
+  skippableDialogue: {fileID: 11400000, guid: aeff2b2b7751f6345928b6e1e8989137, type: 2}
 --- !u!4 &1269839788
 Transform:
   m_ObjectHideFlags: 0
@@ -2416,6 +2386,34 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1269839787}
         m_MethodName: DialogueEnd
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+--- !u!114 &1269839791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1269839785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14602ab6441821f43883d0b13d4f57c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  evnt: {fileID: 11400000, guid: 05d76028287e26e4eb77ccea91c6351e, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1269839787}
+        m_MethodName: SkipDialogue
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

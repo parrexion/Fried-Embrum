@@ -438,6 +438,17 @@ public abstract class TacticsMove : MonoBehaviour {
 		ForEachSkills(Activation.STARTTURN, playerList);
 		hasMoved = false;
 		canUndoMove = true;
+
+		// Map tiles
+		int diff = (int)(stats.hp * 0.01f * currentTile.terrain.healPercent);
+		if (diff > 0) {
+			TakeHeals(diff);
+			Debug.Log("Heal");
+		}
+		else if (diff < 0) {
+			TakeDamage(-diff, false);
+			Debug.Log("Damage");
+		}
 	}
 
 	/// <summary>

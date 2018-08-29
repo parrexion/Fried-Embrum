@@ -14,7 +14,6 @@ public class DialogueTextHandler : MonoBehaviour {
 	public Text dialogueTextBox;
 	public CursorBobber cursorBobber;
 	public FloatVariable blipSfxDelay;
-	// public GameObject choiceBox;
 	public UnityEvent nextFrameEvent;
 	public UnityEvent updateDialogueTextEvent;
 	public UnityEvent playDialogueBlipEvent;
@@ -177,35 +176,4 @@ public class DialogueTextHandler : MonoBehaviour {
 		return false;
 	}
 
-
-
-
-	// /// <summary>
-	// /// Creates choice buttons in the dialogue
-	// /// </summary>
-	// void CreateButtons() {
-	// 	for(int i = 0 ; i < options.Length; i++) {
-	// 		GameObject button = (GameObject)Instantiate(choiceBox);
-	// 		Button b = button.GetComponent<Button>();
-	// 		ChoiceButton cb = button.GetComponent<ChoiceButton>();
-	// 		cb.SetText(options[i].Split(':')[0]);
-	// 		cb.option = options[i].Split(':')[1];
-	// 		cb.box = this;
-	// 		b.transform.SetParent(this.transform);
-	// 		b.transform.localPosition = new Vector3(0,-25+(i*50));
-	// 		b.transform.localScale = new Vector3(1,1,1);
-	// 		buttons.Add(b);
-	// 	}
-	// }
-
-	// /// <summary>
-	// /// Removes the dialogue buttons.
-	// /// </summary>
-	// void ClearButtons() {
-	// 	for (int i = 0; i < buttons.Count; i++) {
-	// 		Button b = buttons[i];
-	// 		buttons.Remove(b);
-	// 		Destroy(b.gameObject);
-	// 	}
-	// }
 }

@@ -54,7 +54,7 @@ public class CharacterSaveData {
 		invCharges = new List<int>();
 		skills = new List<string>();
 		for (int i = 0; i < invCont.inventory.Length; i++) {
-			if (invCont.inventory[i] == null)
+			if (invCont.inventory[i].item == null)
 				continue;
 			inventory.Add(invCont.inventory[i].item.id);
 			invCharges.Add(invCont.inventory[i].charge);

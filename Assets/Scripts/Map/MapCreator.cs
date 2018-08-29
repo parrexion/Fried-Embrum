@@ -31,8 +31,13 @@ public class MapCreator : MonoBehaviour {
 	private TerrainTile _tMountain;
 	private TerrainTile _tBridge;
 	private TerrainTile _tLedge;
+	private TerrainTile _tHouse;
+	private TerrainTile _tFort;
 	private TerrainTile _tRiver;
+	private TerrainTile _tBreakable;
 	private TerrainTile _tWall;
+	private TerrainTile _tThrone;
+	private TerrainTile _tPillar;
 
 
 	private void Start() {
@@ -49,7 +54,12 @@ public class MapCreator : MonoBehaviour {
 		_tMountain = mapInfo.value.mountain;
 		_tBridge = mapInfo.value.bridge;
 		_tLedge = mapInfo.value.ledge;
+		_tFort = mapInfo.value.fort;
 		_tWall = mapInfo.value.wall;
+		_tBreakable = mapInfo.value.breakable;
+		_tHouse = mapInfo.value.house;
+		_tThrone = mapInfo.value.throne;
+		_tPillar = mapInfo.value.pillar;
 		
 		cameraBox.size = new Vector2(_sizeX+1, _sizeY+1);
 		cameraBox.transform.position = new Vector3((_sizeX-1)/2.0f, (_sizeY-1)/2.0f, 0);
@@ -223,6 +233,7 @@ public class MapCreator : MonoBehaviour {
 			tactics.posy = pos.y;
 			tactics.stats = availableCharacters.stats[i];
 			tactics.inventory = availableCharacters.inventory[i];
+			tactics.skills = availableCharacters.skills[i];
 			tactics.Setup();
 		}
 		cursorX.value = mapInfo.value.spawnPoints[0].x;
@@ -290,6 +301,21 @@ public class MapCreator : MonoBehaviour {
 		}
 		else if (pixelColor == new Color(1f,0f,1f,1f)) {
 			terrain = _tLedge;
+		}
+		else if (pixelColor == new Color(0f,1f,1f,1f)) {
+			terrain = _tFort;
+		}
+		else if (pixelColor.r == 255 && pixelColor.g == 128 && pixelColor.b == 0) {
+			terrain = _tHouse;
+		}
+		else if (pixelColor.r == 0 && pixelColor.g == 128 && pixelColor.b == 255) {
+			terrain = _tBreakable;
+		}
+		else if (pixelColor.r == 128 && pixelColor.g == 128 && pixelColor.b == 0) {
+			terrain = _tThrone;
+		}
+		else if (pixelColor.r == 128 && pixelColor.g == 0 && pixelColor.b == 255) {
+			terrain = _tPillar;
 		}
 
 		return terrain;
