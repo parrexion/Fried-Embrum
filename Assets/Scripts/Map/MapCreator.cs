@@ -1,15 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class MapCreator : MonoBehaviour {
 
 	public MapInfoVariable mapInfo;
 	public BoxCollider2D cameraBox;
 	public MapCursor mapClicker;
+
+	public IntVariable cursorX;
+	public IntVariable cursorY;
 	
 	public Transform tilePrefab;
 	
+	[Header("Characters")]
 	public Transform enemyParent;
 	public Transform enemyPrefab;
 
@@ -17,8 +22,14 @@ public class MapCreator : MonoBehaviour {
 	public Transform playerPrefab;
 	public SaveListVariable availableCharacters;
 
-	public IntVariable cursorX;
-	public IntVariable cursorY;
+	[Header("Music")]
+	public AudioVariable mainMusic;
+	public AudioVariable subMusic;
+	public BoolVariable musicFocus;
+
+	[Header("Events")]
+	public UnityEvent cursorMoveEvent;
+	public UnityEvent playBkgMusicEvent;
 
 	[HideInInspector] public MapTile[] tiles;
 
@@ -65,7 +76,9 @@ public class MapCreator : MonoBehaviour {
 		cameraBox.transform.position = new Vector3((_sizeX-1)/2.0f, (_sizeY-1)/2.0f, 0);
 		
 		GenerateMap(mapInfo.value.mapSprite);
+		cursorMoveEvent.Invoke();
 		SpawnCharacters();
+		SetupMusic();
 	}
 	
 	public void ResetMap() {
@@ -157,37 +170,30 @@ public class MapCreator : MonoBehaviour {
 			}
 		}
 	}
-	
-	
-	
-
-	//////////
-	// EDITOR STUFF
 
 
+	// public void GenerateLinks() {
+	// 	Debug.Log("Generate maP!");
 
-	public void GenerateLinks() {
-		Debug.Log("Generate maP!");
+	// 	tiles = new MapTile[_sizeX * _sizeY];
+	// 	MapTile[] objects = GetComponentsInChildren<MapTile>();
+	// 	for (int i = 0; i < objects.Length; i++) {
+	// 		MapTile t = objects[i];
+	// 		t.mapCreator = this;
+	// 		t.posx = (int)t.transform.position.x;
+	// 		t.posy = (int)t.transform.position.y;
+	// 		t.Reset();
+	// 		tiles[TilePosition(t.posx, t.posy)] = t;
+	// 	}
+	// }
 
-		tiles = new MapTile[_sizeX * _sizeY];
-		MapTile[] objects = GetComponentsInChildren<MapTile>();
-		for (int i = 0; i < objects.Length; i++) {
-			MapTile t = objects[i];
-			t.mapCreator = this;
-			t.posx = (int)t.transform.position.x;
-			t.posy = (int)t.transform.position.y;
-			t.Reset();
-			tiles[TilePosition(t.posx, t.posy)] = t;
-		}
-	}
-
-	public void RemoveOldMap() {
-		for (int i = 0; i < tiles.Length; i++) {
-			DestroyImmediate(tiles[i].gameObject);
-		}
-		tiles = new MapTile[0];
-		Debug.Log("Removed old map.");
-	}
+	// public void RemoveOldMap() {
+	// 	for (int i = 0; i < tiles.Length; i++) {
+	// 		DestroyImmediate(tiles[i].gameObject);
+	// 	}
+	// 	tiles = new MapTile[0];
+	// 	Debug.Log("Removed old map.");
+	// }
 	
 	public void GenerateMap(Texture2D texMap) {
 		Color32[] colorData = texMap.GetPixels32();
@@ -219,9 +225,26 @@ public class MapCreator : MonoBehaviour {
 		//Players
 		for (int i = 0; i < mapInfo.value.spawnPoints.Length; i++) {
 			PlayerPosition pos = mapInfo.value.spawnPoints[i];
-			if (i >= availableCharacters.stats.Length) {
+			StatsContainer stats;
+			InventoryContainer inventory;
+			SkillsContainer skills;
+
+			if (pos.stats != null) {
+				stats = new StatsContainer(pos.stats, pos.level);
+				inventory = new InventoryContainer(pos.inventory);
+				skills = new SkillsContainer(pos.skills);
+				availableCharacters.stats.Add(stats);
+				availableCharacters.inventory.Add(inventory);
+				availableCharacters.skills.Add(skills);
+			}
+			else if (i >= availableCharacters.stats.Count) {
 				GetTile(pos.x, pos.y).selectable = true;
 				continue;
+			}
+			else {
+				stats = availableCharacters.stats[i];
+				inventory = availableCharacters.inventory[i];
+				skills = availableCharacters.skills[i];
 			}
 
 			Transform playerTransform = Instantiate(playerPrefab, playerParent);
@@ -231,9 +254,9 @@ public class MapCreator : MonoBehaviour {
 			tactics.mapCreator = this;
 			tactics.posx = pos.x;
 			tactics.posy = pos.y;
-			tactics.stats = availableCharacters.stats[i];
-			tactics.inventory = availableCharacters.inventory[i];
-			tactics.skills = availableCharacters.skills[i];
+			tactics.stats = stats;
+			tactics.inventory = inventory;
+			tactics.skills = skills;
 			tactics.Setup();
 		}
 		cursorX.value = mapInfo.value.spawnPoints[0].x;
@@ -249,30 +272,9 @@ public class MapCreator : MonoBehaviour {
 			tactics.mapCreator = this;
 			tactics.posx = pos.x;
 			tactics.posy = pos.y;
-			tactics.stats.level = pos.level;
-			tactics.stats.charData = pos.stats;
-			tactics.stats.classData = pos.stats.charClass;
-			tactics.stats.GenerateIV();
-			tactics.stats.wpnSkills = pos.stats.charClass.GenerateBaseWpnSkill();
-			tactics.inventory.inventory = new InventoryTuple[InventoryContainer.INVENTORY_SIZE];
-			for (int j = 0; j < InventoryContainer.INVENTORY_SIZE; j++) {
-				if (j < pos.inventory.Length) {
-					tactics.inventory.inventory[j] = new InventoryTuple() {
-						index = j,
-						item = pos.inventory[j].item,
-						charge = pos.inventory[j].item.maxCharge,
-						droppable = pos.inventory[j].droppable
-					};
-				}
-				else {
-					tactics.inventory.inventory[j] = new InventoryTuple() {
-						index = j,
-						charge = 0,
-						droppable = false
-					};
-				}
-			}
-			tactics.skills.skills = pos.skills;
+			tactics.stats = new StatsContainer(pos.stats, pos.level);
+			tactics.inventory = new InventoryContainer(pos.inventory);
+			tactics.skills = new SkillsContainer(pos.skills);
 			((NPCMove)tactics).aggroType = pos.aggroType;
 			tactics.Setup();
 		}
@@ -319,5 +321,12 @@ public class MapCreator : MonoBehaviour {
 		}
 
 		return terrain;
+	}
+
+	private void SetupMusic() {
+		musicFocus.value = true;
+		mainMusic.value = mapInfo.value.owMusic.clip;
+		subMusic.value = null;
+		playBkgMusicEvent.Invoke();
 	}
 }

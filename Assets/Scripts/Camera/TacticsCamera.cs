@@ -25,14 +25,13 @@ public class TacticsCamera : MonoBehaviour {
 
 	private void Start() {
 		_camera = GetComponent<Camera>();
-		transform.localPosition = AdjustPosition(transform.localPosition);
 	}
 
 	/// <summary>
 	/// Sets the camera position in such a wat that the map cursor appears in the camera box.
 	/// </summary>
 	public void UpdateCameraPositionCursor() {
-		Vector3 currentPosition = Camera.main.transform.localPosition;
+		Vector3 currentPosition = _camera.transform.localPosition;
 		Vector3 nextPosition = new Vector3(
 			Mathf.Clamp(currentPosition.x, cursorX.value-moveWidth, cursorX.value+moveWidth),
 			Mathf.Clamp(currentPosition.y, cursorY.value-moveHeight, cursorY.value+moveHeight),
@@ -45,7 +44,7 @@ public class TacticsCamera : MonoBehaviour {
 	/// Sets the camera position in such a wat that the selected character appears in the camera box.
 	/// </summary>
 	public void UpdateCameraPositionFollow() {
-		Vector3 currentPosition = Camera.main.transform.localPosition;
+		Vector3 currentPosition = _camera.transform.localPosition;
 		Vector3 nextPosition = new Vector3(
 			Mathf.Clamp(currentPosition.x, selectedCharacter.value.posx-moveWidth, selectedCharacter.value.posx+moveWidth),
 			Mathf.Clamp(currentPosition.y, selectedCharacter.value.posy-moveHeight, selectedCharacter.value.posy+moveHeight),
@@ -61,12 +60,11 @@ public class TacticsCamera : MonoBehaviour {
 	/// <returns></returns>
 	private Vector3 AdjustPosition(Vector3 input) {
 		float vertExtent = _camera.orthographicSize;
-		float horizExtent = vertExtent * _camera.rect.width * (float)Screen.height / (float)Screen.width;
- 
+		float horizExtent = vertExtent * _camera.rect.width * (float)Screen.width / (float)Screen.height; 
 		Bounds areaBounds = boxCollider.bounds;
  
 		return new Vector3(
-			Mathf.Clamp(input.x, areaBounds.min.x + horizExtent +6, areaBounds.max.x - horizExtent +6),
+			Mathf.Clamp(input.x, areaBounds.min.x + horizExtent, areaBounds.max.x - horizExtent),
 			Mathf.Clamp(input.y, areaBounds.min.y + vertExtent, areaBounds.max.y - vertExtent),
 			input.z);
 	}

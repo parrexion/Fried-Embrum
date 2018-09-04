@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class TradeController : InputReceiver {
 
 	[Header("References")]
+	public ActionModeVariable currentMode;
 	public TacticsMoveVariable selectedCharacter;
 	public TacticsMoveVariable targetCharacter;
 
@@ -60,6 +61,7 @@ public class TradeController : InputReceiver {
 			if (menuPosition >= 2 * InventoryContainer.INVENTORY_SIZE)
 				menuPosition -= InventoryContainer.INVENTORY_SIZE;
 		}
+		menuMoveEvent.Invoke();
 		UpdateSelection();
     }
 
@@ -77,6 +79,7 @@ public class TradeController : InputReceiver {
 			if (menuPosition < InventoryContainer.INVENTORY_SIZE)
 				menuPosition += InventoryContainer.INVENTORY_SIZE;
 		}
+		menuMoveEvent.Invoke();
 		UpdateSelection();
     }
 
@@ -84,18 +87,22 @@ public class TradeController : InputReceiver {
 		if (!active)
 			return;
 
-        if (menuPosition >= InventoryContainer.INVENTORY_SIZE)
+        if (menuPosition >= InventoryContainer.INVENTORY_SIZE) {
 			menuPosition -= InventoryContainer.INVENTORY_SIZE;
-		UpdateSelection();
+			menuMoveEvent.Invoke();
+			UpdateSelection();
+		}
     }
 
     public override void OnRightArrow() {
 		if (!active)
 			return;
 
-        if (menuPosition < InventoryContainer.INVENTORY_SIZE)
+        if (menuPosition < InventoryContainer.INVENTORY_SIZE) {
 			menuPosition += InventoryContainer.INVENTORY_SIZE;
-		UpdateSelection();
+			menuMoveEvent.Invoke();
+			UpdateSelection();
+		}
     }
 
     public override void OnOkButton() {
@@ -104,10 +111,12 @@ public class TradeController : InputReceiver {
 
 		if (selectedIndex != -1) {
 			SwapItems();
+			menuAcceptEvent.Invoke();
 		}
 		else if (itemNames[menuPosition].text != "--") {
 			selectedIndex = menuPosition;
 			UpdateSelection();
+			menuAcceptEvent.Invoke();
 		}
     }
 
@@ -122,8 +131,12 @@ public class TradeController : InputReceiver {
 		else {
 			active = false;
 			currentMenuMode.value = (int)MenuMode.UNIT;
+			currentMode.value = ActionMode.MOVE;
 			StartCoroutine(MenuChangeDelay());
+			selectedIndex = -1;
+			UpdateSelection();
 		}
+		menuAcceptEvent.Invoke();
     }
 
 	private void UpdateInventories() {
@@ -135,11 +148,11 @@ public class TradeController : InputReceiver {
 
 		for (int i = 0, j = InventoryContainer.INVENTORY_SIZE; i < InventoryContainer.INVENTORY_SIZE; i++, j++) {
 			InventoryTuple tup = selectedCharacter.value.inventory.GetItem(i);
-			itemNames[i].text = (tup.item != null) ? tup.item.name : "--";
+			itemNames[i].text = (tup.item != null) ? tup.item.itemName : "--";
 			itemCharges[i].text = (tup.item != null) ? tup.charge.ToString() : "";
 			
 			tup = targetCharacter.value.inventory.GetItem(i);
-			itemNames[j].text = (tup.item != null) ? tup.item.name : "--";
+			itemNames[j].text = (tup.item != null) ? tup.item.itemName : "--";
 			itemCharges[j].text = (tup.item != null && tup.item.maxCharge != 1) ? tup.charge.ToString() : "";
 		}
 	}
@@ -166,15 +179,12 @@ public class TradeController : InputReceiver {
 		InventoryTuple temp = new InventoryTuple();
 		temp.charge = tup1.charge;
 		temp.droppable = tup1.droppable;
-		temp.index = tup1.index;
 		temp.item = tup1.item;
 		tup1.charge = tup2.charge;
 		tup1.droppable = tup2.droppable;
-		tup1.index = tup2.index;
 		tup1.item = tup2.item;
 		tup2.charge = temp.charge;
 		tup2.droppable = temp.droppable;
-		tup2.index = temp.index;
 		tup2.item = temp.item;
 
 		selectedIndex = -1;

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class SaveFileController : MonoBehaviour {
 
+	public MapInfoListVariable chapterList;
 	public GameObject fileMenu;
 	public Image[] saveFiles;
 
@@ -26,7 +27,6 @@ public class SaveFileController : MonoBehaviour {
 	[Header("Save Data")]
 	public IntVariable saveIndex;
 	public IntVariable[] chapterIndex;
-	public StringVariable[] levelNames;
 	public IntVariable[] playTimes;
 
 	public UnityEvent saveGameEvent;
@@ -104,7 +104,7 @@ public class SaveFileController : MonoBehaviour {
 	/// <returns></returns>
 	public bool OkClicked() {
 		if (!isPopup) {
-			if (playTimes[saveIndex.value].value == 0) {
+			if (usedForLoad && (playTimes[saveIndex.value].value == 0 || chapterIndex[saveIndex.value].value >= chapterList.values.Count)) {
 				return false;
 			}
 			else {
@@ -157,10 +157,16 @@ public class SaveFileController : MonoBehaviour {
 				levelNameTexts[i].text = "";
 				playTimeTexts[i].text = "";
 			}
+			else if (chapterIndex[i].value >= chapterList.values.Count) {
+				emptyFileText[i].gameObject.SetActive(false);
+				chapterIndexTexts[i].text = "Ch " + chapterIndex[i].value;
+				levelNameTexts[i].text = "All maps cleared!";
+				playTimeTexts[i].text = Constants.PlayTimeFromInt(playTimes[i].value,false);
+			}
 			else {
 				emptyFileText[i].gameObject.SetActive(false);
 				chapterIndexTexts[i].text = "Ch " + chapterIndex[i].value;
-				levelNameTexts[i].text = levelNames[i].value;
+				levelNameTexts[i].text = chapterList.values[chapterIndex[i].value].mapName;
 				playTimeTexts[i].text = Constants.PlayTimeFromInt(playTimes[i].value,false);
 			}
 		}

@@ -15,6 +15,10 @@ public class DialogueLines : MonoBehaviour {
 	public BoolVariable overrideActionNumber;
     public BoolVariable skippableDialogue;
 
+	[Header("Debug")]
+	public GameObject debugMusicBkg;
+	public GameObject debugMusicText;
+
 	private DialogueEntry dialogueEntry;
 	private DialogueScene scene;
 	private bool isWaiting;
@@ -37,6 +41,9 @@ public class DialogueLines : MonoBehaviour {
 		scene.bkgMusicChanged.Invoke();
 		scene.characterChanged.Invoke();
 		scene.dialogueTextChanged.Invoke();
+
+		debugMusicBkg.SetActive(false);
+		debugMusicText.SetActive(false);
 	}
 
 	public void NextFrame(){
@@ -116,8 +123,7 @@ public class DialogueLines : MonoBehaviour {
 	/// </summary>
 	public void DialogueEnd() {
 		if (dialoguePrePost.value) {
-			currentMap.value = currentMap.value.nextLevel;
-			SceneManager.LoadScene("SaveMenu");
+			SceneManager.LoadScene("SaveScene");
 		}
 		else
 			SceneManager.LoadScene("BattleScene");

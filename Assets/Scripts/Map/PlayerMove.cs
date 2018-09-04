@@ -14,7 +14,7 @@ public class PlayerMove : TacticsMove {
 	/// </summary>
 	protected override void SetupLists() {
 		playerList.values.Add(this);
-		Debug.Log(stats.charData.charName);
+		Debug.Log("Spawned " + stats.charData.charName);
 	}
 	
 	/// <summary>

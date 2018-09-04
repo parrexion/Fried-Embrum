@@ -37,6 +37,7 @@ public class ActionInputController : InputReceiver {
 			if (actionMenuPosition.value >= actionButtons.Length)
 				actionMenuPosition.value = 0;
 		} while (!actionButtons[actionMenuPosition.value].gameObject.activeSelf);
+		menuMoveEvent.Invoke();
 		ButtonHighlighting();
     }
 
@@ -49,6 +50,7 @@ public class ActionInputController : InputReceiver {
 			if (actionMenuPosition.value < 0)
 				actionMenuPosition.value += actionButtons.Length;
 		} while (!actionButtons[actionMenuPosition.value].gameObject.activeSelf);
+		menuMoveEvent.Invoke();
 		ButtonHighlighting();
     }
 
@@ -60,7 +62,7 @@ public class ActionInputController : InputReceiver {
 			currentMenuMode.value = (int)MenuMode.MAP;
 			currentActionMode.value = ActionMode.MOVE;
 			StartCoroutine(MenuChangeDelay());
-			Debug.Log("Oh, not there");
+			menuBackEvent.Invoke();
 		}
     }
 
@@ -71,39 +73,41 @@ public class ActionInputController : InputReceiver {
 		switch (actionMenuPosition.value)
 		{
 			case 0: // ATTACK
+				// Debug.Log("Attack!");
 				targetList.values = selectedCharacter.value.GetEnemiesInRange();
 				currentMenuMode.value = (int)MenuMode.MAP;
 				currentActionMode.value = ActionMode.ATTACK;
-				Debug.Log("Attack!");
 				StartCoroutine(MenuChangeDelay());
 				break;
 			case 1: // HEAL
+				// Debug.Log("Heal!");
 				targetList.values = selectedCharacter.value.FindSupportablesInRange();
 				currentMenuMode.value = (int)MenuMode.MAP;
 				currentActionMode.value = ActionMode.HEAL;
-				Debug.Log("Heal!");
 				StartCoroutine(MenuChangeDelay());
 				break;
 			case 2: // TRADE
+				// Debug.Log("Trade!");
 				targetList.values = selectedCharacter.value.FindAdjacentCharacters(Faction.PLAYER);
 				currentMenuMode.value = (int)MenuMode.MAP;
 				currentActionMode.value = ActionMode.TRADE;
-				Debug.Log("Trade!");
 				StartCoroutine(MenuChangeDelay());
 				break;
 			case 3: // ITEM
+				// Debug.Log("Item!");
 				currentMenuMode.value = (int)MenuMode.STATS;
 				inventoryIndex.value = 0;
-				Debug.Log("Item!");
 				StartCoroutine(MenuChangeDelay());
 				break;
 			case 4: // WAIT
+				// Debug.Log("Wait!");
 				currentMenuMode.value = (int)MenuMode.MAP;
 				currentActionMode.value = ActionMode.NONE;
 				StartCoroutine(MenuChangeDelay());
 				selectedCharacter.value.End();
 				break;
 		}
+		menuAcceptEvent.Invoke();
     }
 
 	private void ButtonSetup() {

@@ -5,12 +5,16 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "LibraryEntries/MapInfo")]
 public class MapInfo : ScriptableObject {
 
+	public string mapName;
+
 	[Header("Dialogues")]
 	public DialogueEntry preDialogue;
 	public DialogueEntry postDialogue;
 
-	[Header("Next Level")]
-	public MapInfo nextLevel;
+	[Header("Music")]
+	public MusicEntry owMusic;
+	public MusicEntry battleMusic;
+	public MusicEntry healMusic;
 
 	[Header("Map")]
 	public int sizeX;
@@ -31,7 +35,7 @@ public class MapInfo : ScriptableObject {
 	public TerrainTile throne;
 	public TerrainTile wall;
 
-	[Header("Spawn Points")]
+	[Header("Players")]
 	public PlayerPosition[] spawnPoints;
 	
 	[Header("Enemies")]
@@ -44,6 +48,10 @@ public class MapInfo : ScriptableObject {
 public class PlayerPosition {
 	public int x;
 	public int y;
+	public int level;
+	public CharData stats;
+	public WeaponTuple[] inventory;
+	public CharacterSkill[] skills;
 }
 
 [System.Serializable]

@@ -27,6 +27,12 @@ public class TurnController : MonoBehaviour {
 	public GameObject turnChangeDisplay;
 	public Text turnChangeText;
 
+	[Header("Sound")]
+	public AudioQueueVariable sfxQueue;
+	public SfxEntry victoryFanfare;
+	public SfxEntry gameOverFanfare;
+	public SfxEntry turnChangeFanfare;
+
 	[Header("Game Finished")]
 	public GameObject gameFinishObject;
 	public Text gameFinishText;
@@ -36,6 +42,7 @@ public class TurnController : MonoBehaviour {
 	public UnityEvent resetSelections;
 	public UnityEvent gameWinEvent;
 	public UnityEvent gameLoseEvent;
+	public UnityEvent playSfxEvent;
 	
 	private bool gameover;
 	public BoolVariable autoWin;
@@ -147,7 +154,9 @@ public class TurnController : MonoBehaviour {
 		gameFinishText.text = "BATTLE WON";
 		gameFinishText.gameObject.SetActive(true);
 		gameFinishObject.SetActive(true);
-		yield return new WaitForSeconds(2f);
+		sfxQueue.Enqueue(victoryFanfare);
+		playSfxEvent.Invoke();
+		yield return new WaitForSeconds(4f);
 		gameWinEvent.Invoke();
 	}
 
@@ -159,6 +168,8 @@ public class TurnController : MonoBehaviour {
 		gameFinishText.text = "GAME OVER";
 		gameFinishText.gameObject.SetActive(true);
 		gameFinishObject.SetActive(true);
+		sfxQueue.Enqueue(gameOverFanfare);
+		playSfxEvent.Invoke();
 		yield return new WaitForSeconds(2f);
 		gameLoseEvent.Invoke();
 	}
@@ -179,6 +190,8 @@ public class TurnController : MonoBehaviour {
 		turnChangeDisplay.SetActive(true);
 		resetSelections.Invoke();
 		menuModeChangedEvent.Invoke();
+		sfxQueue.Enqueue(turnChangeFanfare);
+		playSfxEvent.Invoke();
 
 		yield return new WaitForSeconds(duration);
 

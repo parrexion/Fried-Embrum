@@ -56,14 +56,26 @@ public class StatsContainer {
 	public List<Boost> boosts = new List<Boost>();
 
 
-	public StatsContainer(ItemLibrary iLib, CharacterSaveData saveData, CharData cStats, CharClass charClass) {
-		SetupValues(iLib, saveData, cStats, charClass);
+	public StatsContainer(CharacterSaveData saveData, CharData cStats, CharClass charClass) {
+		SetupValues(saveData, cStats, charClass);
 	}
 
-	private void SetupValues(ItemLibrary iLib, CharacterSaveData saveData, CharData cStats, CharClass charClass) {
+	public StatsContainer(CharData cStats, int level) {
+		this.level = level;
+		charData = cStats;
+		classData = cStats.charClass;
+		GenerateIV();
+		wpnSkills = cStats.charClass.GenerateBaseWpnSkill();
+	}
+
+	private void SetupValues(CharacterSaveData saveData, CharData cStats, CharClass charClass) {
 		charData = cStats;
 		classData = charClass;
 		
+		if (saveData == null) {
+			return;
+		}
+
 		level = saveData.level;
 		if (level == -1)
 			return;

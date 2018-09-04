@@ -45,10 +45,15 @@ public abstract class TacticsMove : MonoBehaviour {
 	public GameObject boostObject;
 	public GameObject debuffObject;
 
+	[Header("Sound")]
+	public AudioQueueVariable sfxQueue;
+	public SfxEntry deathSfx;
+
 	[Header("Events")]
 	public UnityEvent characterClicked;
 	public UnityEvent cameraFollowEvent;
 	public UnityEvent waitEvent;
+	public UnityEvent playSfxEvent;
 
 
 	/// <summary>
@@ -426,6 +431,8 @@ public abstract class TacticsMove : MonoBehaviour {
 	protected IEnumerator OnDeath() {
 		GetComponent<SpriteRenderer>().color = new Color(0.4f,0.4f,0.4f);
 		currentTile.currentCharacter = null;
+		sfxQueue.Enqueue(deathSfx);
+		playSfxEvent.Invoke();
 		yield return new WaitForSeconds(1f);
 		gameObject.SetActive(false);
 	}

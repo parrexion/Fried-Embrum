@@ -241,7 +241,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lockControls: {fileID: 11400000, guid: b8d06aee0ad3bce4daa463a8433439f4, type: 2}
   mapCreator: {fileID: 0}
-  currentMode: {fileID: 11400000, guid: b0e392ad086e2ab4e9c4feb871cf0d41, type: 2}
   targetCharacter: {fileID: 11400000, guid: 3bf3d9dea0a4b724a921b8d7c25399c4, type: 2}
   playerList: {fileID: 11400000, guid: 8943adc57d10eb547a5f30311d9c9f90, type: 2}
   enemyList: {fileID: 11400000, guid: 267060ebaf58f1a45bfa555220142569, type: 2}
@@ -293,7 +292,6 @@ MonoBehaviour:
   skills:
     skills: []
   currentHealth: 0
-  deadMaterial: {fileID: 2100000, guid: a0d4a628f94a1be47bb7325e15805d00, type: 2}
   healthImage: {fileID: 114925322311367406}
   damageObject: {fileID: 1617974608082166}
   damageNumberBkg: {fileID: 114078750439624710}
@@ -301,6 +299,8 @@ MonoBehaviour:
   critEffect: {fileID: 198621108400987074}
   boostObject: {fileID: 1619431132817054}
   debuffObject: {fileID: 1582299407058870}
+  sfxQueue: {fileID: 11400000, guid: 20c2a8af0750fd24b9b1e5c73c95005d, type: 2}
+  deathSfx: {fileID: 11400000, guid: 270e2ddbd8e448c4cb09a052a45524d2, type: 2}
   characterClicked:
     m_PersistentCalls:
       m_Calls:
@@ -349,6 +349,23 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  playSfxEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 14dc020d1fae2d84e976c5dc7c0bdde7, type: 2}
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  currentMode: {fileID: 11400000, guid: b0e392ad086e2ab4e9c4feb871cf0d41, type: 2}
   aggroType: 0
   targetTile: {fileID: 11400000, guid: 3a98548c39c09914ba5bd9f128964722, type: 2}
   bossCrest: {fileID: 212127390524370948}

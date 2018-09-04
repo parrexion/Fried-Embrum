@@ -55,6 +55,7 @@ public class ForcastInputController : InputReceiver {
 			selectedCharacter.value.Attack(defendCharacter.value);
 		else
 			selectedCharacter.value.Heal(defendCharacter.value);
+		menuAcceptEvent.Invoke();
 	}
 
 	public override void OnBackButton() {
@@ -63,6 +64,7 @@ public class ForcastInputController : InputReceiver {
 
 		battleWeaponIndex.value = attackerWeapons[0].index;
 		currentMenuMode.value = (int)MenuMode.MAP;
+		menuBackEvent.Invoke();
 		StartCoroutine(MenuChangeDelay());
 	}
 
@@ -71,9 +73,12 @@ public class ForcastInputController : InputReceiver {
 	/// </summary>
 	/// <param name="diff"></param>
 	public void ChangeWeapon(int diff) {
+		int startIndex = listIndex;
 		listIndex += diff;
 		listIndex = (listIndex >= 0) ? listIndex % attackerWeapons.Count : listIndex + attackerWeapons.Count;
 		battleWeaponIndex.value = attackerWeapons[listIndex].index;
+		if (startIndex != listIndex)
+			menuMoveEvent.Invoke();
 		forecast.UpdateUI(active);
 	}
 

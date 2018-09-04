@@ -1,12 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class LevelupScript : MonoBehaviour {
 
 	public GameObject levelupCongrats;
 	public GameObject levelupStats;
+
+	[Header("Sound")]
+	public AudioQueueVariable sfxQueue;
+	public UnityEvent playSfxEvent;
+	public SfxEntry levelupPing;
 
 	[Header("Text objects")]
 	public Text levelText;
@@ -86,41 +92,57 @@ public class LevelupScript : MonoBehaviour {
 		stats.level++;
 		levelLevel.text = "+1";
 		stats.CalculateStats();
+		sfxQueue.Enqueue(levelupPing);
+		playSfxEvent.Invoke();
 		yield return new WaitForSeconds(0.2f);
 
 		if (stats.hp > _hp) {
 			_hp++;
 			levelHp.text = "+1";
+			sfxQueue.Enqueue(levelupPing);
+			playSfxEvent.Invoke();
 			yield return new WaitForSeconds(0.2f);
 		}
 		if (stats.atk > _atk) {
 			_atk++;
 			levelAtk.text = "+1";
+			sfxQueue.Enqueue(levelupPing);
+			playSfxEvent.Invoke();
 			yield return new WaitForSeconds(0.2f);
 		}
 		if (stats.spd > _spd) {
 			_spd++;
 			levelSpd.text = "+1";
+			sfxQueue.Enqueue(levelupPing);
+			playSfxEvent.Invoke();
 			yield return new WaitForSeconds(0.2f);
 		}
 		if (stats.skl > _skl) {
 			_skl++;
 			levelSkl.text = "+1";
+			sfxQueue.Enqueue(levelupPing);
+			playSfxEvent.Invoke();
 			yield return new WaitForSeconds(0.2f);
 		}
 		if (stats.lck > _lck) {
 			_lck++;
 			levelLck.text = "+1";
+			sfxQueue.Enqueue(levelupPing);
+			playSfxEvent.Invoke();
 			yield return new WaitForSeconds(0.2f);
 		}
 		if (stats.def > _def) {
 			_def++;
 			levelDef.text = "+1";
+			sfxQueue.Enqueue(levelupPing);
+			playSfxEvent.Invoke();
 			yield return new WaitForSeconds(0.2f);
 		}
 		if (stats.res > _res) {
 			_res++;
 			levelRes.text = "+1";
+			sfxQueue.Enqueue(levelupPing);
+			playSfxEvent.Invoke();
 			yield return new WaitForSeconds(0.2f);
 		}
 

@@ -8,12 +8,15 @@ using UnityEngine.SceneManagement;
 public class OptionsController : MonoBehaviour {
 
 	public GameObject optionMenu;
+	public Text explanationField;
 
 	public Image[] options;
-	public BoolVariable[] optionValues;
+	public ScriptableObject[] optionValues;
+	public string[] explanations;
 	public Image[] optionCheckmarks;
-	// public Transform leftArrow;
-	// public Transform rightArrow;
+	public Text[] optionTexts;
+
+	public UnityEvent volumeChanged;
 
 	private int optionIndex;
 
@@ -47,21 +50,35 @@ public class OptionsController : MonoBehaviour {
 		SetupOptions();
     }
 
-	// /// <summary>
-	// /// Moves one screen to the left if possible.
-	// /// </summary>
-    // public void MoveLeft() {
-    //     screenPosition = Mathf.Max(0, screenPosition -1);
-	// 	SetupOptions();
-    // }
+	/// <summary>
+	/// Moves one screen to the left if possible.
+	/// </summary>
+    public bool MoveLeft() {
+		if (optionIndex >= 2)
+			return false;
 
-	// /// <summary>
-	// /// Moves one screen to the right if possible.
-	// /// </summary>
-    // public void MoveRight() {
-    //     screenPosition = Mathf.Min(screens.Length -1, screenPosition + 1);
-	// 	SetupOptions();
-    // }
+		IntVariable option = (IntVariable)optionValues[optionIndex];
+		option.value = Mathf.Max(0, option.value - 10);
+
+		SetupOptions();
+		volumeChanged.Invoke();
+		return true;
+    }
+
+	/// <summary>
+	/// Moves one screen to the right if possible.
+	/// </summary>
+    public bool MoveRight() {
+		if (optionIndex >= 2)
+			return false;
+
+		IntVariable option = (IntVariable)optionValues[optionIndex];
+		option.value = Mathf.Min(100, option.value + 10);
+
+		SetupOptions();
+		volumeChanged.Invoke();
+		return true;
+    }
 
 	/// <summary>
 	/// Resets the help screen position back to the first one again.
@@ -75,9 +92,13 @@ public class OptionsController : MonoBehaviour {
 	/// Checks if it's possible to click on OK in this screen.
 	/// </summary>
 	/// <returns></returns>
-	public void OKClicked() {
-		optionValues[optionIndex].value = !optionValues[optionIndex].value;
+	public bool OKClicked() {
+		if (optionIndex < 2)
+			return false;
+		BoolVariable option = (BoolVariable)optionValues[optionIndex];
+		option.value = !option.value;
 		SetupOptions();
+		return true;
 	}
 
 
@@ -85,12 +106,17 @@ public class OptionsController : MonoBehaviour {
 	/// Shows the current controls screen as well as scroll arrows.
 	/// </summary>
 	private void SetupOptions() {
-		// leftArrow.position = new Vector3(leftArrow.position.x, options[optionIndex].transform.position.y, leftArrow.position.z);
-		// rightArrow.position = new Vector3(rightArrow.position.x, options[optionIndex].transform.position.y, rightArrow.position.z);
-
+		explanationField.text = explanations[optionIndex];
 		for (int i = 0; i < options.Length; i++) {
 			options[i].color = (optionIndex == i) ? Color.cyan : Color.white;
-			optionCheckmarks[i].enabled = optionValues[i].value;
+			if (i < 2) {
+				IntVariable option = (IntVariable)optionValues[i];
+				optionTexts[i].text = option.value.ToString();
+			}
+			else {
+				BoolVariable option = (BoolVariable)optionValues[i];
+				optionCheckmarks[i].enabled = option.value;
+			}
 		}
 	}
 

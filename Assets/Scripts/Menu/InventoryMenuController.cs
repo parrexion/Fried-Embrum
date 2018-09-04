@@ -7,6 +7,12 @@ using UnityEngine.UI;
 public class InventoryMenuController : InputReceiver {
 
 	public TacticsMoveVariable selectedCharacter;
+	public ActionModeVariable currentMode;
+
+	[Header("Extra sounds")]
+	public AudioQueueVariable sfxQueue;
+	public SfxEntry healItemSfx;
+	public SfxEntry boostItemSfx;
 	
 	[Header("Inventory Menu")]
 	public GameObject inventoryMenu;
@@ -20,6 +26,7 @@ public class InventoryMenuController : InputReceiver {
 	public StringVariable tooltipMessage;
 
 	public UnityEvent inventoryChangedEvent;
+	public UnityEvent playSfxEvent;
 	
 	
 	private void Start () {
@@ -68,6 +75,7 @@ public class InventoryMenuController : InputReceiver {
 				inventoryMenuPosition.value = inventoryButtons.Length-1;
 		} while (!inventoryButtons[inventoryMenuPosition.value].gameObject.activeSelf);
 
+		menuMoveEvent.Invoke();
 		ButtonHighlighting();
     }
 
@@ -81,6 +89,7 @@ public class InventoryMenuController : InputReceiver {
 				inventoryMenuPosition.value = 0;
 		} while (!inventoryButtons[inventoryMenuPosition.value].gameObject.activeSelf);
 			
+		menuMoveEvent.Invoke();
 		ButtonHighlighting();
     }
 
@@ -100,6 +109,7 @@ public class InventoryMenuController : InputReceiver {
 				DropItem();
 				break;
 		}
+		menuAcceptEvent.Invoke();
     }
 
     public override void OnBackButton() {
@@ -107,7 +117,10 @@ public class InventoryMenuController : InputReceiver {
 			return;
 
         currentMenuMode.value = (int)MenuMode.STATS;
+		menuBackEvent.Invoke();
 		StartCoroutine(MenuChangeDelay());
+		inventoryIndex.value = -1;
+		ButtonHighlighting();
     }
 
 	/// <summary>
@@ -125,9 +138,18 @@ public class InventoryMenuController : InputReceiver {
 	/// Uses the selected item.
 	/// </summary>
 	public void UseItem() {
+		InventoryTuple tup = selectedCharacter.value.inventory.GetItem(inventoryIndex.value);
+		SfxEntry sfx = (tup.item.itemType == ItemType.CHEAL) ? healItemSfx : boostItemSfx;
+		sfxQueue.Enqueue(sfx);
+		playSfxEvent.Invoke();
+
 		selectedCharacter.value.inventory.UseItem(inventoryIndex.value, selectedCharacter.value);
+		inventoryIndex.value = -1;
+		ButtonHighlighting();
+		currentMenuMode.value = (int)MenuMode.MAP;
+		currentMode.value = ActionMode.NONE;
 		inventoryChangedEvent.Invoke();
-		currentMenuMode.value = (int)MenuMode.STATS;
+		selectedCharacter.value.End();
 		StartCoroutine(MenuChangeDelay());
 	}
 

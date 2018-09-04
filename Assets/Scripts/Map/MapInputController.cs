@@ -32,7 +32,6 @@ public class MapInputController : InputReceiver {
 		
 		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL || currentMode.value == ActionMode.TRADE) {
 			target.value = targetList.values[targetIndex.value];
-			Debug.Log("Show attack, heal or trade");
 		}
 		else if (currentMode.value == ActionMode.MOVE) {
 			clicker.UndoMove();
@@ -45,11 +44,17 @@ public class MapInputController : InputReceiver {
 			return;
 
 		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL || currentMode.value == ActionMode.TRADE) {
+			int prev = targetIndex.value;
 			targetIndex.value = (targetIndex.value + 1) % targetList.values.Count;
 			target.value = targetList.values[targetIndex.value];
+			if (prev != targetIndex.value)
+				menuMoveEvent.Invoke();
 		}
 		else {
+			int prev = cursorY.value;
 			cursorY.value = Mathf.Min(cursorY.value + 1, selectedMap.value.sizeY -1);
+			if (prev != cursorY.value)
+				menuMoveEvent.Invoke();
 		}
 
 		cursorMovedEvent.Invoke();
@@ -60,11 +65,17 @@ public class MapInputController : InputReceiver {
 			return;
 
 		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL || currentMode.value == ActionMode.TRADE) {
+			int prev = targetIndex.value;
 			targetIndex.value = (targetIndex.value -1 < 0) ? (targetList.values.Count-1) : targetIndex.value -1;
 			target.value = targetList.values[targetIndex.value];
+			if (prev != targetIndex.value)
+				menuMoveEvent.Invoke();
 		}
 		else {
+			int prev = cursorY.value;
 			cursorY.value = Mathf.Max(cursorY.value -1, 0);
+			if (prev != cursorY.value)
+				menuMoveEvent.Invoke();
 		}
 
 		cursorMovedEvent.Invoke();
@@ -75,11 +86,17 @@ public class MapInputController : InputReceiver {
 			return;
 
 		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL || currentMode.value == ActionMode.TRADE) {
+			int prev = targetIndex.value;
 			targetIndex.value = (targetIndex.value -1 < 0) ? (targetList.values.Count-1) : targetIndex.value -1;
 			target.value = targetList.values[targetIndex.value];
+			if (prev != targetIndex.value)
+				menuMoveEvent.Invoke();
 		}
 		else {
+			int prev = cursorX.value;
 			cursorX.value = Mathf.Max(cursorX.value -1, 0);
+			if (prev != cursorX.value)
+				menuMoveEvent.Invoke();
 		}
 		cursorMovedEvent.Invoke();
 	}
@@ -89,11 +106,17 @@ public class MapInputController : InputReceiver {
 			return;
 
 		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL || currentMode.value == ActionMode.TRADE) {
+			int prev = targetIndex.value;
 			targetIndex.value = (targetIndex.value + 1) % targetList.values.Count;
 			target.value = targetList.values[targetIndex.value];
+			if (prev != targetIndex.value)
+				menuMoveEvent.Invoke();
 		}
 		else {
+			int prev = cursorX.value;
 			cursorX.value = Mathf.Min(cursorX.value + 1, selectedMap.value.sizeX -1);
+			if (prev != cursorX.value)
+				menuMoveEvent.Invoke();
 		}
 		cursorMovedEvent.Invoke();
 	}
@@ -104,17 +127,14 @@ public class MapInputController : InputReceiver {
 		
 		if (currentMode.value == ActionMode.ATTACK) {
 			currentMenuMode.value = (int)MenuMode.ATTACK;
-			Debug.Log("GO to weapons");
 			StartCoroutine(MenuChangeDelay());
 		}
 		else if (currentMode.value == ActionMode.HEAL) {
 			currentMenuMode.value = (int)MenuMode.HEAL;
-			Debug.Log("GO to Staffs");
 			StartCoroutine(MenuChangeDelay());
 		}
 		else if (currentMode.value == ActionMode.TRADE) {
 			currentMenuMode.value = (int)MenuMode.TRADE;
-			Debug.Log("GO to trade");
 			StartCoroutine(MenuChangeDelay());
 		}
 		else {
@@ -122,6 +142,7 @@ public class MapInputController : InputReceiver {
 			buttonMenuPosition.value = -1;
 			clicker.CursorClick();
 		}
+		menuAcceptEvent.Invoke();
 	}
 
 	public override void OnBackButton() {
@@ -133,6 +154,7 @@ public class MapInputController : InputReceiver {
 			StartCoroutine(MenuChangeDelay());
 		}
 		clicker.CursorBack();
+		menuBackEvent.Invoke();
 	}
 
 

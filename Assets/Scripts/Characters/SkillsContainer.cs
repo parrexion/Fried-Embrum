@@ -14,6 +14,13 @@ public class SkillsContainer {
 		SetupValues(iLib, saveData);
 	}
 
+	public SkillsContainer(CharacterSkill[] presetSkills) {
+		skills = new CharacterSkill[SKILL_SIZE];
+		for (int i = 0; i < presetSkills.Length; i++) {
+			skills[i] = presetSkills[i];
+		}
+	}
+
 	private void SetupValues(ItemLibrary iLib, CharacterSaveData saveData) {
 		skills = new CharacterSkill[SKILL_SIZE];
 		for (int i = 0; i < saveData.skills.Count; i++) {

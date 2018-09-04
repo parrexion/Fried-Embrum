@@ -32,17 +32,21 @@ public class HowToPlayController : MonoBehaviour {
 	/// <summary>
 	/// Moves one screen to the left if possible.
 	/// </summary>
-    public void MoveLeft() {
+    public bool MoveLeft() {
+		int pos = screenPosition;
         screenPosition = Mathf.Max(0, screenPosition -1);
 		SetupScreens();
+		return (pos != screenPosition);
     }
 
 	/// <summary>
 	/// Moves one screen to the right if possible.
 	/// </summary>
-    public void MoveRight() {
+    public bool MoveRight() {
+		int pos = screenPosition;
         screenPosition = Mathf.Min(screens.Length -1, screenPosition + 1);
 		SetupScreens();
+		return (pos != screenPosition);
     }
 
 	/// <summary>

@@ -108,6 +108,8 @@ public class SimpleCharacterUI : MonoBehaviour {
 		statsObject.SetActive(false);
 		basicObject.SetActive(true);
 		inventoryObject.SetActive(false);
+
+		UpdateSelection();
 	}
 
 	public void ShowStatsStats(TacticsMove tactics) {
@@ -152,6 +154,8 @@ public class SimpleCharacterUI : MonoBehaviour {
 		defText.text = stats.def.ToString();
 		resText.text = stats.res.ToString();
 		movText.text = stats.GetMovespeed().ToString();
+
+		UpdateSelection();
 	}
 
 	/// <summary>
@@ -210,8 +214,6 @@ public class SimpleCharacterUI : MonoBehaviour {
 			}
 		}
 
-		helpButtons.SetActive(currentMenuMode.value != (int)MenuMode.STATS &&currentMenuMode.value != (int)MenuMode.INV);
-
 		UpdateSelection();
 	}
 
@@ -223,5 +225,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 			inventoryHighlight[i].enabled = (i == inventoryIndex.value);
 			inventoryHighlight[i].color = (currentMenuMode.value == (int)MenuMode.STATS) ? new Color(0.35f,0.7f,1f,0.6f) : new Color(0.35f,1f,1f,0.75f);
 		}
+
+		helpButtons.SetActive(currentMenuMode.value != (int)MenuMode.STATS &&currentMenuMode.value != (int)MenuMode.INV);
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -8,6 +9,9 @@ public class SaveScreenController : InputReceiver {
 
 	public MapInfoVariable currentMap;
 	public SaveFileController saveFileController;
+	public MapInfoListVariable chapterList;
+	public IntVariable chapterIndex;
+	public BoolVariable dialoguePrePost;
 
 	[Header("No Save Popup")]
 	public GameObject noSavePopup;
@@ -18,18 +22,31 @@ public class SaveScreenController : InputReceiver {
 	public GameObject savingPopup;
 	public Text saveText;
 
+	public UnityEvent stopMusicEvent;
+
 	private int state;
+	/*
+	state 0 = Main menu
+	state 1 = Save popup
+	state 2 = No save popup
+	state 3 = Transitioning
+	 */
+
 
 	private void Start() {
 		state = 0;
 		savingPopup.SetActive(false);
+		stopMusicEvent.Invoke();
 	}
 
 	public void NextLevel() {
-		if (currentMap == null) {
+		if (chapterIndex.value >= chapterList.values.Count) {
 			SceneManager.LoadScene("MainMenu");
 		}
 		else {
+			currentMap.value = chapterList.values[chapterIndex.value];
+			chapterIndex.value++;
+			dialoguePrePost.value = false;
 			SceneManager.LoadScene("Dialogue");
 		}
 	}
@@ -44,6 +61,7 @@ public class SaveScreenController : InputReceiver {
 				noSavePosition = noSaveButtons.Length -1;
 			UpdateNoSavePopup();
 		}
+		menuMoveEvent.Invoke();
     }
 
     public override void OnDownArrow() {
@@ -56,30 +74,40 @@ public class SaveScreenController : InputReceiver {
 				noSavePosition = 0;
 			UpdateNoSavePopup();
 		}
+		menuMoveEvent.Invoke();
     }
 
 
     public override void OnOkButton() {
 		if (state == 0) {
 			bool res = saveFileController.OkClicked();
-			if (res)
+			if (res) {
 				state = 1;
+				menuAcceptEvent.Invoke();
+			}
 		}
 		else if (state == 1) {
 			bool res = saveFileController.OkClicked();
 			if (res) {
 				state = 3;
-				StartCoroutine(Transition());
+				NextLevel();
+				menuAcceptEvent.Invoke();
+			}
+			else {
+				state = 0;
+				menuBackEvent.Invoke();
 			}
 		}
 		else if (state == 2) {
 			if (noSavePosition == 0) {
 				state = 3;
 				StartCoroutine(Transition());
+				menuAcceptEvent.Invoke();
 			}
 			else if (noSavePosition == 1) {
 				state = 0;
 				noSavePopup.SetActive(false);
+				menuBackEvent.Invoke();
 			}
 		}
     }
@@ -89,14 +117,17 @@ public class SaveScreenController : InputReceiver {
 			state = 2;
 			noSavePopup.SetActive(true);
 			UpdateNoSavePopup();
+			menuBackEvent.Invoke();
 		}
 		else if (state == 1) {
 			state = 0;
 			saveFileController.BackClicked();
+			menuBackEvent.Invoke();
 		}
 		else if (state == 2) {
 			state = 0;
 			noSavePopup.SetActive(false);
+			menuBackEvent.Invoke();
 		}
 	}
 
@@ -109,12 +140,7 @@ public class SaveScreenController : InputReceiver {
 		yield return new WaitForSeconds(1f);
 		savingPopup.SetActive(false);
 
-		if (currentMap == null) {
-			SceneManager.LoadScene("MainMenu");
-		}
-		else {
-			SceneManager.LoadScene("Dialogue");
-		}
+		NextLevel();
 	}
 
 	private void UpdateNoSavePopup() {

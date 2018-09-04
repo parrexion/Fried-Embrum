@@ -10,6 +10,9 @@ public abstract class InputReceiver : MonoBehaviour {
 
 	public IntVariable currentMenuMode;
 	public UnityEvent menuModeChangedEvent;
+	public UnityEvent menuAcceptEvent;
+	public UnityEvent menuBackEvent;
+	public UnityEvent menuMoveEvent;
 	protected bool active;
 
 	/// <summary>

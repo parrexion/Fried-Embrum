@@ -11,9 +11,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ef43daa4e1338c44956284349be9656, type: 3}
   m_Name: Chapter2
   m_EditorClassIdentifier: 
+  mapName: Chapter 2 Map
   preDialogue: {fileID: 11400000, guid: 6f84cbd5fbe1eb946a719ea208f697d3, type: 2}
   postDialogue: {fileID: 11400000, guid: 00a5adf2124c59443bac12ecc1b2caa4, type: 2}
   nextLevel: {fileID: 0}
+  owMusic: {fileID: 11400000, guid: c5d55a00157aa9d45904a928008f24d0, type: 2}
+  battleMusic: {fileID: 11400000, guid: a157ae89a4b1e784cbe12bd1e184e2ea, type: 2}
+  healMusic: {fileID: 11400000, guid: c9ab7f5c344f22c458bafeb1c2e29d45, type: 2}
   sizeX: 15
   sizeY: 10
   mapSprite: {fileID: 2800000, guid: 27372e41419cadd41976cb5bdcf89c36, type: 3}
@@ -32,10 +36,22 @@ MonoBehaviour:
   spawnPoints:
   - x: 0
     y: 6
+    level: 0
+    stats: {fileID: 0}
+    inventory: []
+    skills: []
   - x: 1
     y: 4
+    level: 0
+    stats: {fileID: 0}
+    inventory: []
+    skills: []
   - x: 1
     y: 6
+    level: 0
+    stats: {fileID: 0}
+    inventory: []
+    skills: []
   enemies:
   - x: 7
     y: 9

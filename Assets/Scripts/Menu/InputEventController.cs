@@ -32,6 +32,9 @@ public class InputEventController : MonoBehaviour {
 	public BoolVariable lockAllControls;
 	public BoolVariable lockMoveControls;
 
+	[Header("Play Time Clock")]
+	public IntVariable currentPlayTime;
+
 	[Header("Move events")]
 	public UnityEvent upArrowEvent;
 	public UnityEvent downArrowEvent;
@@ -55,6 +58,7 @@ public class InputEventController : MonoBehaviour {
 		currentAction.value = ActionMode.NONE;
 		menuMode.value = (int)startMode;
 		StartCoroutine(TransitionDelay());
+		StartCoroutine(CountPlayTime());
 	}
 
 	private IEnumerator TransitionDelay() {
@@ -135,4 +139,14 @@ public class InputEventController : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Continuosly counts up the current play time.
+	/// </summary>
+	/// <returns></returns>
+	IEnumerator CountPlayTime() {
+        while (true) {
+            yield return new WaitForSeconds(1);
+            currentPlayTime.value++;
+        }
+	}
 }

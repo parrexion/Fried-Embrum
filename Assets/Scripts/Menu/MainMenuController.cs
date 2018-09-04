@@ -9,8 +9,15 @@ public class MainMenuController : InputReceiver {
 	public GameObject startMenuObject;
 	public HowToPlayController howTo;
 	public SaveFileController saveFileController;
+	public MapInfoListVariable chapterList;
+	
+	[Header("Current Data")]
+	public IntVariable currentChapterIndex;
+	public IntVariable currentPlayTime;
+	public MapInfoVariable currentMap;
 	public BoolVariable dialoguePrePost;
 
+	[Header("Menu")]
 	public Image[] menuButtons;
 
 	private int state;
@@ -37,13 +44,15 @@ public class MainMenuController : InputReceiver {
 		saveFileController.ActivateMenu();
 	}
 
-	public void StartClicked() {
+	/// <summary>
+	/// Called when starting a new game. Sets the starting values.
+	/// </summary>
+	public void NewGameClicked() {
+		currentChapterIndex.value = 1;
+		currentPlayTime.value = 0;
+		currentMap.value = chapterList.values[0];
 		dialoguePrePost.value = false;
 		SceneManager.LoadScene("Dialogue");
-	}
-
-	public void StartBattle() {
-		SceneManager.LoadScene("BattleScene");
 	}
 
     public override void OnUpArrow() {
@@ -52,9 +61,11 @@ public class MainMenuController : InputReceiver {
 			if (buttonPosition < 0)
 				buttonPosition += menuButtons.Length;
 			SetupMenuButtons();	
+			menuMoveEvent.Invoke();
 		}
 		else if (state == 2 || state == 3) {
 			saveFileController.UpClicked();
+			menuMoveEvent.Invoke();
 		}
     }
 
@@ -64,9 +75,11 @@ public class MainMenuController : InputReceiver {
 			if (buttonPosition >= menuButtons.Length)
 				buttonPosition = 0;
 			SetupMenuButtons();
+			menuMoveEvent.Invoke();
 		}
 		else if (state == 2 || state == 3) {
 			saveFileController.DownClicked();
+			menuMoveEvent.Invoke();
 		}
     }
 
@@ -74,14 +87,18 @@ public class MainMenuController : InputReceiver {
 		if (state != 1)
 			return;
 
-        howTo.MoveLeft();
+        bool res = howTo.MoveLeft();
+		if (res)
+			menuMoveEvent.Invoke();
     }
 
     public override void OnRightArrow() {
 		if (state != 1)
 			return;
 
-        howTo.MoveRight();
+        bool res = howTo.MoveRight();
+		if (res)
+			menuMoveEvent.Invoke();
     }
 
     public override void OnOkButton() {
@@ -95,20 +112,28 @@ public class MainMenuController : InputReceiver {
 					LoadClicked();
 					break;
 			}
+			menuAcceptEvent.Invoke();
 		}
 		else if (state == 1 && howTo.CheckOk()) {
-			StartClicked();
+			NewGameClicked();
+			menuAcceptEvent.Invoke();
 		}
 		else if (state == 2) {
 			bool res = saveFileController.OkClicked();
-			if (res)
+			if (res) {
+				menuAcceptEvent.Invoke();
 				state = 3;
+			}
 		}
 		else if (state == 3) {
-			if (saveFileController.OkClicked())
-				StartClicked();
-			else
+			if (saveFileController.OkClicked()) {
+				menuAcceptEvent.Invoke();
+				NewGameClicked();
+			}
+			else {
+				menuBackEvent.Invoke();
 				state = 2;
+			}
 		}
     }
 
@@ -116,16 +141,19 @@ public class MainMenuController : InputReceiver {
 		if (state == 1) {
 			state = 0;
 			howTo.BackClicked();
+			menuBackEvent.Invoke();
 			startMenuObject.SetActive(true);
 		}
 		else if (state == 2) {
 			state = 0;
 			saveFileController.BackClicked();
+			menuBackEvent.Invoke();
 			startMenuObject.SetActive(true);
 		}
 		else if (state == 3) {
 			state = 2;
 			saveFileController.BackClicked();
+			menuBackEvent.Invoke();
 		}
 	}
 

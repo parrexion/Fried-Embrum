@@ -13,6 +13,27 @@ public class InventoryContainer {
 		SetupValues(iLib, saveData);
 	}
 
+	public InventoryContainer(WeaponTuple[] presetInventory) {
+		inventory = new InventoryTuple[INVENTORY_SIZE];
+		for (int i = 0; i < INVENTORY_SIZE; i++) {
+			if (i < presetInventory.Length && presetInventory[i].item != null) {
+				inventory[i] = new InventoryTuple {
+					index = i,
+					item = presetInventory[i].item,
+					charge = presetInventory[i].item.maxCharge,
+					droppable = presetInventory[i].droppable
+				};
+			}
+			else {
+				inventory[i] = new InventoryTuple {
+					index = i,
+					charge = 0,
+					droppable = false
+				};
+			}
+		}
+	}
+
 	private void SetupValues(ItemLibrary iLib, CharacterSaveData saveData) {
 		
 		inventory = new InventoryTuple[INVENTORY_SIZE];

@@ -29,9 +29,12 @@ public class SaveController : MonoBehaviour {
 	public SaveListVariable availableUnits;
 	public IntVariable saveIndex;
 
+	[Header("Current Data")]
+	public IntVariable currentChapterIndex;
+	public IntVariable currentPlayTime;
+
 	[Header("Simple Data")]
 	public IntVariable[] chapterIndex;
-	public StringVariable[] levelNames;
 	public IntVariable[] playTimes;
 
 	[Header("Libraries")]
@@ -72,16 +75,14 @@ public class SaveController : MonoBehaviour {
 
 	public void Save() {
 		// Update data
-		chapterIndex[saveIndex.value].value++;
-		levelNames[saveIndex.value].value = (currentMap.value.nextLevel == null) ? "Game Cleared" : currentMap.value.name;
-		playTimes[saveIndex.value].value += Random.Range(360,1240);
+		chapterIndex[saveIndex.value].value = currentChapterIndex.value;
+		playTimes[saveIndex.value].value = currentPlayTime.value;
 
 		// Setup save data
 		SaveData data = new SaveData();
 		data.chapterIndex = chapterIndex[saveIndex.value].value;
-		data.levelName = levelNames[saveIndex.value].value;
 		data.playTime = playTimes[saveIndex.value].value;
-		for (int i = 0; i < availableUnits.stats.Length; i++) {
+		for (int i = 0; i < availableUnits.stats.Count; i++) {
 			if (availableUnits.stats[i].charData == null)
 				continue;
 			CharacterSaveData c = new CharacterSaveData();
@@ -110,11 +111,12 @@ public class SaveController : MonoBehaviour {
 			Debug.LogWarning("No save file found: " + path);
 			EmptySave();
 		}
-
-		XmlSerializer serializer = new XmlSerializer(typeof(SavePackage));
-		FileStream file = File.Open(path,FileMode.Open);
-		saveFileData = serializer.Deserialize(file) as SavePackage;
-		file.Close();
+		else {
+			XmlSerializer serializer = new XmlSerializer(typeof(SavePackage));
+			FileStream file = File.Open(path,FileMode.Open);
+			saveFileData = serializer.Deserialize(file) as SavePackage;
+			file.Close();
+		}
 
 		if (saveFileData == null) {
 			Debug.LogError("Could not open the file: " + path);
@@ -125,7 +127,6 @@ public class SaveController : MonoBehaviour {
 			if (saveFileData.saveFiles[i] == null)
 				continue;
 			chapterIndex[i].value = saveFileData.saveFiles[i].chapterIndex;
-			levelNames[i].value = saveFileData.saveFiles[i].levelName;
 			playTimes[i].value = saveFileData.saveFiles[i].playTime;
 		}
 		
@@ -148,15 +149,15 @@ public class SaveController : MonoBehaviour {
 		// Read data in save file
 		SaveData loadedData = saveFileData.saveFiles[saveIndex.value];
 		Debug.Log("Characters:  " + loadedData.characters.Count);
-		availableUnits.stats = new StatsContainer[loadedData.characters.Count];
-		availableUnits.inventory = new InventoryContainer[loadedData.characters.Count];
-		availableUnits.skills = new SkillsContainer[loadedData.characters.Count];
+		availableUnits.stats = new List<StatsContainer>();
+		availableUnits.inventory = new List<InventoryContainer>();
+		availableUnits.skills = new List<SkillsContainer>();
 		for (int i = 0; i < loadedData.characters.Count; i++) {
 			CharData cStats = characterLibrary.GetEntry(loadedData.characters[i].id);
 			CharClass cClass = classLibrary.GetEntry(loadedData.characters[i].classID);
-			availableUnits.stats[i] = new StatsContainer(itemLibrary, loadedData.characters[i], cStats, cClass);
-			availableUnits.inventory[i] = new InventoryContainer(itemLibrary, loadedData.characters[i]);
-			availableUnits.skills[i] = new SkillsContainer(itemLibrary, loadedData.characters[i]);
+			availableUnits.stats.Add(new StatsContainer(loadedData.characters[i], cStats, cClass));
+			availableUnits.inventory.Add(new InventoryContainer(itemLibrary, loadedData.characters[i]));
+			availableUnits.skills.Add(new SkillsContainer(itemLibrary, loadedData.characters[i]));
 			Debug.Log("Done loading " + cStats.charName);
 		}
 		Debug.Log("Successfully loaded the save data!");

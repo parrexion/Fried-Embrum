@@ -5,7 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "LibraryEntries/Dialogue")]
 public class DialogueEntry : ScrObjLibraryEntry {
 
-	public int size { get{ return frames.Count; } }
 	public List<Color> participantColors = new List<Color>();
 
 	public DialogueEntry dialogueEntry = null;
@@ -13,7 +12,6 @@ public class DialogueEntry : ScrObjLibraryEntry {
 	public bool changePosition = false;
 	public Vector2 playerPosition = new Vector2();
 
-	public List<Frame> frames = new List<Frame>();
 	public List<DialogueActionData> actions = new List<DialogueActionData>();
 
 

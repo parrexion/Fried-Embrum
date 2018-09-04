@@ -12,6 +12,7 @@ public class BattleContainer : MonoBehaviour {
 		instance = this;
 	}
 
+	public MapInfoVariable currentMap;
 	public FactionVariable currentTurn;
 	public BoolVariable lockControls;
 	public IntVariable cursorX;
@@ -49,11 +50,29 @@ public class BattleContainer : MonoBehaviour {
 	public GameObject brokenTooltip;
 	public Image brokenIcon;
 	public Text brokenText;
+
+	[Header("Sound")]
+	public AudioVariable subMusic;
+	public AudioQueueVariable sfxQueue;
+	public BoolVariable musicFocus;
+	public SfxEntry levelupFanfare;
+	public SfxEntry levelupFill;
+	public SfxEntry brokenItemFanfare;
+	public SfxEntry droppedItemFanfare;
+	public SfxEntry missedAttackSfx;
+	public SfxEntry hitAttackSfx;
+	public SfxEntry leathalAttackSfx;
+	public SfxEntry critAttackSfx;
+	public SfxEntry enemyDiedSfx;
+	public SfxEntry healSfx;
 	
 	[Header("Events")]
 	public UnityEvent updateHealthEvent;
 	public UnityEvent battleFinishedEvent;
 	public UnityEvent showDialogueEvent;
+	public UnityEvent playSubMusicEvent;
+	public UnityEvent playSfxEvent;
+	public UnityEvent stopSfxEvent;
 	
 	private TacticsMove _currentCharacter;
 	private bool _attackerDealtDamage;
@@ -105,6 +124,11 @@ public class BattleContainer : MonoBehaviour {
 		rightTransform.GetComponent<SpriteRenderer>().color = Color.white;
 		_attackerDealtDamage = false;
 		_defenderDealtDamage = false;
+
+		//Music
+		subMusic.value = (actions[0].isDamage) ? currentMap.value.battleMusic.clip : currentMap.value.healMusic.clip;
+		musicFocus.value = false;
+		playSubMusicEvent.Invoke();
 	}
 
 	private IEnumerator ActionLoop() {
@@ -136,7 +160,7 @@ public class BattleContainer : MonoBehaviour {
 			
 			//Move forward
 			float f = 0;
-			Debug.Log("Start moving");
+			// Debug.Log("Start moving");
 			while(f < 0.5f) {
 				f += Time.deltaTime * speed;
 				attackTransform.localPosition = Vector3.Lerp(startPos, enemyPos, f);
@@ -151,14 +175,24 @@ public class BattleContainer : MonoBehaviour {
 					isCrit = true;
 				}
 				act.defender.TakeDamage(damage, isCrit);
+				if (damage < 0) {
+					sfxQueue.Enqueue(missedAttackSfx);
+					playSfxEvent.Invoke();
+				}
+				else {
+					SfxEntry hitSfx = (isCrit) ? critAttackSfx : 
+									(!act.defender.IsAlive()) ? leathalAttackSfx : hitAttackSfx;
+					sfxQueue.Enqueue(hitSfx);
+					playSfxEvent.Invoke();
+				}
 				StartCoroutine(DamageDisplay(act.leftSide, damage, true, isCrit));
-				Debug.Log(i + " Dealt damage :  " + damage);
 				
-				if (damage > 0)
+				if (damage > 0) {
 					if (act.leftSide)
 						_attackerDealtDamage = true;
 					else
 						_defenderDealtDamage = true;
+				}
 				
 				if (!act.defender.IsAlive()) {
 					if (act.leftSide)
@@ -174,11 +208,9 @@ public class BattleContainer : MonoBehaviour {
 					int health = act.GetHeals();
 					act.defender.TakeHeals(health);
 					StartCoroutine(DamageDisplay(act.leftSide, health, false, false));
-					Debug.Log(i + " Healt damage :  " + health);
 				}
 				else if (act.staffAtk.item.itemType == ItemType.BUFF) {
 					act.defender.ReceiveBuff(act.attacker.GetEquippedWeapon(ItemCategory.STAFF).boost, true, true);
-					Debug.Log("Boost them up!");
 				}
 				act.attacker.ReduceWeaponCharge(ItemCategory.STAFF);
 				act.attacker.stats.GiveWpnExp(act.attacker.GetEquippedWeapon(ItemCategory.STAFF));
@@ -196,7 +228,7 @@ public class BattleContainer : MonoBehaviour {
 			}
 			
 			// Move back
-			Debug.Log("Moving back");
+			// Debug.Log("Moving back");
 			while(f > 0f) {
 				f -= Time.deltaTime * speed;
 				attackTransform.localPosition = Vector3.Lerp(startPos, enemyPos, f);
@@ -204,7 +236,7 @@ public class BattleContainer : MonoBehaviour {
 			}
 
 			//Check Death
-			Debug.Log("Check death");
+			// Debug.Log("Check death");
 			if (!act.defender.IsAlive()) {
 				yield return new WaitForSeconds(1f);
 				break;
@@ -249,6 +281,11 @@ public class BattleContainer : MonoBehaviour {
 		
 		yield return new WaitForSeconds(0.5f);
 
+		//Music
+		subMusic.value = null;
+		musicFocus.value = true;
+		playSubMusicEvent.Invoke();
+
 		//Send game finished
 		battleFinishedEvent.Invoke();
 	}
@@ -289,26 +326,33 @@ public class BattleContainer : MonoBehaviour {
 			expMeter.currentExp = player.stats.currentExp;
 			Debug.Log("Exp is currently: " + player.stats.currentExp);
 			yield return new WaitForSeconds(0.5f);
-			
+			sfxQueue.Enqueue(levelupFill);
+			playSfxEvent.Invoke();
 			while(exp > 0) {
 				exp--;
 				expMeter.currentExp++;
 				if (expMeter.currentExp == 100) {
 					expMeter.currentExp = 0;
+					stopSfxEvent.Invoke();
 					yield return new WaitForSeconds(1f);
 					expMeter.gameObject.SetActive(false);
 					levelupScript.SetupStats(player.stats.level,player.stats);
 					Debug.Log("LEVELUP!");
+					sfxQueue.value.Enqueue(levelupFanfare.clip);
+					playSfxEvent.Invoke();
 					yield return StartCoroutine(levelupScript.RunLevelup(player.stats));
 					CharacterSkill skill = player.stats.classData.AwardSkills(player.stats.level);
 					if (skill) {
 						player.skills.GainSkill(skill);
-						yield return StartCoroutine(ShowPopup(skill.icon,  "gained: " + skill.itemName));
+						yield return StartCoroutine(ShowPopup(skill.icon,  "gained: " + skill.itemName, droppedItemFanfare));
 					}
 					expMeter.gameObject.SetActive(true);
+					sfxQueue.Enqueue(levelupFill);
+					playSfxEvent.Invoke();
 				}
 				yield return null;
 			}
+			stopSfxEvent.Invoke();
 			yield return new WaitForSeconds(0.5f);
 			expMeter.gameObject.SetActive(false);
 			player.stats.currentExp = expMeter.currentExp;
@@ -321,26 +365,21 @@ public class BattleContainer : MonoBehaviour {
 		if (actions[0].isDamage) {
 			InventoryTuple invTup = actions[0].weaponAtk;
 			if (invTup.item != null && invTup.charge <= 0) {
-				yield return StartCoroutine(ShowPopup(invTup.item.icon, invTup.item.itemName + " broke!"));
+				yield return StartCoroutine(ShowPopup(invTup.item.icon, invTup.item.itemName + " broke!", brokenItemFanfare));
 				actions[0].attacker.inventory.CleanupInventory();
 			}
 			invTup = actions[0].weaponDef;
 			if (invTup != null && invTup.charge <= 0) {
-				yield return StartCoroutine(ShowPopup(invTup.item.icon, invTup.item.itemName + " broke!"));
+				yield return StartCoroutine(ShowPopup(invTup.item.icon, invTup.item.itemName + " broke!", brokenItemFanfare));
 				actions[0].defender.inventory.CleanupInventory();
 			}
 		}
 		else {
 			InventoryTuple invTup = actions[0].staffAtk;
 			if (invTup != null && invTup.charge <= 0) {
-				yield return StartCoroutine(ShowPopup(invTup.item.icon, invTup.item.itemName + " broke!"));
+				yield return StartCoroutine(ShowPopup(invTup.item.icon, invTup.item.itemName + " broke!", brokenItemFanfare));
 				actions[0].attacker.inventory.CleanupInventory();
 			}
-			// invTup = actions[0].defender.GetFirstUsableInventoryTuple(ItemCategory.STAFF);
-			// if (invTup != null && invTup.charge <= 0) {
-			// 	yield return StartCoroutine(ShowPopup(invTup.item.icon, invTup.item.itemName + " broke!"));
-			// 	actions[0].defender.inventory.CleanupInventory();
-			// }
 		}
 	}
 
@@ -354,15 +393,19 @@ public class BattleContainer : MonoBehaviour {
 			inventory[i].droppable = false;
 			receiver.inventory.GainItem(inventory[i]);
 
-			yield return StartCoroutine(ShowPopup(inventory[i].item.icon, "Gained " + inventory[i].item.itemName));
+			yield return StartCoroutine(ShowPopup(inventory[i].item.icon, "Gained " + inventory[i].item.itemName, droppedItemFanfare));
 		}
 		yield break;
 	}
 
-	private IEnumerator ShowPopup(Sprite icon, string text) {
+	private IEnumerator ShowPopup(Sprite icon, string text, SfxEntry sfx) {
 		brokenIcon.sprite = icon;
 		brokenText.text = text;
 		brokenTooltip.SetActive(true);
+		if (sfx != null) {
+			sfxQueue.Enqueue(sfx);
+			playSfxEvent.Invoke();
+		}
 		yield return new WaitForSeconds(2f);
 		brokenTooltip.SetActive(false);
 		yield return new WaitForSeconds(0.5f);
@@ -374,13 +417,13 @@ public class BattleContainer : MonoBehaviour {
 			nr += Random.Range(0, 100);
 			nr /= 2;
 		}
-		Debug.Log("HIT:  " + nr + " -> " + hit);
+		// Debug.Log("HIT:  " + nr + " -> " + hit);
 		return (nr < hit);
 	}
 
 	private bool SingleNumberCheck(int hit) {
 		int nr = Random.Range(0, 100);
-		Debug.Log("SINGLE:  " + nr + " -> " + hit);
+		// Debug.Log("SINGLE:  " + nr + " -> " + hit);
 		return (nr < hit);
 	}
 }

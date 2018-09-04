@@ -681,7 +681,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &476822048
 RectTransform:
   m_ObjectHideFlags: 0
@@ -697,7 +697,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -150, y: -30}
+  m_AnchoredPosition: {x: -15, y: -10}
   m_SizeDelta: {x: 300, y: 30}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &476822049
@@ -721,7 +721,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 24
+    m_FontSize: 36
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 1
@@ -2112,7 +2112,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: "We have ventured from Caelin, in Lycia, in search of someone.\u201D"
+  m_Text: Yes. Let's continue.
 --- !u!222 &1253105048
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2169,7 +2169,7 @@ MonoBehaviour:
   talkingIndex: {fileID: 11400000, guid: 0c23bff85b03dca4095cc4ca544597b5, type: 2}
   dialogueText: {fileID: 11400000, guid: 1f3a3d049a932124bb989fba2a3eeb8a, type: 2}
   inputText: {fileID: 11400000, guid: b225e05cda6d5dd4d96d3967715cffdf, type: 2}
-  bkgMusic: {fileID: 11400000, guid: 8a9c37779c36abf43aa5a4f3c1438fb1, type: 2}
+  bkgMusic: {fileID: 11400000, guid: 40f826d9f1abd9e4f9f0972569193a0f, type: 2}
   sfxClip: {fileID: 0}
   flashBackground: {fileID: 11400000, guid: d5d920cb7a6f3ea48b4924dbbf4578a1, type: 2}
   effectStartDuration: {fileID: 11400000, guid: d4cf5a2af9f420346b27f1d442d7d5f3,
@@ -2328,6 +2328,8 @@ MonoBehaviour:
   overrideActionNumber: {fileID: 11400000, guid: 37c0a4afb88a5c44eb9349e82e5db61d,
     type: 2}
   skippableDialogue: {fileID: 11400000, guid: aeff2b2b7751f6345928b6e1e8989137, type: 2}
+  debugMusicBkg: {fileID: 2108826028}
+  debugMusicText: {fileID: 476822047}
 --- !u!4 &1269839788
 Transform:
   m_ObjectHideFlags: 0
@@ -3455,7 +3457,7 @@ MonoBehaviour:
   musicText: {fileID: 476822049}
   currentDialogueText: {fileID: 11400000, guid: b225e05cda6d5dd4d96d3967715cffdf,
     type: 2}
-  currentMusic: {fileID: 11400000, guid: 8a9c37779c36abf43aa5a4f3c1438fb1, type: 2}
+  currentMusic: {fileID: 0}
 --- !u!4 &2084936043
 Transform:
   m_ObjectHideFlags: 0
@@ -3499,7 +3501,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2108826029
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3515,8 +3517,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -150, y: -30}
-  m_SizeDelta: {x: 300, y: 30}
+  m_AnchoredPosition: {x: 0, y: -10}
+  m_SizeDelta: {x: 300, y: 40}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &2108826030
 MonoBehaviour:
@@ -3551,3 +3553,45 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2108826028}
+--- !u!1001 &2131675722
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4963551257367080, guid: dd1d2ef58e78a094fa67c8f1df0b0f20, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4963551257367080, guid: dd1d2ef58e78a094fa67c8f1df0b0f20, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4963551257367080, guid: dd1d2ef58e78a094fa67c8f1df0b0f20, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4963551257367080, guid: dd1d2ef58e78a094fa67c8f1df0b0f20, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4963551257367080, guid: dd1d2ef58e78a094fa67c8f1df0b0f20, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4963551257367080, guid: dd1d2ef58e78a094fa67c8f1df0b0f20, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4963551257367080, guid: dd1d2ef58e78a094fa67c8f1df0b0f20, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4963551257367080, guid: dd1d2ef58e78a094fa67c8f1df0b0f20, type: 2}
+      propertyPath: m_RootOrder
+      value: 10
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: dd1d2ef58e78a094fa67c8f1df0b0f20, type: 2}
+  m_IsPrefabParent: 0

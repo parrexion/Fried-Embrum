@@ -129,7 +129,9 @@ public class MapCursor : MonoBehaviour {
 				currentActionMode.value = ActionMode.MOVE;
 				moveTile.value = mapCreator.GetTile(cursorX.value, cursorY.value);
 				moveTile.value.current = true;
+				selectTarget.value.path.Clear();
 				Debug.Log("Click!");
+				Debug.Log("X:  " + cursorX.value + "  Y:  " + cursorY.value);
 			}
 		}
 		else {

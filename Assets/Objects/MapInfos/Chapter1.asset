@@ -11,9 +11,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ef43daa4e1338c44956284349be9656, type: 3}
   m_Name: Chapter1
   m_EditorClassIdentifier: 
+  mapName: Chapter 1 Map
   preDialogue: {fileID: 11400000, guid: 6035377f5a1c88543abe60b340e7b8fe, type: 2}
   postDialogue: {fileID: 11400000, guid: b0d7cdd69b548af4fa2330de5d2d01e0, type: 2}
   nextLevel: {fileID: 11400000, guid: 0073f2801d7821540939edb1aff0f034, type: 2}
+  owMusic: {fileID: 11400000, guid: c5d55a00157aa9d45904a928008f24d0, type: 2}
+  battleMusic: {fileID: 11400000, guid: a157ae89a4b1e784cbe12bd1e184e2ea, type: 2}
+  healMusic: {fileID: 11400000, guid: c9ab7f5c344f22c458bafeb1c2e29d45, type: 2}
   sizeX: 15
   sizeY: 10
   mapSprite: {fileID: 2800000, guid: a75e698ec45c3c24eb526e74823c0324, type: 3}
@@ -32,10 +36,38 @@ MonoBehaviour:
   spawnPoints:
   - x: 2
     y: 1
+    level: 2
+    stats: {fileID: 11400000, guid: ebe64c7e451dc494fbc8211be6f10d6a, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 21e0cdf65dcd3c64f99de572c0526714, type: 2}
+      droppable: 0
+    - item: {fileID: 11400000, guid: 4f62fac29e57cf149a77b69982270829, type: 2}
+      droppable: 0
+    - item: {fileID: 11400000, guid: 4f62fac29e57cf149a77b69982270829, type: 2}
+      droppable: 0
+    skills: []
   - x: 0
     y: 2
+    level: 1
+    stats: {fileID: 11400000, guid: cf951a3da37e1794b9cd29749c715911, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 21e0cdf65dcd3c64f99de572c0526714, type: 2}
+      droppable: 0
+    - item: {fileID: 11400000, guid: 70a69ddf23ff8c4479dae28fb5396f18, type: 2}
+      droppable: 0
+    - item: {fileID: 11400000, guid: 4f62fac29e57cf149a77b69982270829, type: 2}
+      droppable: 0
+    skills: []
   - x: 0
     y: 4
+    level: 1
+    stats: {fileID: 11400000, guid: 0bf81bfd9c0d55f49a76297d05c3a788, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 70a69ddf23ff8c4479dae28fb5396f18, type: 2}
+      droppable: 0
+    - item: {fileID: 11400000, guid: 21e0cdf65dcd3c64f99de572c0526714, type: 2}
+      droppable: 0
+    skills: []
   enemies:
   - x: 4
     y: 3
@@ -43,7 +75,7 @@ MonoBehaviour:
     stats: {fileID: 11400000, guid: 3c62e59d0a22e10499d7722b228fdf6c, type: 2}
     inventory:
     - item: {fileID: 11400000, guid: 44de95ac3ea804a4d805c36c1ac7039e, type: 2}
-      droppable: 0
+      droppable: 1
     skills: []
     aggroType: 1
   - x: 9
