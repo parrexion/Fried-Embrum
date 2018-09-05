@@ -5293,7 +5293,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -24, y: -24}
+  m_SizeDelta: {x: -24, y: -16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &111132476
 MonoBehaviour:
@@ -5321,17 +5321,19 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 2
     m_MaxSize: 40
-    m_Alignment: 0
+    m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
-    m_VerticalOverflow: 1
+    m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 'New Text
 
     asdfhjk
 
-    weqwiou'
+    weqwiou
+
+    asdf'
 --- !u!222 &111132477
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9103,10 +9105,6 @@ Prefab:
     - target: {fileID: 4575758833937932, guid: f32300c4ac5bcb847893cfc711aeaf01, type: 2}
       propertyPath: m_RootOrder
       value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 1697261231692124, guid: f32300c4ac5bcb847893cfc711aeaf01, type: 2}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f32300c4ac5bcb847893cfc711aeaf01, type: 2}
@@ -18863,9 +18861,6 @@ MonoBehaviour:
   inventoryIndex: {fileID: 11400000, guid: c3a8482422cc87f4d833a6cfb596270a, type: 2}
   inventoryMenuPosition: {fileID: 11400000, guid: c658c698f3e1bbf4993c4b7020510fd4,
     type: 2}
-  tooltipObject: {fileID: 2145219254}
-  tooltipText: {fileID: 111132476}
-  tooltipMessage: {fileID: 11400000, guid: ccbfbec92eac39c4393c012a856d30f3, type: 2}
   inventoryChangedEvent:
     m_PersistentCalls:
       m_Calls:
@@ -32898,6 +32893,8 @@ MonoBehaviour:
   - {fileID: 921131188}
   - {fileID: 1327305025}
   helpButtons: {fileID: 433435092}
+  tooltipObject: {fileID: 2145219254}
+  tooltipText: {fileID: 111132476}
 --- !u!1 &1647818443
 GameObject:
   m_ObjectHideFlags: 0

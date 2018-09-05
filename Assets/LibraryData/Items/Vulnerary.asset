@@ -9,24 +9,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 68587546ec2f48ba8d64c96049de68f2, type: 3}
-  m_Name: HealStaff
+  m_Name: Vulnerary
   m_EditorClassIdentifier: 
-  id: HealStaff
-  icon: {fileID: 21300000, guid: fae50d7c3f58a4a44b5523f6e9e97281, type: 3}
-  itemName: Heal
-  description: Basic heal. Heals most smaller wounds.
-  itemCategory: 1
-  itemType: 7
-  power: 5
-  maxCharge: 30
+  uuid: Vulnerary
+  entryName: Vulnerary
+  repColor: {r: 0, g: 0, b: 0, a: 0}
+  tag: 
+  icon: {fileID: 21300000, guid: 417cc62e003dbae4e91b174b7fe9a414, type: 3}
+  description: Potion which heals 10 HP when used.
+  itemCategory: 2
+  itemType: 9
+  power: 10
+  maxCharge: 3
   hitRate: 0
   critRate: 0
   range:
-    min: 1
-    max: 1
+    min: 0
+    max: 0
   skillReq: 0
   weight: 0
-  cost: 500
+  cost: 300
   advantageType: 
   boost:
     boostType: 0

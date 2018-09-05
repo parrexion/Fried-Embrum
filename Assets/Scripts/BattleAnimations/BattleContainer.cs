@@ -344,7 +344,7 @@ public class BattleContainer : MonoBehaviour {
 					CharacterSkill skill = player.stats.classData.AwardSkills(player.stats.level);
 					if (skill) {
 						player.skills.GainSkill(skill);
-						yield return StartCoroutine(ShowPopup(skill.icon,  "gained: " + skill.itemName, droppedItemFanfare));
+						yield return StartCoroutine(ShowPopup(skill.icon,  "gained: " + skill.entryName, droppedItemFanfare));
 					}
 					expMeter.gameObject.SetActive(true);
 					sfxQueue.Enqueue(levelupFill);
@@ -365,35 +365,35 @@ public class BattleContainer : MonoBehaviour {
 		if (actions[0].isDamage) {
 			InventoryTuple invTup = actions[0].weaponAtk;
 			if (invTup.item != null && invTup.charge <= 0) {
-				yield return StartCoroutine(ShowPopup(invTup.item.icon, invTup.item.itemName + " broke!", brokenItemFanfare));
+				yield return StartCoroutine(ShowPopup(invTup.item.icon, invTup.item.entryName + " broke!", brokenItemFanfare));
 				actions[0].attacker.inventory.CleanupInventory();
 			}
 			invTup = actions[0].weaponDef;
 			if (invTup != null && invTup.charge <= 0) {
-				yield return StartCoroutine(ShowPopup(invTup.item.icon, invTup.item.itemName + " broke!", brokenItemFanfare));
+				yield return StartCoroutine(ShowPopup(invTup.item.icon, invTup.item.entryName + " broke!", brokenItemFanfare));
 				actions[0].defender.inventory.CleanupInventory();
 			}
 		}
 		else {
 			InventoryTuple invTup = actions[0].staffAtk;
 			if (invTup != null && invTup.charge <= 0) {
-				yield return StartCoroutine(ShowPopup(invTup.item.icon, invTup.item.itemName + " broke!", brokenItemFanfare));
+				yield return StartCoroutine(ShowPopup(invTup.item.icon, invTup.item.entryName + " broke!", brokenItemFanfare));
 				actions[0].attacker.inventory.CleanupInventory();
 			}
 		}
 	}
 
 	private IEnumerator DropItems(TacticsMove dropper, TacticsMove receiver) {
-		InventoryTuple[] inventory = dropper.inventory.inventory;
-		for (int i = 0; i < inventory.Length; i++) {
-			if (inventory[i] == null || !inventory[i].droppable)
+		for (int i = 0; i < InventoryContainer.INVENTORY_SIZE; i++) {
+			InventoryTuple itemTup = dropper.inventory.GetItem(i);
+			if (itemTup == null || !itemTup.droppable)
 				continue;
 			
-			Debug.Log("Dropped item:  " + inventory[i].item.itemName);
-			inventory[i].droppable = false;
-			receiver.inventory.GainItem(inventory[i]);
+			Debug.Log("Dropped item:  " + itemTup.item.entryName);
+			itemTup.droppable = false;
+			receiver.inventory.GainItem(itemTup);
 
-			yield return StartCoroutine(ShowPopup(inventory[i].item.icon, "Gained " + inventory[i].item.itemName, droppedItemFanfare));
+			yield return StartCoroutine(ShowPopup(itemTup.item.icon, "Gained " + itemTup.item.entryName, droppedItemFanfare));
 		}
 		yield break;
 	}

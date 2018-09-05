@@ -53,16 +53,16 @@ public class CharacterSaveData {
 		inventory = new List<string>();
 		invCharges = new List<int>();
 		skills = new List<string>();
-		for (int i = 0; i < invCont.inventory.Length; i++) {
-			if (invCont.inventory[i].item == null)
+		for (int i = 0; i < InventoryContainer.INVENTORY_SIZE; i++) {
+			if (invCont.GetItem(i).item == null)
 				continue;
-			inventory.Add(invCont.inventory[i].item.id);
-			invCharges.Add(invCont.inventory[i].charge);
+			inventory.Add(invCont.GetItem(i).item.uuid);
+			invCharges.Add(invCont.GetItem(i).charge);
 		}
 		for (int i = 0; i < skillCont.skills.Length; i++) {
 			if (!skillCont.skills[i])
 				continue;
-			skills.Add(skillCont.skills[i].id);
+			skills.Add(skillCont.skills[i].uuid);
 		}
 
 		iHp = stats.iHp;

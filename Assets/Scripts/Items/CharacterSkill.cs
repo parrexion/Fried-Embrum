@@ -4,7 +4,10 @@ using UnityEngine;
 
 public enum Activation { PRECOMBAT, INITCOMBAT, STARTTURN, PASSIVE, POSTCOMBAT, EXP } 
 
-public abstract class CharacterSkill : Item {
+public abstract class CharacterSkill : ScrObjLibraryEntry {
+
+    public Sprite icon;
+    public string description;
 
     public Activation activation;
     public int range;

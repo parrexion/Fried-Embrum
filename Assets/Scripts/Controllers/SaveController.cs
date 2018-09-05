@@ -38,7 +38,8 @@ public class SaveController : MonoBehaviour {
 	public IntVariable[] playTimes;
 
 	[Header("Libraries")]
-	public ItemLibrary itemLibrary;
+	public ScrObjLibraryVariable itemLibrary;
+	public ScrObjLibraryVariable skillLibrary;
 	public CharacterLibrary characterLibrary;
 	public ClassLibrary classLibrary;
 	
@@ -157,7 +158,7 @@ public class SaveController : MonoBehaviour {
 			CharClass cClass = classLibrary.GetEntry(loadedData.characters[i].classID);
 			availableUnits.stats.Add(new StatsContainer(loadedData.characters[i], cStats, cClass));
 			availableUnits.inventory.Add(new InventoryContainer(itemLibrary, loadedData.characters[i]));
-			availableUnits.skills.Add(new SkillsContainer(itemLibrary, loadedData.characters[i]));
+			availableUnits.skills.Add(new SkillsContainer(skillLibrary, loadedData.characters[i]));
 			Debug.Log("Done loading " + cStats.charName);
 		}
 		Debug.Log("Successfully loaded the save data!");

@@ -10,7 +10,7 @@ public class SkillsContainer {
 	public CharacterSkill[] skills;
 
 
-	public SkillsContainer(ItemLibrary iLib, CharacterSaveData saveData) {
+	public SkillsContainer(ScrObjLibraryVariable iLib, CharacterSaveData saveData) {
 		SetupValues(iLib, saveData);
 	}
 
@@ -21,17 +21,17 @@ public class SkillsContainer {
 		}
 	}
 
-	private void SetupValues(ItemLibrary iLib, CharacterSaveData saveData) {
+	private void SetupValues(ScrObjLibraryVariable iLib, CharacterSaveData saveData) {
 		skills = new CharacterSkill[SKILL_SIZE];
 		for (int i = 0; i < saveData.skills.Count; i++) {
 			skills[i] = (CharacterSkill) iLib.GetEntry(saveData.skills[i]);
-			Debug.Log("Found skill " + skills[i].id);
+			Debug.Log("Found skill " + skills[i].uuid);
 		}
 	}
 
 	
 	public bool GainSkill(CharacterSkill skill) {
-		Debug.Log("Adding skill " + skill.itemName);
+		Debug.Log("Adding skill " + skill.entryName);
 		for (int i = 0; i < skills.Length; i++) {
 			if (skills[i] == null) {
 				skills[i] = skill;

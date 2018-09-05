@@ -9,24 +9,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 68587546ec2f48ba8d64c96049de68f2, type: 3}
-  m_Name: IronAxe
+  m_Name: IronSword
   m_EditorClassIdentifier: 
-  id: IronAxe
-  icon: {fileID: 21300000, guid: 75ab5234191d45549b777652dc174aa9, type: 3}
-  itemName: Iron Axe
-  description: Basic iron axe. Deals some damage.
+  uuid: IronSword
+  entryName: IronSword
+  repColor: {r: 0, g: 0, b: 0, a: 0}
+  tag: 
+  icon: {fileID: 21300000, guid: 5a873f549478332449569eda0c3dacf6, type: 3}
+  description: Basic iron weapon.
   itemCategory: 0
-  itemType: 3
-  power: 8
-  maxCharge: 45
-  hitRate: 75
+  itemType: 1
+  power: 5
+  maxCharge: 46
+  hitRate: 0
   critRate: 0
   range:
     min: 1
     max: 1
-  skillReq: 0
-  weight: 10
-  cost: 300
+  skillReq: 1
+  weight: 5
+  cost: 350
   advantageType: 
   boost:
     boostType: 0

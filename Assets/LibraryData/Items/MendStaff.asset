@@ -9,24 +9,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 68587546ec2f48ba8d64c96049de68f2, type: 3}
-  m_Name: IronSword
+  m_Name: MendStaff
   m_EditorClassIdentifier: 
-  id: IronSword
-  icon: {fileID: 21300000, guid: 5a873f549478332449569eda0c3dacf6, type: 3}
-  itemName: Iron Sword
-  description: Basic iron sword. Deals some damage.
-  itemCategory: 0
-  itemType: 1
-  power: 5
-  maxCharge: 46
-  hitRate: 90
+  uuid: MendStaff
+  entryName: MendStaff
+  repColor: {r: 0, g: 0, b: 0, a: 0}
+  tag: 
+  icon: {fileID: 21300000, guid: fae50d7c3f58a4a44b5523f6e9e97281, type: 3}
+  description: Advanced heal.
+  itemCategory: 1
+  itemType: 7
+  power: 10
+  maxCharge: 20
+  hitRate: 0
   critRate: 0
   range:
     min: 1
     max: 1
-  skillReq: 0
-  weight: 5
-  cost: 350
+  skillReq: 100
+  weight: 0
+  cost: 1000
   advantageType: 
   boost:
     boostType: 0

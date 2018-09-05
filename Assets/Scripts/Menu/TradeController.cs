@@ -148,11 +148,11 @@ public class TradeController : InputReceiver {
 
 		for (int i = 0, j = InventoryContainer.INVENTORY_SIZE; i < InventoryContainer.INVENTORY_SIZE; i++, j++) {
 			InventoryTuple tup = selectedCharacter.value.inventory.GetItem(i);
-			itemNames[i].text = (tup.item != null) ? tup.item.itemName : "--";
+			itemNames[i].text = (tup.item != null) ? tup.item.entryName : "--";
 			itemCharges[i].text = (tup.item != null) ? tup.charge.ToString() : "";
 			
 			tup = targetCharacter.value.inventory.GetItem(i);
-			itemNames[j].text = (tup.item != null) ? tup.item.itemName : "--";
+			itemNames[j].text = (tup.item != null) ? tup.item.entryName : "--";
 			itemCharges[j].text = (tup.item != null && tup.item.maxCharge != 1) ? tup.charge.ToString() : "";
 		}
 	}

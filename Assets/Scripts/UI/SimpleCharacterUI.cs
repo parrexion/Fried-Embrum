@@ -66,6 +66,10 @@ public class SimpleCharacterUI : MonoBehaviour {
 	public Text[] inventoryValues;
 	public GameObject helpButtons;
 
+	[Header("Tooltip")]
+	public GameObject tooltipObject;
+	public Text tooltipText;
+
 	
 	public void ShowBasicStats(TacticsMove tactics) {
 		StatsContainer stats = tactics.stats;
@@ -83,7 +87,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 
 		WeaponItem weapon = tactics.GetEquippedWeapon(ItemCategory.WEAPON);
 		wpnIcon.sprite = (weapon != null) ? weapon.icon : null;
-		wpnName.text = (weapon != null) ? weapon.itemName : "";
+		wpnName.text = (weapon != null) ? weapon.entryName : "";
 		
 		for (int i = 0; i < skillImages.Length; i++) {
 			if (i >= skills.skills.Length || skills.skills[i] == null) {
@@ -109,7 +113,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 		basicObject.SetActive(true);
 		inventoryObject.SetActive(false);
 
-		UpdateSelection();
+		UpdateSelection(tactics);
 	}
 
 	public void ShowStatsStats(TacticsMove tactics) {
@@ -155,7 +159,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 		resText.text = stats.res.ToString();
 		movText.text = stats.GetMovespeed().ToString();
 
-		UpdateSelection();
+		UpdateSelection(tactics);
 	}
 
 	/// <summary>
@@ -191,41 +195,48 @@ public class SimpleCharacterUI : MonoBehaviour {
 			}
 		}
 		
-		InventoryTuple first = inventory.inventory[0];
+		InventoryTuple first = inventory.GetItem(0);
 		bool equipped = (first.item != null && first.item.itemCategory == ItemCategory.WEAPON);
 		equipIndicator.SetActive(equipped);
 
 		// Set up inventory list
 		for (int i = 0; i < 5; i++) {
-			if (i >= inventory.inventory.Length || inventory.inventory[i].item == null) {
+			if (i >= InventoryContainer.INVENTORY_SIZE || inventory.GetItem(i).item == null) {
 				inventoryFields[i].color = Color.black;
 				inventoryFields[i].text = "---";
 				inventoryValues[i].text = " ";
 			}
 			else {
-				InventoryTuple tuple = inventory.inventory[i];
+				InventoryTuple tuple = inventory.GetItem(i);
 				int skill = stats.GetWpnSkill(tuple.item);
 				inventoryFields[i].color = (tuple.droppable) ? Color.green : 
 							(tuple.item.CanUse(skill)) ? Color.black : Color.grey;
-				inventoryFields[i].text = tuple.item.itemName;
+				inventoryFields[i].text = tuple.item.entryName;
 				inventoryValues[i].text = (tuple.item.maxCharge >= 0) ? tuple.charge.ToString() : " ";
 				if (tuple.item.itemCategory == ItemCategory.CONSUME && tuple.item.maxCharge == 1)
 					inventoryValues[i].text = " ";
 			}
 		}
 
-		UpdateSelection();
+		UpdateSelection(tactics);
 	}
 
 	/// <summary>
 	/// Updates the highlight for each inventory slot and sets the appropriate color.
 	/// </summary>
-	public void UpdateSelection() {
+	public void UpdateSelection(TacticsMove tactics) {
 		for (int i = 0; i < 5; i++) {
 			inventoryHighlight[i].enabled = (i == inventoryIndex.value);
 			inventoryHighlight[i].color = (currentMenuMode.value == (int)MenuMode.STATS) ? new Color(0.35f,0.7f,1f,0.6f) : new Color(0.35f,1f,1f,0.75f);
 		}
 
-		helpButtons.SetActive(currentMenuMode.value != (int)MenuMode.STATS &&currentMenuMode.value != (int)MenuMode.INV);
+		helpButtons.SetActive(currentMenuMode.value != (int)MenuMode.STATS && currentMenuMode.value != (int)MenuMode.INV);
+
+		//Tooltip
+		tooltipObject.SetActive(currentMenuMode.value == (int)MenuMode.STATS);
+		if (inventoryIndex.value != -1) {
+			InventoryTuple item = tactics.inventory.GetItem(inventoryIndex.value);
+			tooltipText.text = (item.item != null) ? item.item.GetDescription() : "";
+		}
 	}
 }

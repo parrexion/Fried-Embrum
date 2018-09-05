@@ -33,7 +33,7 @@ public class LibraryEditorWindow : EditorWindow {
 
 	public ItemEditorWindow itemEditor;
 	public ScrObjLibraryVariable itemLibrary;
-	// public ItemEquip itemContainer;
+	public WeaponItem itemContainer;
 
 	private string[] toolbarStrings = new string[] {"Battles", "Characters", "Enemies", "Background", "Items"};
 
@@ -97,7 +97,7 @@ public class LibraryEditorWindow : EditorWindow {
 		characterEditor = new CharacterEditorWindow(characterLibrary, charContainer, poseList);
 		enemyEditor = new EnemyEditorWindow(enemyLibrary, enemyContainer);
 		backgroundEditor = new BackgroundEditorWindow(backgroundLibrary, backgroundContainer);
-		itemEditor = new ItemEditorWindow(itemLibrary);//, itemContainer);
+		itemEditor = new ItemEditorWindow(itemLibrary, itemContainer);
 
 		InitializeWindow();
 	}

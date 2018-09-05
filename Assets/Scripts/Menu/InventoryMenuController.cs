@@ -20,17 +20,11 @@ public class InventoryMenuController : InputReceiver {
 	public IntVariable inventoryMenuPosition;
 	private Image[] inventoryButtons = new Image[0];
 
-	[Header("Tooltip")]
-	public GameObject tooltipObject;
-	public Text tooltipText;
-	public StringVariable tooltipMessage;
-
 	public UnityEvent inventoryChangedEvent;
 	public UnityEvent playSfxEvent;
 	
 	
 	private void Start () {
-		tooltipObject.SetActive(false);
 		inventoryMenu.SetActive(false);
 		inventoryButtons = inventoryMenu.GetComponentsInChildren<Image>(true);
 	}

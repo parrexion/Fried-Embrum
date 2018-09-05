@@ -153,7 +153,7 @@ public static class BattleCalc {
 		if (weaponAtk == null)
 			return false;
 
-		for (int i = 0; i < weaponAtk.advantageType.Length; i++) {
+		for (int i = 0; i < weaponAtk.advantageType.Count; i++) {
 			if (weaponAtk.advantageType[i] == defender.classData.classType)
 				return true;
 		}
@@ -161,7 +161,7 @@ public static class BattleCalc {
 	}
 
 	public static float GetWeaknessBonus(WeaponItem weaponAtk, StatsContainer defender) {
-		for (int i = 0; i < weaponAtk.advantageType.Length; i++) {
+		for (int i = 0; i < weaponAtk.advantageType.Count; i++) {
 			if (weaponAtk.advantageType[i] == defender.classData.classType)
 				return 2.5f;
 		}

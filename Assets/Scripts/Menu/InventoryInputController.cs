@@ -62,7 +62,7 @@ public class InventoryInputController : InputReceiver {
 					inventoryIndex.value = 0;
 			} while (inventoryIndex.value != 0 && selectCharacter.value.inventory.GetItem(inventoryIndex.value).item == null);
 			menuMoveEvent.Invoke();
-			ui.UpdateSelection();
+			ui.UpdateSelection(selectCharacter.value);
 		}
 		
     }
@@ -78,7 +78,7 @@ public class InventoryInputController : InputReceiver {
 					inventoryIndex.value = InventoryContainer.INVENTORY_SIZE -1;
 			} while (inventoryIndex.value != 0 && selectCharacter.value.inventory.GetItem(inventoryIndex.value).item == null);
 			menuMoveEvent.Invoke();
-			ui.UpdateSelection();
+			ui.UpdateSelection(selectCharacter.value);
 		}
     }
 
@@ -91,7 +91,7 @@ public class InventoryInputController : InputReceiver {
 			inventoryMenuPosition.value = -1;
 			StartCoroutine(MenuChangeDelay());
 			menuAcceptEvent.Invoke();
-			ui.UpdateSelection();
+			ui.UpdateSelection(selectCharacter.value);
 		}
     }
 	

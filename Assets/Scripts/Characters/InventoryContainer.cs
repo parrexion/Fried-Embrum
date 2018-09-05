@@ -7,9 +7,10 @@ public class InventoryContainer {
 
 	public const int INVENTORY_SIZE = 5;
 	
-	public InventoryTuple[] inventory;
+	[SerializeField] private InventoryTuple[] inventory;
 
-	public InventoryContainer(ItemLibrary iLib, CharacterSaveData saveData) {
+
+	public InventoryContainer(ScrObjLibraryVariable iLib, CharacterSaveData saveData) {
 		SetupValues(iLib, saveData);
 	}
 
@@ -34,7 +35,7 @@ public class InventoryContainer {
 		}
 	}
 
-	private void SetupValues(ItemLibrary iLib, CharacterSaveData saveData) {
+	private void SetupValues(ScrObjLibraryVariable iLib, CharacterSaveData saveData) {
 		
 		inventory = new InventoryTuple[INVENTORY_SIZE];
 		for (int i = 0; i < inventory.Length; i++) {

@@ -133,7 +133,7 @@ public class ForecastUI : MonoBehaviour {
 		wpnAdvantage.enabled = (atkAdv != 0);
 		wpnAdvantage.sprite = (atkAdv == 1) ? advArrow : disArrow;
 		wpnIcon.sprite = (InvTup != null) ? InvTup.item.icon : null;
-		wpnName.text = (InvTup != null) ? InvTup.item.itemName : "";
+		wpnName.text = (InvTup != null) ? InvTup.item.entryName : "";
 		if (wpnCharge)
 			wpnCharge.text = (InvTup != null) ? InvTup.charge.ToString() : "";
 
@@ -153,7 +153,7 @@ public class ForecastUI : MonoBehaviour {
 		eWpnAdvantage.enabled = (defAdv != 0);
 		eWpnAdvantage.sprite = (defAdv == 1) ? advArrow : disArrow;
 		eWpnIcon.sprite = (invTup != null) ? invTup.item.icon : null;
-		eWpnName.text = (invTup != null) ? invTup.item.itemName : "";
+		eWpnName.text = (invTup != null) ? invTup.item.entryName : "";
 		if (eWpnCharge)
 			eWpnCharge.text = (invTup != null) ? invTup.charge.ToString() : "";
 
@@ -185,7 +185,7 @@ public class ForecastUI : MonoBehaviour {
 		}
 
 		hWpnIcon.sprite = (staff.item != null) ? staff.item.icon : null;
-		hWpnName.text = (staff.item != null) ? staff.item.itemName : "";
+		hWpnName.text = (staff.item != null) ? staff.item.entryName : "";
 
 		if (!inBattle) {
 			hWpnCharge.text = (staff.item != null) ? staff.charge.ToString() : "";
