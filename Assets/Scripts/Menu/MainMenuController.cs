@@ -55,6 +55,15 @@ public class MainMenuController : InputReceiver {
 		SceneManager.LoadScene("Dialogue");
 	}
 
+	/// <summary>
+	/// Called when starting a new game. Sets the starting values.
+	/// </summary>
+	public void LoadGameFinished() {
+		currentMap.value = chapterList.values[currentChapterIndex.value];
+		dialoguePrePost.value = false;
+		SceneManager.LoadScene("Dialogue");
+	}
+
     public override void OnUpArrow() {
 		if (state == 0) {
 			buttonPosition--;
@@ -128,7 +137,7 @@ public class MainMenuController : InputReceiver {
 		else if (state == 3) {
 			if (saveFileController.OkClicked()) {
 				menuAcceptEvent.Invoke();
-				NewGameClicked();
+				state = 4;
 			}
 			else {
 				menuBackEvent.Invoke();

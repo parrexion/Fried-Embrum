@@ -1708,6 +1708,7 @@ GameObject:
   - component: {fileID: 1861314127}
   - component: {fileID: 1861314131}
   - component: {fileID: 1861314130}
+  - component: {fileID: 1861314132}
   m_Layer: 5
   m_Name: MenuController
   m_TagString: Untagged
@@ -1826,7 +1827,7 @@ MonoBehaviour:
   currentChapterIndex: {fileID: 11400000, guid: ffae086fb70763b44b8d1dd1c466a42e,
     type: 2}
   currentPlayTime: {fileID: 11400000, guid: 1777461650df39a4cb5b7ff0b6dedf81, type: 2}
-  currentMap: {fileID: 11400000, guid: c3bc96eadab1cd74c83d0cb1cbebc279, type: 2}
+  currentMap: {fileID: 11400000, guid: 188cfd11b445e1244a89510ca126c756, type: 2}
   dialoguePrePost: {fileID: 11400000, guid: 53f9c0711be2541448d8d01702114265, type: 2}
   menuButtons:
   - {fileID: 1295224109}
@@ -1973,6 +1974,34 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1861314125}
         m_MethodName: OnLeftArrow
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+--- !u!114 &1861314132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1861314123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14602ab6441821f43883d0b13d4f57c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  evnt: {fileID: 11400000, guid: 63a19eaa9e984e343855df79cfeb4f13, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1861314125}
+        m_MethodName: LoadGameFinished
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

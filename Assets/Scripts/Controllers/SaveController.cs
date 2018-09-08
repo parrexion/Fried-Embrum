@@ -4,6 +4,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 public class SaveController : MonoBehaviour {
@@ -42,6 +43,15 @@ public class SaveController : MonoBehaviour {
 	public ScrObjLibraryVariable skillLibrary;
 	public ScrObjLibraryVariable characterLibrary;
 	public ScrObjLibraryVariable classLibrary;
+
+	[Header("Options")]
+	public IntVariable musicVolume;
+	public IntVariable sfxVolume;
+	public BoolVariable useAnimations;
+	public BoolVariable trueHit;
+	public BoolVariable autoEnd;
+
+	public UnityEvent loadFinishedEvent;
 	
 	private string _savePath = "";
 	private string _backupSavePath = "";
@@ -60,6 +70,11 @@ public class SaveController : MonoBehaviour {
 		saveFileData = new SavePackage();
 
 		// Setup save data
+		saveFileData.musicVolume = 10;
+		saveFileData.sfxVolume = 10;
+		saveFileData.useAnimations = true;
+		saveFileData.trueHit = true;
+		saveFileData.autoEnd = true;
 		for (int i = 0; i < SAVE_FILES_COUNT; i++) {
 			SaveData data = new SaveData(){chapterIndex = 1, playTime = 0};
 			saveFileData.saveFiles[i] = data;
@@ -78,6 +93,13 @@ public class SaveController : MonoBehaviour {
 		// Update data
 		chapterIndex[saveIndex.value].value = currentChapterIndex.value;
 		playTimes[saveIndex.value].value = currentPlayTime.value;
+
+		// Options
+		saveFileData.musicVolume = musicVolume.value;
+		saveFileData.sfxVolume = sfxVolume.value;
+		saveFileData.useAnimations = useAnimations.value;
+		saveFileData.trueHit = trueHit.value;
+		saveFileData.autoEnd = autoEnd.value;
 
 		// Setup save data
 		SaveData data = new SaveData();
@@ -124,6 +146,14 @@ public class SaveController : MonoBehaviour {
 			return;
 		}
 
+		// Options
+		musicVolume.value = saveFileData.musicVolume;
+		sfxVolume.value = saveFileData.sfxVolume;
+		useAnimations.value = saveFileData.useAnimations;
+		trueHit.value = saveFileData.trueHit;
+		autoEnd.value = saveFileData.autoEnd;
+
+		//Save files
 		for (int i = 0; i < saveFileData.saveFiles.Length; i++) {
 			if (saveFileData.saveFiles[i] == null)
 				continue;
@@ -147,6 +177,10 @@ public class SaveController : MonoBehaviour {
 			return;
 		}
 		
+		// Set basic data
+		currentChapterIndex.value = chapterIndex[saveIndex.value].value;
+		currentPlayTime.value = playTimes[saveIndex.value].value;
+
 		// Read data in save file
 		SaveData loadedData = saveFileData.saveFiles[saveIndex.value];
 		Debug.Log("Characters:  " + loadedData.characters.Count);
@@ -162,11 +196,17 @@ public class SaveController : MonoBehaviour {
 			Debug.Log("Done loading " + cStats.entryName);
 		}
 		Debug.Log("Successfully loaded the save data!");
+		loadFinishedEvent.Invoke();
 	}
 }
 
 [System.Serializable]
 public class SavePackage {
+	public int musicVolume;
+	public int sfxVolume;
+	public bool useAnimations;
+	public bool trueHit;
+	public bool autoEnd;
 	public SaveData[] saveFiles = new SaveData[SaveController.SAVE_FILES_COUNT];
 }
 

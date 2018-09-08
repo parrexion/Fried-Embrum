@@ -95,10 +95,31 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3965f19769b7f5f43b40372a30e51121, type: 2}
   - {fileID: 11400000, guid: d1fe251223cd944499ba03d20355f968, type: 2}
   - {fileID: 11400000, guid: 4602c34b6d09ffe4385943bf4556e3a8, type: 2}
-  itemLibrary: {fileID: 0}
+  itemLibrary: {fileID: 11400000, guid: 8db4087cf91860c44b6a447c30365620, type: 2}
   skillLibrary: {fileID: 11400000, guid: 9e07ba92ff63cc445b414bc6f32d5b06, type: 2}
-  characterLibrary: {fileID: 11400000, guid: b5188af2057e9d749ba648e01e8adedb, type: 2}
-  classLibrary: {fileID: 11400000, guid: 445b9b074e68f524e8986a63a4d7a2aa, type: 2}
+  characterLibrary: {fileID: 11400000, guid: 0bcb95b7cfdd4ad49b878c00855c24d1, type: 2}
+  classLibrary: {fileID: 11400000, guid: c83b7aa76c8717d46a6edcd61cc8e397, type: 2}
+  musicVolume: {fileID: 11400000, guid: 5bedaa14979ef5f49b8b48855377d3a3, type: 2}
+  sfxVolume: {fileID: 11400000, guid: e83e766a7530ac94f918274763b536f5, type: 2}
+  useAnimations: {fileID: 11400000, guid: baa24d385cc1cb547a8642b2c53065b6, type: 2}
+  trueHit: {fileID: 11400000, guid: a367362d22cab4441bd8aed3d1f6ad83, type: 2}
+  autoEnd: {fileID: 11400000, guid: 27e8cb1b44794c44da7921a16f5d1041, type: 2}
+  loadFinishedEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 63a19eaa9e984e343855df79cfeb4f13, type: 2}
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!114 &114932910106586066
 MonoBehaviour:
   m_ObjectHideFlags: 1
