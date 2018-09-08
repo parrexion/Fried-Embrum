@@ -128,7 +128,7 @@ public class ForecastUI : MonoBehaviour {
 	private void ShowAttackerStats(TacticsMove tactics, InventoryTuple InvTup, int damage, int speed, int hit, int crit, int atkAdv, bool defWeak) {
 //		colorBackground.color = (tactics.faction == Faction.PLAYER) ? new Color(0.5f,0.8f,1f) : new Color(1f,0.5f,0.8f);
 		
-		characterName.text = tactics.stats.charData.charName;
+		characterName.text = tactics.stats.charData.entryName;
 		portrait.sprite = tactics.stats.charData.portrait;
 		wpnAdvantage.enabled = (atkAdv != 0);
 		wpnAdvantage.sprite = (atkAdv == 1) ? advArrow : disArrow;
@@ -148,7 +148,7 @@ public class ForecastUI : MonoBehaviour {
 	private void ShowDefenderStats(TacticsMove tactics, InventoryTuple invTup, int damage, int speed, int hit, int crit, int defAdv, bool atkWeak) {
 //		colorBackground.color = (tactics.faction == Faction.PLAYER) ? new Color(0.5f,0.8f,1f) : new Color(1f,0.5f,0.8f);
 		
-		eCharacterName.text = tactics.stats.charData.charName;
+		eCharacterName.text = tactics.stats.charData.entryName;
 		ePortrait.sprite = tactics.stats.charData.portrait;
 		eWpnAdvantage.enabled = (defAdv != 0);
 		eWpnAdvantage.sprite = (defAdv == 1) ? advArrow : disArrow;
@@ -170,11 +170,11 @@ public class ForecastUI : MonoBehaviour {
 			backgroundInBattle.SetActive(false);
 		StatsContainer stats = healer.stats;
 		
-		hCharacterName.text = stats.charData.charName;
+		hCharacterName.text = stats.charData.entryName;
 		hPortrait.sprite = stats.charData.portrait;
 
 		stats = receiver.stats;
-		hCharacterName2.text = stats.charData.charName;
+		hCharacterName2.text = stats.charData.entryName;
 		hPortrait2.sprite = stats.charData.portrait;
 		if (inBattle) {
 			hpText.text = healer.currentHealth.ToString();

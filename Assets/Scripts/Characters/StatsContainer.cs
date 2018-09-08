@@ -143,13 +143,13 @@ public class StatsContainer {
 			return;
 		GenerateBoosts();
 		int calcLevel = level - 1;
-		hp = charData.hp + classData.hp + bHp + (int)(calcLevel * (classData.gHp+charData.gHp) + iHp + eHp);
-		atk = charData.atk + classData.atk + bAtk + (int)(calcLevel * (classData.gAtk+charData.gAtk) + iAtk + eAtk);
-		spd = charData.spd + classData.spd + bSpd + (int)(calcLevel * (classData.gSpd+charData.gSpd) + iSpd + eSpd);
-		skl = charData.skl + classData.skl + bSkl + (int)(calcLevel * (classData.gSkl+charData.gSkl) + iSkl + eSkl);
-		lck = charData.lck + classData.lck + bLck + (int)(calcLevel * (classData.gLck+charData.gLck) + iLck + eLck);
-		def = charData.def + classData.def + bDef + (int)(calcLevel * (classData.gDef+charData.gDef) + iDef + eDef);
-		res = charData.res + classData.res + bRes + (int)(calcLevel * (classData.gRes+charData.gRes) + iRes + eRes);
+		hp = charData.hp + classData.hp + bHp + (int)(0.01f * calcLevel * (classData.gHp+charData.gHp) + iHp + eHp);
+		atk = charData.atk + classData.atk + bAtk + (int)(0.01f * calcLevel * (classData.gAtk+charData.gAtk) + iAtk + eAtk);
+		spd = charData.spd + classData.spd + bSpd + (int)(0.01f * calcLevel * (classData.gSpd+charData.gSpd) + iSpd + eSpd);
+		skl = charData.skl + classData.skl + bSkl + (int)(0.01f * calcLevel * (classData.gSkl+charData.gSkl) + iSkl + eSkl);
+		lck = charData.lck + classData.lck + bLck + (int)(0.01f * calcLevel * (classData.gLck+charData.gLck) + iLck + eLck);
+		def = charData.def + classData.def + bDef + (int)(0.01f * calcLevel * (classData.gDef+charData.gDef) + iDef + eDef);
+		res = charData.res + classData.res + bRes + (int)(0.01f * calcLevel * (classData.gRes+charData.gRes) + iRes + eRes);
 	}
 
 	/// <summary>

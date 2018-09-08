@@ -267,7 +267,7 @@ public class DialogueActionWindow: EditorWindow {
 			content = new GUIContent();
 			filteredList[i] = content;
 			content.text = "Talking";
-			CharacterEntry ce = (CharacterEntry)hub.currentState.characters[i].value;
+			PortraitEntry ce = (PortraitEntry)hub.currentState.characters[i].value;
 			if (ce == null)
 				continue;
 
@@ -328,7 +328,7 @@ public class DialogueActionWindow: EditorWindow {
 
 			GUILayout.Label("Character " + j);
 
-			hub.dialogueValues.actions[hub.selAction].entries[j] = (CharacterEntry)EditorGUILayout.ObjectField("", hub.dialogueValues.actions[hub.selAction].entries[j], typeof(CharacterEntry),false, GUILayout.Width(fieldWidth-8));
+			hub.dialogueValues.actions[hub.selAction].entries[j] = (PortraitEntry)EditorGUILayout.ObjectField("", hub.dialogueValues.actions[hub.selAction].entries[j], typeof(PortraitEntry),false, GUILayout.Width(fieldWidth-8));
 			if (hub.dialogueValues.actions[hub.selAction].entries[j] == null){
 				hub.dialogueValues.actions[hub.selAction].values[j] = -1;
 				GUILayout.EndArea();
@@ -362,7 +362,7 @@ public class DialogueActionWindow: EditorWindow {
 				else {
 					GUILayout.BeginHorizontal();
 					GUILayout.FlexibleSpace();
-					GUILayout.Label(((CharacterEntry)hub.dialogueValues.actions[hub.selAction].entries[j]).poses[hub.dialogueValues.actions[hub.selAction].values[j]].texture);
+					GUILayout.Label(((PortraitEntry)hub.dialogueValues.actions[hub.selAction].entries[j]).poses[hub.dialogueValues.actions[hub.selAction].values[j]].texture);
 					GUILayout.FlexibleSpace();
 					GUILayout.EndHorizontal();
 				}

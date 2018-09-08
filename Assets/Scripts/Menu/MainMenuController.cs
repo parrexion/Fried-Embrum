@@ -14,7 +14,7 @@ public class MainMenuController : InputReceiver {
 	[Header("Current Data")]
 	public IntVariable currentChapterIndex;
 	public IntVariable currentPlayTime;
-	public MapInfoVariable currentMap;
+	public ScrObjEntryReference currentMap;
 	public BoolVariable dialoguePrePost;
 
 	[Header("Menu")]

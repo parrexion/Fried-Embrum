@@ -40,8 +40,8 @@ public class CharacterSaveData {
 	}
 
 	public void StoreData(StatsContainer stats, InventoryContainer invCont, SkillsContainer skillCont) {
-		id = stats.charData.id;
-		classID = stats.classData.id;
+		id = stats.charData.uuid;
+		classID = stats.classData.uuid;
 		
 		level = stats.level;
 		currentExp = stats.currentExp;

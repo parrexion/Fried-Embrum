@@ -25,7 +25,7 @@ public class SaveController : MonoBehaviour {
 	}
 	#endregion
 	
-	public MapInfoVariable currentMap;
+	public ScrObjEntryReference currentMap;
 	public SaveListVariable availableUnits;
 	public IntVariable saveIndex;
 
@@ -40,8 +40,8 @@ public class SaveController : MonoBehaviour {
 	[Header("Libraries")]
 	public ScrObjLibraryVariable itemLibrary;
 	public ScrObjLibraryVariable skillLibrary;
-	public CharacterLibrary characterLibrary;
-	public ClassLibrary classLibrary;
+	public ScrObjLibraryVariable characterLibrary;
+	public ScrObjLibraryVariable classLibrary;
 	
 	private string _savePath = "";
 	private string _backupSavePath = "";
@@ -154,12 +154,12 @@ public class SaveController : MonoBehaviour {
 		availableUnits.inventory = new List<InventoryContainer>();
 		availableUnits.skills = new List<SkillsContainer>();
 		for (int i = 0; i < loadedData.characters.Count; i++) {
-			CharData cStats = characterLibrary.GetEntry(loadedData.characters[i].id);
-			CharClass cClass = classLibrary.GetEntry(loadedData.characters[i].classID);
+			CharData cStats = (CharData)characterLibrary.GetEntry(loadedData.characters[i].id);
+			CharClass cClass = (CharClass)classLibrary.GetEntry(loadedData.characters[i].classID);
 			availableUnits.stats.Add(new StatsContainer(loadedData.characters[i], cStats, cClass));
 			availableUnits.inventory.Add(new InventoryContainer(itemLibrary, loadedData.characters[i]));
 			availableUnits.skills.Add(new SkillsContainer(skillLibrary, loadedData.characters[i]));
-			Debug.Log("Done loading " + cStats.charName);
+			Debug.Log("Done loading " + cStats.entryName);
 		}
 		Debug.Log("Successfully loaded the save data!");
 	}

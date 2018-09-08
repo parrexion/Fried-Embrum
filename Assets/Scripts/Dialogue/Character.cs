@@ -24,7 +24,7 @@ public class Character : MonoBehaviour {
 		}
 		else {
 			characterSprite.enabled = true;
-			CharacterEntry ce = (CharacterEntry)character.value;
+			PortraitEntry ce = (PortraitEntry)character.value;
 			characterSprite.sprite = ce.poses[poseIndex.value];
 		}
 	}

@@ -166,7 +166,7 @@ public class SaveFileController : MonoBehaviour {
 			else {
 				emptyFileText[i].gameObject.SetActive(false);
 				chapterIndexTexts[i].text = "Ch " + chapterIndex[i].value;
-				levelNameTexts[i].text = chapterList.values[chapterIndex[i].value].mapName;
+				levelNameTexts[i].text = chapterList.values[chapterIndex[i].value].entryName;
 				playTimeTexts[i].text = Constants.PlayTimeFromInt(playTimes[i].value,false);
 			}
 		}

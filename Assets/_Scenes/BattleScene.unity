@@ -4938,7 +4938,7 @@ MonoBehaviour:
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   clicker: {fileID: 1546354684}
-  selectedMap: {fileID: 11400000, guid: c3bc96eadab1cd74c83d0cb1cbebc279, type: 2}
+  currentMap: {fileID: 11400000, guid: 188cfd11b445e1244a89510ca126c756, type: 2}
   currentMode: {fileID: 11400000, guid: b0e392ad086e2ab4e9c4feb871cf0d41, type: 2}
   targetList: {fileID: 11400000, guid: 062cc521596969743bd025d58e0bcb87, type: 2}
   target: {fileID: 11400000, guid: 3bf3d9dea0a4b724a921b8d7c25399c4, type: 2}
@@ -9210,7 +9210,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 722a1cde4c2892242871b9a98dddca21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentMap: {fileID: 11400000, guid: c3bc96eadab1cd74c83d0cb1cbebc279, type: 2}
+  currentMap: {fileID: 11400000, guid: 188cfd11b445e1244a89510ca126c756, type: 2}
   currentTurn: {fileID: 11400000, guid: 03872b965811b8f4eb110ecb93bea4ca, type: 2}
   lockControls: {fileID: 11400000, guid: b8d06aee0ad3bce4daa463a8433439f4, type: 2}
   cursorX: {fileID: 11400000, guid: c2b3aa3e1e995d545b1165460053d109, type: 2}
@@ -19064,7 +19064,7 @@ RectTransform:
   - {fileID: 625147949}
   - {fileID: 1110088558}
   m_Father: {fileID: 1067026260}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -20427,8 +20427,8 @@ RectTransform:
   - {fileID: 882958281}
   - {fileID: 1660277171}
   - {fileID: 132860757}
-  - {fileID: 1007044718}
   - {fileID: 1149291025}
+  - {fileID: 1007044718}
   - {fileID: 326923670}
   - {fileID: 2033105231}
   - {fileID: 317286484}
@@ -22343,7 +22343,7 @@ RectTransform:
   - {fileID: 871231243}
   - {fileID: 198693501}
   m_Father: {fileID: 1067026260}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -39339,7 +39339,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9181246438253184292bbf46f04d1cae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapInfo: {fileID: 11400000, guid: c3bc96eadab1cd74c83d0cb1cbebc279, type: 2}
+  currentMap: {fileID: 11400000, guid: 188cfd11b445e1244a89510ca126c756, type: 2}
   cameraBox: {fileID: 2074500938}
   mapClicker: {fileID: 1546354684}
   cursorX: {fileID: 11400000, guid: c2b3aa3e1e995d545b1165460053d109, type: 2}
@@ -39389,6 +39389,18 @@ MonoBehaviour:
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   tiles: []
+  tileNormal: {fileID: 11400000, guid: 4b27fdea53660cf4784c5f4ac749c0b4, type: 2}
+  tileForest: {fileID: 11400000, guid: 69f7db223f9dc364f9716d5363d1b9d7, type: 2}
+  tileMountain: {fileID: 11400000, guid: a7c26c3f90a0e284891015a9f612451e, type: 2}
+  tileBridge: {fileID: 11400000, guid: 806b62d3c535ca9429a095f192f52b54, type: 2}
+  tileLedge: {fileID: 11400000, guid: 84e439404530c8d4fb974096b3c6f3ca, type: 2}
+  tileHouse: {fileID: 11400000, guid: b44d94aac358b4446a6300b9585d500c, type: 2}
+  tileFort: {fileID: 11400000, guid: 3719a2ba52b739b43b271f76900fb069, type: 2}
+  tileRiver: {fileID: 11400000, guid: 0c85abdced740404f89c54a5a63e8fc3, type: 2}
+  tileBreakable: {fileID: 11400000, guid: 2b541f935d1e4734d925e12c22fdfcc4, type: 2}
+  tileWall: {fileID: 11400000, guid: 2218d56ff5d6d0147b3897d1e93656e6, type: 2}
+  tileThrone: {fileID: 11400000, guid: 1cbeb701910bc234eaed418100608382, type: 2}
+  tilePillar: {fileID: 11400000, guid: 6561e1536dc732c4b834ff1a8b264aa1, type: 2}
 --- !u!4 &2074500937
 Transform:
   m_ObjectHideFlags: 0

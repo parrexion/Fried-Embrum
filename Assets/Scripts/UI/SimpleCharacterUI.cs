@@ -77,7 +77,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 //		colorBackground.color = (tactics.faction == Faction.PLAYER) ? 
 //			new Color(0.2f,0.2f,0.5f) : new Color(0.5f,0.2f,0.2f);
 		
-		characterName.text = stats.charData.charName;
+		characterName.text = stats.charData.entryName;
 		portrait.enabled = true;
 		portrait.sprite = stats.charData.portrait;
 		currentHpText.text = tactics.currentHealth + " / " + stats.hp;
@@ -121,7 +121,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 		statsObject.SetActive(true);
 		basicObject.SetActive(false);
 		inventoryObject.SetActive(false);
-		characterName.text = stats.charData.charName;
+		characterName.text = stats.charData.entryName;
 
 		hpText.color = (stats.bHp != 0) ? Color.green : Color.black;
 		atkText.color = (stats.bAtk != 0) ? Color.green : Color.black;
@@ -172,7 +172,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 		statsObject.SetActive(false);
 		basicObject.SetActive(false);
 		inventoryObject.SetActive(true);
-		characterName.text = stats.charData.charName;
+		characterName.text = stats.charData.entryName;
 
 		WeaponItem weapon = tactics.GetEquippedWeapon(ItemCategory.WEAPON);
 		conText.text = stats.GetConstitution().ToString();
@@ -185,7 +185,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 		}
 
 		for (int i = 0; i < weaponSkillIcons.Length; i++) {
-			if (i >= stats.classData.weaponSkills.Length){
+			if (i >= stats.classData.weaponSkills.Count){
 				weaponSkillIcons[i].transform.parent.gameObject.SetActive(false);
 			}
 			else {

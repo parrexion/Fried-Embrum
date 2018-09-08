@@ -12,7 +12,7 @@ public class BattleContainer : MonoBehaviour {
 		instance = this;
 	}
 
-	public MapInfoVariable currentMap;
+	public ScrObjEntryReference currentMap;
 	public FactionVariable currentTurn;
 	public BoolVariable lockControls;
 	public IntVariable cursorX;
@@ -126,7 +126,8 @@ public class BattleContainer : MonoBehaviour {
 		_defenderDealtDamage = false;
 
 		//Music
-		subMusic.value = (actions[0].isDamage) ? currentMap.value.battleMusic.clip : currentMap.value.healMusic.clip;
+		MapEntry map = (MapEntry)currentMap.value;
+		subMusic.value = (actions[0].isDamage) ? map.battleMusic.clip : map.healMusic.clip;
 		musicFocus.value = false;
 		playSubMusicEvent.Invoke();
 	}

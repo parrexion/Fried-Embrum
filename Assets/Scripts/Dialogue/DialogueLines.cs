@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(DialogueScene))]
 public class DialogueLines : MonoBehaviour {
 
-	public MapInfoVariable currentMap;
+	public ScrObjEntryReference currentMap;
 	public BoolVariable dialoguePrePost;
 	public IntVariable currentAction;
 	public DialogueEntry wpEntry;
@@ -27,7 +27,8 @@ public class DialogueLines : MonoBehaviour {
 	void Start() {
 		scene = GetComponent<DialogueScene>();
 		if (!overrideActionNumber.value) {
-			dialogueEntry = (dialoguePrePost.value) ? currentMap.value.postDialogue : currentMap.value.preDialogue;
+			MapEntry map = (MapEntry)currentMap.value;
+			dialogueEntry = (dialoguePrePost.value) ? map.postDialogue : map.preDialogue;
 			currentAction.value = 0;
 			scene.Reset();
 		}

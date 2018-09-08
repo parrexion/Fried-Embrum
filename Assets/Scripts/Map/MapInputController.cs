@@ -6,7 +6,7 @@ using UnityEngine.Events;
 public class MapInputController : InputReceiver {
 
 	public MapCursor clicker;
-	public MapInfoVariable selectedMap;
+	public ScrObjEntryReference currentMap;
 	public ActionModeVariable currentMode;
 
 	[Header("Target")]
@@ -22,6 +22,12 @@ public class MapInputController : InputReceiver {
 	[Header("Events")]
 	public UnityEvent cursorMovedEvent;
 
+	private MapEntry map;
+
+
+	private void Start() {
+		map = (MapEntry)currentMap.value;
+	}
 
     public override void OnMenuModeChanged() {
 		MenuMode mode = (MenuMode)currentMenuMode.value;
@@ -52,7 +58,7 @@ public class MapInputController : InputReceiver {
 		}
 		else {
 			int prev = cursorY.value;
-			cursorY.value = Mathf.Min(cursorY.value + 1, selectedMap.value.sizeY -1);
+			cursorY.value = Mathf.Min(cursorY.value + 1, map.sizeY -1);
 			if (prev != cursorY.value)
 				menuMoveEvent.Invoke();
 		}
@@ -114,7 +120,7 @@ public class MapInputController : InputReceiver {
 		}
 		else {
 			int prev = cursorX.value;
-			cursorX.value = Mathf.Min(cursorX.value + 1, selectedMap.value.sizeX -1);
+			cursorX.value = Mathf.Min(cursorX.value + 1, map.sizeX -1);
 			if (prev != cursorX.value)
 				menuMoveEvent.Invoke();
 		}
@@ -151,10 +157,13 @@ public class MapInputController : InputReceiver {
 
 		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL || currentMode.value == ActionMode.TRADE) {
 			currentMenuMode.value = (int)MenuMode.UNIT;
+			menuBackEvent.Invoke();
 			StartCoroutine(MenuChangeDelay());
 		}
-		clicker.CursorBack();
-		menuBackEvent.Invoke();
+		else if (currentMode.value == ActionMode.MOVE) {
+			clicker.CursorBack();
+			menuBackEvent.Invoke();
+		}
 	}
 
 

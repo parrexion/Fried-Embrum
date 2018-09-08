@@ -6,36 +6,45 @@ using System.Collections.Generic;
 
 public class LibraryEditorWindow : EditorWindow {
 
-	private enum State { BATTLE = 0, CHARACTER = 1, ENEMY = 2, BACKGROUND = 3, ITEMEQUIP = 4 }
+	private enum State { MAPS, CHARACTERS, CLASSES, ITEMS, SKILLS, BACKGROUND, PORTRAITS }
 
 	// Header
 	Rect headerRect = new Rect();
 	Texture2D headerTex;
+	static GUIStyle horizontalLine;
 
 	public IntVariable currentWindow;
 
-	public BattleEditorWindow battleEditor;
-	public ScrObjLibraryVariable battleLibrary;
-	public BattleEntry battleContainer;
+	public MapEditorWindow mapEditor;
+	public ScrObjLibraryVariable mapLibrary;
+	public MapEntry mapContainer;
 
 	public CharacterEditorWindow characterEditor;
 	public ScrObjLibraryVariable characterLibrary;
-	public CharacterEntry charContainer;
-	public SpriteListVariable poseList;
+	public CharData characterContainer;
 
-	public EnemyEditorWindow enemyEditor;
-	public ScrObjLibraryVariable enemyLibrary;
-	public EnemyEntry enemyContainer;
-
-	public BackgroundEditorWindow backgroundEditor;
-	public ScrObjLibraryVariable backgroundLibrary;
-	public BackgroundEntry backgroundContainer;
+	public ClassEditorWindow classEditor;
+	public ScrObjLibraryVariable classLibrary;
+	public CharClass classContainer;
 
 	public ItemEditorWindow itemEditor;
 	public ScrObjLibraryVariable itemLibrary;
 	public WeaponItem itemContainer;
 
-	private string[] toolbarStrings = new string[] {"Battles", "Characters", "Enemies", "Background", "Items"};
+	public ItemEditorWindow skillEditor;
+	public ScrObjLibraryVariable skillLibrary;
+	public CharacterSkill skillContainer;
+
+	public BackgroundEditorWindow backgroundEditor;
+	public ScrObjLibraryVariable backgroundLibrary;
+	public BackgroundEntry backgroundContainer;
+
+	public PortraitEditorWindow portraitEditor;
+	public ScrObjLibraryVariable portraitLibrary;
+	public PortraitEntry portraitContainer;
+	public SpriteListVariable poseList;
+
+	private string[] toolbarStrings = new string[] {"Maps", "Characters", "Classes", "Items", "Skills", "Background", "Portraits"};
 
 
 	[MenuItem("Window/LibraryEditor")]
@@ -60,20 +69,26 @@ public class LibraryEditorWindow : EditorWindow {
 		
 		switch ((State)currentWindow.value)
 		{
-			case State.BATTLE:
-				battleEditor.DrawWindow();
+			case State.MAPS:
+				mapEditor.DrawWindow();
 				break;
-			case State.CHARACTER:
+			case State.CHARACTERS:
 				characterEditor.DrawWindow();
 				break;
-			case State.ENEMY:
-				enemyEditor.DrawWindow();
+			case State.CLASSES:
+				classEditor.DrawWindow();
+				break;
+			case State.ITEMS:
+				itemEditor.DrawWindow();
+				break;
+			case State.SKILLS:
+				// skillEditor.DrawWindow();
 				break;
 			case State.BACKGROUND:
 				backgroundEditor.DrawWindow();
 				break;
-			case State.ITEMEQUIP:
-				itemEditor.DrawWindow();
+			case State.PORTRAITS:
+				portraitEditor.DrawWindow();
 				break;
 		}
 	}
@@ -93,11 +108,13 @@ public class LibraryEditorWindow : EditorWindow {
 	/// Loads all the libraries for the editors.
 	/// </summary>
 	void LoadLibraries() {
-		battleEditor = new BattleEditorWindow(battleLibrary, battleContainer);
-		characterEditor = new CharacterEditorWindow(characterLibrary, charContainer, poseList);
-		enemyEditor = new EnemyEditorWindow(enemyLibrary, enemyContainer);
-		backgroundEditor = new BackgroundEditorWindow(backgroundLibrary, backgroundContainer);
+		mapEditor = new MapEditorWindow(mapLibrary, mapContainer);
+		characterEditor = new CharacterEditorWindow(characterLibrary, characterContainer);
+		classEditor = new ClassEditorWindow(classLibrary, classContainer);
 		itemEditor = new ItemEditorWindow(itemLibrary, itemContainer);
+		// skillEditor = new ItemEditorWindow(itemLibrary, skillContainer);
+		backgroundEditor = new BackgroundEditorWindow(backgroundLibrary, backgroundContainer);
+		portraitEditor = new PortraitEditorWindow(portraitLibrary, portraitContainer, poseList);
 
 		InitializeWindow();
 	}
@@ -109,12 +126,19 @@ public class LibraryEditorWindow : EditorWindow {
 		headerTex = new Texture2D(1, 1);
 		headerTex.SetPixel(0, 0, new Color(0.5f, 0.2f, 0.8f));
 		headerTex.Apply();
+		
+		// divider style
+		horizontalLine = new GUIStyle();
+		horizontalLine.normal.background = EditorGUIUtility.whiteTexture;
+		horizontalLine.margin = new RectOffset( 0, 0, 4, 4 );
+		horizontalLine.fixedHeight = 1;
 
-		battleEditor.InitializeWindow();
+		mapEditor.InitializeWindow();
 		characterEditor.InitializeWindow();
-		enemyEditor.InitializeWindow();
-		backgroundEditor.InitializeWindow();
+		classEditor.InitializeWindow();
 		itemEditor.InitializeWindow();
+		backgroundEditor.InitializeWindow();
+		portraitEditor.InitializeWindow();
 	}
 
 	/// <summary>
@@ -128,5 +152,13 @@ public class LibraryEditorWindow : EditorWindow {
 		GUI.DrawTexture(headerRect, headerTex);
 
 		currentWindow.value = GUILayout.Toolbar(currentWindow.value, toolbarStrings);
+	}
+
+	// utility method for drawing lines
+	public static void HorizontalLine ( Color color ) {
+		var c = GUI.color;
+		GUI.color = color;
+		GUILayout.Box( GUIContent.none, horizontalLine );
+		GUI.color = c;
 	}
 }

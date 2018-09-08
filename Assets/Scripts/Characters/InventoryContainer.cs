@@ -14,10 +14,10 @@ public class InventoryContainer {
 		SetupValues(iLib, saveData);
 	}
 
-	public InventoryContainer(WeaponTuple[] presetInventory) {
+	public InventoryContainer(List<WeaponTuple> presetInventory) {
 		inventory = new InventoryTuple[INVENTORY_SIZE];
 		for (int i = 0; i < INVENTORY_SIZE; i++) {
-			if (i < presetInventory.Length && presetInventory[i].item != null) {
+			if (i < presetInventory.Count && presetInventory[i].item != null) {
 				inventory[i] = new InventoryTuple {
 					index = i,
 					item = presetInventory[i].item,

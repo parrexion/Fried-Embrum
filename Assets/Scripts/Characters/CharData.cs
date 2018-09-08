@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "LibraryEntries/CharData")]
-public class CharData : ScriptableObject {
-
-	public string id;
+public class CharData : ScrObjLibraryEntry {
 
 	[Header("Character Info")]
-	public string charName;
 	public Sprite bigPortrait;
 	public Sprite portrait;
 	public Sprite battleSprite;
@@ -28,14 +25,74 @@ public class CharData : ScriptableObject {
 	public int con;
 
 	[Header("Personal Growths")]
-	public float gHp;
-	public float gAtk;
-	public float gSkl;
-	public float gSpd;
-	public float gLck;
-	public float gDef;
-	public float gRes;
+	public int gHp;
+	public int gAtk;
+	public int gSkl;
+	public int gSpd;
+	public int gLck;
+	public int gDef;
+	public int gRes;
 
 	[Header("Other Data")]
 	public bool mustSurvive;
+
+	
+	public override void ResetValues() {
+		base.ResetValues();
+
+		bigPortrait = null;
+		portrait = null;
+		battleSprite = null;
+		charClass = null;
+
+		personalSkill = null;
+
+		hp = 0;
+		atk = 0;
+		skl = 0;
+		spd = 0;
+		lck = 0;
+		def = 0;
+		res = 0;
+
+		gHp = 0;
+		gAtk = 0;
+		gSkl = 0;
+		gSpd = 0;
+		gLck = 0;
+		gDef = 0;
+		gRes = 0;
+
+		mustSurvive = false;
+	}
+	
+	public override void CopyValues(ScrObjLibraryEntry other) {
+		base.CopyValues(other);
+		CharData cd = (CharData)other;
+
+		bigPortrait = cd.bigPortrait;
+		portrait = cd.portrait;
+		battleSprite = cd.battleSprite;
+		charClass = cd.charClass;
+
+		personalSkill = cd.personalSkill;
+
+		hp = cd.hp;
+		atk = cd.atk;
+		skl = cd.skl;
+		spd = cd.spd;
+		lck = cd.lck;
+		def = cd.def;
+		res = cd.res;
+
+		gHp = cd.gHp;
+		gAtk = cd.gAtk;
+		gSkl = cd.gSkl;
+		gSpd = cd.gSpd;
+		gLck = cd.gLck;
+		gDef = cd.gDef;
+		gRes = cd.gRes;
+
+		mustSurvive = cd.mustSurvive;
+	}
 }

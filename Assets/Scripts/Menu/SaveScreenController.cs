@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class SaveScreenController : InputReceiver {
 
-	public MapInfoVariable currentMap;
+	public ScrObjEntryReference currentMap;
 	public SaveFileController saveFileController;
 	public MapInfoListVariable chapterList;
 	public IntVariable chapterIndex;

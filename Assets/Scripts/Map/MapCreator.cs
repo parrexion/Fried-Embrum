@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class MapCreator : MonoBehaviour {
 
-	public MapInfoVariable mapInfo;
+	public ScrObjEntryReference currentMap;
 	public BoxCollider2D cameraBox;
 	public MapCursor mapClicker;
 
@@ -32,23 +32,24 @@ public class MapCreator : MonoBehaviour {
 	public UnityEvent playBkgMusicEvent;
 
 	[HideInInspector] public MapTile[] tiles;
-
 	
-	//Map Info
+	[Header("Terrain Tiles")]
+	public TerrainTile tileNormal;
+	public TerrainTile tileForest;
+	public TerrainTile tileMountain;
+	public TerrainTile tileBridge;
+	public TerrainTile tileLedge;
+	public TerrainTile tileHouse;
+	public TerrainTile tileFort;
+	public TerrainTile tileRiver;
+	public TerrainTile tileBreakable;
+	public TerrainTile tileWall;
+	public TerrainTile tileThrone;
+	public TerrainTile tilePillar;
+
+	//Map size
 	private int _sizeX;
 	private int _sizeY;
-	private TerrainTile _tNormal;
-	private TerrainTile _tForest;
-	private TerrainTile _tMountain;
-	private TerrainTile _tBridge;
-	private TerrainTile _tLedge;
-	private TerrainTile _tHouse;
-	private TerrainTile _tFort;
-	private TerrainTile _tRiver;
-	private TerrainTile _tBreakable;
-	private TerrainTile _tWall;
-	private TerrainTile _tThrone;
-	private TerrainTile _tPillar;
 
 
 	private void Start() {
@@ -56,26 +57,14 @@ public class MapCreator : MonoBehaviour {
 	}
 
 	public void CreateMap() {
-		_sizeX = mapInfo.value.sizeX;
-		_sizeY = mapInfo.value.sizeY;
-		
-		_tNormal = mapInfo.value.normal;
-		_tForest = mapInfo.value.forest;
-		_tRiver = mapInfo.value.river;
-		_tMountain = mapInfo.value.mountain;
-		_tBridge = mapInfo.value.bridge;
-		_tLedge = mapInfo.value.ledge;
-		_tFort = mapInfo.value.fort;
-		_tWall = mapInfo.value.wall;
-		_tBreakable = mapInfo.value.breakable;
-		_tHouse = mapInfo.value.house;
-		_tThrone = mapInfo.value.throne;
-		_tPillar = mapInfo.value.pillar;
+		MapEntry map = (MapEntry)currentMap.value;
+		_sizeX = map.sizeX;
+		_sizeY = map.sizeY;
 		
 		cameraBox.size = new Vector2(_sizeX+1, _sizeY+1);
 		cameraBox.transform.position = new Vector3((_sizeX-1)/2.0f, (_sizeY-1)/2.0f, 0);
 		
-		GenerateMap(mapInfo.value.mapSprite);
+		GenerateMap(map.mapSprite);
 		cursorMoveEvent.Invoke();
 		SpawnCharacters();
 		SetupMusic();
@@ -221,10 +210,11 @@ public class MapCreator : MonoBehaviour {
 	}
 
 	private void SpawnCharacters() {
+		MapEntry map = (MapEntry)currentMap.value;
 		
 		//Players
-		for (int i = 0; i < mapInfo.value.spawnPoints.Length; i++) {
-			PlayerPosition pos = mapInfo.value.spawnPoints[i];
+		for (int i = 0; i < map.spawnPoints.Count; i++) {
+			PlayerPosition pos = map.spawnPoints[i];
 			StatsContainer stats;
 			InventoryContainer inventory;
 			SkillsContainer skills;
@@ -259,12 +249,12 @@ public class MapCreator : MonoBehaviour {
 			tactics.skills = skills;
 			tactics.Setup();
 		}
-		cursorX.value = mapInfo.value.spawnPoints[0].x;
-		cursorY.value = mapInfo.value.spawnPoints[0].y;
+		cursorX.value = map.spawnPoints[0].x;
+		cursorY.value = map.spawnPoints[0].y;
 		
 		//Enemies
-		for (int i = 0; i < mapInfo.value.enemies.Length; i++) {
-			EnemyPosition pos = mapInfo.value.enemies[i];
+		for (int i = 0; i < map.enemies.Count; i++) {
+			EnemyPosition pos = map.enemies[i];
 			Transform enemyTransform = Instantiate(enemyPrefab, enemyParent);
 			enemyTransform.position = new Vector3(pos.x, pos.y);
 
@@ -281,51 +271,52 @@ public class MapCreator : MonoBehaviour {
 	}
 
 	private TerrainTile GetTerrainFromPixel(Color32 pixelColor) {
-		TerrainTile terrain = _tNormal;
+		TerrainTile terrain = tileNormal;
 
 		if (pixelColor.r == 255 && pixelColor.g == 255 && pixelColor.b == 255) {
 			//Normal empty space
 		}
 		else if (pixelColor == new Color(0f,0f,0f,1f)) {
-			terrain = _tWall;
+			terrain = tileWall;
 		}
 		else if (pixelColor == new Color(0f,1f,0f,1f)) {
-			terrain = _tForest;
+			terrain = tileForest;
 		}
 		else if (pixelColor == new Color(0f,0f,1f,1f)) {
-			terrain = _tRiver;
+			terrain = tileRiver;
 		}
 		else if (pixelColor == new Color(1f,0f,0f,1f)) {
-			terrain = _tMountain;
+			terrain = tileMountain;
 		}
 		else if (pixelColor == new Color(1f,1f,0f,1f)) {
-			terrain = _tBridge;
+			terrain = tileBridge;
 		}
 		else if (pixelColor == new Color(1f,0f,1f,1f)) {
-			terrain = _tLedge;
+			terrain = tileLedge;
 		}
 		else if (pixelColor == new Color(0f,1f,1f,1f)) {
-			terrain = _tFort;
+			terrain = tileFort;
 		}
 		else if (pixelColor.r == 255 && pixelColor.g == 128 && pixelColor.b == 0) {
-			terrain = _tHouse;
+			terrain = tileHouse;
 		}
 		else if (pixelColor.r == 0 && pixelColor.g == 128 && pixelColor.b == 255) {
-			terrain = _tBreakable;
+			terrain = tileBreakable;
 		}
 		else if (pixelColor.r == 128 && pixelColor.g == 128 && pixelColor.b == 0) {
-			terrain = _tThrone;
+			terrain = tileThrone;
 		}
 		else if (pixelColor.r == 128 && pixelColor.g == 0 && pixelColor.b == 255) {
-			terrain = _tPillar;
+			terrain = tilePillar;
 		}
 
 		return terrain;
 	}
 
 	private void SetupMusic() {
+		MapEntry map = (MapEntry)currentMap.value;
 		musicFocus.value = true;
-		mainMusic.value = mapInfo.value.owMusic.clip;
+		mainMusic.value = map.owMusic.clip;
 		subMusic.value = null;
 		playBkgMusicEvent.Invoke();
 	}

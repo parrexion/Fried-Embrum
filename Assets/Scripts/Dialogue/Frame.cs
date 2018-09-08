@@ -4,12 +4,12 @@ using UnityEngine;
 [System.Serializable]
 public class Frame {
 	public BackgroundEntry background = null;
-	public CharacterEntry[] characters = new CharacterEntry[Constants.DIALOGUE_PLAYERS_COUNT];
+	public PortraitEntry[] characters = new PortraitEntry[Constants.DIALOGUE_PLAYERS_COUNT];
 	public int[] poses = new int[Constants.DIALOGUE_PLAYERS_COUNT];
 	public string talkingName = "";
 	public string dialogueText = "";
 	public int talkingIndex = -1;
-	public CharacterEntry talkingChar { get {
+	public PortraitEntry talkingChar { get {
 			if (talkingIndex == -1 || talkingIndex == 4)
 				return null;
 			return characters[talkingIndex];
@@ -25,7 +25,7 @@ public class Frame {
 
 	public void CopyValues(Frame other) {
 		background = other.background;
-		characters = new CharacterEntry[Constants.DIALOGUE_PLAYERS_COUNT];
+		characters = new PortraitEntry[Constants.DIALOGUE_PLAYERS_COUNT];
 		poses = new int[Constants.DIALOGUE_PLAYERS_COUNT];
 		for (int i = 0; i < Constants.DIALOGUE_PLAYERS_COUNT; i++) {
 			characters[i] = other.characters[i];

@@ -8,7 +8,6 @@ public class DialogueEntry : ScrObjLibraryEntry {
 	public List<Color> participantColors = new List<Color>();
 
 	public DialogueEntry dialogueEntry = null;
-	public BattleEntry battleEntry = null;
 	public bool changePosition = false;
 	public Vector2 playerPosition = new Vector2();
 
@@ -42,7 +41,6 @@ public class DialogueEntry : ScrObjLibraryEntry {
 		CreateBasicActions();
 
 		dialogueEntry = null;
-		battleEntry = null;
 		changePosition = false;
 		playerPosition = new Vector2();
 	}
@@ -55,7 +53,6 @@ public class DialogueEntry : ScrObjLibraryEntry {
 		participantColors = de.participantColors;
 
 		dialogueEntry = de.dialogueEntry;
-		battleEntry = de.battleEntry;
 		changePosition = de.changePosition;
 		playerPosition = de.playerPosition;
 		Debug.Log("COPY");

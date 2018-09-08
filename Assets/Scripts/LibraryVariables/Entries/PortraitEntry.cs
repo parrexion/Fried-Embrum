@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "LibraryEntries/Character")]
-public class CharacterEntry : ScrObjLibraryEntry {
+[CreateAssetMenu(menuName = "LibraryEntries/Portrait")]
+public class PortraitEntry : ScrObjLibraryEntry {
 
 	public Sprite[] poses;
 
@@ -15,7 +15,7 @@ public class CharacterEntry : ScrObjLibraryEntry {
 
 	public override void CopyValues(ScrObjLibraryEntry other) {
 		base.CopyValues(other);
-		CharacterEntry ce = (CharacterEntry)other;
+		PortraitEntry ce = (PortraitEntry)other;
 
 		poses = new Sprite[ce.poses.Length];
 		for (int i = 0; i < ce.poses.Length; i++) {

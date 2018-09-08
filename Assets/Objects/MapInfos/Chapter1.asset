@@ -8,31 +8,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ef43daa4e1338c44956284349be9656, type: 3}
+  m_Script: {fileID: 11500000, guid: 4424ecce59954d349b8dc1a5714d0991, type: 3}
   m_Name: Chapter1
   m_EditorClassIdentifier: 
-  mapName: Chapter 1 Map
+  uuid: map_Chapter1
+  entryName: Chapter 1
+  repColor: {r: 0, g: 0, b: 0, a: 0}
+  tag: 
   preDialogue: {fileID: 11400000, guid: 6035377f5a1c88543abe60b340e7b8fe, type: 2}
   postDialogue: {fileID: 11400000, guid: b0d7cdd69b548af4fa2330de5d2d01e0, type: 2}
-  nextLevel: {fileID: 11400000, guid: 0073f2801d7821540939edb1aff0f034, type: 2}
   owMusic: {fileID: 11400000, guid: c5d55a00157aa9d45904a928008f24d0, type: 2}
   battleMusic: {fileID: 11400000, guid: a157ae89a4b1e784cbe12bd1e184e2ea, type: 2}
   healMusic: {fileID: 11400000, guid: c9ab7f5c344f22c458bafeb1c2e29d45, type: 2}
   sizeX: 15
   sizeY: 10
   mapSprite: {fileID: 2800000, guid: a75e698ec45c3c24eb526e74823c0324, type: 3}
-  breakable: {fileID: 11400000, guid: 2b541f935d1e4734d925e12c22fdfcc4, type: 2}
-  bridge: {fileID: 11400000, guid: 806b62d3c535ca9429a095f192f52b54, type: 2}
-  forest: {fileID: 11400000, guid: 69f7db223f9dc364f9716d5363d1b9d7, type: 2}
-  fort: {fileID: 11400000, guid: 3719a2ba52b739b43b271f76900fb069, type: 2}
-  house: {fileID: 11400000, guid: b44d94aac358b4446a6300b9585d500c, type: 2}
-  ledge: {fileID: 11400000, guid: 84e439404530c8d4fb974096b3c6f3ca, type: 2}
-  mountain: {fileID: 11400000, guid: a7c26c3f90a0e284891015a9f612451e, type: 2}
-  normal: {fileID: 11400000, guid: 4b27fdea53660cf4784c5f4ac749c0b4, type: 2}
-  pillar: {fileID: 11400000, guid: 6561e1536dc732c4b834ff1a8b264aa1, type: 2}
-  river: {fileID: 11400000, guid: 0c85abdced740404f89c54a5a63e8fc3, type: 2}
-  throne: {fileID: 11400000, guid: 1cbeb701910bc234eaed418100608382, type: 2}
-  wall: {fileID: 11400000, guid: 2218d56ff5d6d0147b3897d1e93656e6, type: 2}
   spawnPoints:
   - x: 2
     y: 1
@@ -69,18 +59,36 @@ MonoBehaviour:
       droppable: 0
     skills: []
   enemies:
+  - x: 13
+    y: 8
+    level: 4
+    stats: {fileID: 11400000, guid: d97777127cd0d214aa49cb5f8201f6f9, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 44de95ac3ea804a4d805c36c1ac7039e, type: 2}
+      droppable: 0
+    skills: []
+    aggroType: 3
   - x: 4
     y: 3
     level: 1
     stats: {fileID: 11400000, guid: 3c62e59d0a22e10499d7722b228fdf6c, type: 2}
     inventory:
     - item: {fileID: 11400000, guid: 44de95ac3ea804a4d805c36c1ac7039e, type: 2}
-      droppable: 1
+      droppable: 0
     skills: []
     aggroType: 1
   - x: 9
     y: 0
     level: 1
+    stats: {fileID: 11400000, guid: 3c62e59d0a22e10499d7722b228fdf6c, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 44de95ac3ea804a4d805c36c1ac7039e, type: 2}
+      droppable: 0
+    skills: []
+    aggroType: 1
+  - x: 12
+    y: 8
+    level: 2
     stats: {fileID: 11400000, guid: 3c62e59d0a22e10499d7722b228fdf6c, type: 2}
     inventory:
     - item: {fileID: 11400000, guid: 44de95ac3ea804a4d805c36c1ac7039e, type: 2}
@@ -96,21 +104,3 @@ MonoBehaviour:
       droppable: 0
     skills: []
     aggroType: 0
-  - x: 12
-    y: 8
-    level: 2
-    stats: {fileID: 11400000, guid: 3c62e59d0a22e10499d7722b228fdf6c, type: 2}
-    inventory:
-    - item: {fileID: 11400000, guid: 44de95ac3ea804a4d805c36c1ac7039e, type: 2}
-      droppable: 0
-    skills: []
-    aggroType: 1
-  - x: 13
-    y: 8
-    level: 4
-    stats: {fileID: 11400000, guid: d97777127cd0d214aa49cb5f8201f6f9, type: 2}
-    inventory:
-    - item: {fileID: 11400000, guid: 44de95ac3ea804a4d805c36c1ac7039e, type: 2}
-      droppable: 0
-    skills: []
-    aggroType: 3

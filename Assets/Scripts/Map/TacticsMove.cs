@@ -69,7 +69,7 @@ public abstract class TacticsMove : MonoBehaviour {
 		stats.boosts.Clear();
 		ActivateSkills(Activation.PASSIVE, null);
 		stats.CalculateStats();
-		gameObject.name = stats.charData.charName;
+		gameObject.name = stats.charData.entryName;
 		currentHealth = stats.hp;
 		GetComponent<SpriteRenderer>().sprite = stats.charData.battleSprite;
 		currentTile = mapCreator.GetTile(posx, posy);

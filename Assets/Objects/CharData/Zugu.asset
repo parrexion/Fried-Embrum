@@ -11,8 +11,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffbd57f50cc07054281a2e1bd782da5f, type: 3}
   m_Name: Zugu
   m_EditorClassIdentifier: 
-  id: Zugu
-  charName: Zugu
+  uuid: Zugu
+  entryName: Zugu
+  repColor: {r: 1, g: 0, b: 0, a: 1}
+  tag: 
   bigPortrait: {fileID: 0}
   portrait: {fileID: 21300000, guid: cc85f58909cabad4da42b02ca91357d0, type: 3}
   battleSprite: {fileID: 21300000, guid: f291acc4f0a9d9a4f9f66b4fd3bea583, type: 3}
@@ -20,10 +22,10 @@ MonoBehaviour:
   personalSkill: {fileID: 0}
   hp: 0
   atk: 0
-  skl: 4
+  skl: 0
   spd: -1
-  lck: 1
-  def: 0
+  lck: 0
+  def: 1
   res: 0
   con: 0
   gHp: 0
@@ -34,8 +36,3 @@ MonoBehaviour:
   gDef: 0
   gRes: 0
   mustSurvive: 0
-  enemyQuotes:
-  - triggerCharacter: {fileID: 11400000, guid: ebe64c7e451dc494fbc8211be6f10d6a, type: 2}
-    line: {fileID: 11400000, guid: 33db8e46a6777d4428a0e88aa3456cbd, type: 2}
-  - triggerCharacter: {fileID: 0}
-    line: {fileID: 11400000, guid: 9e4f41a2bb7bdd74ca81ae688628f0f3, type: 2}
