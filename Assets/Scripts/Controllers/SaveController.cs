@@ -61,7 +61,7 @@ public class SaveController : MonoBehaviour {
 	private void Initialize() {
 		_savePath = Application.persistentDataPath+"/saveData2.xml";
 		_backupSavePath = Application.streamingAssetsPath+"/saveData2.xml";
-		saveIndex.value = 0;
+		saveIndex.value = -1;
 		PreLoad();
 		// EmptySave();
 	}
@@ -89,11 +89,7 @@ public class SaveController : MonoBehaviour {
 		Debug.Log("Successfully saved new save data!\n" + _savePath);
 	}
 
-	public void Save() {
-		// Update data
-		chapterIndex[saveIndex.value].value = currentChapterIndex.value;
-		playTimes[saveIndex.value].value = currentPlayTime.value;
-
+	public void Save(bool onlyOptions) {
 		// Options
 		saveFileData.musicVolume = musicVolume.value;
 		saveFileData.sfxVolume = sfxVolume.value;
@@ -101,18 +97,24 @@ public class SaveController : MonoBehaviour {
 		saveFileData.trueHit = trueHit.value;
 		saveFileData.autoEnd = autoEnd.value;
 
-		// Setup save data
-		SaveData data = new SaveData();
-		data.chapterIndex = chapterIndex[saveIndex.value].value;
-		data.playTime = playTimes[saveIndex.value].value;
-		for (int i = 0; i < availableUnits.stats.Count; i++) {
-			if (availableUnits.stats[i].charData == null)
-				continue;
-			CharacterSaveData c = new CharacterSaveData();
-			c.StoreData(availableUnits.stats[i], availableUnits.inventory[i], availableUnits.skills[i]);
-			data.characters.Add(c);
+		if (!onlyOptions) {
+			// Update data
+			chapterIndex[saveIndex.value].value = currentChapterIndex.value;
+			playTimes[saveIndex.value].value = currentPlayTime.value;
+
+			// Setup save data
+			SaveData data = new SaveData();
+			data.chapterIndex = chapterIndex[saveIndex.value].value;
+			data.playTime = playTimes[saveIndex.value].value;
+			for (int i = 0; i < availableUnits.stats.Count; i++) {
+				if (availableUnits.stats[i].charData == null)
+					continue;
+				CharacterSaveData c = new CharacterSaveData();
+				c.StoreData(availableUnits.stats[i], availableUnits.inventory[i], availableUnits.skills[i]);
+				data.characters.Add(c);
+			}
+			saveFileData.saveFiles[saveIndex.value] = data;
 		}
-		saveFileData.saveFiles[saveIndex.value] = data;
 		
 		//Write to file
 		XmlWriterSettings xmlWriterSettings = new XmlWriterSettings() { Indent = true };

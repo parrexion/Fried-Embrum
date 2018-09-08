@@ -38,7 +38,9 @@ public class OptionsController : MonoBehaviour {
 	/// Moves one screen to the left if possible.
 	/// </summary>
     public void MoveUp() {
-        optionIndex = Mathf.Max(0, optionIndex -1);
+        optionIndex--;
+		if (optionIndex < 0)
+			optionIndex = options.Length -1;
 		SetupOptions();
     }
 
@@ -46,7 +48,9 @@ public class OptionsController : MonoBehaviour {
 	/// Moves one screen to the right if possible.
 	/// </summary>
     public void MoveDown() {
-        optionIndex = Mathf.Min(options.Length -1, optionIndex + 1);
+        optionIndex++;
+		if (optionIndex >= options.Length)
+			optionIndex = 0;
 		SetupOptions();
     }
 
@@ -58,11 +62,12 @@ public class OptionsController : MonoBehaviour {
 			return false;
 
 		IntVariable option = (IntVariable)optionValues[optionIndex];
+		int before = option.value;
 		option.value = Mathf.Max(0, option.value - 10);
 
 		SetupOptions();
 		volumeChanged.Invoke();
-		return true;
+		return (option.value != before);
     }
 
 	/// <summary>
@@ -73,11 +78,12 @@ public class OptionsController : MonoBehaviour {
 			return false;
 
 		IntVariable option = (IntVariable)optionValues[optionIndex];
+		int before = option.value;
 		option.value = Mathf.Min(100, option.value + 10);
 
 		SetupOptions();
 		volumeChanged.Invoke();
-		return true;
+		return (option.value != before);
     }
 
 	/// <summary>

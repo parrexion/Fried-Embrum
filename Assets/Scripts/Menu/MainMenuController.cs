@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -9,6 +10,7 @@ public class MainMenuController : InputReceiver {
 	public GameObject startMenuObject;
 	public HowToPlayController howTo;
 	public SaveFileController saveFileController;
+	public OptionsController OptionsController;
 	public MapInfoListVariable chapterList;
 	
 	[Header("Current Data")]
@@ -20,6 +22,15 @@ public class MainMenuController : InputReceiver {
 	[Header("Menu")]
 	public Image[] menuButtons;
 
+	[Header("Music")]
+	public MusicEntry mainTheme;
+	public AudioVariable mainMusic;
+	public AudioVariable subMusic;
+	public BoolVariable musicFocus;
+	public UnityEvent playBkgMusicEvent;
+
+	public UnityEvent saveGameEvent;
+
 	private int state;
 	private int menuPosition;
 	private int buttonPosition;
@@ -30,6 +41,11 @@ public class MainMenuController : InputReceiver {
 		startMenuObject.SetActive(true);
 		saveFileController.HideMenu();
 		SetupMenuButtons();
+
+		musicFocus.value = true;
+		mainMusic.value = mainTheme.clip;
+		subMusic.value = null;
+		playBkgMusicEvent.Invoke();
 	}
 
 	public void ControlsClicked() {
@@ -42,6 +58,12 @@ public class MainMenuController : InputReceiver {
 		state = 2;
 		startMenuObject.SetActive(false);
 		saveFileController.ActivateMenu();
+	}
+
+	public void OptionsClicked() {
+		state = 4;
+		startMenuObject.SetActive(false);
+		OptionsController.UpdateState(true);
 	}
 
 	/// <summary>
@@ -76,6 +98,10 @@ public class MainMenuController : InputReceiver {
 			saveFileController.UpClicked();
 			menuMoveEvent.Invoke();
 		}
+		else if (state == 4) {
+			OptionsController.MoveUp();
+			menuMoveEvent.Invoke();
+		}
     }
 
     public override void OnDownArrow() {
@@ -90,24 +116,32 @@ public class MainMenuController : InputReceiver {
 			saveFileController.DownClicked();
 			menuMoveEvent.Invoke();
 		}
+		else if (state == 4) {
+			OptionsController.MoveDown();
+			menuMoveEvent.Invoke();
+		}
     }
 
     public override void OnLeftArrow() {
-		if (state != 1)
-			return;
-
-        bool res = howTo.MoveLeft();
-		if (res)
-			menuMoveEvent.Invoke();
+		if (state == 1) {
+			if (howTo.MoveLeft())
+				menuMoveEvent.Invoke();
+		}
+		else if (state == 4) {
+			if (OptionsController.MoveLeft())
+				menuMoveEvent.Invoke();
+		}
     }
 
     public override void OnRightArrow() {
-		if (state != 1)
-			return;
-
-        bool res = howTo.MoveRight();
-		if (res)
-			menuMoveEvent.Invoke();
+		if (state == 1) {
+			if (howTo.MoveRight())
+				menuMoveEvent.Invoke();
+		}
+		else if (state == 4) {
+			if (OptionsController.MoveRight())
+				menuMoveEvent.Invoke();
+		}
     }
 
     public override void OnOkButton() {
@@ -119,6 +153,9 @@ public class MainMenuController : InputReceiver {
 					break;
 				case 1:
 					LoadClicked();
+					break;
+				case 2:
+					OptionsClicked();
 					break;
 			}
 			menuAcceptEvent.Invoke();
@@ -137,7 +174,7 @@ public class MainMenuController : InputReceiver {
 		else if (state == 3) {
 			if (saveFileController.OkClicked()) {
 				menuAcceptEvent.Invoke();
-				state = 4;
+				state = -1;
 			}
 			else {
 				menuBackEvent.Invoke();
@@ -163,6 +200,13 @@ public class MainMenuController : InputReceiver {
 			state = 2;
 			saveFileController.BackClicked();
 			menuBackEvent.Invoke();
+		}
+		else if (state == 4) {
+			state = 0;
+			OptionsController.BackClicked();
+			menuBackEvent.Invoke();
+			startMenuObject.SetActive(true);
+			saveGameEvent.Invoke();
 		}
 	}
 

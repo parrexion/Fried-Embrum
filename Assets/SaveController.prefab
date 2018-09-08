@@ -20,8 +20,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4575758833937932}
   - component: {fileID: 114229465209009738}
-  - component: {fileID: 114095220548718822}
   - component: {fileID: 114932910106586066}
+  - component: {fileID: 114095220548718822}
+  - component: {fileID: 114301300023292630}
   m_Layer: 0
   m_Name: SaveController
   m_TagString: Untagged
@@ -59,7 +60,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 114229465209009738}
         m_MethodName: Save
-        m_Mode: 1
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -117,6 +118,34 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+--- !u!114 &114301300023292630
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1697261231692124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14602ab6441821f43883d0b13d4f57c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  evnt: {fileID: 11400000, guid: 2dcd71b201b108a43afab11b4ba2e999, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114229465209009738}
+        m_MethodName: Save
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
