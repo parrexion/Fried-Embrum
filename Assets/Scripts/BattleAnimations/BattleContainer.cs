@@ -79,35 +79,51 @@ public class BattleContainer : MonoBehaviour {
 	private bool _defenderDealtDamage;
 
 
-	public void GenerateActions(TacticsMove attacker, TacticsMove defender) {
-		// Add battle init boosts
-		attacker.ActivateSkills(Activation.INITCOMBAT, defender);
-		attacker.ActivateSkills(Activation.PRECOMBAT, defender);
-		defender.ActivateSkills(Activation.PRECOMBAT, attacker);
-		
-		_currentCharacter = attacker;
-		actions.Clear();
-		actions.Add(new BattleAction(true, true, attacker, defender));
-		int range = Mathf.Abs(attacker.posx - defender.posx) + Mathf.Abs(attacker.posy - defender.posy);
-		if (defender.GetEquippedWeapon(ItemCategory.WEAPON) != null && defender.GetEquippedWeapon(ItemCategory.WEAPON).InRange(range)) {
-			actions.Add(new BattleAction(false, true, defender, attacker));
+	public void GenerateActions(TacticsMove attacker, MapTile target) {
+		if (target.currentCharacter == null) {
+			_currentCharacter = attacker;
+			actions.Clear();
+			actions.Add(new BattleAction(true, true, attacker, target.blockMove));
+			Debug.Log("BLOCK FIGHT!!");
 		}
-		//Compare speeds
-		int spdDiff = actions[0].GetSpeedDifference();
-		if (spdDiff >= doublingSpeed.value) {
+		else {
+			TacticsMove defender = target.currentCharacter;
+
+			// Add battle init boosts
+			attacker.ActivateSkills(Activation.INITCOMBAT, defender);
+			attacker.ActivateSkills(Activation.PRECOMBAT, defender);
+			defender.ActivateSkills(Activation.PRECOMBAT, attacker);
+			
+			_currentCharacter = attacker;
+			actions.Clear();
 			actions.Add(new BattleAction(true, true, attacker, defender));
-		}
-		else if (spdDiff <= - doublingSpeed.value) {
+			int range = Mathf.Abs(attacker.posx - defender.posx) + Mathf.Abs(attacker.posy - defender.posy);
 			if (defender.GetEquippedWeapon(ItemCategory.WEAPON) != null && defender.GetEquippedWeapon(ItemCategory.WEAPON).InRange(range)) {
 				actions.Add(new BattleAction(false, true, defender, attacker));
+			}
+			//Compare speeds
+			int spdDiff = actions[0].GetSpeedDifference();
+			if (spdDiff >= doublingSpeed.value) {
+				actions.Add(new BattleAction(true, true, attacker, defender));
+			}
+			else if (spdDiff <= - doublingSpeed.value) {
+				if (defender.GetEquippedWeapon(ItemCategory.WEAPON) != null && defender.GetEquippedWeapon(ItemCategory.WEAPON).InRange(range)) {
+					actions.Add(new BattleAction(false, true, defender, attacker));
+				}
 			}
 		}
 	}
 
-	public void GenerateHealAction(TacticsMove attacker, TacticsMove defender) {
-		_currentCharacter = attacker;
-		actions.Clear();
-		actions.Add(new BattleAction(true, false, attacker, defender));
+	public void GenerateHealAction(TacticsMove attacker, MapTile target) {
+		if (target.currentCharacter == null) {
+
+		}
+		else {
+			TacticsMove defender = target.currentCharacter;
+			_currentCharacter = attacker;
+			actions.Clear();
+			actions.Add(new BattleAction(true, false, attacker, defender));
+		}
 	}
 
 	public void PlayBattleAnimations() {
@@ -133,7 +149,10 @@ public class BattleContainer : MonoBehaviour {
 	}
 
 	private IEnumerator ActionLoop() {
-		
+		bool useAnim = useBattleAnimations.value;
+		if (actions[0].defender.faction == Faction.WORLD) {
+			useAnim = false;
+		}
 		for (int i = 0; i < actions.Count; i++) {
 			BattleAction act = actions[i];
 			if (act.isDamage && act.attacker.GetFirstUsableInventoryTuple(ItemCategory.WEAPON).charge <= 0) {
@@ -143,16 +162,16 @@ public class BattleContainer : MonoBehaviour {
 				continue; //Broken staff
 			}
 			
-			Transform attackTransform = (!useBattleAnimations.value) ? act.attacker.transform : (act.leftSide) ? leftTransform : rightTransform;
-			Transform defenseTransform = (!useBattleAnimations.value) ? act.defender.transform : (act.leftSide) ? rightTransform : leftTransform;
-			Vector3 startPos = attackTransform.localPosition;
-			Vector3 enemyPos = defenseTransform.localPosition;
+			Transform attackTransform = (!useAnim) ? act.attacker.transform : (act.leftSide) ? leftTransform : rightTransform;
+			Transform defenseTransform = (!useAnim) ? act.defender.transform : (act.leftSide) ? rightTransform : leftTransform;
+			Vector3 startPos = attackTransform.position;
+			Vector3 enemyPos = defenseTransform.position;
 			enemyPos = startPos + (enemyPos - startPos).normalized;
 			
-			battleAnimationObject.SetActive(useBattleAnimations.value);
-			// uiCanvas.SetActive(!useBattleAnimations.value);
+			battleAnimationObject.SetActive(useAnim);
+			// uiCanvas.SetActive(!useAnim.value);
 			forecastUI.UpdateUI(true);
-			if (useBattleAnimations.value) {
+			if (useAnim) {
 				leftHealth.fillAmount = actions[0].attacker.GetHealthPercent();
 				rightHealth.fillAmount = actions[0].defender.GetHealthPercent();
 			}
@@ -164,7 +183,7 @@ public class BattleContainer : MonoBehaviour {
 			// Debug.Log("Start moving");
 			while(f < 0.5f) {
 				f += Time.deltaTime * speed;
-				attackTransform.localPosition = Vector3.Lerp(startPos, enemyPos, f);
+				attackTransform.position = Vector3.Lerp(startPos, enemyPos, f);
 				yield return null;
 			}
 			// Deal damage
@@ -232,7 +251,7 @@ public class BattleContainer : MonoBehaviour {
 			// Debug.Log("Moving back");
 			while(f > 0f) {
 				f -= Time.deltaTime * speed;
-				attackTransform.localPosition = Vector3.Lerp(startPos, enemyPos, f);
+				attackTransform.position = Vector3.Lerp(startPos, enemyPos, f);
 				yield return null;
 			}
 
@@ -306,7 +325,7 @@ public class BattleContainer : MonoBehaviour {
 	private IEnumerator ShowExpGain() {
 		TacticsMove player = null;
 		for (int i = 0; i < actions.Count; i++) {
-			if (actions[i].attacker.faction == Faction.PLAYER) {
+			if (actions[i].attacker.faction == Faction.PLAYER && actions[i].defender.faction != Faction.WORLD) {
 				if ((actions[i].leftSide && _attackerDealtDamage) || (!actions[i].leftSide && _defenderDealtDamage)) {
 					player = actions[i].attacker;
 					break;

@@ -10,7 +10,7 @@ public class ForecastUI : MonoBehaviour {
 	public bool inBattle;
 	public TacticsMoveVariable selectCharacter;
 	public MapTileVariable walkTile;
-	public TacticsMoveVariable defendCharacter;
+	public MapTileVariable defendCharacter;
 	public ActionModeVariable currentMode;
 	public IntVariable doublingSpeed;
 
@@ -84,43 +84,78 @@ public class ForecastUI : MonoBehaviour {
 		eHpText.text = _defenderTactics.currentHealth.ToString();
 	}
 
-	private void CalculateShowForecast(TacticsMove attacker, TacticsMove defender) {
-		bool attackmode = (currentMode.value == ActionMode.ATTACK);
-		BattleAction act1 = new BattleAction(true, attackmode, attacker, defender);
-		_attackerTactics = attacker;
-		_defenderTactics = defender;
-		act1.weaponAtk = attacker.inventory.GetItem(battleWeaponIndex.value);
+	private void CalculateShowForecast(TacticsMove attacker, MapTile target) {
+		if (target.currentCharacter == null) {
+			TacticsMove defender = target.blockMove;
+			bool attackmode = (currentMode.value == ActionMode.ATTACK);
+			BattleAction act1 = new BattleAction(true, attackmode, attacker, defender);
+			_attackerTactics = attacker;
+			_defenderTactics = defender;
+			act1.weaponAtk = attacker.inventory.GetItem(battleWeaponIndex.value);
 
-		if (attackmode) {
-			if (inBattle)
-				backgroundInBattle.SetActive(true);
+			if (attackmode) {
+				if (inBattle)
+					backgroundInBattle.SetActive(true);
 
-			BattleAction act2 = new BattleAction(false, true, defender, attacker);
-			act2.weaponDef = attacker.inventory.GetItem(battleWeaponIndex.value);
-			int distance = MapCreator.DistanceTo(defender, walkTile.value);
-			int atk = (act1.weaponAtk.item.InRange(distance)) ? act1.GetDamage() : -1;
-			int ret = (act1.DefenderInRange(distance)) ? act2.GetDamage() : -1;
-			int spd = act1.GetSpeedDifference();
-			int hit = (atk != -1) ? act1.GetHitRate() : -1;
-			int hit2 = (ret != -1) ? act2.GetHitRate() : -1;
-			int crit = (atk != -1) ? act1.GetCritRate() : -1;
-			int crit2 = (ret != -1) ? act2.GetCritRate() : -1;
-			bool atkWeak = act1.CheckWeaponWeakness();
-			bool defWeak = act2.CheckWeaponWeakness();
-			int atkAdv = act1.GetAdvantage();
-			int defAdv = act2.GetAdvantage();
-			ShowAttackerStats(attacker, act1.weaponAtk, atk, spd, hit, crit, atkAdv, atkWeak);
-			ShowDefenderStats(defender, act2.weaponAtk, ret, spd, hit2, crit2, defAdv, defWeak);
-			if (!inBattle) {
-				backgroundFight.SetActive(true);
-				backgroundHeal.SetActive(false);
+				int distance = MapCreator.DistanceTo(defender, walkTile.value);
+				int atk = (act1.weaponAtk.item.InRange(distance)) ? act1.GetDamage() : -1;
+				int ret = -1;
+				int spd = 0;
+				int hit = (atk != -1) ? act1.GetHitRate() : -1;
+				int hit2 = -1;
+				int crit = -1;
+				int crit2 = -1;
+				bool atkWeak = false;
+				bool defWeak = false;
+				int atkAdv = 0;
+				int defAdv = 0;
+				ShowAttackerStats(attacker, act1.weaponAtk, atk, spd, hit, crit, atkAdv, atkWeak);
+				ShowDefenderStats(defender, null, ret, spd, hit2, crit2, defAdv, defWeak);
+				if (!inBattle) {
+					backgroundFight.SetActive(true);
+					backgroundHeal.SetActive(false);
+				}
 			}
 		}
 		else {
-			ShowHealForecast(attacker, defender, act1.weaponAtk);
-			if (!inBattle) {
-				backgroundFight.SetActive(false);
-				backgroundHeal.SetActive(true);
+			TacticsMove defender = target.currentCharacter;
+			bool attackmode = (currentMode.value == ActionMode.ATTACK);
+			BattleAction act1 = new BattleAction(true, attackmode, attacker, defender);
+			_attackerTactics = attacker;
+			_defenderTactics = defender;
+			act1.weaponAtk = attacker.inventory.GetItem(battleWeaponIndex.value);
+
+			if (attackmode) {
+				if (inBattle)
+					backgroundInBattle.SetActive(true);
+
+				BattleAction act2 = new BattleAction(false, true, defender, attacker);
+				act2.weaponDef = attacker.inventory.GetItem(battleWeaponIndex.value);
+				int distance = MapCreator.DistanceTo(defender, walkTile.value);
+				int atk = (act1.weaponAtk.item.InRange(distance)) ? act1.GetDamage() : -1;
+				int ret = (act1.DefenderInRange(distance)) ? act2.GetDamage() : -1;
+				int spd = act1.GetSpeedDifference();
+				int hit = (atk != -1) ? act1.GetHitRate() : -1;
+				int hit2 = (ret != -1) ? act2.GetHitRate() : -1;
+				int crit = (atk != -1) ? act1.GetCritRate() : -1;
+				int crit2 = (ret != -1) ? act2.GetCritRate() : -1;
+				bool atkWeak = act1.CheckWeaponWeakness();
+				bool defWeak = act2.CheckWeaponWeakness();
+				int atkAdv = act1.GetAdvantage();
+				int defAdv = act2.GetAdvantage();
+				ShowAttackerStats(attacker, act1.weaponAtk, atk, spd, hit, crit, atkAdv, atkWeak);
+				ShowDefenderStats(defender, act2.weaponAtk, ret, spd, hit2, crit2, defAdv, defWeak);
+				if (!inBattle) {
+					backgroundFight.SetActive(true);
+					backgroundHeal.SetActive(false);
+				}
+			}
+			else {
+				ShowHealForecast(attacker, defender, act1.weaponAtk);
+				if (!inBattle) {
+					backgroundFight.SetActive(false);
+					backgroundHeal.SetActive(true);
+				}
 			}
 		}
 	}
@@ -141,8 +176,8 @@ public class ForecastUI : MonoBehaviour {
 		dmgText.text = (damage != -1) ? damage.ToString() : "--";
 		dmgText.color = (damage != -1 && defWeak) ? Color.green : Color.black;
 		doubleDamage.SetActive(speed >= doublingSpeed.value);
-		hitText.text = hit.ToString();
-		critText.text = crit.ToString();
+		hitText.text = (hit != -1) ? hit.ToString() : "--";
+		critText.text = (crit != -1) ? crit.ToString() : "--";
 	}
 	
 	private void ShowDefenderStats(TacticsMove tactics, InventoryTuple invTup, int damage, int speed, int hit, int crit, int defAdv, bool atkWeak) {
@@ -161,8 +196,8 @@ public class ForecastUI : MonoBehaviour {
 		eDmgText.text = (damage != -1) ? damage.ToString() : "--";
 		eDmgText.color = (damage != -1 && atkWeak) ? Color.green : Color.black;
 		eDoubleDamage.SetActive(speed <= - doublingSpeed.value);
-		eHitText.text = hit.ToString();
-		eCritText.text = crit.ToString();
+		eHitText.text = (hit != -1) ? hit.ToString() : "--";
+		eCritText.text = (crit != -1) ? crit.ToString() : "--";
 	}
 	
 	private void ShowHealForecast(TacticsMove healer, TacticsMove receiver, InventoryTuple staff) {

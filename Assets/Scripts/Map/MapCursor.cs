@@ -13,7 +13,7 @@ public class MapCursor : MonoBehaviour {
 	private MapTile startTile;
 	public MapTileVariable moveTile;
 	public TacticsMoveVariable selectTarget;
-	public TacticsMoveVariable target;
+	public MapTileVariable target;
 	public CharacterListVariable enemyCharacters;
 
 	[Header("Cursor")]
@@ -92,6 +92,9 @@ public class MapCursor : MonoBehaviour {
 		selectTarget.value = tile.currentCharacter;
 		if (selectTarget.value != null && (alwaysShowMovement.value || !selectTarget.value.hasMoved)) {
 			selectTarget.value.FindAllMoveTiles(false);
+		}
+		else if (selectTarget.value == null && tile.blockMove.IsAlive()) {
+			selectTarget.value = tile.blockMove;
 		}
 		else {
 			mapCreator.ResetMap();

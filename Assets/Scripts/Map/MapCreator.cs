@@ -13,6 +13,7 @@ public class MapCreator : MonoBehaviour {
 	public IntVariable cursorY;
 	
 	public Transform tilePrefab;
+	public Transform blockTilePrefab;
 	
 	[Header("Characters")]
 	public Transform enemyParent;
@@ -32,6 +33,7 @@ public class MapCreator : MonoBehaviour {
 	public UnityEvent playBkgMusicEvent;
 
 	[HideInInspector] public MapTile[] tiles;
+	[HideInInspector] public List<MapTile> breakables = new List<MapTile>();
 	
 	[Header("Terrain Tiles")]
 	public TerrainTile tileNormal;
@@ -160,38 +162,21 @@ public class MapCreator : MonoBehaviour {
 		}
 	}
 
-
-	// public void GenerateLinks() {
-	// 	Debug.Log("Generate maP!");
-
-	// 	tiles = new MapTile[_sizeX * _sizeY];
-	// 	MapTile[] objects = GetComponentsInChildren<MapTile>();
-	// 	for (int i = 0; i < objects.Length; i++) {
-	// 		MapTile t = objects[i];
-	// 		t.mapCreator = this;
-	// 		t.posx = (int)t.transform.position.x;
-	// 		t.posy = (int)t.transform.position.y;
-	// 		t.Reset();
-	// 		tiles[TilePosition(t.posx, t.posy)] = t;
-	// 	}
-	// }
-
-	// public void RemoveOldMap() {
-	// 	for (int i = 0; i < tiles.Length; i++) {
-	// 		DestroyImmediate(tiles[i].gameObject);
-	// 	}
-	// 	tiles = new MapTile[0];
-	// 	Debug.Log("Removed old map.");
-	// }
-	
+	/// <summary>
+	/// Takes a texture representing the map and generates tiles from the pixels' color values.
+	/// </summary>
+	/// <param name="texMap"></param>
 	public void GenerateMap(Texture2D texMap) {
+		MapEntry map = (MapEntry)currentMap.value;
 		Color32[] colorData = texMap.GetPixels32();
 		int pos = 0;
 		List<MapTile> mappus = new List<MapTile>();
+		breakables.Clear();
 		
 		for (int j = 0; j < _sizeY; j++) {
 			for (int i = 0; i < _sizeX; i++) {
-				Transform tile = Instantiate(tilePrefab);
+				InteractPosition interPos = GetInteractable(map, i, j);
+				Transform tile = (interPos == null)? Instantiate(tilePrefab) : Instantiate(blockTilePrefab);
 				tile.position = new Vector3(i,j,0);
 				tile.parent = transform;
 
@@ -199,14 +184,44 @@ public class MapCreator : MonoBehaviour {
 				tempTile.mapCreator = this;
 				tempTile.posx = i;
 				tempTile.posy = j;
-				tempTile.SetTerrain(GetTerrainFromPixel(colorData[pos]));
+				if (interPos == null) {
+					tempTile.SetTerrain(GetTerrainFromPixel(colorData[pos]));
+				}
+				else {
+					tempTile.SetTerrain(tileBreakable);
+					tempTile.alternativeTerrain = GetTerrainFromPixel(colorData[pos]);
+					breakables.Add(tempTile);
+				}
 				mappus.Add(tempTile);
+
+				if (interPos != null) {
+					BlockMove block = tempTile.GetComponent<BlockMove>();
+					block.currentTile = tempTile;
+					block.stats.hp = interPos.health;
+					block.currentHealth = interPos.health;
+				}
 				pos++;
 			}
 		}
 
 		tiles = mappus.ToArray();
 		Debug.Log("Data read");
+	}
+
+	/// <summary>
+	/// Checks the list of interactables and returns the one at the given position 
+	/// or null if there is none.
+	/// </summary>
+	/// <param name="map"></param>
+	/// <param name="posx"></param>
+	/// <param name="posy"></param>
+	/// <returns></returns>
+	private InteractPosition GetInteractable(MapEntry map, int posx, int posy) {
+		for (int i = 0; i < map.interactions.Count; i++) {
+			if (map.interactions[i].x == posx && map.interactions[i].y == posy)
+				return map.interactions[i];
+		}
+		return null;
 	}
 
 	private void SpawnCharacters() {
@@ -268,7 +283,9 @@ public class MapCreator : MonoBehaviour {
 			((NPCMove)tactics).aggroType = pos.aggroType;
 			tactics.Setup();
 		}
+		
 	}
+	
 
 	private TerrainTile GetTerrainFromPixel(Color32 pixelColor) {
 		TerrainTile terrain = tileNormal;

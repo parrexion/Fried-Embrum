@@ -24,6 +24,9 @@ public class MapEntry : ScrObjLibraryEntry {
 	
 	[Header("Enemies")]
 	public List<EnemyPosition> enemies = new List<EnemyPosition>();
+	
+	[Header("Interactions")]
+	public List<InteractPosition> interactions = new List<InteractPosition>();
 
 
 	public override void ResetValues() {
@@ -41,6 +44,7 @@ public class MapEntry : ScrObjLibraryEntry {
 
 		spawnPoints = new List<PlayerPosition>();
 		enemies = new List<EnemyPosition>();
+		interactions = new List<InteractPosition>();
 	}
 
 	public override void CopyValues(ScrObjLibraryEntry other) {
@@ -65,6 +69,10 @@ public class MapEntry : ScrObjLibraryEntry {
 		enemies = new List<EnemyPosition>();
 		for (int i = 0; i < map.enemies.Count; i++){
 			enemies.Add(map.enemies[i]);
+		}
+		interactions = new List<InteractPosition>();
+		for (int i = 0; i < map.interactions.Count; i++){
+			interactions.Add(map.interactions[i]);
 		}
 	}
 }
@@ -95,4 +103,16 @@ public class EnemyPosition {
 	public List<WeaponTuple> inventory = new List<WeaponTuple>();
 	public CharacterSkill[] skills;
 	public AggroType aggroType;
+}
+
+public enum InteractType { NONE, BLOCK, DIALOGUE, VILLAGE }
+
+[System.Serializable]
+public class InteractPosition {
+	public int x;
+	public int y;
+	public InteractType interactType;
+	public int health;
+	public DialogueEntry dialogue;
+	public WeaponItem gift;
 }

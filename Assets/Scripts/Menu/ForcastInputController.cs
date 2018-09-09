@@ -7,7 +7,7 @@ public class ForcastInputController : InputReceiver {
 	public ForecastUI forecast;
 
 	public TacticsMoveVariable selectedCharacter;
-	public TacticsMoveVariable defendCharacter;
+	public MapTileVariable defendCharacter;
 	public IntVariable battleWeaponIndex;
 
 	private List<InventoryTuple> attackerWeapons;
@@ -51,10 +51,12 @@ public class ForcastInputController : InputReceiver {
 		if (!active)
 			return;
 
-		if (currentMenuMode.value == (int)MenuMode.ATTACK)
+		if (currentMenuMode.value == (int)MenuMode.ATTACK) {
 			selectedCharacter.value.Attack(defendCharacter.value);
-		else
+		}
+		else {
 			selectedCharacter.value.Heal(defendCharacter.value);
+		}
 		menuAcceptEvent.Invoke();
 	}
 

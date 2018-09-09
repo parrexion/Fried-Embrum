@@ -10,7 +10,6 @@ public class SimpleCharacterUI : MonoBehaviour {
 
 	[Header("References")]
 	public TacticsMoveVariable selectCharacter;
-	public TacticsMoveVariable targetCharacter;
 	public IntVariable inventoryIndex;
 	public IntVariable currentMenuMode;
 	
@@ -219,6 +218,35 @@ public class SimpleCharacterUI : MonoBehaviour {
 		}
 
 		UpdateSelection(tactics);
+	}
+	
+	public void ShowObjectStats(MapTile tile) {
+		StatsContainer stats = tile.blockMove.stats;
+//		colorBackground.color = (tactics.faction == Faction.PLAYER) ? 
+//			new Color(0.2f,0.2f,0.5f) : new Color(0.5f,0.2f,0.2f);
+		
+		characterName.text = stats.charData.entryName;
+		portrait.enabled = true;
+		portrait.sprite = stats.charData.portrait;
+		currentHpText.text = tile.blockMove.currentHealth + " / " + stats.hp;
+		healthBar.fillAmount = tile.blockMove.GetHealthPercent();
+		weakIcon1.sprite = null;
+		weakIcon1.enabled = false;
+
+		wpnIcon.sprite = null;
+		wpnName.text = "";
+
+		pwrText.text = "Hit:  --";
+		hitText.text = "Pwr:  --";
+		critText.text = "Crit:   --";
+		avoidText.text = "Avo:  --";
+
+		//Terrain
+		boostAvoid.enabled = false;
+		
+		statsObject.SetActive(false);
+		basicObject.SetActive(true);
+		inventoryObject.SetActive(false);
 	}
 
 	/// <summary>

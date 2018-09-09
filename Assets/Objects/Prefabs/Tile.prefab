@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4495043604141880}
   - component: {fileID: 212381448783165162}
   - component: {fileID: 114283638680834638}
+  - component: {fileID: 114791382339344342}
   m_Layer: 0
   m_Name: Tile
   m_TagString: Tile
@@ -97,6 +98,124 @@ MonoBehaviour:
   terrain: {fileID: 11400000, guid: 4b27fdea53660cf4784c5f4ac749c0b4, type: 2}
   distance: 1000
   parent: {fileID: 0}
+  interactType: 0
+  alternativeTerrain: {fileID: 0}
+  blockMove: {fileID: 114791382339344342}
+--- !u!114 &114791382339344342
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1450041700566152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caea4d97de1013d48ae64bba99e86d7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lockControls: {fileID: 0}
+  mapCreator: {fileID: 0}
+  targetTile: {fileID: 0}
+  playerList: {fileID: 0}
+  enemyList: {fileID: 0}
+  interactList: {fileID: 0}
+  battleWeaponIndex: {fileID: 0}
+  movementVelocity: {fileID: 0}
+  isMoving: 0
+  canUndoMove: 0
+  hasMoved: 0
+  posx: 0
+  posy: 0
+  currentTile: {fileID: 0}
+  faction: 0
+  stats:
+    charData: {fileID: 11400000, guid: 126ee22b66eeb934588d8aaaa5790d46, type: 2}
+    classData: {fileID: 0}
+    level: 0
+    currentExp: 0
+    wpnSkills: 
+    hp: 0
+    atk: 0
+    spd: 999
+    skl: 0
+    lck: 0
+    def: 0
+    res: 0
+    iHp: 0
+    iAtk: 0
+    iSpd: 0
+    iSkl: 0
+    iLck: 0
+    iDef: 0
+    iRes: 0
+    eHp: 0
+    eAtk: 0
+    eSpd: 0
+    eSkl: 0
+    eLck: 0
+    eDef: 0
+    eRes: 0
+    bHp: 0
+    bAtk: 0
+    bSpd: 0
+    bSkl: 0
+    bLck: 0
+    bDef: 0
+    bRes: 0
+    boosts: []
+  inventory:
+    inventory:
+    - index: 0
+      item: {fileID: 0}
+      charge: 0
+      droppable: 0
+    - index: 0
+      item: {fileID: 0}
+      charge: 0
+      droppable: 0
+    - index: 0
+      item: {fileID: 0}
+      charge: 0
+      droppable: 0
+    - index: 0
+      item: {fileID: 0}
+      charge: 0
+      droppable: 0
+    - index: 0
+      item: {fileID: 0}
+      charge: 0
+      droppable: 0
+  skills:
+    skills: []
+  currentHealth: 0
+  healthImage: {fileID: 0}
+  damageObject: {fileID: 0}
+  damageNumberBkg: {fileID: 0}
+  damageNumber: {fileID: 0}
+  critEffect: {fileID: 0}
+  boostObject: {fileID: 0}
+  debuffObject: {fileID: 0}
+  sfxQueue: {fileID: 0}
+  deathSfx: {fileID: 0}
+  characterClicked:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  cameraFollowEvent:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  waitEvent:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  playSfxEvent:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!212 &212381448783165162
 SpriteRenderer:
   m_ObjectHideFlags: 1

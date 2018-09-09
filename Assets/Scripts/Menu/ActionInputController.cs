@@ -8,7 +8,7 @@ public class ActionInputController : InputReceiver {
 	[Header("References")]
 	public TacticsMoveVariable selectedCharacter;
 	public ActionModeVariable currentActionMode;
-	public CharacterListVariable targetList;
+	public MapTileListVariable targetList;
 	public IntVariable inventoryIndex;
 
 	[Header("Unit Action Menu")]
@@ -74,7 +74,7 @@ public class ActionInputController : InputReceiver {
 		{
 			case 0: // ATTACK
 				// Debug.Log("Attack!");
-				targetList.values = selectedCharacter.value.GetEnemiesInRange();
+				targetList.values = selectedCharacter.value.GetAttackablesInRange();
 				currentMenuMode.value = (int)MenuMode.MAP;
 				currentActionMode.value = ActionMode.ATTACK;
 				StartCoroutine(MenuChangeDelay());

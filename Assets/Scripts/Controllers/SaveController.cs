@@ -61,7 +61,6 @@ public class SaveController : MonoBehaviour {
 	private void Initialize() {
 		_savePath = Application.persistentDataPath+"/saveData2.xml";
 		_backupSavePath = Application.streamingAssetsPath+"/saveData2.xml";
-		saveIndex.value = -1;
 		PreLoad();
 		// EmptySave();
 	}

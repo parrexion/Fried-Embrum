@@ -24,6 +24,7 @@ public class MapEditorWindow {
 	
 	private bool showPlayerStuff = false;
 	private bool showEnemyStuff = false;
+	private bool showInteractStuff = false;
 
 
 	public MapEditorWindow(ScrObjLibraryVariable entries, MapEntry container){
@@ -189,6 +190,18 @@ public class MapEditorWindow {
 
 		GUILayout.Space(10);
 
+		// Interactions 
+		GUILayout.BeginHorizontal();
+		GUILayout.Label("Interaction points", EditorStyles.boldLabel);
+		if (GUILayout.Button((showInteractStuff) ? "Hide" : "Show")) {
+			showInteractStuff = !showInteractStuff;
+		}
+		GUILayout.EndHorizontal();
+		if (showInteractStuff)
+			DrawInteractStuff();
+
+		GUILayout.Space(10);
+
 		GUILayout.EndScrollView();
 		GUILayout.EndArea();
 	}
@@ -201,7 +214,6 @@ public class MapEditorWindow {
 			GUILayout.Label("Position");
 			mapValues.spawnPoints[i].x = EditorGUILayout.IntField("X", mapValues.spawnPoints[i].x);
 			mapValues.spawnPoints[i].y = EditorGUILayout.IntField("Y", mapValues.spawnPoints[i].y);
-			//  = (ClassType)EditorGUILayout.EnumPopup("",itemValues.advantageType[i]);
 			if (GUILayout.Button("X", GUILayout.Width(50))) {
 				GUI.FocusControl(null);
 				mapValues.spawnPoints.RemoveAt(i);
@@ -295,6 +307,39 @@ public class MapEditorWindow {
 		}
 		if (GUILayout.Button("+")) {
 			mapValues.enemies.Add(new EnemyPosition());
+		}
+	}
+
+	private void DrawInteractStuff() {
+		GUILayout.Space(5);
+		for (int i = 0; i < mapValues.interactions.Count; i++) {
+			GUILayout.BeginHorizontal();
+			EditorGUIUtility.labelWidth = 70;
+			GUILayout.Label("Position");
+			mapValues.interactions[i].x = EditorGUILayout.IntField("X", mapValues.interactions[i].x);
+			mapValues.interactions[i].y = EditorGUILayout.IntField("Y", mapValues.interactions[i].y);
+			if (GUILayout.Button("X", GUILayout.Width(50))) {
+				GUI.FocusControl(null);
+				mapValues.interactions.RemoveAt(i);
+				i--;
+				continue;
+			}
+			EditorGUIUtility.labelWidth = 120;
+			GUILayout.EndHorizontal();
+
+			mapValues.interactions[i].interactType = (InteractType)EditorGUILayout.EnumPopup("Type", mapValues.interactions[i].interactType);
+
+			switch (mapValues.interactions[i].interactType)
+			{
+				case InteractType.BLOCK:
+					mapValues.interactions[i].health = EditorGUILayout.IntField("Health", mapValues.interactions[i].health);
+					break;
+			}
+
+			LibraryEditorWindow.HorizontalLine(Color.black);
+		}
+		if (GUILayout.Button("+")) {
+			mapValues.interactions.Add(new InteractPosition());
 		}
 	}
 	

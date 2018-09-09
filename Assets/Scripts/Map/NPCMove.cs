@@ -8,7 +8,7 @@ public class NPCMove : TacticsMove {
 
 	public ActionModeVariable currentMode;
 	public AggroType aggroType;
-	public MapTileVariable targetTile;
+	public MapTileVariable tempTargetTile;
 	public SpriteRenderer bossCrest;
 
 
@@ -40,16 +40,16 @@ public class NPCMove : TacticsMove {
 			FindBestTile(staff, out tileBestStf, out tileGoodStf);
 		}
 
-		targetTile.value = (tileBestWpn != null) ? tileBestWpn :
+		tempTargetTile.value = (tileBestWpn != null) ? tileBestWpn :
 					(tileBestStf != null) ? tileBestStf :
 					(tileGoodWpn != null) ? tileGoodWpn : tileGoodStf;
 
 		//Nowhere to move
-		if (targetTile.value == null) {
+		if (tempTargetTile.value == null) {
 			EndMovement();
 		}
 		else {
-			ShowMove(targetTile.value);
+			ShowMove(tempTargetTile.value);
 			StartMove();
 		}
 	}
@@ -128,26 +128,22 @@ public class NPCMove : TacticsMove {
 		mapCreator.ResetMap();
 
 		//Calculate range
-		bool range1 = false;
-		bool range2 = false; 
-		for (int w = 0; w < weapons.Count; w++) {
-			range1 = (weapons[w].item.InRange(1)) ? true : range1;
-			range2 = (weapons[w].item.InRange(2)) ? true : range2;
-		}
 
 		//Generate attack/support tiles
 		if (weapons[0].item.itemCategory == ItemCategory.WEAPON) {
+			WeaponRange reach = inventory.GetReach(ItemCategory.WEAPON);
 			for (int i = 0; i < playerList.values.Count; i++) {
-				((PlayerMove)playerList.values[i]).ShowAttackTiles(range1, range2);
+				((PlayerMove)playerList.values[i]).ShowAttackTiles(reach);
 			}
 		}
 		else {
+			WeaponRange reach = inventory.GetReach(ItemCategory.STAFF);
 			for (int i = 0; i < enemyList.values.Count; i++) {
 				if (this == enemyList.values[i])
 					continue;
 				bool isBuff = (weapons[0].item.itemType == ItemType.BUFF);
 				if (isBuff || enemyList.values[i].IsInjured())
-					((NPCMove)enemyList.values[i]).ShowSupportTiles(range1, range2);
+					((NPCMove)enemyList.values[i]).ShowSupportTiles(reach);
 			}
 		}
 	}
@@ -208,16 +204,16 @@ public class NPCMove : TacticsMove {
 			return false;
 
 		if (currentMode.value == ActionMode.ATTACK) {
-			targetCharacter.value = FindRandomTarget(playerList, ItemCategory.WEAPON, false);
-			int distance = MapCreator.DistanceTo(this, targetCharacter.value);
+			base.targetTile.value = FindRandomTarget(playerList, ItemCategory.WEAPON, false);
+			int distance = MapCreator.DistanceTo(this, base.targetTile.value);
 			inventory.EquipFirstInRangeItem(ItemCategory.WEAPON, stats, distance);
-			Attack(targetCharacter.value);
+            Attack(base.targetTile.value);
 		}
 		else {
-			targetCharacter.value = FindRandomTarget(enemyList, ItemCategory.STAFF, true);
-			int distance = MapCreator.DistanceTo(this, targetCharacter.value);
+			base.targetTile.value = FindRandomTarget(enemyList, ItemCategory.STAFF, true);
+			int distance = MapCreator.DistanceTo(this, base.targetTile.value);
 			inventory.EquipFirstInRangeItem(ItemCategory.STAFF, stats, distance);
-			Heal(targetCharacter.value);
+            Heal(base.targetTile.value);
 		}
 		return true;
 	}
@@ -229,8 +225,8 @@ public class NPCMove : TacticsMove {
 	/// <param name="category"></param>
 	/// <param name="checkInjured"></param>
 	/// <returns></returns>
-	private TacticsMove FindRandomTarget(CharacterListVariable list, ItemCategory category, bool checkInjured) {
-		List<TacticsMove> hits = new List<TacticsMove>();
+	private MapTile FindRandomTarget(CharacterListVariable list, ItemCategory category, bool checkInjured) {
+		List<MapTile> hits = new List<MapTile>();
 		WeaponRange range = inventory.GetReach(category);
 
 		for (int i = 0; i < list.values.Count; i++) {
@@ -238,7 +234,7 @@ public class NPCMove : TacticsMove {
 				continue;
 			int distance = MapCreator.DistanceTo(this, list.values[i]);
 			if (range.InRange(distance)) {
-				hits.Add(list.values[i]);
+				hits.Add(list.values[i].currentTile);
 			}
 		}
 
@@ -252,37 +248,13 @@ public class NPCMove : TacticsMove {
 	/// </summary>
 	/// <param name="range1"></param>
 	/// <param name="range2"></param>
-	public void ShowSupportTiles(bool range1, bool range2) {
+	public void ShowSupportTiles(WeaponRange range) {
 		if (!IsAlive())
 			return;
-			
-		if (range1) {
-			MapTile tile = mapCreator.GetTile(posx+1,posy);
-			if (tile != null) tile.supportable = true;
-			tile = mapCreator.GetTile(posx,posy+1);
-			if (tile != null) tile.supportable = true;
-			tile = mapCreator.GetTile(posx-1,posy);
-			if (tile != null) tile.supportable = true;
-			tile = mapCreator.GetTile(posx,posy-1);
-			if (tile != null) tile.supportable = true;
-		}
-		if (range2) {
-			MapTile tile = mapCreator.GetTile(posx+2,posy);
-			if (tile != null) tile.supportable = true;
-			tile = mapCreator.GetTile(posx,posy+2);
-			if (tile != null) tile.supportable = true;
-			tile = mapCreator.GetTile(posx-2,posy);
-			if (tile != null) tile.supportable = true;
-			tile = mapCreator.GetTile(posx,posy-2);
-			if (tile != null) tile.supportable = true;
-			tile = mapCreator.GetTile(posx+1,posy+1);
-			if (tile != null) tile.supportable = true;
-			tile = mapCreator.GetTile(posx-1,posy+1);
-			if (tile != null) tile.supportable = true;
-			tile = mapCreator.GetTile(posx-1,posy-1);
-			if (tile != null) tile.supportable = true;
-			tile = mapCreator.GetTile(posx+1,posy-1);
-			if (tile != null) tile.supportable = true;
+
+		for (int i = 0; i < mapCreator.tiles.Length; i++) {			
+			if (range.InRange(MapCreator.DistanceTo(this, mapCreator.tiles[i])))
+				mapCreator.tiles[i].supportable = true;
 		}
 	}
 }

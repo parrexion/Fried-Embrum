@@ -27,15 +27,18 @@ public class MapTile : MonoBehaviour {
 	public int distance = 1000;
 	public MapTile parent;
 
+	[Header("Special Tiles")]
+	public InteractType interactType;
+	public TerrainTile alternativeTerrain;
+	public BlockMove blockMove;
+
 	private SpriteRenderer _rend;
 
 
-	// Use this for initialization
 	private void Start () {
 		_rend = highlight.GetComponent<SpriteRenderer>();
 	}
 	
-	// Update is called once per frame
 	private void Update () {
 		SetHighlightColor();
 	}

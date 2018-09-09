@@ -33,37 +33,13 @@ public class PlayerMove : TacticsMove {
 	/// </summary>
 	/// <param name="range1"></param>
 	/// <param name="range2"></param>
-	public void ShowAttackTiles(bool range1, bool range2) {
+	public void ShowAttackTiles(WeaponRange range) {
 		if (!IsAlive())
 			return;
-			
-		if (range1) {
-			MapTile tile = mapCreator.GetTile(posx+1,posy);
-			if (tile != null) tile.attackable = true;
-			tile = mapCreator.GetTile(posx,posy+1);
-			if (tile != null) tile.attackable = true;
-			tile = mapCreator.GetTile(posx-1,posy);
-			if (tile != null) tile.attackable = true;
-			tile = mapCreator.GetTile(posx,posy-1);
-			if (tile != null) tile.attackable = true;
-		}
-		if (range2) {
-			MapTile tile = mapCreator.GetTile(posx+2,posy);
-			if (tile != null) tile.attackable = true;
-			tile = mapCreator.GetTile(posx,posy+2);
-			if (tile != null) tile.attackable = true;
-			tile = mapCreator.GetTile(posx-2,posy);
-			if (tile != null) tile.attackable = true;
-			tile = mapCreator.GetTile(posx,posy-2);
-			if (tile != null) tile.attackable = true;
-			tile = mapCreator.GetTile(posx+1,posy+1);
-			if (tile != null) tile.attackable = true;
-			tile = mapCreator.GetTile(posx-1,posy+1);
-			if (tile != null) tile.attackable = true;
-			tile = mapCreator.GetTile(posx-1,posy-1);
-			if (tile != null) tile.attackable = true;
-			tile = mapCreator.GetTile(posx+1,posy-1);
-			if (tile != null) tile.attackable = true;
+
+		for (int i = 0; i < mapCreator.tiles.Length; i++) {			
+			if (range.InRange(MapCreator.DistanceTo(this, mapCreator.tiles[i])))
+				mapCreator.tiles[i].attackable = true;
 		}
 	}
 }

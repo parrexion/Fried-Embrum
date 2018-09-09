@@ -8,7 +8,7 @@ public class TradeController : InputReceiver {
 	[Header("References")]
 	public ActionModeVariable currentMode;
 	public TacticsMoveVariable selectedCharacter;
-	public TacticsMoveVariable targetCharacter;
+	public MapTileVariable targetTile;
 
 	[Header("Trade Windows")]
 	public GameObject tradeWindowLeft;
@@ -143,15 +143,16 @@ public class TradeController : InputReceiver {
 		if (!active)
 			return;
 
+		TacticsMove targetCharacter = targetTile.value.currentCharacter;
 		portraitLeft.sprite = selectedCharacter.value.stats.charData.bigPortrait;
-		portraitRight.sprite = targetCharacter.value.stats.charData.bigPortrait;
+		portraitRight.sprite = targetCharacter.stats.charData.bigPortrait;
 
 		for (int i = 0, j = InventoryContainer.INVENTORY_SIZE; i < InventoryContainer.INVENTORY_SIZE; i++, j++) {
 			InventoryTuple tup = selectedCharacter.value.inventory.GetItem(i);
 			itemNames[i].text = (tup.item != null) ? tup.item.entryName : "--";
 			itemCharges[i].text = (tup.item != null) ? tup.charge.ToString() : "";
 			
-			tup = targetCharacter.value.inventory.GetItem(i);
+			tup = targetCharacter.inventory.GetItem(i);
 			itemNames[j].text = (tup.item != null) ? tup.item.entryName : "--";
 			itemCharges[j].text = (tup.item != null && tup.item.maxCharge != 1) ? tup.charge.ToString() : "";
 		}
@@ -169,11 +170,12 @@ public class TradeController : InputReceiver {
 
 	private void SwapItems() {
 		selectedCharacter.value.canUndoMove = false;
+		TacticsMove targetCharacter = targetTile.value.currentCharacter;
 		InventoryTuple tup1 = (selectedIndex > InventoryContainer.INVENTORY_SIZE) ? 
-				targetCharacter.value.inventory.GetItem(selectedIndex-InventoryContainer.INVENTORY_SIZE) : 
+				targetCharacter.inventory.GetItem(selectedIndex-InventoryContainer.INVENTORY_SIZE) : 
 				selectedCharacter.value.inventory.GetItem(selectedIndex);
 		InventoryTuple tup2 = (menuPosition > InventoryContainer.INVENTORY_SIZE) ? 
-				targetCharacter.value.inventory.GetItem(menuPosition-InventoryContainer.INVENTORY_SIZE) : 
+				targetCharacter.inventory.GetItem(menuPosition-InventoryContainer.INVENTORY_SIZE) : 
 				selectedCharacter.value.inventory.GetItem(menuPosition);
 
 		InventoryTuple temp = new InventoryTuple();

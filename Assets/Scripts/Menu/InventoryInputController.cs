@@ -11,7 +11,7 @@ public class InventoryInputController : InputReceiver {
 	public GameObject background;
 
 	public TacticsMoveVariable selectCharacter;
-	public TacticsMoveVariable targetCharacter;
+	public MapTileVariable targetTile;
 	public ActionModeVariable currentMode;
 	public IntVariable currentPage;
 	public IntVariable inventoryIndex;
@@ -39,9 +39,24 @@ public class InventoryInputController : InputReceiver {
 	/// Updates the information in the UI whenever the state or character changes.
 	/// </summary>
 	public void UpdateUI() {
-		TacticsMove tactics = (currentMode.value != ActionMode.ATTACK && currentMode.value != ActionMode.HEAL && currentMode.value != ActionMode.TRADE) ? selectCharacter.value : targetCharacter.value;
+		TacticsMove tactics = selectCharacter.value;
+		bool block = false;
+		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL || currentMode.value == ActionMode.TRADE) {
+			if (targetTile.value.currentCharacter == null) {
+				block = true;
+			}
+			else {
+				tactics = targetTile.value.currentCharacter;
+			}
+		}
 
-		if (currentPage.value == (int)StatsType.INVENTORY || currentMenuMode.value == (int)MenuMode.STATS || currentMenuMode.value == (int)MenuMode.INV || currentMode.value == ActionMode.TRADE) {
+		if (block) {
+			ui.ShowObjectStats(targetTile.value);
+		}
+		else if (selectCharacter.value != null && selectCharacter.value.faction == Faction.WORLD) {
+			ui.ShowObjectStats(selectCharacter.value.currentTile);
+		}
+		else if (currentPage.value == (int)StatsType.INVENTORY || currentMenuMode.value == (int)MenuMode.STATS || currentMenuMode.value == (int)MenuMode.INV || currentMode.value == ActionMode.TRADE) {
 			ui.ShowInventoryStats(tactics);
 		}
 		else if (currentPage.value == (int)StatsType.STATS) {

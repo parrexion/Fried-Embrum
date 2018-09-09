@@ -10,8 +10,8 @@ public class MapInputController : InputReceiver {
 	public ActionModeVariable currentMode;
 
 	[Header("Target")]
-	public CharacterListVariable targetList;
-	public TacticsMoveVariable target;
+	public MapTileListVariable targetList;
+	public MapTileVariable target;
 
 	[Header("Cursor")]
 	public IntVariable cursorX;
@@ -157,7 +157,9 @@ public class MapInputController : InputReceiver {
 
 		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL || currentMode.value == ActionMode.TRADE) {
 			currentMenuMode.value = (int)MenuMode.UNIT;
+			currentMode.value = ActionMode.MOVE;
 			menuBackEvent.Invoke();
+			target.value = null;
 			StartCoroutine(MenuChangeDelay());
 		}
 		else if (currentMode.value == ActionMode.MOVE) {
