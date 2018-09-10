@@ -12,7 +12,8 @@ public class MapCursor : MonoBehaviour {
 	[Header("Targets")]
 	private MapTile startTile;
 	public MapTileVariable moveTile;
-	public TacticsMoveVariable selectTarget;
+	public TacticsMoveVariable selectCharacter;
+	public MapTileVariable selectTile;
 	public MapTileVariable target;
 	public CharacterListVariable enemyCharacters;
 
@@ -89,12 +90,10 @@ public class MapCursor : MonoBehaviour {
 	private void NormalHover(int x, int y) {
 		MapTile tile = mapCreator.GetTile(x, y);
 		startTile = tile;
-		selectTarget.value = tile.currentCharacter;
-		if (selectTarget.value != null && (alwaysShowMovement.value || !selectTarget.value.hasMoved)) {
-			selectTarget.value.FindAllMoveTiles(false);
-		}
-		else if (selectTarget.value == null && tile.blockMove.IsAlive()) {
-			selectTarget.value = tile.blockMove;
+		selectTile.value = tile;
+		selectCharacter.value = tile.currentCharacter;
+		if (selectCharacter.value != null && (alwaysShowMovement.value || !selectCharacter.value.hasMoved)) {
+			selectCharacter.value.FindAllMoveTiles(false);
 		}
 		else {
 			mapCreator.ResetMap();
@@ -112,7 +111,8 @@ public class MapCursor : MonoBehaviour {
 		MapTile tile = mapCreator.GetTile(x, y);
 		if (tile.selectable) {
 			moveTile.value = tile;
-			selectTarget.value.ShowMove(tile);
+			selectCharacter.value.ShowMove(tile);
+			updateCharacterUI.Invoke();
 		}
 		else {
 			moveTile.value = null;
@@ -127,12 +127,12 @@ public class MapCursor : MonoBehaviour {
 	/// If no character is hovered, show the in-game menu instead.
 	/// </summary>
 	private void SelectCharacter() {
-		if (selectTarget.value != null) {
-			if (selectTarget.value.faction == Faction.PLAYER && !selectTarget.value.hasMoved) {
+		if (selectCharacter.value != null) {
+			if (selectCharacter.value.faction == Faction.PLAYER && !selectCharacter.value.hasMoved) {
 				currentActionMode.value = ActionMode.MOVE;
 				moveTile.value = mapCreator.GetTile(cursorX.value, cursorY.value);
 				moveTile.value.current = true;
-				selectTarget.value.path.Clear();
+				selectCharacter.value.path.Clear();
 				Debug.Log("Click!");
 				Debug.Log("X:  " + cursorX.value + "  Y:  " + cursorY.value);
 			}
@@ -148,7 +148,7 @@ public class MapCursor : MonoBehaviour {
 	/// </summary>
 	private void SelectMoveTile() {
 		if (moveTile.value != null) {
-			selectTarget.value.StartMove();
+			selectCharacter.value.StartMove();
 			Debug.Log("OK move");
 		}
 
@@ -173,7 +173,7 @@ public class MapCursor : MonoBehaviour {
 	public void UndoMove() {
 		cursorX.value = startTile.posx;
 		cursorY.value = startTile.posy;
-		selectTarget.value.UndoMove(startTile);
+		selectCharacter.value.UndoMove(startTile);
 		moveTile.value = null;
 		MoveHover(cursorX.value, cursorY.value);
 		cursorMovedEvent.Invoke();
@@ -183,9 +183,9 @@ public class MapCursor : MonoBehaviour {
 	/// Resets all the targets.
 	/// </summary>
 	public void ResetTargets() {
-		
 		Debug.Log("Actionmode");
-		selectTarget.value = null;
+		selectTile.value = null;
+		selectCharacter.value = null;
 		moveTile.value = null;
 		mapCreator.ResetMap();
 	}

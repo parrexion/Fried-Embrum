@@ -86,20 +86,27 @@ public class ActionInputController : InputReceiver {
 				currentActionMode.value = ActionMode.HEAL;
 				StartCoroutine(MenuChangeDelay());
 				break;
-			case 2: // TRADE
+			case 2: // VISIT
+				selectedCharacter.value.currentTile.interacted = true;
+				currentMenuMode.value = (int)MenuMode.MAP;
+				currentActionMode.value = ActionMode.NONE;
+				StartCoroutine(MenuChangeDelay());
+				selectedCharacter.value.End();
+				break;
+			case 3: // TRADE
 				// Debug.Log("Trade!");
 				targetList.values = selectedCharacter.value.FindAdjacentCharacters(Faction.PLAYER);
 				currentMenuMode.value = (int)MenuMode.MAP;
 				currentActionMode.value = ActionMode.TRADE;
 				StartCoroutine(MenuChangeDelay());
 				break;
-			case 3: // ITEM
+			case 4: // ITEM
 				// Debug.Log("Item!");
 				currentMenuMode.value = (int)MenuMode.STATS;
 				inventoryIndex.value = 0;
 				StartCoroutine(MenuChangeDelay());
 				break;
-			case 4: // WAIT
+			case 5: // WAIT
 				// Debug.Log("Wait!");
 				currentMenuMode.value = (int)MenuMode.MAP;
 				currentActionMode.value = ActionMode.NONE;
@@ -116,7 +123,8 @@ public class ActionInputController : InputReceiver {
 			
 		actionButtons[0].gameObject.SetActive(selectedCharacter.value.CanAttack());
 		actionButtons[1].gameObject.SetActive(selectedCharacter.value.CanSupport());
-		actionButtons[2].gameObject.SetActive(selectedCharacter.value.CanTrade());
+		actionButtons[2].gameObject.SetActive(selectedCharacter.value.CanVisit());
+		actionButtons[3].gameObject.SetActive(selectedCharacter.value.CanTrade());
 		if (actionMenuPosition.value == -1 || !actionButtons[actionMenuPosition.value].IsActive()) {
 			actionMenuPosition.value = -1;
 			OnDownArrow();

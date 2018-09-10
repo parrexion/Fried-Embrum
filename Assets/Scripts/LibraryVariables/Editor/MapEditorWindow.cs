@@ -334,6 +334,10 @@ public class MapEditorWindow {
 				case InteractType.BLOCK:
 					mapValues.interactions[i].health = EditorGUILayout.IntField("Health", mapValues.interactions[i].health);
 					break;
+				case InteractType.VILLAGE:
+					mapValues.interactions[i].dialogue = (DialogueEntry)EditorGUILayout.ObjectField("Dialogue",mapValues.interactions[i].dialogue, typeof(DialogueEntry),false);
+					mapValues.interactions[i].gift = (WeaponItem)EditorGUILayout.ObjectField("Gift",mapValues.interactions[i].gift, typeof(WeaponItem),false);
+					break;
 			}
 
 			LibraryEditorWindow.HorizontalLine(Color.black);

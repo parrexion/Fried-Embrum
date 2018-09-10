@@ -105,7 +105,7 @@ public class EnemyPosition {
 	public AggroType aggroType;
 }
 
-public enum InteractType { NONE, BLOCK, DIALOGUE, VILLAGE }
+public enum InteractType { NONE, BLOCK, DIALOGUE, VILLAGE, CHEST }
 
 [System.Serializable]
 public class InteractPosition {

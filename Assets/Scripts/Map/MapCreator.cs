@@ -176,7 +176,7 @@ public class MapCreator : MonoBehaviour {
 		for (int j = 0; j < _sizeY; j++) {
 			for (int i = 0; i < _sizeX; i++) {
 				InteractPosition interPos = GetInteractable(map, i, j);
-				Transform tile = (interPos == null)? Instantiate(tilePrefab) : Instantiate(blockTilePrefab);
+				Transform tile = (interPos != null && interPos.interactType == InteractType.BLOCK) ? Instantiate(blockTilePrefab) : Instantiate(tilePrefab);
 				tile.position = new Vector3(i,j,0);
 				tile.parent = transform;
 
@@ -187,19 +187,28 @@ public class MapCreator : MonoBehaviour {
 				if (interPos == null) {
 					tempTile.SetTerrain(GetTerrainFromPixel(colorData[pos]));
 				}
-				else {
+				else if (interPos.interactType == InteractType.BLOCK) {
+					tempTile.interactType = InteractType.BLOCK;
 					tempTile.SetTerrain(tileBreakable);
 					tempTile.alternativeTerrain = GetTerrainFromPixel(colorData[pos]);
 					breakables.Add(tempTile);
-				}
-				mappus.Add(tempTile);
-
-				if (interPos != null) {
+					
 					BlockMove block = tempTile.GetComponent<BlockMove>();
 					block.currentTile = tempTile;
 					block.stats.hp = interPos.health;
 					block.currentHealth = interPos.health;
 				}
+				else if (interPos.interactType == InteractType.VILLAGE) {
+					tempTile.interactType = InteractType.VILLAGE;
+					tempTile.SetTerrain(tileHouse);
+					tempTile.dialogue = interPos.dialogue;
+					tempTile.gift = interPos.gift;
+				}
+				else {
+					Debug.LogError("Unimplemented interact type");
+				}
+				mappus.Add(tempTile);
+
 				pos++;
 			}
 		}

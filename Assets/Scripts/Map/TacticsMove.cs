@@ -538,6 +538,14 @@ public abstract class TacticsMove : MonoBehaviour {
 	}
 
 	/// <summary>
+	/// Checks if the character can visit a village or other buildings.
+	/// </summary>
+	/// <returns></returns>
+	public bool CanVisit() {
+		return (currentTile.interactType == InteractType.VILLAGE);
+	}
+
+	/// <summary>
 	/// Checks if the character can trade with anyone.
 	/// </summary>
 	/// <returns></returns>

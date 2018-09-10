@@ -11,6 +11,8 @@ public class InventoryInputController : InputReceiver {
 	public GameObject background;
 
 	public TacticsMoveVariable selectCharacter;
+	public MapTileVariable selectTile;
+	public MapTileVariable moveTile;
 	public MapTileVariable targetTile;
 	public ActionModeVariable currentMode;
 	public IntVariable currentPage;
@@ -24,7 +26,8 @@ public class InventoryInputController : InputReceiver {
 	}
 
     public override void OnMenuModeChanged() {
-        if (selectCharacter.value == null || currentMenuMode.value == (int)MenuMode.ATTACK || currentMenuMode.value == (int)MenuMode.HEAL) {
+        if (currentMenuMode.value == (int)MenuMode.ATTACK || currentMenuMode.value == (int)MenuMode.HEAL
+					|| (selectCharacter.value == null && selectTile.value.interactType == InteractType.NONE)) {
 			active = false;
 			background.SetActive(false);
 		}
@@ -33,6 +36,21 @@ public class InventoryInputController : InputReceiver {
 			background.SetActive(true);
 			UpdateUI();
 		}
+		
+		if (currentMenuMode.value == (int)MenuMode.MAP) {
+			if (currentMode.value == ActionMode.MOVE) {
+				ui.ShowTerrainInfo(moveTile.value.terrain, true);
+			}
+			else if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL || currentMode.value == ActionMode.TRADE) {
+				ui.ShowTerrainInfo(targetTile.value.terrain, true);
+			}
+			else {
+				ui.ShowTerrainInfo(selectTile.value.terrain, true);
+			}
+		}
+		else {
+			ui.ShowTerrainInfo(null, false);
+		}
     }
 
 	/// <summary>
@@ -40,21 +58,15 @@ public class InventoryInputController : InputReceiver {
 	/// </summary>
 	public void UpdateUI() {
 		TacticsMove tactics = selectCharacter.value;
-		bool block = false;
+		MapTile tile = selectTile.value;
 		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL || currentMode.value == ActionMode.TRADE) {
-			if (targetTile.value.currentCharacter == null) {
-				block = true;
-			}
-			else {
+			tile = targetTile.value;
+			if (targetTile.value != null)
 				tactics = targetTile.value.currentCharacter;
-			}
 		}
 
-		if (block) {
-			ui.ShowObjectStats(targetTile.value);
-		}
-		else if (selectCharacter.value != null && selectCharacter.value.faction == Faction.WORLD) {
-			ui.ShowObjectStats(selectCharacter.value.currentTile);
+		if (selectCharacter.value == null && selectTile.value.interactType != InteractType.NONE) {
+			ui.ShowObjectStats(tile);
 		}
 		else if (currentPage.value == (int)StatsType.INVENTORY || currentMenuMode.value == (int)MenuMode.STATS || currentMenuMode.value == (int)MenuMode.INV || currentMode.value == ActionMode.TRADE) {
 			ui.ShowInventoryStats(tactics);

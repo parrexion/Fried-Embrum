@@ -31,6 +31,9 @@ public class MapTile : MonoBehaviour {
 	public InteractType interactType;
 	public TerrainTile alternativeTerrain;
 	public BlockMove blockMove;
+	public bool interacted;
+	public DialogueEntry dialogue;
+	public WeaponItem gift;
 
 	private SpriteRenderer _rend;
 
