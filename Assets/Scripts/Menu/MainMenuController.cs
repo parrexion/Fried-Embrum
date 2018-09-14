@@ -74,7 +74,7 @@ public class MainMenuController : InputReceiver {
 		currentPlayTime.value = 0;
 		currentMap.value = chapterList.values[0];
 		dialoguePrePost.value = false;
-		SceneManager.LoadScene("Dialogue");
+		SceneManager.LoadScene("LoadingScreen");
 	}
 
 	/// <summary>
@@ -83,7 +83,7 @@ public class MainMenuController : InputReceiver {
 	public void LoadGameFinished() {
 		currentMap.value = chapterList.values[currentChapterIndex.value];
 		dialoguePrePost.value = false;
-		SceneManager.LoadScene("Dialogue");
+		SceneManager.LoadScene("LoadingScreen");
 	}
 
     public override void OnUpArrow() {

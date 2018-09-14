@@ -35,6 +35,7 @@ public class CharData : ScrObjLibraryEntry {
 
 	[Header("Other Data")]
 	public bool mustSurvive;
+	public DialogueEntry deathQuote;
 
 	
 	public override void ResetValues() {

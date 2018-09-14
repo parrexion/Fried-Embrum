@@ -267,13 +267,15 @@ public class MapEditorWindow {
 				i--;
 				continue;
 			}
-			EditorGUIUtility.labelWidth = 120;
 			GUILayout.EndHorizontal();
 
+			GUILayout.BeginHorizontal();
 			mapValues.enemies[i].stats = (CharData)EditorGUILayout.ObjectField("Character",mapValues.enemies[i].stats, typeof(CharData),false);
+			mapValues.enemies[i].hasQuotes = EditorGUILayout.Toggle("Quotes", mapValues.enemies[i].hasQuotes, GUILayout.Width(80));
+			GUILayout.EndHorizontal();
+			
 			if (mapValues.enemies[i].stats != null) {
 				GUILayout.BeginHorizontal();
-				EditorGUIUtility.labelWidth = 70;
 				mapValues.enemies[i].level = EditorGUILayout.IntField("Level", mapValues.enemies[i].level);
 				mapValues.enemies[i].aggroType = (AggroType)EditorGUILayout.EnumPopup("Aggro", mapValues.enemies[i].aggroType);
 				EditorGUIUtility.labelWidth = 120;
@@ -299,6 +301,30 @@ public class MapEditorWindow {
 				GUILayout.Space(120);
 				if (GUILayout.Button("Add Item")) {
 					mapValues.enemies[i].inventory.Add(new WeaponTuple());
+				}
+				GUILayout.EndHorizontal();
+			}
+
+			if (mapValues.enemies[i].hasQuotes) {
+				// Quotes
+				for (int j = 0; j < mapValues.enemies[i].quotes.Count; j++) {
+					EditorGUIUtility.labelWidth = 70;
+					GUILayout.BeginHorizontal();
+					mapValues.enemies[i].quotes[j].triggerer = (CharData)EditorGUILayout.ObjectField("Caused by",mapValues.enemies[i].quotes[j].triggerer, typeof(CharData),false);
+					mapValues.enemies[i].quotes[j].quote = (DialogueEntry)EditorGUILayout.ObjectField("Quote",mapValues.enemies[i].quotes[j].quote, typeof(DialogueEntry),false);
+					if (GUILayout.Button("X", GUILayout.Width(50))) {
+						GUI.FocusControl(null);
+						mapValues.enemies[i].quotes.RemoveAt(j);
+						j--;
+						continue;
+					}
+					GUILayout.EndHorizontal();
+					EditorGUIUtility.labelWidth = 120;	
+				}
+				GUILayout.BeginHorizontal();
+				GUILayout.Space(120);
+				if (GUILayout.Button("Add Quote")) {
+					mapValues.enemies[i].quotes.Add(new FightQuote());
 				}
 				GUILayout.EndHorizontal();
 			}

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class ActionInputController : InputReceiver {
@@ -16,6 +17,13 @@ public class ActionInputController : InputReceiver {
 	public IntVariable actionMenuPosition;
 	private Image[] actionButtons= new Image[0];
 
+	[Header("Dialogues")]
+	public IntVariable dialogueMode;
+	public ScrObjEntryReference dialogueEntry;
+	public PopupController popup;
+	public SfxEntry gainItemSfx;
+	public UnityEvent startDialogue;
+
 
 	private void Start() {
 		actionButtons = actionMenu.GetComponentsInChildren<Image>(true);
@@ -25,6 +33,7 @@ public class ActionInputController : InputReceiver {
 		MenuMode mode = (MenuMode)currentMenuMode.value;
 		active = (mode == MenuMode.UNIT);
 		actionMenu.SetActive(mode == MenuMode.UNIT);
+		Debug.Log("Active:  " + active + " , " + mode);
 		ButtonSetup();
     }
 
@@ -67,8 +76,9 @@ public class ActionInputController : InputReceiver {
     }
 
     public override void OnOkButton() {
-		if (!active)
+		if (!active) {
 			return;
+		}
 
 		switch (actionMenuPosition.value)
 		{
@@ -88,10 +98,11 @@ public class ActionInputController : InputReceiver {
 				break;
 			case 2: // VISIT
 				selectedCharacter.value.currentTile.interacted = true;
-				currentMenuMode.value = (int)MenuMode.MAP;
-				currentActionMode.value = ActionMode.NONE;
+				active = false;
 				StartCoroutine(MenuChangeDelay());
-				selectedCharacter.value.End();
+				dialogueMode.value = (int)DialogueMode.VISIT;
+				dialogueEntry.value = selectedCharacter.value.currentTile.dialogue;
+				startDialogue.Invoke();
 				break;
 			case 3: // TRADE
 				// Debug.Log("Trade!");
@@ -116,6 +127,27 @@ public class ActionInputController : InputReceiver {
 		}
 		menuAcceptEvent.Invoke();
     }
+	
+	public void ResumeBattle() {
+		if (dialogueMode.value == (int)DialogueMode.VISIT) {
+			currentMenuMode.value = (int)MenuMode.MAP;
+			currentActionMode.value = ActionMode.NONE;
+			StartCoroutine(MenuChangeDelay());
+			if (selectedCharacter.value.currentTile.gift != null) {
+				StartCoroutine(WaitForItemGain());
+			}
+			else {
+				Debug.Log("OK");
+				selectedCharacter.value.End();
+			}
+		}
+	}
+
+	private IEnumerator WaitForItemGain() {
+		WeaponItem item = selectedCharacter.value.currentTile.gift;
+		yield return StartCoroutine(popup.ShowPopup(item.icon, item.entryName, gainItemSfx, 2f, 0f));
+		selectedCharacter.value.End();
+	}
 
 	private void ButtonSetup() {
 		if (!active)

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Character : MonoBehaviour {
 
@@ -7,9 +8,9 @@ public class Character : MonoBehaviour {
 	public IntVariable poseIndex;
 
 	private int moveIndex;
-	private Vector3 movePosition;
+	private Vector2 movePosition;
 
-	[SerializeField] private SpriteRenderer characterSprite = null;
+	[SerializeField] private Image characterSprite = null;
 	
 
 	// Use this for initialization
@@ -29,7 +30,7 @@ public class Character : MonoBehaviour {
 		}
 	}
 
-	public void SetMoveDirection(Vector3 movePosition, int moveIndex) {
+	public void SetMoveDirection(Vector2 movePosition, int moveIndex) {
 		this.movePosition = movePosition;
 		this.moveIndex = moveIndex;
 	}
@@ -40,15 +41,15 @@ public class Character : MonoBehaviour {
 		}
 	}
 
-	IEnumerator Animation(Vector3 movePosition, float moveSpeed) {
-		Vector3 startPosition = transform.position;
+	IEnumerator Animation(Vector2 movePosition, float moveSpeed) {
+		Vector2 startPosition = transform.position;
 		// Debug.Log("start     " + startPosition.ToString());
 		// Debug.Log("end     " + movePosition.ToString());
 		// Debug.Log("char     " + character.value.ToString());
 		float dist = 0;
 		while (dist <= moveSpeed) {
 			dist += Time.deltaTime;
-			transform.position = Vector3.Lerp(movePosition, startPosition, dist / moveSpeed);
+			transform.position = Vector2.Lerp(movePosition, startPosition, dist / moveSpeed);
 			yield return null;
 		}
 		transform.position = startPosition;

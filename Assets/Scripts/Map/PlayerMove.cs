@@ -24,6 +24,7 @@ public class PlayerMove : TacticsMove {
 		Debug.Log("Finished move");
 		isMoving = false;
 		lockControls.value = false;
+			Debug.Log("Now with UNiT!");
 		currentMenuMode.value = (int)MenuMode.UNIT;
 		menuModeChangedEvent.Invoke();
 	}

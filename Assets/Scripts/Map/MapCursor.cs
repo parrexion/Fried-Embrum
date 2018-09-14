@@ -25,7 +25,6 @@ public class MapCursor : MonoBehaviour {
 
 	[Header("Events")]
 	public UnityEvent updateCharacterUI;
-	public UnityEvent hideTooltipEvent;
 	public UnityEvent cursorMovedEvent;
 	public UnityEvent showIngameMenuEvent;
 
@@ -99,7 +98,6 @@ public class MapCursor : MonoBehaviour {
 			mapCreator.ResetMap();
 		}
 		updateCharacterUI.Invoke();
-		hideTooltipEvent.Invoke();
 	}
 
 	/// <summary>

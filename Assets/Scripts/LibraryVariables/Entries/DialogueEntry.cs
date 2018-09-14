@@ -7,10 +7,6 @@ public class DialogueEntry : ScrObjLibraryEntry {
 
 	public List<Color> participantColors = new List<Color>();
 
-	public DialogueEntry dialogueEntry = null;
-	public bool changePosition = false;
-	public Vector2 playerPosition = new Vector2();
-
 	public List<DialogueActionData> actions = new List<DialogueActionData>();
 
 
@@ -39,10 +35,6 @@ public class DialogueEntry : ScrObjLibraryEntry {
 
 		participantColors = new List<Color>();
 		CreateBasicActions();
-
-		dialogueEntry = null;
-		changePosition = false;
-		playerPosition = new Vector2();
 	}
 
 	public override void CopyValues(ScrObjLibraryEntry other) {
@@ -51,11 +43,6 @@ public class DialogueEntry : ScrObjLibraryEntry {
 
 		actions = de.actions;
 		participantColors = de.participantColors;
-
-		dialogueEntry = de.dialogueEntry;
-		changePosition = de.changePosition;
-		playerPosition = de.playerPosition;
-		Debug.Log("COPY");
 	}
 
 	public void InsertAction(int index, DialogueActionData da) {

@@ -6,7 +6,6 @@ using UnityEngine.Events;
 public class MapCreator : MonoBehaviour {
 
 	public ScrObjEntryReference currentMap;
-	public BoxCollider2D cameraBox;
 	public MapCursor mapClicker;
 
 	public IntVariable cursorX;
@@ -63,8 +62,9 @@ public class MapCreator : MonoBehaviour {
 		_sizeX = map.sizeX;
 		_sizeY = map.sizeY;
 		
-		cameraBox.size = new Vector2(_sizeX+1, _sizeY+1);
-		cameraBox.transform.position = new Vector3((_sizeX-1)/2.0f, (_sizeY-1)/2.0f, 0);
+		TacticsCamera.boxCollider.size = new Vector2(_sizeX+1, _sizeY+1);
+		TacticsCamera.boxCollider.center = new Vector3((_sizeX-1)/2.0f, (_sizeY-1)/2.0f, 0);
+		TacticsCamera.boxActive = true;
 		
 		GenerateMap(map.mapSprite);
 		cursorMoveEvent.Invoke();
@@ -289,6 +289,13 @@ public class MapCreator : MonoBehaviour {
 			tactics.stats = new StatsContainer(pos.stats, pos.level);
 			tactics.inventory = new InventoryContainer(pos.inventory);
 			tactics.skills = new SkillsContainer(pos.skills);
+			for (int q = 0; q < pos.quotes.Count; q++) {
+				FightQuote fight = new FightQuote();
+				fight.triggerer = pos.quotes[q].triggerer;
+				fight.quote = pos.quotes[q].quote;
+				fight.activated = false;
+				tactics.fightQuotes.Add(fight);
+			}
 			((NPCMove)tactics).aggroType = pos.aggroType;
 			tactics.Setup();
 		}

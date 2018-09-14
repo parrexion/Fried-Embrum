@@ -47,7 +47,7 @@ public class SaveScreenController : InputReceiver {
 			currentMap.value = chapterList.values[chapterIndex.value];
 			chapterIndex.value++;
 			dialoguePrePost.value = false;
-			SceneManager.LoadScene("Dialogue");
+			SceneManager.LoadScene("LoadingScreen");
 		}
 	}
 

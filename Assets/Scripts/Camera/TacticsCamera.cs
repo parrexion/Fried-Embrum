@@ -8,8 +8,23 @@ using UnityEngine;
 /// </summary>
 public class TacticsCamera : MonoBehaviour {
 
-	public BoxCollider2D boxCollider;
+#region Singleton
+	private static TacticsCamera instance = null;
+	private void Awake() {
+		if (instance != null) {
+			Destroy(gameObject);
+		}
+		else {
+			instance = this;
+		}
+	}
+#endregion
+
+	public static Bounds boxCollider = new Bounds();
+	public static bool boxActive = false;
 	public TacticsMoveVariable selectedCharacter;
+	public FloatVariable cameraPosX;
+	public FloatVariable cameraPosY;
 
 	[Header("Cursor Position")]
 	public IntVariable cursorX;
@@ -38,6 +53,8 @@ public class TacticsCamera : MonoBehaviour {
 			currentPosition.z
 		);
 		transform.localPosition = AdjustPosition(nextPosition);
+		cameraPosX.value = transform.localPosition.x;
+		cameraPosY.value = transform.localPosition.y;
 	}
 
 	/// <summary>
@@ -51,6 +68,8 @@ public class TacticsCamera : MonoBehaviour {
 			currentPosition.z
 		);
 		transform.localPosition = AdjustPosition(nextPosition);
+		cameraPosX.value = transform.localPosition.x;
+		cameraPosY.value = transform.localPosition.y;
 	}
 
 	/// <summary>
@@ -59,13 +78,15 @@ public class TacticsCamera : MonoBehaviour {
 	/// <param name="input"></param>
 	/// <returns></returns>
 	private Vector3 AdjustPosition(Vector3 input) {
+		if (!boxActive)
+			return input;
+
 		float vertExtent = _camera.orthographicSize;
 		float horizExtent = vertExtent * _camera.rect.width * (float)Screen.width / (float)Screen.height; 
-		Bounds areaBounds = boxCollider.bounds;
  
 		return new Vector3(
-			Mathf.Clamp(input.x, areaBounds.min.x + horizExtent, areaBounds.max.x - horizExtent),
-			Mathf.Clamp(input.y, areaBounds.min.y + vertExtent, areaBounds.max.y - vertExtent),
+			Mathf.Clamp(input.x, boxCollider.min.x + horizExtent, boxCollider.max.x - horizExtent),
+			Mathf.Clamp(input.y, boxCollider.min.y + vertExtent, boxCollider.max.y - vertExtent),
 			input.z);
 	}
 }

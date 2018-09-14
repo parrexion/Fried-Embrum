@@ -26,7 +26,7 @@ public class InventoryInputController : InputReceiver {
 	}
 
     public override void OnMenuModeChanged() {
-        if (currentMenuMode.value == (int)MenuMode.ATTACK || currentMenuMode.value == (int)MenuMode.HEAL
+        if (currentMenuMode.value == (int)MenuMode.ATTACK || currentMenuMode.value == (int)MenuMode.HEAL || currentMenuMode.value == (int)MenuMode.DIALOGUE
 					|| (selectCharacter.value == null && selectTile.value.interactType == InteractType.NONE)) {
 			active = false;
 			background.SetActive(false);
@@ -127,6 +127,7 @@ public class InventoryInputController : InputReceiver {
 			return;
 
 		if (currentMenuMode.value == (int)MenuMode.STATS){
+			Debug.Log("Now with UNiT!");
 			currentMenuMode.value = (int)MenuMode.UNIT;
 			inventoryIndex.value = -1;
 			menuBackEvent.Invoke();

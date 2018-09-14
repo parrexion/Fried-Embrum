@@ -157,6 +157,7 @@ public class MapInputController : InputReceiver {
 
 		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL || currentMode.value == ActionMode.TRADE) {
 			currentMenuMode.value = (int)MenuMode.UNIT;
+			Debug.Log("Now with UNiT!");
 			currentMode.value = ActionMode.MOVE;
 			menuBackEvent.Invoke();
 			target.value = null;

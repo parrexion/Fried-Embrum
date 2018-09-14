@@ -78,7 +78,7 @@ public class AudioController : MonoBehaviour {
 	/// </summary>
 	/// <param name="clip">Clip.</param>
 	void PlayBackgroundMusic(bool isMain, bool updateClip) {
-		Debug.Log("MUSIC!");
+		// Debug.Log("MUSIC!");
 		AudioClip selectedSong = (isMain) ? mainMusic.value : subMusic.value;
 		AudioSource source = (isMain) ? musicMainSource : musicSubSource;
 		bool useVolume = (isMain && musicFocusSource.value || !isMain && !musicFocusSource.value);

@@ -7,6 +7,7 @@ public class Background : MonoBehaviour {
 
 	public ScrObjEntryReference dialogueBackground;
 	public Image image;
+	public Image backdrop;
 
 	// Use this for initialization
 	void Start () {
@@ -16,9 +17,15 @@ public class Background : MonoBehaviour {
 	// Update is called once per frame
 	public void UpdateBackground () {
 		if (dialogueBackground.value == null) {
+			backdrop.enabled = true;
 			image.enabled = false;
 		}
+		else if (((BackgroundEntry)dialogueBackground.value).sprite == null) {
+			image.enabled = false;
+			backdrop.enabled = false;
+		}
 		else {
+			backdrop.enabled = true;
 			image.sprite = ((BackgroundEntry)dialogueBackground.value).sprite;
 			image.enabled = true;
 		}

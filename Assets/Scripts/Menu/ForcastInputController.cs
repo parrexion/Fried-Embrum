@@ -53,11 +53,12 @@ public class ForcastInputController : InputReceiver {
 
 		if (currentMenuMode.value == (int)MenuMode.ATTACK) {
 			selectedCharacter.value.Attack(defendCharacter.value);
+			menuAcceptEvent.Invoke();
 		}
-		else {
+		else if (currentMenuMode.value == (int)MenuMode.HEAL) {
 			selectedCharacter.value.Heal(defendCharacter.value);
+			menuAcceptEvent.Invoke();
 		}
-		menuAcceptEvent.Invoke();
 	}
 
 	public override void OnBackButton() {

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+enum DialogueMode { NONE, PRE, VISIT, EVENT, POST, QUOTE }
+
 [System.Serializable]
 public class DialogueScene : MonoBehaviour {
 
@@ -35,7 +37,6 @@ public class DialogueScene : MonoBehaviour {
 
 
 	public void Reset() {
-		Debug.Log("RESET!");
 		background.value = null;
 		for (int i = 0; i < characters.Length; i++) {
 			characters[i].value = null;

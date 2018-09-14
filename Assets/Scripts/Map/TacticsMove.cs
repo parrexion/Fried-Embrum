@@ -36,6 +36,9 @@ public abstract class TacticsMove : MonoBehaviour {
 	public SkillsContainer skills;
 	public int currentHealth;
 
+	[Header("Dialogue")]
+	public List<FightQuote> fightQuotes = new List<FightQuote>();
+
 	[Header("Health")]
 	public Image healthImage;
 	public GameObject damageObject;
@@ -304,7 +307,7 @@ public abstract class TacticsMove : MonoBehaviour {
 		inventory.EquipItem(battleWeaponIndex.value);
 		battleWeaponIndex.value = 0;
 		characterClicked.Invoke();
-		mapCreator.GetTile(targetTile.value.posx,targetTile.value.posy).target = true;
+		targetTile.value.target = true;
 		BattleContainer.instance.GenerateHealAction(this, ally);
 		BattleContainer.instance.PlayBattleAnimations();
 	}
@@ -453,6 +456,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// Refreshes the character and removes expired buffs.
 	/// </summary>
 	public void OnStartTurn() {
+		Debug.Log("START");
 		stats.ClearBoosts(true);
 		ForEachSkills(Activation.STARTTURN, playerList);
 		hasMoved = false;

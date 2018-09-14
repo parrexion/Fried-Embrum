@@ -15,8 +15,16 @@ public class BattleContainer : MonoBehaviour {
 	public ScrObjEntryReference currentMap;
 	public FactionVariable currentTurn;
 	public BoolVariable lockControls;
-	public IntVariable cursorX;
-	public IntVariable cursorY;
+	public FloatVariable cameraPosX;
+	public FloatVariable cameraPosY;
+	// public IntVariable cursorX;
+	// public IntVariable cursorY;
+	public PopupController popup;
+
+	[Header("Dialogue")]
+	public IntVariable dialogueMode;
+	public ScrObjEntryReference currentDialogue;
+	private DialogueEntry dialogue;
 
 	[Header("Settings")]
 	public BoolVariable useTrueHit;
@@ -46,11 +54,6 @@ public class BattleContainer : MonoBehaviour {
 	public GameObject rightDamageObject;
 	public Text rightDamageText;
 
-	[Header("Broken Tooltip")]
-	public GameObject brokenTooltip;
-	public Image brokenIcon;
-	public Text brokenText;
-
 	[Header("Sound")]
 	public AudioVariable subMusic;
 	public AudioQueueVariable sfxQueue;
@@ -74,12 +77,14 @@ public class BattleContainer : MonoBehaviour {
 	public UnityEvent playSfxEvent;
 	public UnityEvent stopSfxEvent;
 	
+	private bool runningLoop;
 	private TacticsMove _currentCharacter;
 	private bool _attackerDealtDamage;
 	private bool _defenderDealtDamage;
 
 
 	public void GenerateActions(TacticsMove attacker, MapTile target) {
+		dialogue = null;
 		if (target.currentCharacter == null) {
 			_currentCharacter = attacker;
 			actions.Clear();
@@ -111,6 +116,24 @@ public class BattleContainer : MonoBehaviour {
 					actions.Add(new BattleAction(false, true, defender, attacker));
 				}
 			}
+
+			TacticsMove quoter = (attacker.faction == Faction.ENEMY) ? attacker : defender;
+			CharData triggerer = (attacker.faction == Faction.ENEMY) ? defender.stats.charData : attacker.stats.charData;
+			FightQuote bestFind = null;
+			for (int q = 0; q < quoter.fightQuotes.Count; q++) {
+				if (quoter.fightQuotes[q].triggerer == null) {
+					if (bestFind == null)
+						bestFind = quoter.fightQuotes[q];
+				}
+				else if (quoter.fightQuotes[q].triggerer == triggerer) {
+					bestFind = quoter.fightQuotes[q];
+					break;
+				}
+			}
+			if (bestFind != null && !bestFind.activated) {
+				dialogue = bestFind.quote;
+				bestFind.activated = true;
+			}
 		}
 	}
 
@@ -128,8 +151,38 @@ public class BattleContainer : MonoBehaviour {
 
 	public void PlayBattleAnimations() {
 		SetupBattle();
-		StartCoroutine(ActionLoop());
+		if (dialogue != null) {
+			dialogueMode.value = (int)DialogueMode.QUOTE;
+			currentDialogue.value = dialogue;
+			showDialogueEvent.Invoke();
+			lockControls.value = false;
+		}
+		else
+			StartCoroutine(ActionLoop());
 	}
+
+	public void ResumeBattle() {
+		Debug.Log("Resuming   ");
+		if ((dialogue != null && dialogueMode.value == (int)DialogueMode.QUOTE)) {
+			lockControls.value = true;
+			if (runningLoop) {
+				runningLoop = false;
+				Debug.Log("Continue");
+			}
+			else {
+				StartCoroutine(ActionLoop());
+				Debug.Log("Action!");
+			}
+		}
+	}
+	/*
+	public void StartActionLoop() {
+		if ((dialogue != null && dialogueMode.value == (int)DialogueMode.QUOTE)) {
+			lockControls.value = true;
+			StartCoroutine(ActionLoop());
+		}
+	}
+	*/
 
 	private void SetupBattle() {
 		leftDamageObject.SetActive(false);
@@ -141,6 +194,15 @@ public class BattleContainer : MonoBehaviour {
 		_attackerDealtDamage = false;
 		_defenderDealtDamage = false;
 
+		forecastUI.UpdateUI(true);
+
+		battleAnimationObject.transform.localPosition = new Vector3(
+			cameraPosX.value, 
+			cameraPosY.value, 
+			battleAnimationObject.transform.localPosition.z
+		);
+		battleAnimationObject.SetActive(useBattleAnimations.value);
+
 		//Music
 		MapEntry map = (MapEntry)currentMap.value;
 		subMusic.value = (actions[0].isDamage) ? map.battleMusic.clip : map.healMusic.clip;
@@ -149,6 +211,7 @@ public class BattleContainer : MonoBehaviour {
 	}
 
 	private IEnumerator ActionLoop() {
+		runningLoop = false;
 		bool useAnim = useBattleAnimations.value;
 		if (actions[0].defender.faction == Faction.WORLD) {
 			useAnim = false;
@@ -167,9 +230,6 @@ public class BattleContainer : MonoBehaviour {
 			Vector3 startPos = attackTransform.position;
 			Vector3 enemyPos = defenseTransform.position;
 			enemyPos = startPos + (enemyPos - startPos).normalized;
-			
-			battleAnimationObject.SetActive(useAnim);
-			// uiCanvas.SetActive(!useAnim.value);
 			forecastUI.UpdateUI(true);
 			if (useAnim) {
 				leftHealth.fillAmount = actions[0].attacker.GetHealthPercent();
@@ -259,6 +319,24 @@ public class BattleContainer : MonoBehaviour {
 			// Debug.Log("Check death");
 			if (!act.defender.IsAlive()) {
 				yield return new WaitForSeconds(1f);
+				if (act.defender.stats.charData.deathQuote != null) {
+					Debug.Log("Death quote");
+					runningLoop = true;
+					dialogueMode.value = (int)DialogueMode.QUOTE;
+					currentDialogue.value = act.defender.stats.charData.deathQuote;
+					showDialogueEvent.Invoke();
+					lockControls.value = false;
+
+					if (act.defender.faction == Faction.PLAYER) {
+						MapEntry map = (MapEntry)currentMap.value;
+						subMusic.value = map.deathMusic.clip;
+						playSubMusicEvent.Invoke();
+					}
+
+					while(runningLoop) {
+						yield return null;
+					}
+				}
 				break;
 			}
 		}
@@ -295,8 +373,8 @@ public class BattleContainer : MonoBehaviour {
 		if (currentTurn.value == Faction.PLAYER)
 			lockControls.value = false;
 		_currentCharacter.End();
-		cursorX.value = _currentCharacter.posx;
-		cursorY.value = _currentCharacter.posy;
+		// cursorX.value = _currentCharacter.posx;
+		// cursorY.value = _currentCharacter.posy;
 		_currentCharacter = null;
 		
 		yield return new WaitForSeconds(0.5f);
@@ -364,7 +442,7 @@ public class BattleContainer : MonoBehaviour {
 					CharacterSkill skill = player.stats.classData.AwardSkills(player.stats.level);
 					if (skill) {
 						player.skills.GainSkill(skill);
-						yield return StartCoroutine(ShowPopup(skill.icon,  "gained: " + skill.entryName, droppedItemFanfare));
+						yield return StartCoroutine(popup.ShowPopup(skill.icon,  "gained: " + skill.entryName, droppedItemFanfare));
 					}
 					expMeter.gameObject.SetActive(true);
 					sfxQueue.Enqueue(levelupFill);
@@ -385,19 +463,19 @@ public class BattleContainer : MonoBehaviour {
 		if (actions[0].isDamage) {
 			InventoryTuple invTup = actions[0].weaponAtk;
 			if (invTup.item != null && invTup.charge <= 0) {
-				yield return StartCoroutine(ShowPopup(invTup.item.icon, invTup.item.entryName + " broke!", brokenItemFanfare));
+				yield return StartCoroutine(popup.ShowPopup(invTup.item.icon, invTup.item.entryName + " broke!", brokenItemFanfare));
 				actions[0].attacker.inventory.CleanupInventory();
 			}
 			invTup = actions[0].weaponDef;
 			if (invTup != null && invTup.charge <= 0) {
-				yield return StartCoroutine(ShowPopup(invTup.item.icon, invTup.item.entryName + " broke!", brokenItemFanfare));
+				yield return StartCoroutine(popup.ShowPopup(invTup.item.icon, invTup.item.entryName + " broke!", brokenItemFanfare));
 				actions[0].defender.inventory.CleanupInventory();
 			}
 		}
 		else {
 			InventoryTuple invTup = actions[0].staffAtk;
 			if (invTup != null && invTup.charge <= 0) {
-				yield return StartCoroutine(ShowPopup(invTup.item.icon, invTup.item.entryName + " broke!", brokenItemFanfare));
+				yield return StartCoroutine(popup.ShowPopup(invTup.item.icon, invTup.item.entryName + " broke!", brokenItemFanfare));
 				actions[0].attacker.inventory.CleanupInventory();
 			}
 		}
@@ -413,24 +491,17 @@ public class BattleContainer : MonoBehaviour {
 			itemTup.droppable = false;
 			receiver.inventory.GainItem(itemTup);
 
-			yield return StartCoroutine(ShowPopup(itemTup.item.icon, "Gained " + itemTup.item.entryName, droppedItemFanfare));
+			yield return StartCoroutine(popup.ShowPopup(itemTup.item.icon, "Gained " + itemTup.item.entryName, droppedItemFanfare));
 		}
 		yield break;
 	}
 
-	private IEnumerator ShowPopup(Sprite icon, string text, SfxEntry sfx) {
-		brokenIcon.sprite = icon;
-		brokenText.text = text;
-		brokenTooltip.SetActive(true);
-		if (sfx != null) {
-			sfxQueue.Enqueue(sfx);
-			playSfxEvent.Invoke();
-		}
-		yield return new WaitForSeconds(2f);
-		brokenTooltip.SetActive(false);
-		yield return new WaitForSeconds(0.5f);
-	}
-
+	/// <summary>
+	/// Generates two hit numbers from 100 and averages them.
+	/// Is a hit if it's below the hit number.
+	/// </summary>
+	/// <param name="hit"></param>
+	/// <returns></returns>
 	private bool GenerateHitNumber(int hit) {
 		int nr = Random.Range(0, 100);
 		if (useTrueHit.value) {
@@ -441,6 +512,11 @@ public class BattleContainer : MonoBehaviour {
 		return (nr < hit);
 	}
 
+	/// <summary>
+	/// Generates a single number out of 100 and hits if it's below the hit value.
+	/// </summary>
+	/// <param name="hit"></param>
+	/// <returns></returns>
 	private bool SingleNumberCheck(int hit) {
 		int nr = Random.Range(0, 100);
 		// Debug.Log("SINGLE:  " + nr + " -> " + hit);

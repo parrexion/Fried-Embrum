@@ -13,6 +13,7 @@ public class MapEntry : ScrObjLibraryEntry {
 	public MusicEntry owMusic;
 	public MusicEntry battleMusic;
 	public MusicEntry healMusic;
+	public MusicEntry deathMusic;
 
 	[Header("Map")]
 	public int sizeX;
@@ -103,6 +104,8 @@ public class EnemyPosition {
 	public List<WeaponTuple> inventory = new List<WeaponTuple>();
 	public CharacterSkill[] skills;
 	public AggroType aggroType;
+	public bool hasQuotes;
+	public List<FightQuote> quotes = new List<FightQuote>();
 }
 
 public enum InteractType { NONE, BLOCK, DIALOGUE, VILLAGE, CHEST }
@@ -115,4 +118,11 @@ public class InteractPosition {
 	public int health;
 	public DialogueEntry dialogue;
 	public WeaponItem gift;
+}
+
+[System.Serializable]
+public class FightQuote {
+	public CharData triggerer;
+	public DialogueEntry quote;
+	public bool activated;
 }

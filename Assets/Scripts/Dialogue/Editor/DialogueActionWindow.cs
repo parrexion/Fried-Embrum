@@ -161,7 +161,7 @@ public class DialogueActionWindow: EditorWindow {
 			currentAction.value = hub.selAction;
 			overrideActionNumber.value = true;
 			Scene currentScene = SceneManager.GetActiveScene();
-			if (currentScene.name != "Dialogue")
+			if (currentScene.name != "DialogueScene")
 				EditorSceneManager.OpenScene("Assets/_Scenes/Dialogue.unity");
 			EditorApplication.isPlaying = true;
 		}
@@ -523,8 +523,7 @@ public class DialogueActionWindow: EditorWindow {
 	/// </summary>
 	void NextAreaStuff() {
 		GUILayout.BeginArea(editRect);
-		GUILayout.Label("Next Action", EditorStyles.boldLabel);
-		hub.dialogueValues.dialogueEntry = (DialogueEntry)EditorGUILayout.ObjectField("Next dialogue", hub.dialogueValues.dialogueEntry, typeof(DialogueEntry),false);
+		GUILayout.Label("End Action", EditorStyles.boldLabel);
 
 		GUILayout.EndArea();
 	}

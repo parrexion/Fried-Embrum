@@ -18,7 +18,6 @@ public class DAEndDialogue : DialogueAction {
 	*/
 
 	public override bool Act(DialogueScene scene, DialogueActionData data) {
-		scene.dialogueEndEvent.Invoke();
 		return false;
 	}
 

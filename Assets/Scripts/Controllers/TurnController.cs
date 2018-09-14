@@ -19,6 +19,7 @@ public class TurnController : MonoBehaviour {
 	public FactionVariable currentTurn;
 	public ActionModeVariable currentMode;
 	public IntVariable currentMenuMode;
+	public IntVariable currentDialogueMode;
 	public BoolVariable dialoguePrePost;
 
 	public BoolVariable autoEndTurn;
@@ -40,7 +41,7 @@ public class TurnController : MonoBehaviour {
 	[Header("Events")]
 	public UnityEvent menuModeChangedEvent;
 	public UnityEvent resetSelections;
-	public UnityEvent gameWinEvent;
+	public UnityEvent startDialogueEvent;
 	public UnityEvent gameLoseEvent;
 	public UnityEvent playSfxEvent;
 	
@@ -49,12 +50,18 @@ public class TurnController : MonoBehaviour {
 
 
 	/// <summary>
-	/// Clears character lists and starts the player's first turn.
+	/// Clears character lists and prepares for the player's first turn.
 	/// </summary>
-	private void Awake() {
+	private void Start() {
 		currentTurn.value = Faction.PLAYER;
 		playerList.values.Clear();
 		enemyList.values.Clear();
+	}
+
+	public void StartGame() {
+		Debug.Log("Start");
+		currentMenuMode.value = (int)MenuMode.MAP;
+		menuModeChangedEvent.Invoke();
 		StartCoroutine(DisplayTurnChange(1.5f));
 	}
 
@@ -157,7 +164,9 @@ public class TurnController : MonoBehaviour {
 		sfxQueue.Enqueue(victoryFanfare);
 		playSfxEvent.Invoke();
 		yield return new WaitForSeconds(4f);
-		gameWinEvent.Invoke();
+		currentDialogueMode.value = (int)DialogueMode.POST;
+		startDialogueEvent.Invoke();
+		
 	}
 
 	/// <summary>
@@ -180,6 +189,7 @@ public class TurnController : MonoBehaviour {
 	/// <param name="duration"></param>
 	/// <returns></returns>
 	private IEnumerator DisplayTurnChange(float duration) {
+		Debug.Log("Display ON");
 		lockControls.value = true;
 		currentMode.value = ActionMode.NONE;
 		currentMenuMode.value = (int)MenuMode.NONE;
@@ -197,6 +207,7 @@ public class TurnController : MonoBehaviour {
 
 		turnChangeDisplay.SetActive(false);
 		StartTurn();
+		Debug.Log("Display OFF");
 	}
 
 	/// <summary>
@@ -226,11 +237,6 @@ public class TurnController : MonoBehaviour {
 			Debug.LogError("Wrong state!");
 		}
 		menuModeChangedEvent.Invoke();
-	}
-
-	public void MoveToPostDialogue() {
-		dialoguePrePost.value = true;
-		SceneManager.LoadScene("Dialogue");
 	}
 
 	public void MoveToMainMenu() {

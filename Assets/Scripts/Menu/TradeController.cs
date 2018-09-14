@@ -131,6 +131,7 @@ public class TradeController : InputReceiver {
 		else {
 			active = false;
 			currentMenuMode.value = (int)MenuMode.UNIT;
+			Debug.Log("Now with UNiT!");
 			currentMode.value = ActionMode.MOVE;
 			StartCoroutine(MenuChangeDelay());
 			selectedIndex = -1;

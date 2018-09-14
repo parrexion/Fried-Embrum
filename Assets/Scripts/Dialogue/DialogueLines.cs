@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(DialogueScene))]
 public class DialogueLines : MonoBehaviour {
 
-	public ScrObjEntryReference currentMap;
+	public ScrObjEntryReference currentDialogue;
 	public BoolVariable dialoguePrePost;
 	public IntVariable currentAction;
 	public DialogueEntry wpEntry;
@@ -26,9 +26,14 @@ public class DialogueLines : MonoBehaviour {
 
 	void Start() {
 		scene = GetComponent<DialogueScene>();
+
+		debugMusicBkg.SetActive(false);
+		debugMusicText.SetActive(false);
+	}
+
+	public void StartDialogue() {
 		if (!overrideActionNumber.value) {
-			MapEntry map = (MapEntry)currentMap.value;
-			dialogueEntry = (dialoguePrePost.value) ? map.postDialogue : map.preDialogue;
+			dialogueEntry = (DialogueEntry)currentDialogue.value;
 			currentAction.value = 0;
 			scene.Reset();
 		}
@@ -42,9 +47,6 @@ public class DialogueLines : MonoBehaviour {
 		scene.bkgMusicChanged.Invoke();
 		scene.characterChanged.Invoke();
 		scene.dialogueTextChanged.Invoke();
-
-		debugMusicBkg.SetActive(false);
-		debugMusicText.SetActive(false);
 	}
 
 	public void NextFrame(){
@@ -114,20 +116,8 @@ public class DialogueLines : MonoBehaviour {
 
 	public void SkipDialogue() {
         if (skippableDialogue.value){
-            DialogueEnd();
+            scene.dialogueEndEvent.Invoke();
         }
-	}
-
-	/// <summary>
-	/// Called when thee dialogue ends. Either sends the player to the battle
-	/// or to the main menu if the map has already been beat.
-	/// </summary>
-	public void DialogueEnd() {
-		if (dialoguePrePost.value) {
-			SceneManager.LoadScene("SaveScene");
-		}
-		else
-			SceneManager.LoadScene("BattleScene");
 	}
 
 }
