@@ -65,6 +65,7 @@ public class CharData : ScrObjLibraryEntry {
 		gRes = 0;
 
 		mustSurvive = false;
+		deathQuote = null;
 	}
 	
 	public override void CopyValues(ScrObjLibraryEntry other) {
@@ -95,5 +96,6 @@ public class CharData : ScrObjLibraryEntry {
 		gRes = cd.gRes;
 
 		mustSurvive = cd.mustSurvive;
+		deathQuote = cd.deathQuote;
 	}
 }

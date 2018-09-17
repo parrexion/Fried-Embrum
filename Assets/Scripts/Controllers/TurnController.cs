@@ -16,11 +16,12 @@ public class TurnController : MonoBehaviour {
 	public CharacterListVariable enemyList;
 
 	public BoolVariable lockControls;
+	public ScrObjEntryReference currentMap;
 	public FactionVariable currentTurn;
 	public ActionModeVariable currentMode;
 	public IntVariable currentMenuMode;
 	public IntVariable currentDialogueMode;
-	public BoolVariable dialoguePrePost;
+	public ScrObjEntryReference currentDialogue;
 
 	public BoolVariable autoEndTurn;
 
@@ -164,9 +165,11 @@ public class TurnController : MonoBehaviour {
 		sfxQueue.Enqueue(victoryFanfare);
 		playSfxEvent.Invoke();
 		yield return new WaitForSeconds(4f);
+		gameFinishObject.SetActive(false);
+		gameFinishText.gameObject.SetActive(false);
 		currentDialogueMode.value = (int)DialogueMode.POST;
+		currentDialogue.value = ((MapEntry)currentMap.value).postDialogue;
 		startDialogueEvent.Invoke();
-		
 	}
 
 	/// <summary>

@@ -9,7 +9,6 @@ using UnityEngine.SceneManagement;
 public class DialogueLines : MonoBehaviour {
 
 	public ScrObjEntryReference currentDialogue;
-	public BoolVariable dialoguePrePost;
 	public IntVariable currentAction;
 	public DialogueEntry wpEntry;
 	public BoolVariable overrideActionNumber;

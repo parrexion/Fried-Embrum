@@ -13,6 +13,7 @@ public class DialogueActionWindow: EditorWindow {
 	}
 
 	public BackgroundEntry noBackgroundSprite;
+	public BackgroundEntry transparentBackgroundSprite;
 	public BackgroundEntry noCharacterSprite;
 	public IntVariable currentAction;
 	public BoolVariable overrideActionNumber;
@@ -392,8 +393,11 @@ public class DialogueActionWindow: EditorWindow {
 		GUILayout.Label("Set background", EditorStyles.boldLabel);
 
 		hub.dialogueValues.actions[hub.selAction].entries[0] = (BackgroundEntry)EditorGUILayout.ObjectField("Background", hub.dialogueValues.actions[hub.selAction].entries[0], typeof(BackgroundEntry),false);
-		if (hub.dialogueValues.actions[hub.selAction].entries[0] != null){
+		if (hub.dialogueValues.actions[hub.selAction].entries[0] != null && ((BackgroundEntry)hub.dialogueValues.actions[hub.selAction].entries[0]).sprite != null){
 			GUI.DrawTexture(bkgRect, ((BackgroundEntry)hub.dialogueValues.actions[hub.selAction].entries[0]).sprite.texture);
+		}
+		else if (((BackgroundEntry)hub.dialogueValues.actions[hub.selAction].entries[0]).sprite == null) {
+			GUI.DrawTexture(bkgRect, transparentBackgroundSprite.sprite.texture);
 		}
 		else
 			GUI.DrawTexture(bkgRect, noBackgroundSprite.sprite.texture);

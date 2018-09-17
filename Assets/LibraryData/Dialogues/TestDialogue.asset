@@ -16,9 +16,6 @@ MonoBehaviour:
   repColor: {r: 0, g: 0, b: 0, a: 0}
   tag: PROLOGUE
   participantColors: []
-  dialogueEntry: {fileID: 0}
-  changePosition: 0
-  playerPosition: {x: 0, y: 0}
   actions:
   - autoContinue: 1
     useDelay: 0
@@ -332,9 +329,9 @@ MonoBehaviour:
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 11400000, guid: cdc00e512112565439c1058cea07343b, type: 2}
-    - {fileID: 0}
+    - {fileID: 11400000, guid: 19df14f1cf7931c4db2ac34472f30565, type: 2}
     - {fileID: 11400000, guid: 193b3a8379d8c464db011f1fa6fd2bde, type: 2}
-    values: ffffffffffffffffffffffff00000000ffffffff00000000
+    values: ffffffffffffffffffffffff000000000000000000000000
     text: []
     boolValue: 0
   - autoContinue: 1
@@ -606,7 +603,7 @@ MonoBehaviour:
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 11400000, guid: 5c3b07cc5881c724990648d4066e9974, type: 2}
-    - {fileID: 0}
+    - {fileID: 11400000, guid: 19df14f1cf7931c4db2ac34472f30565, type: 2}
     values: ffffffffffffffffffffffffffffffff0000000000000000
     text: []
     boolValue: 0
@@ -782,7 +779,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 5c3b07cc5881c724990648d4066e9974, type: 2}
     - {fileID: 0}
     - {fileID: 0}
-    - {fileID: 0}
+    - {fileID: 11400000, guid: 19df14f1cf7931c4db2ac34472f30565, type: 2}
     - {fileID: 0}
     - {fileID: 11400000, guid: cdc00e512112565439c1058cea07343b, type: 2}
     values: 00000000ffffffffffffffff00000000ffffffff00000000
@@ -800,7 +797,7 @@ MonoBehaviour:
     type: 3
     entries:
     - {fileID: 0}
-    - {fileID: 0}
+    - {fileID: 11400000, guid: 19df14f1cf7931c4db2ac34472f30565, type: 2}
     - {fileID: 0}
     - {fileID: 11400000, guid: cdc00e512112565439c1058cea07343b, type: 2}
     - {fileID: 0}
@@ -929,7 +926,7 @@ MonoBehaviour:
     entries: []
     values: 03000000
     text:
-    - Kent
+    - Lyn
     - We will follow your orders in this battle.
     boolValue: 1
   - autoContinue: 0
@@ -954,9 +951,9 @@ MonoBehaviour:
     useDelay: 0
     type: 2
     entries: []
-    values: 00000000
+    values: ffffffff
     text:
-    - Lyn
+    - 
     - "Let\u2019s go!\u201D"
     boolValue: 1
   - autoContinue: 0

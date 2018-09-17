@@ -14,6 +14,8 @@ public class DialogueTextHandler : MonoBehaviour {
 	public Text dialogueTextBox;
 	public CursorBobber cursorBobber;
 	public FloatVariable blipSfxDelay;
+
+	[Header("Events")]
 	public UnityEvent nextFrameEvent;
 	public UnityEvent updateDialogueTextEvent;
 	public UnityEvent playDialogueBlipEvent;

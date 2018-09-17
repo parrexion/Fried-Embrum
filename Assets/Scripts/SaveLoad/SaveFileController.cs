@@ -120,10 +120,12 @@ public class SaveFileController : MonoBehaviour {
 		}
 		else {
 			if (popupPosition == 0) {
+				filePopup.SetActive(false);
 				loadGameEvent.Invoke();
 				return true;
 			}
 			else if (popupPosition == 1) {
+				filePopup.SetActive(false);
 				saveGameEvent.Invoke();
 				return true;
 			}

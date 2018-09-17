@@ -17,7 +17,7 @@ public class MainMenuController : InputReceiver {
 	public IntVariable currentChapterIndex;
 	public IntVariable currentPlayTime;
 	public ScrObjEntryReference currentMap;
-	public BoolVariable dialoguePrePost;
+	public ScrObjEntryReference currentDialogue;
 
 	[Header("Menu")]
 	public Image[] menuButtons;
@@ -36,8 +36,9 @@ public class MainMenuController : InputReceiver {
 	private int buttonPosition;
 
 
-	private void Start() {
+	private void Awake() {
 		state = 0;
+		currentChapterIndex.value = 1;
 		startMenuObject.SetActive(true);
 		saveFileController.HideMenu();
 		SetupMenuButtons();
@@ -73,7 +74,8 @@ public class MainMenuController : InputReceiver {
 		currentChapterIndex.value = 1;
 		currentPlayTime.value = 0;
 		currentMap.value = chapterList.values[0];
-		dialoguePrePost.value = false;
+		currentDialogue.value = ((MapEntry)currentMap.value).preDialogue;
+		Debug.Log("Set Dialogue to:  " + currentDialogue.value.entryName);
 		SceneManager.LoadScene("LoadingScreen");
 	}
 
@@ -82,7 +84,9 @@ public class MainMenuController : InputReceiver {
 	/// </summary>
 	public void LoadGameFinished() {
 		currentMap.value = chapterList.values[currentChapterIndex.value];
-		dialoguePrePost.value = false;
+		currentDialogue.value = ((MapEntry)currentMap.value).preDialogue;
+		currentChapterIndex.value++;
+		Debug.Log("Set DialogueC to:  " + currentDialogue.value.entryName);
 		SceneManager.LoadScene("LoadingScreen");
 	}
 
@@ -93,6 +97,10 @@ public class MainMenuController : InputReceiver {
 				buttonPosition += menuButtons.Length;
 			SetupMenuButtons();	
 			menuMoveEvent.Invoke();
+		}
+		else if (state == 1) {
+			if (howTo.MoveUp())
+				menuMoveEvent.Invoke();
 		}
 		else if (state == 2 || state == 3) {
 			saveFileController.UpClicked();
@@ -112,6 +120,10 @@ public class MainMenuController : InputReceiver {
 			SetupMenuButtons();
 			menuMoveEvent.Invoke();
 		}
+		else if (state == 1) {
+			if (howTo.MoveDown())
+				menuMoveEvent.Invoke();
+		}
 		else if (state == 2 || state == 3) {
 			saveFileController.DownClicked();
 			menuMoveEvent.Invoke();
@@ -123,22 +135,14 @@ public class MainMenuController : InputReceiver {
     }
 
     public override void OnLeftArrow() {
-		if (state == 1) {
-			if (howTo.MoveLeft())
-				menuMoveEvent.Invoke();
-		}
-		else if (state == 4) {
+		if (state == 4) {
 			if (OptionsController.MoveLeft())
 				menuMoveEvent.Invoke();
 		}
     }
 
     public override void OnRightArrow() {
-		if (state == 1) {
-			if (howTo.MoveRight())
-				menuMoveEvent.Invoke();
-		}
-		else if (state == 4) {
+		if (state == 4) {
 			if (OptionsController.MoveRight())
 				menuMoveEvent.Invoke();
 		}
@@ -158,10 +162,6 @@ public class MainMenuController : InputReceiver {
 					OptionsClicked();
 					break;
 			}
-			menuAcceptEvent.Invoke();
-		}
-		else if (state == 1 && howTo.CheckOk()) {
-			NewGameClicked();
 			menuAcceptEvent.Invoke();
 		}
 		else if (state == 2) {
@@ -210,6 +210,13 @@ public class MainMenuController : InputReceiver {
 		}
 	}
 
+    public override void OnStartButton() {
+		if (state == 1) {
+			NewGameClicked();
+			menuAcceptEvent.Invoke();
+		}
+	}
+
 	/// <summary>
 	/// Shows which button is currently selected.
 	/// </summary>
@@ -223,5 +230,4 @@ public class MainMenuController : InputReceiver {
     public override void OnMenuModeChanged() { }
     public override void OnSp1Button() { }
     public override void OnSp2Button() { }
-    public override void OnStartButton() { }
 }

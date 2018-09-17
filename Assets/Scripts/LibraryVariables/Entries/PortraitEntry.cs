@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "LibraryEntries/Portrait")]
 public class PortraitEntry : ScrObjLibraryEntry {
 
-	public Sprite[] poses;
+	public Sprite[] poses = new Sprite[0];
 
 
 	public override void ResetValues() {

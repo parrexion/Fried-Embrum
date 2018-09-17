@@ -57,6 +57,11 @@ public class IngameMenuController : InputReceiver {
 			ButtonHighlighting();
 			menuMoveEvent.Invoke();
 		}
+		else if (state == 1) {
+			bool res = howTo.MoveUp();
+			if (res)
+				menuMoveEvent.Invoke();
+		}
 		else if (state == 2) {
 			options.MoveUp();
 			menuMoveEvent.Invoke();
@@ -74,6 +79,11 @@ public class IngameMenuController : InputReceiver {
 				
 			ButtonHighlighting();
 			menuMoveEvent.Invoke();
+		}
+		else if (state == 1) {
+			bool res = howTo.MoveDown();
+			if (res)
+				menuMoveEvent.Invoke();
 		}
 		else if (state == 2) {
 			options.MoveDown();
@@ -126,6 +136,9 @@ public class IngameMenuController : InputReceiver {
 		}
 		else if (state == 1) {
 			state = 0;
+			ingameMenu.SetActive(true);
+			objectiveObject.SetActive(true);
+			overlay.enabled = true;
 			howTo.BackClicked();
 		}
 		else if (state == 2) {
@@ -170,6 +183,9 @@ public class IngameMenuController : InputReceiver {
 
 	private void Controls() {
 		state = 1;
+		ingameMenu.SetActive(false);
+		objectiveObject.SetActive(false);
+		overlay.enabled = false;
 		howTo.UpdateState(true);
 	}
 
@@ -180,19 +196,11 @@ public class IngameMenuController : InputReceiver {
 		options.UpdateState(true);
 	}
 
-	private void SaveGame() {
-
-	}
-
     public override void OnLeftArrow() {
 		if (!active)
 			return;
 		
-		if (state == 1) {
-			menuMoveEvent.Invoke();
-			howTo.MoveLeft();
-		}
-		else if (state == 2) {
+		if (state == 2) {
 			bool res = options.MoveLeft();
 			if (res)
 				menuMoveEvent.Invoke();
@@ -202,12 +210,7 @@ public class IngameMenuController : InputReceiver {
 		if (!active)
 			return;
 		
-		if (state == 1) {
-			bool res = howTo.MoveRight();
-			if (res)
-				menuMoveEvent.Invoke();
-		}
-		else if (state == 2) {
+		if (state == 2) {
 			bool res = options.MoveRight();
 			if (res)
 				menuMoveEvent.Invoke();

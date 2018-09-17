@@ -69,8 +69,11 @@ MonoBehaviour:
       droppable: 0
     skills: []
     aggroType: 3
-    hasQuotes: 0
-    quotes: []
+    hasQuotes: 1
+    quotes:
+    - triggerer: {fileID: 0}
+      quote: {fileID: 11400000, guid: 0d079fc5442fd004ba690c6a64087362, type: 2}
+      activated: 0
   - x: 4
     y: 3
     level: 1
@@ -115,10 +118,4 @@ MonoBehaviour:
     aggroType: 0
     hasQuotes: 0
     quotes: []
-  interactions:
-  - x: 0
-    y: 0
-    interactType: 1
-    health: 20
-    dialogue: {fileID: 0}
-    gift: {fileID: 0}
+  interactions: []

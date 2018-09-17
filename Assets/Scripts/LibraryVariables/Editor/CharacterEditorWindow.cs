@@ -158,6 +158,7 @@ public class CharacterEditorWindow {
 		GUILayout.Space(10);
 
 		GUILayout.Label("Other values", EditorStyles.boldLabel);
+		charValues.deathQuote = (DialogueEntry)EditorGUILayout.ObjectField("Death Quote", charValues.deathQuote, typeof(DialogueEntry),false);
 		charValues.mustSurvive = EditorGUILayout.Toggle("Must survive", charValues.mustSurvive);
 
 		GUILayout.Space(10);

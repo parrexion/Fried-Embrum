@@ -8,10 +8,10 @@ using UnityEngine.UI;
 public class SaveScreenController : InputReceiver {
 
 	public ScrObjEntryReference currentMap;
+	public ScrObjEntryReference currentDialogue;
 	public SaveFileController saveFileController;
 	public MapInfoListVariable chapterList;
 	public IntVariable chapterIndex;
-	public BoolVariable dialoguePrePost;
 
 	[Header("No Save Popup")]
 	public GameObject noSavePopup;
@@ -40,13 +40,14 @@ public class SaveScreenController : InputReceiver {
 	}
 
 	public void NextLevel() {
+		Debug.Log("Current index is:  " + chapterIndex.value);
 		if (chapterIndex.value >= chapterList.values.Count) {
 			SceneManager.LoadScene("MainMenu");
 		}
 		else {
 			currentMap.value = chapterList.values[chapterIndex.value];
 			chapterIndex.value++;
-			dialoguePrePost.value = false;
+			currentDialogue.value = ((MapEntry)currentMap.value).preDialogue;
 			SceneManager.LoadScene("LoadingScreen");
 		}
 	}
@@ -90,7 +91,7 @@ public class SaveScreenController : InputReceiver {
 			bool res = saveFileController.OkClicked();
 			if (res) {
 				state = 3;
-				NextLevel();
+				StartCoroutine(Transition());
 				menuAcceptEvent.Invoke();
 			}
 			else {
@@ -101,7 +102,7 @@ public class SaveScreenController : InputReceiver {
 		else if (state == 2) {
 			if (noSavePosition == 0) {
 				state = 3;
-				StartCoroutine(Transition());
+				NextLevel();
 				menuAcceptEvent.Invoke();
 			}
 			else if (noSavePosition == 1) {
