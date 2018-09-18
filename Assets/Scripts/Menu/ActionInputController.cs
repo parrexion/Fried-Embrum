@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
+public enum ActionInputType { SEIZE, ATTACK, HEAL, VISIT, TRADE, ITEM, WAIT }
+
 public class ActionInputController : InputReceiver {
 
 	[Header("References")]
@@ -11,6 +13,7 @@ public class ActionInputController : InputReceiver {
 	public ActionModeVariable currentActionMode;
 	public MapTileListVariable targetList;
 	public IntVariable inventoryIndex;
+	public BoolVariable triggeredWin;
 
 	[Header("Unit Action Menu")]
 	public GameObject actionMenu;
@@ -33,7 +36,7 @@ public class ActionInputController : InputReceiver {
 		MenuMode mode = (MenuMode)currentMenuMode.value;
 		active = (mode == MenuMode.UNIT);
 		actionMenu.SetActive(mode == MenuMode.UNIT);
-		Debug.Log("Active:  " + active + " , " + mode);
+		// Debug.Log("Active:  " + active + " , " + mode);
 		ButtonSetup();
     }
 
@@ -80,23 +83,30 @@ public class ActionInputController : InputReceiver {
 			return;
 		}
 
-		switch (actionMenuPosition.value)
+		switch ((ActionInputType)actionMenuPosition.value)
 		{
-			case 0: // ATTACK
+			case ActionInputType.SEIZE:
+				triggeredWin.value = true;
+				currentMenuMode.value = (int)MenuMode.MAP;
+				currentActionMode.value = ActionMode.NONE;
+				StartCoroutine(MenuChangeDelay());
+				selectedCharacter.value.End();
+				break;
+			case ActionInputType.ATTACK:
 				// Debug.Log("Attack!");
 				targetList.values = selectedCharacter.value.GetAttackablesInRange();
 				currentMenuMode.value = (int)MenuMode.MAP;
 				currentActionMode.value = ActionMode.ATTACK;
 				StartCoroutine(MenuChangeDelay());
 				break;
-			case 1: // HEAL
+			case ActionInputType.HEAL: // HEAL
 				// Debug.Log("Heal!");
 				targetList.values = selectedCharacter.value.FindSupportablesInRange();
 				currentMenuMode.value = (int)MenuMode.MAP;
 				currentActionMode.value = ActionMode.HEAL;
 				StartCoroutine(MenuChangeDelay());
 				break;
-			case 2: // VISIT
+			case ActionInputType.VISIT: // VISIT
 				selectedCharacter.value.currentTile.interacted = true;
 				active = false;
 				StartCoroutine(MenuChangeDelay());
@@ -104,20 +114,20 @@ public class ActionInputController : InputReceiver {
 				dialogueEntry.value = selectedCharacter.value.currentTile.dialogue;
 				startDialogue.Invoke();
 				break;
-			case 3: // TRADE
+			case ActionInputType.TRADE: // TRADE
 				// Debug.Log("Trade!");
 				targetList.values = selectedCharacter.value.FindAdjacentCharacters(Faction.PLAYER);
 				currentMenuMode.value = (int)MenuMode.MAP;
 				currentActionMode.value = ActionMode.TRADE;
 				StartCoroutine(MenuChangeDelay());
 				break;
-			case 4: // ITEM
+			case ActionInputType.ITEM: // ITEM
 				// Debug.Log("Item!");
 				currentMenuMode.value = (int)MenuMode.STATS;
 				inventoryIndex.value = 0;
 				StartCoroutine(MenuChangeDelay());
 				break;
-			case 5: // WAIT
+			case ActionInputType.WAIT: // WAIT
 				// Debug.Log("Wait!");
 				currentMenuMode.value = (int)MenuMode.MAP;
 				currentActionMode.value = ActionMode.NONE;
@@ -153,10 +163,11 @@ public class ActionInputController : InputReceiver {
 		if (!active)
 			return;
 			
-		actionButtons[0].gameObject.SetActive(selectedCharacter.value.CanAttack());
-		actionButtons[1].gameObject.SetActive(selectedCharacter.value.CanSupport());
-		actionButtons[2].gameObject.SetActive(selectedCharacter.value.CanVisit());
-		actionButtons[3].gameObject.SetActive(selectedCharacter.value.CanTrade());
+		actionButtons[(int)ActionInputType.SEIZE].gameObject.SetActive(selectedCharacter.value.CanSeize());
+		actionButtons[(int)ActionInputType.ATTACK].gameObject.SetActive(selectedCharacter.value.CanAttack());
+		actionButtons[(int)ActionInputType.HEAL].gameObject.SetActive(selectedCharacter.value.CanSupport());
+		actionButtons[(int)ActionInputType.VISIT].gameObject.SetActive(selectedCharacter.value.CanVisit());
+		actionButtons[(int)ActionInputType.TRADE].gameObject.SetActive(selectedCharacter.value.CanTrade());
 		if (actionMenuPosition.value == -1 || !actionButtons[actionMenuPosition.value].IsActive()) {
 			actionMenuPosition.value = -1;
 			OnDownArrow();

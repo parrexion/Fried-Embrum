@@ -204,6 +204,10 @@ public class MapCreator : MonoBehaviour {
 					tempTile.dialogue = interPos.dialogue;
 					tempTile.gift = interPos.gift;
 				}
+				else if (interPos.interactType == InteractType.SEIZE) {
+					tempTile.SetTerrain(GetTerrainFromPixel(colorData[pos]));
+					tempTile.interactType = InteractType.SEIZE;
+				}
 				else {
 					Debug.LogError("Unimplemented interact type");
 				}

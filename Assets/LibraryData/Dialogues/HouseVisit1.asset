@@ -16,15 +16,12 @@ MonoBehaviour:
   repColor: {r: 0, g: 0, b: 0, a: 0}
   tag: 
   participantColors: []
-  dialogueEntry: {fileID: 0}
-  changePosition: 0
-  playerPosition: {x: 0, y: 0}
   actions:
   - autoContinue: 1
     useDelay: 0
     type: 4
     entries:
-    - {fileID: 11400000, guid: 8ff3cb043e4e49b4ba7146e6b9547887, type: 2}
+    - {fileID: 11400000, guid: 18c15af4d95fd9240b609d916cbeb41e, type: 2}
     values: 
     text: []
     boolValue: 0
@@ -40,23 +37,51 @@ MonoBehaviour:
     useDelay: 0
     type: 3
     entries:
-    - {fileID: 11400000, guid: 19df14f1cf7931c4db2ac34472f30565, type: 2}
-    - {fileID: 0}
-    - {fileID: 11400000, guid: 5c3b07cc5881c724990648d4066e9974, type: 2}
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
-    values: 00000000ffffffff00000000ffffffffffffffffffffffff
+    - {fileID: 11400000, guid: eb0bcfedcddb2144ebd89d759d57e786, type: 2}
+    - {fileID: 0}
+    - {fileID: 0}
+    values: ffffffffffffffffffffffff00000000ffffffffffffffff
     text: []
     boolValue: 0
   - autoContinue: 0
     useDelay: 0
     type: 2
     entries: []
-    values: 02000000
+    values: 03000000
     text:
-    - Village 1
-    - Huh?
+    - char_vilF1
+    - "\u201CDo you know much about the sword held at the altar?"
+    boolValue: 1
+  - autoContinue: 0
+    useDelay: 0
+    type: 2
+    entries: []
+    values: 03000000
+    text:
+    - char_vilF1
+    - "It\u2019s called the Mani Katti, blessed by the spirits."
+    boolValue: 1
+  - autoContinue: 0
+    useDelay: 0
+    type: 2
+    entries: []
+    values: 03000000
+    text:
+    - char_vilF1
+    - According to the priest, the Mani Katti is waiting for the right owner to appear.
+    boolValue: 1
+  - autoContinue: 0
+    useDelay: 0
+    type: 2
+    entries: []
+    values: 03000000
+    text:
+    - char_vilF1
+    - "It\u2019s so odd, don\u2019t you think? The idea that a sword can choose who
+      will wield it?\u201D"
     boolValue: 1
   - autoContinue: 0
     useDelay: 0

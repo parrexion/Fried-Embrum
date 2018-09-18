@@ -20,6 +20,7 @@ public class TurnController : MonoBehaviour {
 	public FactionVariable currentTurn;
 	public ActionModeVariable currentMode;
 	public IntVariable currentMenuMode;
+	public BoolVariable triggeredWin;
 	public IntVariable currentDialogueMode;
 	public ScrObjEntryReference currentDialogue;
 
@@ -55,6 +56,7 @@ public class TurnController : MonoBehaviour {
 	/// </summary>
 	private void Start() {
 		currentTurn.value = Faction.PLAYER;
+		triggeredWin.value = false;
 		playerList.values.Clear();
 		enemyList.values.Clear();
 	}
@@ -112,14 +114,22 @@ public class TurnController : MonoBehaviour {
 	public void CheckGameFinished() {
 		// Check if any players are alive
 		bool gameFinished = true;
-		for (int i = 0; i < playerList.values.Count; i++) {
-			if (playerList.values[i].IsAlive()) {
-				gameFinished = false;
-				break;
+		MapEntry map = (MapEntry)currentMap.value;
+		// Normal lose condition
+		if (map.loseCondition == LoseCondition.NORMAL) {
+			for (int i = 0; i < playerList.values.Count; i++) {
+				if (playerList.values[i].IsAlive()) {
+					gameFinished = false;
+					break;
+				}
+				else if (playerList.values[i].stats.charData.mustSurvive) {
+					gameFinished = true;
+					break;
+				}
 			}
-			else if (playerList.values[i].stats.charData.mustSurvive) {
-				break;
-			}
+		}
+		else {
+			Debug.LogError("Undefined lose condition:   " + map.loseCondition);
 		}
 		if (gameFinished) {
 			Debug.Log("GAME OVER");
@@ -130,11 +140,29 @@ public class TurnController : MonoBehaviour {
 
 		// Check if any enemies are alive
 		gameFinished = true;
-		for (int i = 0; i < enemyList.values.Count; i++) {
-			if (enemyList.values[i].IsAlive()) {
-				gameFinished = false;
-				break;
+		// Rout win condition
+		if (map.winCondition == WinCondition.ROUT) {
+			for (int i = 0; i < enemyList.values.Count; i++) {
+				if (enemyList.values[i].IsAlive()) {
+					gameFinished = false;
+					break;
+				}
 			}
+		}
+		else if (map.winCondition == WinCondition.BOSS) {
+			for (int i = 0; i < enemyList.values.Count; i++) {
+				NPCMove enemy = (NPCMove)enemyList.values[i];
+				if (enemy.aggroType == AggroType.BOSS && enemyList.values[i].IsAlive()) {
+					gameFinished = false;
+					break;
+				}
+			}
+		}
+		else if (map.winCondition == WinCondition.SEIZE){
+			gameFinished = (triggeredWin.value);
+		}
+		else {
+			Debug.LogError("Undefined win condition:   " + map.winCondition);
 		}
 
 		// DEBUG
@@ -147,8 +175,6 @@ public class TurnController : MonoBehaviour {
 			gameover = true;
 			return;
 		}
-
-		// Add more win/lose conditions
 
 		gameover = false;
 	}

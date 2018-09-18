@@ -16,9 +16,6 @@ MonoBehaviour:
   repColor: {r: 0, g: 0, b: 0, a: 0}
   tag: 
   participantColors: []
-  dialogueEntry: {fileID: 0}
-  changePosition: 0
-  playerPosition: {x: 0, y: 0}
   actions:
   - autoContinue: 1
     useDelay: 0
@@ -40,13 +37,13 @@ MonoBehaviour:
     useDelay: 0
     type: 3
     entries:
-    - {fileID: 11400000, guid: 19df14f1cf7931c4db2ac34472f30565, type: 2}
-    - {fileID: 0}
-    - {fileID: 11400000, guid: 5c3b07cc5881c724990648d4066e9974, type: 2}
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
-    values: 00000000ffffffff00000000ffffffffffffffffffffffff
+    - {fileID: 11400000, guid: 532c6851c1c85d241822db02daa2da6f, type: 2}
+    - {fileID: 0}
+    - {fileID: 0}
+    values: ffffffffffffffffffffffff00000000ffffffffffffffff
     text: []
     boolValue: 0
   - autoContinue: 0
@@ -55,8 +52,18 @@ MonoBehaviour:
     entries: []
     values: 02000000
     text:
-    - Village 2
-    - How can I help you?
+    - Zugu
+    - "\u201CMountains make it more difficult to be hit, but they\u2019re difficult
+      to traverse."
+    boolValue: 1
+  - autoContinue: 0
+    useDelay: 0
+    type: 2
+    entries: []
+    values: ffffffff
+    text:
+    - 
+    - "If you\u2019re riding on horseback, you can\u2019t cross them at all. Be careful.\u201D"
     boolValue: 1
   - autoContinue: 0
     useDelay: 0

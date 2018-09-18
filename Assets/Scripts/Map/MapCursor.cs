@@ -131,8 +131,7 @@ public class MapCursor : MonoBehaviour {
 				moveTile.value = mapCreator.GetTile(cursorX.value, cursorY.value);
 				moveTile.value.current = true;
 				selectCharacter.value.path.Clear();
-				Debug.Log("Click!");
-				Debug.Log("X:  " + cursorX.value + "  Y:  " + cursorY.value);
+				Debug.Log("Click!   X:  " + cursorX.value + "  Y:  " + cursorY.value);
 			}
 		}
 		else {
@@ -147,7 +146,6 @@ public class MapCursor : MonoBehaviour {
 	private void SelectMoveTile() {
 		if (moveTile.value != null) {
 			selectCharacter.value.StartMove();
-			Debug.Log("OK move");
 		}
 
 		// Add features to allow the play to attack and heal target with movement.

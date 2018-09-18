@@ -16,9 +16,6 @@ MonoBehaviour:
   repColor: {r: 0, g: 0, b: 0, a: 0}
   tag: 
   participantColors: []
-  dialogueEntry: {fileID: 0}
-  changePosition: 0
-  playerPosition: {x: 0, y: 0}
   actions:
   - autoContinue: 1
     useDelay: 0
@@ -40,23 +37,44 @@ MonoBehaviour:
     useDelay: 0
     type: 3
     entries:
-    - {fileID: 11400000, guid: 19df14f1cf7931c4db2ac34472f30565, type: 2}
-    - {fileID: 0}
-    - {fileID: 11400000, guid: 5c3b07cc5881c724990648d4066e9974, type: 2}
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
-    values: 00000000ffffffff00000000ffffffffffffffffffffffff
+    - {fileID: 11400000, guid: 6932e7f7e67cd7a42bec9e2a117433cc, type: 2}
+    - {fileID: 0}
+    - {fileID: 0}
+    values: ffffffffffffffffffffffff00000000ffffffffffffffff
     text: []
     boolValue: 0
   - autoContinue: 0
     useDelay: 0
     type: 2
     entries: []
-    values: 02000000
+    values: 03000000
     text:
-    - Village 3
-    - No way! :O
+    - char_vilF2
+    - "\u201COh! You\u2019re going to help the priest! Well, perhaps you could benefit
+      from something I saw earlier\u2026"
+    boolValue: 1
+  - autoContinue: 0
+    useDelay: 0
+    type: 2
+    entries: []
+    values: 03000000
+    text:
+    - char_vilF2
+    - "The bandits may have the main entrance guarded. However, one of the altar\u2019s
+      walls is cracked and in poor repair."
+    boolValue: 1
+  - autoContinue: 0
+    useDelay: 0
+    type: 2
+    entries: []
+    values: ffffffff
+    text:
+    - 
+    - "You might be able to create another entrance by hitting that section with your
+      weapons.\u201D"
     boolValue: 1
   - autoContinue: 0
     useDelay: 0

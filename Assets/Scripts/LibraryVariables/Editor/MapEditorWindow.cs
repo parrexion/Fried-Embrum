@@ -141,6 +141,11 @@ public class MapEditorWindow {
 		mapValues.entryName = EditorGUILayout.TextField("Map Name", mapValues.entryName);
 
 		GUILayout.Space(10);
+		GUILayout.Label("Win/Lose", EditorStyles.boldLabel);
+		mapValues.winCondition = (WinCondition)EditorGUILayout.EnumPopup("",mapValues.winCondition);
+		mapValues.loseCondition = (LoseCondition)EditorGUILayout.EnumPopup("",mapValues.loseCondition);
+
+		GUILayout.Space(10);
 
 		GUILayout.Label("Map Size", EditorStyles.boldLabel);
 		mapValues.mapSprite = (Texture2D)EditorGUILayout.ObjectField("Map Info Sprite",mapValues.mapSprite, typeof(Texture2D),false);

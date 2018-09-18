@@ -17,7 +17,7 @@ public class MapInputController : InputReceiver {
 	public IntVariable cursorX;
 	public IntVariable cursorY;
 	public IntVariable targetIndex;
-	public IntVariable buttonMenuPosition;
+	public IntVariable actionMenuPosition;
 
 	[Header("Events")]
 	public UnityEvent cursorMovedEvent;
@@ -145,7 +145,7 @@ public class MapInputController : InputReceiver {
 		}
 		else {
 			targetIndex.value = 0;
-			buttonMenuPosition.value = -1;
+			actionMenuPosition.value = -1;
 			clicker.CursorClick();
 		}
 		menuAcceptEvent.Invoke();

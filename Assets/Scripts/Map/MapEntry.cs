@@ -2,8 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum WinCondition { ROUT, SEIZE, BOSS, ESCAPE, DEFEND }
+public enum LoseCondition { NORMAL, SEIZE, PROTECT }
+
 [CreateAssetMenu(menuName = "LibraryEntries/MapEntry")]
 public class MapEntry : ScrObjLibraryEntry {
+
+	[Header("Map")]
+	public int sizeX;
+	public int sizeY;
+	public Texture2D mapSprite;
+	public WinCondition winCondition;
+	public LoseCondition loseCondition;
 
 	[Header("Dialogues")]
 	public DialogueEntry preDialogue;
@@ -14,11 +24,6 @@ public class MapEntry : ScrObjLibraryEntry {
 	public MusicEntry battleMusic;
 	public MusicEntry healMusic;
 	public MusicEntry deathMusic;
-
-	[Header("Map")]
-	public int sizeX;
-	public int sizeY;
-	public Texture2D mapSprite;
 
 	[Header("Players")]
 	public List<PlayerPosition> spawnPoints = new List<PlayerPosition>();
@@ -31,6 +36,12 @@ public class MapEntry : ScrObjLibraryEntry {
 
 
 	public override void ResetValues() {
+		sizeX = 0;
+		sizeY = 0;
+		mapSprite = null;
+		winCondition = WinCondition.ROUT;
+		loseCondition = LoseCondition.NORMAL;
+
 		base.ResetValues();
 		preDialogue = null;
 		postDialogue = null;
@@ -38,10 +49,6 @@ public class MapEntry : ScrObjLibraryEntry {
 		owMusic = null;
 		battleMusic = null;
 		healMusic = null;
-
-		sizeX = 0;
-		sizeY = 0;
-		mapSprite = null;
 
 		spawnPoints = new List<PlayerPosition>();
 		enemies = new List<EnemyPosition>();
@@ -52,16 +59,18 @@ public class MapEntry : ScrObjLibraryEntry {
 		base.CopyValues(other);
 		MapEntry map = (MapEntry)other;
 
+		sizeX = map.sizeX;
+		sizeY = map.sizeY;
+		mapSprite = map.mapSprite;
+		winCondition = map.winCondition;
+		loseCondition = map.loseCondition;
+
 		preDialogue = map.preDialogue;
 		postDialogue = map.postDialogue;
 
 		owMusic = map.owMusic;
 		battleMusic = map.battleMusic;
 		healMusic = map.healMusic;
-
-		sizeX = map.sizeX;
-		sizeY = map.sizeY;
-		mapSprite = map.mapSprite;
 
 		spawnPoints = new List<PlayerPosition>();
 		for (int i = 0; i < map.spawnPoints.Count; i++){
@@ -108,7 +117,7 @@ public class EnemyPosition {
 	public List<FightQuote> quotes = new List<FightQuote>();
 }
 
-public enum InteractType { NONE, BLOCK, DIALOGUE, VILLAGE, CHEST }
+public enum InteractType { NONE, BLOCK, DIALOGUE, VILLAGE, SEIZE, CHEST }
 
 [System.Serializable]
 public class InteractPosition {

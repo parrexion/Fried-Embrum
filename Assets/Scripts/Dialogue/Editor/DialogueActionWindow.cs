@@ -179,8 +179,10 @@ public class DialogueActionWindow: EditorWindow {
 
 		for (int i = 0; i < editModeStrings.Length; i++) {
 			if (GUILayout.Button(editModeStrings[i], GUILayout.Height(25))){
+				GUI.FocusControl(null);
 				hub.InsertAction((DActionType)(i+2));
 				listWindow.Repaint();
+				hub.SaveSelectedDialogue();
 			}
 		}
 
@@ -192,6 +194,7 @@ public class DialogueActionWindow: EditorWindow {
 		if (GUILayout.Button("DELETE ACTION", style, GUILayout.Height(30))){
 			hub.DeleteAction();
 			listWindow.Repaint();
+			hub.SaveSelectedDialogue();
 		}
 		GUILayout.EndArea();
 	}
@@ -396,11 +399,15 @@ public class DialogueActionWindow: EditorWindow {
 		if (hub.dialogueValues.actions[hub.selAction].entries[0] != null && ((BackgroundEntry)hub.dialogueValues.actions[hub.selAction].entries[0]).sprite != null){
 			GUI.DrawTexture(bkgRect, ((BackgroundEntry)hub.dialogueValues.actions[hub.selAction].entries[0]).sprite.texture);
 		}
+		else if (hub.dialogueValues.actions[hub.selAction].entries[0] == null) {
+			GUI.DrawTexture(bkgRect, noBackgroundSprite.sprite.texture);
+		}
 		else if (((BackgroundEntry)hub.dialogueValues.actions[hub.selAction].entries[0]).sprite == null) {
 			GUI.DrawTexture(bkgRect, transparentBackgroundSprite.sprite.texture);
 		}
-		else
+		else {
 			GUI.DrawTexture(bkgRect, noBackgroundSprite.sprite.texture);
+		}
 
 		GUILayout.EndArea();
 	}
