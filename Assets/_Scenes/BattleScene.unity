@@ -15128,6 +15128,9 @@ MonoBehaviour:
   autoEndTurn: {fileID: 11400000, guid: 27e8cb1b44794c44da7921a16f5d1041, type: 2}
   turnChangeDisplay: {fileID: 1102929061}
   turnChangeText: {fileID: 189031125}
+  mainMusic: {fileID: 11400000, guid: 40f826d9f1abd9e4f9f0972569193a0f, type: 2}
+  subMusic: {fileID: 11400000, guid: a0a5dc1f59ad1aa42af7dd1c0b2ede36, type: 2}
+  musicFocus: {fileID: 11400000, guid: 7293c60ce7ba5ec458d4ee7f2b4c5119, type: 2}
   sfxQueue: {fileID: 11400000, guid: 20c2a8af0750fd24b9b1e5c73c95005d, type: 2}
   victoryFanfare: {fileID: 11400000, guid: 45b686e032ac8214695879c47cd20b58, type: 2}
   gameOverFanfare: {fileID: 11400000, guid: 6c6c99278c318d64893eb7da5fbbc3f1, type: 2}
@@ -15186,6 +15189,22 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11400000, guid: f789eb97404512442ba6c33e789d5bb9, type: 2}
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  playBkgMusicEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: a9dc149b32873a14f9addbdaec204b43, type: 2}
         m_MethodName: Raise
         m_Mode: 1
         m_Arguments:
@@ -37851,6 +37870,7 @@ MonoBehaviour:
   playerList: {fileID: 11400000, guid: 8943adc57d10eb547a5f30311d9c9f90, type: 2}
   enemyList: {fileID: 11400000, guid: 267060ebaf58f1a45bfa555220142569, type: 2}
   selectCharacter: {fileID: 11400000, guid: 9514266d05ac5174781ef48f42fe570e, type: 2}
+  selectTile: {fileID: 11400000, guid: cc6b23f7f6b66384fbcd3092e9bbc82a, type: 2}
   battleWeaponIndex: {fileID: 11400000, guid: b325086f4f856bb42b4a1d6407137bfe, type: 2}
   currentPage: {fileID: 11400000, guid: 0aeb313bff5d1b74ea4fbec5e866deba, type: 2}
   cursorX: {fileID: 11400000, guid: c2b3aa3e1e995d545b1165460053d109, type: 2}
@@ -40090,29 +40110,10 @@ MonoBehaviour:
     type: 2}
   availableCharacters: {fileID: 11400000, guid: cf29fce9ee9388e4290741fe2d10bab5,
     type: 2}
-  mainMusic: {fileID: 11400000, guid: 40f826d9f1abd9e4f9f0972569193a0f, type: 2}
-  subMusic: {fileID: 11400000, guid: a0a5dc1f59ad1aa42af7dd1c0b2ede36, type: 2}
-  musicFocus: {fileID: 11400000, guid: 7293c60ce7ba5ec458d4ee7f2b4c5119, type: 2}
   cursorMoveEvent:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11400000, guid: 2d602ae12a5de354395e1c957b158428, type: 2}
-        m_MethodName: Raise
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  playBkgMusicEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11400000, guid: a9dc149b32873a14f9addbdaec204b43, type: 2}
         m_MethodName: Raise
         m_Mode: 1
         m_Arguments:

@@ -8,7 +8,7 @@ public class NPCMove : TacticsMove {
 
 	public ActionModeVariable currentMode;
 	public AggroType aggroType;
-	public MapTileVariable tempTargetTile;
+	public MapTileVariable moveTile;
 	public SpriteRenderer bossCrest;
 
 
@@ -40,16 +40,16 @@ public class NPCMove : TacticsMove {
 			FindBestTile(staff, out tileBestStf, out tileGoodStf);
 		}
 
-		tempTargetTile.value = (tileBestWpn != null) ? tileBestWpn :
+		moveTile.value = (tileBestWpn != null) ? tileBestWpn :
 					(tileBestStf != null) ? tileBestStf :
 					(tileGoodWpn != null) ? tileGoodWpn : tileGoodStf;
 
 		//Nowhere to move
-		if (tempTargetTile.value == null) {
+		if (moveTile.value == null) {
 			EndMovement();
 		}
 		else {
-			ShowMove(tempTargetTile.value);
+			ShowMove(moveTile.value);
 			StartMove();
 		}
 	}
@@ -204,16 +204,16 @@ public class NPCMove : TacticsMove {
 			return false;
 
 		if (currentMode.value == ActionMode.ATTACK) {
-			base.targetTile.value = FindRandomTarget(playerList, ItemCategory.WEAPON, false);
-			int distance = MapCreator.DistanceTo(this, base.targetTile.value);
+			targetTile.value = FindRandomTarget(playerList, ItemCategory.WEAPON, false);
+			int distance = MapCreator.DistanceTo(this, targetTile.value);
 			inventory.EquipFirstInRangeItem(ItemCategory.WEAPON, stats, distance);
-            Attack(base.targetTile.value);
+            Attack(targetTile.value);
 		}
 		else {
-			base.targetTile.value = FindRandomTarget(enemyList, ItemCategory.STAFF, true);
-			int distance = MapCreator.DistanceTo(this, base.targetTile.value);
+			targetTile.value = FindRandomTarget(enemyList, ItemCategory.STAFF, true);
+			int distance = MapCreator.DistanceTo(this, targetTile.value);
 			inventory.EquipFirstInRangeItem(ItemCategory.STAFF, stats, distance);
-            Heal(base.targetTile.value);
+            Heal(targetTile.value);
 		}
 		return true;
 	}

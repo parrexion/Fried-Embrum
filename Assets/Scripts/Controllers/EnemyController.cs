@@ -10,6 +10,7 @@ public class EnemyController : MonoBehaviour {
 	public CharacterListVariable playerList;
 	public CharacterListVariable enemyList;
 	public TacticsMoveVariable selectCharacter;
+	public MapTileVariable selectTile;
 	public IntVariable battleWeaponIndex;
 	public IntVariable currentPage;
 	public IntVariable cursorX;
@@ -49,6 +50,7 @@ public class EnemyController : MonoBehaviour {
 			// Select the next enemy and show its movement
 			Debug.Log(enemyList.values[i].gameObject.name + " turn");
 			selectCharacter.value = enemyList.values[i];
+			selectTile.value = selectCharacter.value.currentTile;
 			NPCMove enemy = (NPCMove)enemyList.values[i];
 			enemy.FindAllMoveTiles(false);
 			cursorX.value = enemy.posx;

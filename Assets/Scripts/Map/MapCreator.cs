@@ -22,14 +22,8 @@ public class MapCreator : MonoBehaviour {
 	public Transform playerPrefab;
 	public SaveListVariable availableCharacters;
 
-	[Header("Music")]
-	public AudioVariable mainMusic;
-	public AudioVariable subMusic;
-	public BoolVariable musicFocus;
-
 	[Header("Events")]
 	public UnityEvent cursorMoveEvent;
-	public UnityEvent playBkgMusicEvent;
 
 	[HideInInspector] public MapTile[] tiles;
 	[HideInInspector] public List<MapTile> breakables = new List<MapTile>();
@@ -69,7 +63,7 @@ public class MapCreator : MonoBehaviour {
 		GenerateMap(map.mapSprite);
 		cursorMoveEvent.Invoke();
 		SpawnCharacters();
-		SetupMusic();
+		Debug.Log("Finished creating map");
 	}
 	
 	public void ResetMap() {
@@ -348,13 +342,5 @@ public class MapCreator : MonoBehaviour {
 		}
 
 		return terrain;
-	}
-
-	private void SetupMusic() {
-		MapEntry map = (MapEntry)currentMap.value;
-		musicFocus.value = true;
-		mainMusic.value = map.owMusic.clip;
-		subMusic.value = null;
-		playBkgMusicEvent.Invoke();
 	}
 }

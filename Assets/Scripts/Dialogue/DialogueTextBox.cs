@@ -36,7 +36,7 @@ public class DialogueTextBox : MonoBehaviour {
 					bubble.localScale = new Vector3(-1,1,1);
 					bubble.gameObject.SetActive(true);
 					bubbleNoTalk.SetActive(false);
-					transform.localPosition = new Vector3(-150, transform.localPosition.y, 0);
+					transform.localPosition = new Vector3(-200, transform.localPosition.y, 0);
 					break;
 				case 1:
 					bubble.localScale = new Vector3(-1,1,1);
@@ -54,7 +54,7 @@ public class DialogueTextBox : MonoBehaviour {
 					bubble.localScale = new Vector3(1,1,1);
 					bubble.gameObject.SetActive(true);
 					bubbleNoTalk.SetActive(false);
-					transform.localPosition = new Vector3(150, transform.localPosition.y, 0);
+					transform.localPosition = new Vector3(200, transform.localPosition.y, 0);
 					break;
 				case -1:
 				case 4:

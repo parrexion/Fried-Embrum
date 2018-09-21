@@ -31,6 +31,9 @@ public class TurnController : MonoBehaviour {
 	public Text turnChangeText;
 
 	[Header("Sound")]
+	public AudioVariable mainMusic;
+	public AudioVariable subMusic;
+	public BoolVariable musicFocus;
 	public AudioQueueVariable sfxQueue;
 	public SfxEntry victoryFanfare;
 	public SfxEntry gameOverFanfare;
@@ -45,6 +48,7 @@ public class TurnController : MonoBehaviour {
 	public UnityEvent resetSelections;
 	public UnityEvent startDialogueEvent;
 	public UnityEvent gameLoseEvent;
+	public UnityEvent playBkgMusicEvent;
 	public UnityEvent playSfxEvent;
 	
 	private bool gameover;
@@ -63,9 +67,18 @@ public class TurnController : MonoBehaviour {
 
 	public void StartGame() {
 		Debug.Log("Start");
+		SetupMusic();
 		currentMenuMode.value = (int)MenuMode.MAP;
 		menuModeChangedEvent.Invoke();
 		StartCoroutine(DisplayTurnChange(1.5f));
+	}
+
+	private void SetupMusic() {
+		MapEntry map = (MapEntry)currentMap.value;
+		musicFocus.value = true;
+		mainMusic.value = map.owMusic.clip;
+		subMusic.value = null;
+		playBkgMusicEvent.Invoke();
 	}
 
 	/// <summary>
