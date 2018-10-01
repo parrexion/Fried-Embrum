@@ -78,6 +78,7 @@ public abstract class TacticsMove : MonoBehaviour {
 		currentTile = mapCreator.GetTile(posx, posy);
 		currentTile.currentCharacter = this;
 		transform.position = new Vector3(currentTile.transform.position.x, currentTile.transform.position.y, 0);
+		gameObject.SetActive(true);
 		SetupLists();
 	}
 
@@ -320,7 +321,6 @@ public abstract class TacticsMove : MonoBehaviour {
 		GetComponent<SpriteRenderer>().color = new Color(0.66f,0.66f,0.66f);
 		mapCreator.ResetMap();
 		currentTile.current = true;
-		Debug.Log("Wait!");
 		waitEvent.Invoke();
 	}
 
@@ -456,7 +456,9 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// Refreshes the character and removes expired buffs.
 	/// </summary>
 	public void OnStartTurn() {
-		Debug.Log("START");
+		if (!IsAlive())
+			return;
+			
 		stats.ClearBoosts(true);
 		ForEachSkills(Activation.STARTTURN, playerList);
 		hasMoved = false;

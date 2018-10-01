@@ -13,6 +13,7 @@ public class DialogueLines : MonoBehaviour {
 	public DialogueEntry wpEntry;
 	public BoolVariable overrideActionNumber;
     public BoolVariable skippableDialogue;
+	public IntVariable currentDialogueMode;
 
 	[Header("Debug")]
 	public GameObject debugMusicBkg;
@@ -61,7 +62,7 @@ public class DialogueLines : MonoBehaviour {
 		while(currentAction.value < dialogueEntry.actions.Count) {
 			DialogueActionData data = dialogueEntry.actions[currentAction.value];
 			DialogueAction da = DialogueAction.CreateAction(data.type);
-			da.Act(scene, data);
+			bool res = da.Act(scene, data);
 			if (data.type == DActionType.MOVEMENT) {
 				for (int i = 0; i < Constants.DIALOGUE_PLAYERS_COUNT+2; i++) {
 					float speed = data.values[0] * 0.001f;
@@ -69,7 +70,7 @@ public class DialogueLines : MonoBehaviour {
 				}
 			}
 
-			RunEvents(data.type);
+			RunEvents(data.type, res);
 			currentAction.value++;
 
 			if (data.useDelay) {
@@ -93,7 +94,7 @@ public class DialogueLines : MonoBehaviour {
 		return true;
 	}
 
-	private void RunEvents(DActionType type) {
+	private void RunEvents(DActionType type, bool res) {
 		switch (type)
 		{
 			case DActionType.START_SCENE:
@@ -105,7 +106,7 @@ public class DialogueLines : MonoBehaviour {
 			case DActionType.SET_TEXT: scene.dialogueTextChanged.Invoke(); break;
 			case DActionType.SET_CHARS: scene.characterChanged.Invoke(); break;
 			case DActionType.SET_BKG: scene.backgroundChanged.Invoke(); break;
-			case DActionType.SET_MUSIC: scene.bkgMusicChanged.Invoke();break;
+			case DActionType.SET_MUSIC: if (res) scene.bkgMusicChanged.Invoke();break;
 			case DActionType.PLAY_SFX: scene.playSfx.Invoke(); break;
 			case DActionType.MOVEMENT: scene.characterChanged.Invoke(); break;
 			case DActionType.FLASH: scene.screenFlashEvent.Invoke(); break;
@@ -114,7 +115,7 @@ public class DialogueLines : MonoBehaviour {
 	}
 
 	public void SkipDialogue() {
-        if (skippableDialogue.value){
+        if (skippableDialogue.value && currentDialogueMode.value != (int)DialogueMode.NONE){
             scene.dialogueEndEvent.Invoke();
         }
 	}

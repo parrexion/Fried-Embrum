@@ -17,7 +17,8 @@ public class TurnController : MonoBehaviour {
 
 	public BoolVariable lockControls;
 	public ScrObjEntryReference currentMap;
-	public FactionVariable currentTurn;
+	public IntVariable currentTurn;
+	public FactionVariable currentFactionTurn;
 	public ActionModeVariable currentMode;
 	public IntVariable currentMenuMode;
 	public BoolVariable triggeredWin;
@@ -50,6 +51,8 @@ public class TurnController : MonoBehaviour {
 	public UnityEvent gameLoseEvent;
 	public UnityEvent playBkgMusicEvent;
 	public UnityEvent playSfxEvent;
+	public UnityEvent checkReinforcementsEvent;
+	public UnityEvent checkDialoguesEvent;
 	
 	private bool gameover;
 	public BoolVariable autoWin;
@@ -59,12 +62,16 @@ public class TurnController : MonoBehaviour {
 	/// Clears character lists and prepares for the player's first turn.
 	/// </summary>
 	private void Start() {
-		currentTurn.value = Faction.PLAYER;
+		currentTurn.value = 1;
+		currentFactionTurn.value = Faction.PLAYER;
 		triggeredWin.value = false;
 		playerList.values.Clear();
 		enemyList.values.Clear();
 	}
 
+	/// <summary>
+	/// Starts the game and enables the music and shows the turn change.
+	/// </summary>
 	public void StartGame() {
 		Debug.Log("Start");
 		SetupMusic();
@@ -85,7 +92,7 @@ public class TurnController : MonoBehaviour {
 	/// Auto-ends the turn if all the player characters have taken their turn if enabled.
 	/// </summary>
 	public void CheckEndTurn() {
-		if (!autoEndTurn.value || currentTurn.value != Faction.PLAYER)
+		if (!autoEndTurn.value || currentFactionTurn.value != Faction.PLAYER)
 			return;
 
 		for (int i = 0; i < playerList.values.Count; i++) {
@@ -102,22 +109,33 @@ public class TurnController : MonoBehaviour {
 	public void EndChangeTurn() {
 		if (gameover)
 			return;
-
-		if (currentTurn.value == Faction.PLAYER) {
-			currentTurn.value = Faction.ENEMY;
+		lockControls.value = true;
+		if (currentFactionTurn.value == Faction.PLAYER) {
+			currentFactionTurn.value = Faction.ENEMY;
 			for (int i = 0; i < playerList.values.Count; i++) {
 				playerList.values[i].OnEndTurn();
 			}
+			checkDialoguesEvent.Invoke();
 		}
-		else if (currentTurn.value == Faction.ENEMY) {
-			currentTurn.value = Faction.PLAYER;
+		else if (currentFactionTurn.value == Faction.ENEMY) {
+			currentFactionTurn.value = Faction.PLAYER;
 			for (int i = 0; i < enemyList.values.Count; i++) {
 				enemyList.values[i].OnEndTurn();
 			}
+			currentTurn.value++;
+			checkReinforcementsEvent.Invoke();
 		}
 		else {
 			Debug.LogError("Wrong state!");
 		}
+	}
+
+	public void CheckDialogues() {
+		checkDialoguesEvent.Invoke();
+	}
+
+	public void ShowNextTurnDisplay() {
+		currentDialogueMode.value = (int)DialogueMode.NONE;
 		StartCoroutine(DisplayTurnChange(1.5f));
 	}
 
@@ -184,8 +202,8 @@ public class TurnController : MonoBehaviour {
 
 		if (gameFinished) {
 			Debug.Log("BATTLE WON");
-			StartCoroutine(EndGameWin());
 			gameover = true;
+			StartCoroutine(EndGameWin());
 			return;
 		}
 
@@ -231,11 +249,10 @@ public class TurnController : MonoBehaviour {
 	/// <param name="duration"></param>
 	/// <returns></returns>
 	private IEnumerator DisplayTurnChange(float duration) {
-		Debug.Log("Display ON");
 		lockControls.value = true;
 		currentMode.value = ActionMode.NONE;
 		currentMenuMode.value = (int)MenuMode.NONE;
-		turnChangeText.text = currentTurn.value + " TURN";
+		turnChangeText.text = currentFactionTurn.value + " TURN";
 
 		yield return null;
 
@@ -249,7 +266,6 @@ public class TurnController : MonoBehaviour {
 
 		turnChangeDisplay.SetActive(false);
 		StartTurn();
-		Debug.Log("Display OFF");
 	}
 
 	/// <summary>
@@ -261,14 +277,14 @@ public class TurnController : MonoBehaviour {
 			return;
 		
 		currentMode.value = ActionMode.NONE;
-		if (currentTurn.value == Faction.ENEMY) {
+		if (currentFactionTurn.value == Faction.ENEMY) {
 			for (int i = 0; i < enemyList.values.Count; i++) {
 				enemyList.values[i].OnStartTurn();
 			}
 			enemyController.RunEnemies();
 			currentMenuMode.value = (int)MenuMode.NONE;
 		}
-		else if (currentTurn.value == Faction.PLAYER) {
+		else if (currentFactionTurn.value == Faction.PLAYER) {
 			for (int i = 0; i < playerList.values.Count; i++) {
 				playerList.values[i].OnStartTurn();
 			}

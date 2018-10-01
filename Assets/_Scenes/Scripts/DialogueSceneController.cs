@@ -10,10 +10,13 @@ public class DialogueSceneController : MonoBehaviour {
 	public Canvas[] dialogueCanvases;
 	public DialogueLines lines;
 	public IntVariable currentDialogueMode;
+	public BoolVariable musicFocusSource;
 
 	[Header("Events")]
 	public UnityEvent beginBattleEvent;
 	public UnityEvent resumeBattleEvent;
+	public UnityEvent resumeTurnEvent;
+	public UnityEvent playSubMusicEvent;
 
 
 	private void Start () {
@@ -32,6 +35,10 @@ public class DialogueSceneController : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Triggered when the dialogue ends. 
+	/// Deactivates the dialogue stuff and returns back to game again.
+	/// </summary>
 	public void DialogueEnd() {
 		switch (currentDialogueMode.value)
 		{
@@ -43,11 +50,20 @@ public class DialogueSceneController : MonoBehaviour {
 				SceneManager.LoadScene("SaveScene");
 				break;
 			case (int)DialogueMode.VISIT:
-			case (int)DialogueMode.EVENT:
-			case (int)DialogueMode.QUOTE:
-				Debug.Log("Resume!");
 				resumeBattleEvent.Invoke();
 				ActivateStuff(false);
+				musicFocusSource.value = true;
+				playSubMusicEvent.Invoke();
+				break;
+			case (int)DialogueMode.QUOTE:
+				resumeBattleEvent.Invoke();
+				ActivateStuff(false);
+				break;
+			case (int)DialogueMode.EVENT:
+				resumeTurnEvent.Invoke();
+				ActivateStuff(false);
+				musicFocusSource.value = true;
+				playSubMusicEvent.Invoke();
 				break;
 		}
 	}

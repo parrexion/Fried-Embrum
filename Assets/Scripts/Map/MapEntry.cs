@@ -30,9 +30,13 @@ public class MapEntry : ScrObjLibraryEntry {
 	
 	[Header("Enemies")]
 	public List<EnemyPosition> enemies = new List<EnemyPosition>();
+	public List<EnemyPosition> reinforcements = new List<EnemyPosition>();
 	
 	[Header("Interactions")]
 	public List<InteractPosition> interactions = new List<InteractPosition>();
+	
+	[Header("Turn Events")]
+	public List<TurnEvent> turnEvents = new List<TurnEvent>();
 
 
 	public override void ResetValues() {
@@ -53,6 +57,8 @@ public class MapEntry : ScrObjLibraryEntry {
 		spawnPoints = new List<PlayerPosition>();
 		enemies = new List<EnemyPosition>();
 		interactions = new List<InteractPosition>();
+		turnEvents = new List<TurnEvent>();
+		reinforcements = new List<EnemyPosition>();
 	}
 
 	public override void CopyValues(ScrObjLibraryEntry other) {
@@ -73,16 +79,24 @@ public class MapEntry : ScrObjLibraryEntry {
 		healMusic = map.healMusic;
 
 		spawnPoints = new List<PlayerPosition>();
-		for (int i = 0; i < map.spawnPoints.Count; i++){
+		for (int i = 0; i < map.spawnPoints.Count; i++) {
 			spawnPoints.Add(map.spawnPoints[i]);
 		}
 		enemies = new List<EnemyPosition>();
-		for (int i = 0; i < map.enemies.Count; i++){
+		for (int i = 0; i < map.enemies.Count; i++) {
 			enemies.Add(map.enemies[i]);
 		}
 		interactions = new List<InteractPosition>();
-		for (int i = 0; i < map.interactions.Count; i++){
+		for (int i = 0; i < map.interactions.Count; i++) {
 			interactions.Add(map.interactions[i]);
+		}
+		turnEvents = new List<TurnEvent>();
+		for (int i = 0; i < map.turnEvents.Count; i++) {
+			turnEvents.Add(map.turnEvents[i]);
+		}
+		reinforcements = new List<EnemyPosition>();
+		for (int i = 0; i < map.reinforcements.Count; i++) {
+			reinforcements.Add(map.reinforcements[i]);
 		}
 	}
 }
@@ -106,6 +120,7 @@ public class WeaponTuple {
 
 [System.Serializable]
 public class EnemyPosition {
+	public int spawnTurn;
 	public int x;
 	public int y;
 	public int level;
@@ -127,6 +142,19 @@ public class InteractPosition {
 	public int health;
 	public DialogueEntry dialogue;
 	public WeaponItem gift;
+	public PlayerPosition ally = new PlayerPosition();
+}
+
+public enum TurnEventType { NONE, DIALOGUE, MAPCHANGE }
+[System.Serializable]
+public class TurnEvent {
+	public int turn;
+	public Faction factionTurn;
+	public TurnEventType type;
+	public DialogueEntry dialogue;
+	public int x;
+	public int y;
+	public MapTile changeTile;
 }
 
 [System.Serializable]

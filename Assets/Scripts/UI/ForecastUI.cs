@@ -75,7 +75,6 @@ public class ForecastUI : MonoBehaviour {
 			}
 		}
 		else {
-			Debug.Log("ASDJLK:    " + selectCharacter.value.name);
 			defendCharacter.value.PrintPos();
 			CalculateShowForecast(selectCharacter.value, defendCharacter.value);
 		}
@@ -129,7 +128,6 @@ public class ForecastUI : MonoBehaviour {
 			act1.weaponAtk = attacker.inventory.GetItem(battleWeaponIndex.value);
 
 			if (attackmode) {
-				Debug.Log("ATTACK2!");
 				if (inBattle)
 					backgroundInBattle.SetActive(true);
 
@@ -147,7 +145,6 @@ public class ForecastUI : MonoBehaviour {
 				bool defWeak = act2.CheckWeaponWeakness();
 				int atkAdv = act1.GetAdvantage();
 				int defAdv = act2.GetAdvantage();
-				Debug.Log("Hitrates:  " + hit + " :  " + hit2);
 				ShowAttackerStats(attacker, act1.weaponAtk, atk, spd, hit, crit, atkAdv, atkWeak);
 				ShowDefenderStats(defender, act2.weaponAtk, ret, spd, hit2, crit2, defAdv, defWeak);
 				if (!inBattle) {

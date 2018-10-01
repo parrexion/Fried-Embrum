@@ -146,7 +146,9 @@ public class MapInputController : InputReceiver {
 		else {
 			targetIndex.value = 0;
 			actionMenuPosition.value = -1;
-			clicker.CursorClick();
+			bool res = clicker.CursorClick();
+			if (!res)
+				return;
 		}
 		menuAcceptEvent.Invoke();
 	}

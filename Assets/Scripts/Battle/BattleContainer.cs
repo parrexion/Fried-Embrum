@@ -162,8 +162,10 @@ public class BattleContainer : MonoBehaviour {
 	}
 
 	public void ResumeBattle() {
-		Debug.Log("Resuming   ");
-		if ((dialogue != null && dialogueMode.value == (int)DialogueMode.QUOTE)) {
+		Debug.Log("Resuming");
+		if (dialogue == null)
+			return;
+		if (dialogueMode.value == (int)DialogueMode.QUOTE) {
 			lockControls.value = true;
 			if (runningLoop) {
 				runningLoop = false;
@@ -175,14 +177,6 @@ public class BattleContainer : MonoBehaviour {
 			}
 		}
 	}
-	/*
-	public void StartActionLoop() {
-		if ((dialogue != null && dialogueMode.value == (int)DialogueMode.QUOTE)) {
-			lockControls.value = true;
-			StartCoroutine(ActionLoop());
-		}
-	}
-	*/
 
 	private void SetupBattle() {
 		leftDamageObject.SetActive(false);

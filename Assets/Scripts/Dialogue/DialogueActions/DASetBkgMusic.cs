@@ -8,10 +8,10 @@ public class DASetBkgMusic : DialogueAction {
 
 		MusicEntry me = (MusicEntry)data.entries[0];
 		if (me == null) {
-			Debug.LogWarning("Empty Music action!");
-			return true;
+			return false;
 		}
 		scene.bkgMusic.value = me.clip;
+		scene.musicFocusSource.value = false;
 
 		scene.effectStartDuration.value = 0;
 		scene.effectEndDuration.value = 0;

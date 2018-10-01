@@ -110,6 +110,7 @@ public class ActionInputController : InputReceiver {
 				selectedCharacter.value.currentTile.interacted = true;
 				active = false;
 				StartCoroutine(MenuChangeDelay());
+				currentActionMode.value = ActionMode.NONE;
 				dialogueMode.value = (int)DialogueMode.VISIT;
 				dialogueEntry.value = selectedCharacter.value.currentTile.dialogue;
 				startDialogue.Invoke();
@@ -146,11 +147,21 @@ public class ActionInputController : InputReceiver {
 			if (selectedCharacter.value.currentTile.gift != null) {
 				StartCoroutine(WaitForItemGain());
 			}
+			else if (selectedCharacter.value.currentTile.ally != null) {
+				MapTile closest = selectedCharacter.value.mapCreator.GetClosestEmptyTile(selectedCharacter.value.currentTile);
+				TacticsMove tactics = selectedCharacter.value.currentTile.ally;
+				tactics.posx = closest.posx;
+				tactics.posy = closest.posy;
+				tactics.Setup();
+				selectedCharacter.value.End();
+			}
 			else {
 				Debug.Log("OK");
 				selectedCharacter.value.End();
 			}
 		}
+
+		dialogueMode.value = (int)DialogueMode.NONE;
 	}
 
 	private IEnumerator WaitForItemGain() {

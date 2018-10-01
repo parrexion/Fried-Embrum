@@ -1560,6 +1560,7 @@ MonoBehaviour:
   lines: {fileID: 1269839787}
   currentDialogueMode: {fileID: 11400000, guid: 9ebc847de791cc24bbd938f1f28012e7,
     type: 2}
+  musicFocusSource: {fileID: 11400000, guid: 7293c60ce7ba5ec458d4ee7f2b4c5119, type: 2}
   beginBattleEvent:
     m_PersistentCalls:
       m_Calls:
@@ -1580,6 +1581,38 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11400000, guid: c4a24de7e09302747a7077075726c27d, type: 2}
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  resumeTurnEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 75abbc6a534d9764bab06b6ccdf7aa50, type: 2}
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  playSubMusicEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 80ab7f36f20d07a41993cd0eb2f7bd76, type: 2}
         m_MethodName: Raise
         m_Mode: 1
         m_Arguments:
@@ -2458,7 +2491,6 @@ GameObject:
   - component: {fileID: 1269839787}
   - component: {fileID: 1269839789}
   - component: {fileID: 1269839786}
-  - component: {fileID: 1269839790}
   - component: {fileID: 1269839791}
   m_Layer: 0
   m_Name: DialogueLines
@@ -2497,7 +2529,8 @@ MonoBehaviour:
   talkingIndex: {fileID: 11400000, guid: 0c23bff85b03dca4095cc4ca544597b5, type: 2}
   dialogueText: {fileID: 11400000, guid: 1f3a3d049a932124bb989fba2a3eeb8a, type: 2}
   inputText: {fileID: 11400000, guid: b225e05cda6d5dd4d96d3967715cffdf, type: 2}
-  bkgMusic: {fileID: 11400000, guid: 40f826d9f1abd9e4f9f0972569193a0f, type: 2}
+  musicFocusSource: {fileID: 11400000, guid: 7293c60ce7ba5ec458d4ee7f2b4c5119, type: 2}
+  bkgMusic: {fileID: 11400000, guid: a0a5dc1f59ad1aa42af7dd1c0b2ede36, type: 2}
   sfxClip: {fileID: 0}
   flashBackground: {fileID: 11400000, guid: d5d920cb7a6f3ea48b4924dbbf4578a1, type: 2}
   effectStartDuration: {fileID: 11400000, guid: d4cf5a2af9f420346b27f1d442d7d5f3,
@@ -2545,7 +2578,7 @@ MonoBehaviour:
   bkgMusicChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11400000, guid: a9dc149b32873a14f9addbdaec204b43, type: 2}
+      - m_Target: {fileID: 11400000, guid: 80ab7f36f20d07a41993cd0eb2f7bd76, type: 2}
         m_MethodName: Raise
         m_Mode: 1
         m_Arguments:
@@ -2655,6 +2688,8 @@ MonoBehaviour:
   overrideActionNumber: {fileID: 11400000, guid: 37c0a4afb88a5c44eb9349e82e5db61d,
     type: 2}
   skippableDialogue: {fileID: 11400000, guid: aeff2b2b7751f6345928b6e1e8989137, type: 2}
+  currentDialogueMode: {fileID: 11400000, guid: 9ebc847de791cc24bbd938f1f28012e7,
+    type: 2}
   debugMusicBkg: {fileID: 2108826028}
   debugMusicText: {fileID: 476822047}
 --- !u!4 &1269839788
@@ -2687,34 +2722,6 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1269839787}
         m_MethodName: NextFrame
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
---- !u!114 &1269839790
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1269839785}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14602ab6441821f43883d0b13d4f57c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  evnt: {fileID: 11400000, guid: 4059b0cafd33cf347958e8d41d8bce46, type: 2}
-  response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1269839787}
-        m_MethodName: DialogueEnd
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

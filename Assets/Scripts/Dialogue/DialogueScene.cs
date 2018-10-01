@@ -15,6 +15,7 @@ public class DialogueScene : MonoBehaviour {
 	public IntVariable talkingIndex;
 	public StringVariable dialogueText;
 	public StringVariable inputText;
+	public BoolVariable musicFocusSource;
 	public AudioVariable bkgMusic;
 	public AudioVariable sfxClip;
 	public ScrObjEntryReference flashBackground;

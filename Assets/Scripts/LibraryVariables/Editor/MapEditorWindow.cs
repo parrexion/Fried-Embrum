@@ -25,6 +25,8 @@ public class MapEditorWindow {
 	private bool showPlayerStuff = false;
 	private bool showEnemyStuff = false;
 	private bool showInteractStuff = false;
+	private bool showTurnEventStuff = false;
+	private bool showReinforcementStuff = false;
 
 
 	public MapEditorWindow(ScrObjLibraryVariable entries, MapEntry container){
@@ -174,7 +176,7 @@ public class MapEditorWindow {
 		// Player stuff
 		GUILayout.BeginHorizontal();
 		GUILayout.Label("Player spawn points", EditorStyles.boldLabel);
-		if (GUILayout.Button((showPlayerStuff) ? "Hide" : "Show")) {
+		if (GUILayout.Button((showPlayerStuff) ? "Hide" : "Show", GUILayout.Width(150))) {
 			showPlayerStuff = !showPlayerStuff;
 		}
 		GUILayout.EndHorizontal();
@@ -186,24 +188,50 @@ public class MapEditorWindow {
 		// Enemies 
 		GUILayout.BeginHorizontal();
 		GUILayout.Label("Enemy spawn points", EditorStyles.boldLabel);
-		if (GUILayout.Button((showEnemyStuff) ? "Hide" : "Show")) {
+		if (GUILayout.Button((showEnemyStuff) ? "Hide" : "Show", GUILayout.Width(150))) {
 			showEnemyStuff = !showEnemyStuff;
 		}
 		GUILayout.EndHorizontal();
-		if (showEnemyStuff)
+		if (showEnemyStuff) {
 			DrawEnemyStuff();
+		}
 
 		GUILayout.Space(10);
 
 		// Interactions 
 		GUILayout.BeginHorizontal();
 		GUILayout.Label("Interaction points", EditorStyles.boldLabel);
-		if (GUILayout.Button((showInteractStuff) ? "Hide" : "Show")) {
+		if (GUILayout.Button((showInteractStuff) ? "Hide" : "Show", GUILayout.Width(150))) {
 			showInteractStuff = !showInteractStuff;
 		}
 		GUILayout.EndHorizontal();
 		if (showInteractStuff)
 			DrawInteractStuff();
+
+		GUILayout.Space(10);
+
+		// Turn Events 
+		GUILayout.BeginHorizontal();
+		GUILayout.Label("Turn Events", EditorStyles.boldLabel);
+		if (GUILayout.Button((showTurnEventStuff) ? "Hide" : "Show", GUILayout.Width(150))) {
+			showTurnEventStuff = !showTurnEventStuff;
+		}
+		GUILayout.EndHorizontal();
+		if (showTurnEventStuff)
+			DrawTurnEventStuff();
+
+		GUILayout.Space(10);
+
+		// Reinforcements 
+		GUILayout.BeginHorizontal();
+		GUILayout.Label("Reinforcements", EditorStyles.boldLabel);
+		if (GUILayout.Button((showReinforcementStuff) ? "Hide" : "Show", GUILayout.Width(150))) {
+			showReinforcementStuff = !showReinforcementStuff;
+		}
+		GUILayout.EndHorizontal();
+		if (showReinforcementStuff) {
+			DrawReinforcementStuff();
+		}
 
 		GUILayout.Space(10);
 
@@ -341,14 +369,102 @@ public class MapEditorWindow {
 		}
 	}
 
-	private void DrawInteractStuff() {
+	private void DrawReinforcementStuff() {
 		GUILayout.Space(5);
-		for (int i = 0; i < mapValues.interactions.Count; i++) {
+		for (int i = 0; i < mapValues.reinforcements.Count; i++) {
+			EnemyPosition pos = mapValues.reinforcements[i];
+			GUILayout.BeginHorizontal();
+			GUILayout.Label("Start of turn");
+			pos.spawnTurn = EditorGUILayout.IntField("", pos.spawnTurn);
+			if (GUILayout.Button("X", GUILayout.Width(50))) {
+				GUI.FocusControl(null);
+				mapValues.reinforcements.RemoveAt(i);
+				i--;
+				continue;
+			}
+			GUILayout.EndHorizontal();
 			GUILayout.BeginHorizontal();
 			EditorGUIUtility.labelWidth = 70;
 			GUILayout.Label("Position");
-			mapValues.interactions[i].x = EditorGUILayout.IntField("X", mapValues.interactions[i].x);
-			mapValues.interactions[i].y = EditorGUILayout.IntField("Y", mapValues.interactions[i].y);
+			pos.x = EditorGUILayout.IntField("X", pos.x);
+			pos.y = EditorGUILayout.IntField("Y", pos.y);
+			GUILayout.EndHorizontal();
+
+			GUILayout.BeginHorizontal();
+			pos.stats = (CharData)EditorGUILayout.ObjectField("Character",pos.stats, typeof(CharData),false);
+			
+			if (pos.stats != null) {
+				EditorGUIUtility.labelWidth = 50;
+				pos.level = EditorGUILayout.IntField("Level", pos.level, GUILayout.Width(80));
+				GUILayout.EndHorizontal();
+			
+				// Inventory
+				for (int j = 0; j < pos.inventory.Count; j++) {
+					EditorGUIUtility.labelWidth = 70;
+					GUILayout.BeginHorizontal();
+					pos.inventory[j].item = (WeaponItem)EditorGUILayout.ObjectField("Item",pos.inventory[j].item, typeof(WeaponItem),false);
+					EditorGUIUtility.labelWidth = 35;
+					pos.inventory[j].droppable = EditorGUILayout.Toggle("Drop", pos.inventory[j].droppable, GUILayout.Width(50));
+					if (GUILayout.Button("X", GUILayout.Width(50))) {
+						GUI.FocusControl(null);
+						pos.inventory.RemoveAt(j);
+						j--;
+						continue;
+					}
+					GUILayout.EndHorizontal();
+					EditorGUIUtility.labelWidth = 120;	
+				}
+				GUILayout.BeginHorizontal();
+				GUILayout.Space(120);
+				if (GUILayout.Button("Add Item")) {
+					pos.inventory.Add(new WeaponTuple());
+				}
+				GUILayout.EndHorizontal();
+			}
+			else {
+				GUILayout.EndHorizontal();
+			}
+
+			if (pos.hasQuotes) {
+				// Quotes
+				for (int j = 0; j < pos.quotes.Count; j++) {
+					EditorGUIUtility.labelWidth = 70;
+					GUILayout.BeginHorizontal();
+					pos.quotes[j].triggerer = (CharData)EditorGUILayout.ObjectField("Caused by",pos.quotes[j].triggerer, typeof(CharData),false);
+					pos.quotes[j].quote = (DialogueEntry)EditorGUILayout.ObjectField("Quote",pos.quotes[j].quote, typeof(DialogueEntry),false);
+					if (GUILayout.Button("X", GUILayout.Width(50))) {
+						GUI.FocusControl(null);
+						pos.quotes.RemoveAt(j);
+						j--;
+						continue;
+					}
+					GUILayout.EndHorizontal();
+					EditorGUIUtility.labelWidth = 120;	
+				}
+				GUILayout.BeginHorizontal();
+				GUILayout.Space(120);
+				if (GUILayout.Button("Add Quote")) {
+					pos.quotes.Add(new FightQuote());
+				}
+				GUILayout.EndHorizontal();
+			}
+
+			LibraryEditorWindow.HorizontalLine(Color.black);
+		}
+		if (GUILayout.Button("+")) {
+			mapValues.reinforcements.Add(new EnemyPosition());
+		}
+	}
+
+	private void DrawInteractStuff() {
+		GUILayout.Space(5);
+		for (int i = 0; i < mapValues.interactions.Count; i++) {
+			InteractPosition pos = mapValues.interactions[i];
+			GUILayout.BeginHorizontal();
+			EditorGUIUtility.labelWidth = 70;
+			GUILayout.Label("Position");
+			pos.x = EditorGUILayout.IntField("X", pos.x);
+			pos.y = EditorGUILayout.IntField("Y", pos.y);
 			if (GUILayout.Button("X", GUILayout.Width(50))) {
 				GUI.FocusControl(null);
 				mapValues.interactions.RemoveAt(i);
@@ -358,16 +474,39 @@ public class MapEditorWindow {
 			EditorGUIUtility.labelWidth = 120;
 			GUILayout.EndHorizontal();
 
-			mapValues.interactions[i].interactType = (InteractType)EditorGUILayout.EnumPopup("Type", mapValues.interactions[i].interactType);
+			pos.interactType = (InteractType)EditorGUILayout.EnumPopup("Type", pos.interactType);
 
-			switch (mapValues.interactions[i].interactType)
+			switch (pos.interactType)
 			{
 				case InteractType.BLOCK:
-					mapValues.interactions[i].health = EditorGUILayout.IntField("Health", mapValues.interactions[i].health);
+					pos.health = EditorGUILayout.IntField("Health", pos.health);
 					break;
 				case InteractType.VILLAGE:
-					mapValues.interactions[i].dialogue = (DialogueEntry)EditorGUILayout.ObjectField("Dialogue",mapValues.interactions[i].dialogue, typeof(DialogueEntry),false);
-					mapValues.interactions[i].gift = (WeaponItem)EditorGUILayout.ObjectField("Gift",mapValues.interactions[i].gift, typeof(WeaponItem),false);
+					pos.dialogue = (DialogueEntry)EditorGUILayout.ObjectField("Dialogue",pos.dialogue, typeof(DialogueEntry),false);
+					pos.gift = (WeaponItem)EditorGUILayout.ObjectField("Gift",pos.gift, typeof(WeaponItem),false);
+					pos.ally.stats = (CharData)EditorGUILayout.ObjectField("New ally",pos.ally.stats, typeof(CharData),false);
+					if (pos.ally.stats != null) {
+						pos.ally.level = EditorGUILayout.IntField("Level", pos.ally.level);
+
+						EditorGUIUtility.labelWidth = 70;
+						for (int j = 0; j < pos.ally.inventory.Count; j++) {
+							GUILayout.BeginHorizontal();
+							pos.ally.inventory[j].item = (WeaponItem)EditorGUILayout.ObjectField("Item",pos.ally.inventory[j].item, typeof(WeaponItem),false);
+							if (GUILayout.Button("X", GUILayout.Width(50))) {
+								GUI.FocusControl(null);
+								pos.ally.inventory.RemoveAt(j);
+								i--;
+							}
+							GUILayout.EndHorizontal();
+						}
+						EditorGUIUtility.labelWidth = 120;
+						GUILayout.BeginHorizontal();
+						GUILayout.Space(120);
+						if (GUILayout.Button("Add Item")) {
+							pos.ally.inventory.Add(new WeaponTuple());
+						}
+						GUILayout.EndHorizontal();
+					}
 					break;
 			}
 
@@ -375,6 +514,47 @@ public class MapEditorWindow {
 		}
 		if (GUILayout.Button("+")) {
 			mapValues.interactions.Add(new InteractPosition());
+		}
+	}
+
+	private void DrawTurnEventStuff() {
+		GUILayout.Space(5);
+		for (int i = 0; i < mapValues.turnEvents.Count; i++) {
+			TurnEvent pos = mapValues.turnEvents[i];
+			GUILayout.BeginHorizontal();
+			EditorGUIUtility.labelWidth = 70;
+			pos.turn = EditorGUILayout.IntField("Turn", pos.turn);
+			pos.factionTurn = (Faction)EditorGUILayout.EnumPopup("Faction", pos.factionTurn);
+			if (GUILayout.Button("X", GUILayout.Width(50))) {
+				GUI.FocusControl(null);
+				mapValues.turnEvents.RemoveAt(i);
+				i--;
+				continue;
+			}
+			EditorGUIUtility.labelWidth = 120;
+			GUILayout.EndHorizontal();
+
+			pos.type = (TurnEventType)EditorGUILayout.EnumPopup("Type", pos.type);
+
+			switch (pos.type)
+			{
+				case TurnEventType.MAPCHANGE:
+					GUILayout.BeginHorizontal();
+					GUILayout.Label("Position");
+					pos.x = EditorGUILayout.IntField("X", pos.x);
+					pos.y = EditorGUILayout.IntField("Y", pos.y);
+					GUILayout.EndHorizontal();
+					pos.changeTile = (MapTile)EditorGUILayout.ObjectField("New Tile",pos.changeTile, typeof(MapTile),false);
+					break;
+				case TurnEventType.DIALOGUE:
+					pos.dialogue = (DialogueEntry)EditorGUILayout.ObjectField("Dialogue",pos.dialogue, typeof(DialogueEntry),false);
+					break;
+			}
+
+			LibraryEditorWindow.HorizontalLine(Color.black);
+		}
+		if (GUILayout.Button("+")) {
+			mapValues.turnEvents.Add(new TurnEvent());
 		}
 	}
 	

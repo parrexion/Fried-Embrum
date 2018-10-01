@@ -10,6 +10,8 @@ public class MapCreator : MonoBehaviour {
 
 	public IntVariable cursorX;
 	public IntVariable cursorY;
+	public IntVariable currentTurn;
+	public float reinforcementDelay = 0.75f;
 	
 	public Transform tilePrefab;
 	public Transform blockTilePrefab;
@@ -21,9 +23,16 @@ public class MapCreator : MonoBehaviour {
 	public Transform playerParent;
 	public Transform playerPrefab;
 	public SaveListVariable availableCharacters;
+	
+	[Header("Dialogues")]
+	public BoolVariable lockControls;
+	public IntVariable currentDialogueMode;
+	public ScrObjEntryReference currentDialogue;
 
 	[Header("Events")]
 	public UnityEvent cursorMoveEvent;
+	public UnityEvent finishedReinforcementEvent;
+	public UnityEvent startDialogueEvent;
 
 	[HideInInspector] public MapTile[] tiles;
 	[HideInInspector] public List<MapTile> breakables = new List<MapTile>();
@@ -51,6 +60,9 @@ public class MapCreator : MonoBehaviour {
 		CreateMap();
 	}
 
+	/// <summary>
+	/// Creates the map and spawns all characters and interactions from the map data.
+	/// </summary>
 	public void CreateMap() {
 		MapEntry map = (MapEntry)currentMap.value;
 		_sizeX = map.sizeX;
@@ -61,6 +73,8 @@ public class MapCreator : MonoBehaviour {
 		TacticsCamera.boxActive = true;
 		
 		GenerateMap(map.mapSprite);
+		cursorX.value = map.spawnPoints[0].x;
+		cursorY.value = map.spawnPoints[0].y;
 		cursorMoveEvent.Invoke();
 		SpawnCharacters();
 		Debug.Log("Finished creating map");
@@ -95,6 +109,12 @@ public class MapCreator : MonoBehaviour {
 		return x + y * _sizeX;
 	}
 
+	/// <summary>
+	/// Returns the tile for the given coordinates.
+	/// </summary>
+	/// <param name="x"></param>
+	/// <param name="y"></param>
+	/// <returns></returns>
 	public MapTile GetTile(int x, int y) {
 		if (x < 0 || y < 0 || x >= _sizeX || y >= _sizeY)
 			return null;
@@ -112,6 +132,24 @@ public class MapCreator : MonoBehaviour {
 
 	public static int DistanceTo(TacticsMove character, TacticsMove other) {
 		return Mathf.Abs(character.posx - other.posx) + Mathf.Abs(character.posy - other.posy);
+	}
+
+	/// <summary>
+	/// Checks all tiles to see which closest tile is empty.
+	/// </summary>
+	/// <param name="startTile"></param>
+	/// <returns></returns>
+	public MapTile GetClosestEmptyTile(MapTile startTile) {
+		int bestRange = 99;
+		MapTile bestTile = startTile;
+		for (int i = 0; i < tiles.Length; i++) {
+			int tempDist = DistanceTo(startTile, tiles[i]);
+			if (tempDist < bestRange && tiles[i].currentCharacter == null) {
+				bestRange = tempDist;
+				bestTile = tiles[i];
+			}
+		}
+		return bestTile;
 	}
 
 	/// <summary>
@@ -197,6 +235,12 @@ public class MapCreator : MonoBehaviour {
 					tempTile.SetTerrain(tileHouse);
 					tempTile.dialogue = interPos.dialogue;
 					tempTile.gift = interPos.gift;
+					if (interPos.ally.stats != null) {
+						StatsContainer stats = new StatsContainer(interPos.ally.stats, interPos.ally.level);
+						InventoryContainer inventory = new InventoryContainer(interPos.ally.inventory);
+						SkillsContainer skills = new SkillsContainer(interPos.ally.skills);
+						tempTile.ally = SpawnPlayerCharacter(interPos.x, interPos.y, stats, inventory, skills, false);
+					}
 				}
 				else if (interPos.interactType == InteractType.SEIZE) {
 					tempTile.SetTerrain(GetTerrainFromPixel(colorData[pos]));
@@ -231,6 +275,9 @@ public class MapCreator : MonoBehaviour {
 		return null;
 	}
 
+	/// <summary>
+	/// Takes the map information and spawns all the characters on their given positions.
+	/// </summary>
 	private void SpawnCharacters() {
 		MapEntry map = (MapEntry)currentMap.value;
 		
@@ -259,47 +306,128 @@ public class MapCreator : MonoBehaviour {
 				skills = availableCharacters.skills[i];
 			}
 
-			Transform playerTransform = Instantiate(playerPrefab, playerParent);
-			playerTransform.position = new Vector3(pos.x, pos.y);
-
-			TacticsMove tactics = playerTransform.GetComponent<TacticsMove>();
-			tactics.mapCreator = this;
-			tactics.posx = pos.x;
-			tactics.posy = pos.y;
-			tactics.stats = stats;
-			tactics.inventory = inventory;
-			tactics.skills = skills;
-			tactics.Setup();
+			SpawnPlayerCharacter(pos.x, pos.y, stats, inventory, skills, true);
 		}
-		cursorX.value = map.spawnPoints[0].x;
-		cursorY.value = map.spawnPoints[0].y;
 		
 		//Enemies
 		for (int i = 0; i < map.enemies.Count; i++) {
 			EnemyPosition pos = map.enemies[i];
-			Transform enemyTransform = Instantiate(enemyPrefab, enemyParent);
-			enemyTransform.position = new Vector3(pos.x, pos.y);
 
-			TacticsMove tactics = enemyTransform.GetComponent<TacticsMove>();
-			tactics.mapCreator = this;
-			tactics.posx = pos.x;
-			tactics.posy = pos.y;
-			tactics.stats = new StatsContainer(pos.stats, pos.level);
-			tactics.inventory = new InventoryContainer(pos.inventory);
-			tactics.skills = new SkillsContainer(pos.skills);
+			StatsContainer stats = new StatsContainer(pos.stats, pos.level);
+			InventoryContainer inventory = new InventoryContainer(pos.inventory);
+			SkillsContainer skills = new SkillsContainer(pos.skills);
+			List<FightQuote> quotes = new List<FightQuote>();
 			for (int q = 0; q < pos.quotes.Count; q++) {
 				FightQuote fight = new FightQuote();
 				fight.triggerer = pos.quotes[q].triggerer;
 				fight.quote = pos.quotes[q].quote;
 				fight.activated = false;
-				tactics.fightQuotes.Add(fight);
+				quotes.Add(fight);
 			}
-			((NPCMove)tactics).aggroType = pos.aggroType;
-			tactics.Setup();
+
+			SpawnEnemyCharacter(pos.x, pos.y, stats, inventory, skills, quotes, pos.aggroType);
 		}
-		
+	}
+
+	/// <summary>
+	/// Spawns a player character on the map.
+	/// </summary>
+	/// <param name="x"></param>
+	/// <param name="y"></param>
+	/// <param name="stats"></param>
+	/// <param name="inventory"></param>
+	/// <param name="skills"></param>
+	private TacticsMove SpawnPlayerCharacter(int x, int y, StatsContainer stats, InventoryContainer inventory, SkillsContainer skills, bool active) {
+		Transform playerTransform = Instantiate(playerPrefab, playerParent);
+		playerTransform.position = new Vector3(x, y);
+
+		TacticsMove tactics = playerTransform.GetComponent<TacticsMove>();
+		tactics.mapCreator = this;
+		tactics.posx = x;
+		tactics.posy = y;
+		tactics.stats = stats;
+		tactics.inventory = inventory;
+		tactics.skills = skills;
+		if (active)
+			tactics.Setup();
+		else 
+			playerTransform.gameObject.SetActive(false);
+
+		return tactics;
+	}
+
+	/// <summary>
+	/// Spawns an enemy character on the map.
+	/// </summary>
+	/// <param name="x"></param>
+	/// <param name="y"></param>
+	/// <param name="stats"></param>
+	/// <param name="inventory"></param>
+	/// <param name="skills"></param>
+	/// <param name="quotes"></param>
+	/// <param name="aggro"></param>
+	private void SpawnEnemyCharacter(int x, int y, StatsContainer stats, InventoryContainer inventory, SkillsContainer skills, List<FightQuote> quotes, AggroType aggro) {
+		Transform enemyTransform = Instantiate(enemyPrefab, enemyParent);
+		enemyTransform.position = new Vector3(x, y);
+
+		NPCMove tactics = enemyTransform.GetComponent<NPCMove>();
+		tactics.mapCreator = this;
+		tactics.posx = x;
+		tactics.posy = y;
+		tactics.stats = stats;
+		tactics.inventory = inventory;
+		tactics.skills = skills;
+		tactics.fightQuotes = quotes;
+		tactics.aggroType = aggro;
+		tactics.Setup();
 	}
 	
+	/// <summary>
+	/// Is triggered by event and checks the map to see if any reinforcements should be spawned.
+	/// </summary>
+	public void SpawnReinforcements() {
+		Debug.Log("Show some reinforcements!");
+		StartCoroutine(SpawnReinforcementsLoop());
+	}
+
+	/// <summary>
+	/// Loop which goes through each reinforcement event and spawns the ones which are available.
+	/// </summary>
+	/// <returns></returns>
+	private IEnumerator SpawnReinforcementsLoop() {
+		MapEntry map = (MapEntry)currentMap.value;
+		for (int i = 0; i < map.reinforcements.Count; i++) {
+			EnemyPosition pos = map.reinforcements[i];
+			if (currentTurn.value == pos.spawnTurn) {
+				MapTile tile = GetTile(pos.x, pos.y);
+				if (tile.currentCharacter == null) {
+					StatsContainer stats = new StatsContainer(pos.stats, pos.level);
+					InventoryContainer inventory = new InventoryContainer(pos.inventory);
+					SkillsContainer skills = new SkillsContainer(pos.skills);
+
+					SpawnEnemyCharacter(pos.x, pos.y, stats, inventory, skills, new List<FightQuote>(), AggroType.CHARGE);
+					yield return new WaitForSeconds(reinforcementDelay);
+				}
+			}
+		}
+		finishedReinforcementEvent.Invoke();
+		yield break;
+	}
+
+	public void CheckDialogues() {
+		MapEntry map = (MapEntry)currentMap.value;
+		for (int i = 0; i < map.reinforcements.Count; i++) {
+			TurnEvent pos = map.turnEvents[i];
+			if (currentTurn.value == pos.turn) {
+				Debug.Log("It's time!");
+				currentDialogue.value = pos.dialogue;
+				currentDialogueMode.value = (int)DialogueMode.EVENT;
+				lockControls.value = false;
+				startDialogueEvent.Invoke();
+				break;
+			}
+		}
+	}
 
 	private TerrainTile GetTerrainFromPixel(Color32 pixelColor) {
 		TerrainTile terrain = tileNormal;

@@ -60,19 +60,19 @@ public class EnemyController : MonoBehaviour {
 			yield return new WaitForSeconds(1f);
 
 			// Calculate the tile to move towards and wait for the character to move there
-			Debug.Log("Move time");
+			// Debug.Log("Move time");
 			enemy.CalculateMovement();
 			while (enemy.isMoving)
 				yield return null;
 
 			// Calculate which character to attack/support and waits for the battle scene to finish
-			Debug.Log("Attack time");
+			// Debug.Log("Attack time");
 			waitForNextAction = enemy.CalculateAttacksHeals();
 			while (waitForNextAction)
 				yield return null;
 
 			// Finish the turn
-			Debug.Log("End turn");
+			// Debug.Log("End turn");
 			enemy.End();
 		}
 

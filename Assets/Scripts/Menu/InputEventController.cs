@@ -30,7 +30,7 @@ public class InputEventController : MonoBehaviour {
 
 	[Header("Control locks")]
 	public BoolVariable lockAllControls;
-	public BoolVariable lockMoveControls;
+	// public BoolVariable lockMoveControls;
 
 	[Header("Play Time Clock")]
 	public IntVariable currentPlayTime;
@@ -70,7 +70,7 @@ public class InputEventController : MonoBehaviour {
 		if (lockAllControls.value)
 			return;
 
-		if (!lockMoveControls.value) {
+		// if (!lockMoveControls.value) {
 
 			//Button holds
 			if (Input.GetKey(KeyCode.UpArrow)) {
@@ -117,7 +117,7 @@ public class InputEventController : MonoBehaviour {
 				rightArrowEvent.Invoke();
 				holdRight -= scrollSpeed;
 			}
-		}
+		// }
 
 		if (Input.GetKeyDown(KeyCode.Z)) {
 			okButtonEvent.Invoke();

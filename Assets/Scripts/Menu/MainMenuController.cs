@@ -12,6 +12,7 @@ public class MainMenuController : InputReceiver {
 	public SaveFileController saveFileController;
 	public OptionsController OptionsController;
 	public MapInfoListVariable chapterList;
+	public BoolVariable lockControls;
 	
 	[Header("Current Data")]
 	public IntVariable currentChapterIndex;
@@ -39,6 +40,7 @@ public class MainMenuController : InputReceiver {
 	private void Awake() {
 		state = 0;
 		currentChapterIndex.value = 1;
+		lockControls.value = false;
 		startMenuObject.SetActive(true);
 		saveFileController.HideMenu();
 		SetupMenuButtons();

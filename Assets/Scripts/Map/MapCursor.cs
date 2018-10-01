@@ -57,11 +57,12 @@ public class MapCursor : MonoBehaviour {
 		}
 	}
 
-	public void CursorClick() {
+	public bool CursorClick() {
 		if (currentActionMode.value == ActionMode.NONE)
-			SelectCharacter();
+			return SelectCharacter();
 		else if (currentActionMode.value == ActionMode.MOVE)
-			SelectMoveTile();
+			return SelectMoveTile();
+		return false;
 	}
 
 	public void CursorBack() {
@@ -124,31 +125,37 @@ public class MapCursor : MonoBehaviour {
 	/// Selects the currently hovered character if not doing any other actions.
 	/// If no character is hovered, show the in-game menu instead.
 	/// </summary>
-	private void SelectCharacter() {
-		if (selectCharacter.value != null) {
-			if (selectCharacter.value.faction == Faction.PLAYER && !selectCharacter.value.hasMoved) {
+	private bool SelectCharacter() {
+		if (selectCharacter.value != null && !selectCharacter.value.hasMoved) {
+			if (selectCharacter.value.faction == Faction.PLAYER) {
 				currentActionMode.value = ActionMode.MOVE;
 				moveTile.value = mapCreator.GetTile(cursorX.value, cursorY.value);
 				moveTile.value.current = true;
 				selectCharacter.value.path.Clear();
 				Debug.Log("Click!   X:  " + cursorX.value + "  Y:  " + cursorY.value);
 			}
+			else 
+				return false;
 		}
 		else {
 			Debug.Log("Show other menu. End turn etc.");
 			showIngameMenuEvent.Invoke();
 		}
+		return true;
 	}
 
 	/// <summary>
 	/// Moves the player to the currently selected move tile.
 	/// </summary>
-	private void SelectMoveTile() {
+	private bool SelectMoveTile() {
 		if (moveTile.value != null) {
 			selectCharacter.value.StartMove();
+			return true;
 		}
 
-		// Add features to allow the play to attack and heal target with movement.
+		return false;
+
+		// Add features to allow the player to attack and heal target with movement.
 	}
 
 	/// <summary>
@@ -179,7 +186,6 @@ public class MapCursor : MonoBehaviour {
 	/// Resets all the targets.
 	/// </summary>
 	public void ResetTargets() {
-		Debug.Log("Actionmode");
 		selectTile.value = null;
 		selectCharacter.value = null;
 		moveTile.value = null;

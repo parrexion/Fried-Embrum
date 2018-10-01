@@ -15,6 +15,7 @@ public class InventoryInputController : InputReceiver {
 	public MapTileVariable moveTile;
 	public MapTileVariable targetTile;
 	public ActionModeVariable currentMode;
+	public IntVariable currentDialogueMode;
 	public IntVariable currentPage;
 	public IntVariable inventoryIndex;
 	public IntVariable inventoryMenuPosition;
@@ -137,7 +138,8 @@ public class InventoryInputController : InputReceiver {
 
     public override void OnSp1Button() {
 		bool hidden = (selectCharacter.value == null || currentMenuMode.value == (int)MenuMode.ATTACK || currentMenuMode.value == (int)MenuMode.HEAL);
-		if (!hidden && currentMenuMode.value != (int)MenuMode.STATS && currentMenuMode.value != (int)MenuMode.INV) {
+		bool spec = (currentDialogueMode.value != (int)DialogueMode.NONE || currentMenuMode.value == (int)MenuMode.STATS || currentMenuMode.value == (int)MenuMode.INV);
+		if (!hidden && !spec) {
 			menuMoveEvent.Invoke();
 			ChangeStatsScreen(-1);
 		}
@@ -145,7 +147,8 @@ public class InventoryInputController : InputReceiver {
 
     public override void OnSp2Button() {
 		bool hidden = (selectCharacter.value == null || currentMenuMode.value == (int)MenuMode.ATTACK || currentMenuMode.value == (int)MenuMode.HEAL);
-		if (!hidden && currentMenuMode.value != (int)MenuMode.STATS && currentMenuMode.value != (int)MenuMode.INV) {
+		bool spec = (currentDialogueMode.value != (int)DialogueMode.NONE || currentMenuMode.value == (int)MenuMode.STATS || currentMenuMode.value == (int)MenuMode.INV);
+		if (!hidden && !spec) {
 			menuMoveEvent.Invoke();
 			ChangeStatsScreen(1);
 		}
