@@ -11,6 +11,7 @@ public class DialogueEntry : ScrObjLibraryEntry {
 
 
 	public void CreateBasicActions() {
+		tag = "DEFAULT";
 		
 		actions = new List<DialogueActionData>();
 		DialogueActionData data = new DialogueActionData(){type = DActionType.SET_BKG};

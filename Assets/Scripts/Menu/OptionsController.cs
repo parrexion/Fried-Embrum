@@ -10,13 +10,9 @@ public class OptionsController : MonoBehaviour {
 	public GameObject optionMenu;
 	public Text explanationField;
 
-	public Image[] options;
-	public ScriptableObject[] optionValues;
 	public string[] explanations;
-	public Image[] optionCheckmarks;
-	public Text[] optionTexts;
-
-	public UnityEvent volumeChanged;
+	public Image[] optionBackgrounds;
+	public OptionEntry[] options;
 
 	private int optionIndex;
 
@@ -40,7 +36,7 @@ public class OptionsController : MonoBehaviour {
     public void MoveUp() {
         optionIndex--;
 		if (optionIndex < 0)
-			optionIndex = options.Length -1;
+			optionIndex = optionBackgrounds.Length -1;
 		SetupOptions();
     }
 
@@ -49,7 +45,7 @@ public class OptionsController : MonoBehaviour {
 	/// </summary>
     public void MoveDown() {
         optionIndex++;
-		if (optionIndex >= options.Length)
+		if (optionIndex >= optionBackgrounds.Length)
 			optionIndex = 0;
 		SetupOptions();
     }
@@ -58,32 +54,14 @@ public class OptionsController : MonoBehaviour {
 	/// Moves one screen to the left if possible.
 	/// </summary>
     public bool MoveLeft() {
-		if (optionIndex >= 2)
-			return false;
-
-		IntVariable option = (IntVariable)optionValues[optionIndex];
-		int before = option.value;
-		option.value = Mathf.Max(0, option.value - 10);
-
-		SetupOptions();
-		volumeChanged.Invoke();
-		return (option.value != before);
+		return options[optionIndex].OnLeft();
     }
 
 	/// <summary>
 	/// Moves one screen to the right if possible.
 	/// </summary>
     public bool MoveRight() {
-		if (optionIndex >= 2)
-			return false;
-
-		IntVariable option = (IntVariable)optionValues[optionIndex];
-		int before = option.value;
-		option.value = Mathf.Min(100, option.value + 10);
-
-		SetupOptions();
-		volumeChanged.Invoke();
-		return (option.value != before);
+		return options[optionIndex].OnRight();
     }
 
 	/// <summary>
@@ -99,12 +77,7 @@ public class OptionsController : MonoBehaviour {
 	/// </summary>
 	/// <returns></returns>
 	public bool OKClicked() {
-		if (optionIndex < 2)
-			return false;
-		BoolVariable option = (BoolVariable)optionValues[optionIndex];
-		option.value = !option.value;
-		SetupOptions();
-		return true;
+		return options[optionIndex].OnClick();
 	}
 
 
@@ -112,17 +85,12 @@ public class OptionsController : MonoBehaviour {
 	/// Shows the current controls screen as well as scroll arrows.
 	/// </summary>
 	private void SetupOptions() {
-		explanationField.text = explanations[optionIndex];
+		explanationField.text = options[optionIndex].explanation;
+		for (int i = 0; i < optionBackgrounds.Length; i++) {
+			optionBackgrounds[i].color = (optionIndex == i) ? Color.cyan : Color.white;
+		}
 		for (int i = 0; i < options.Length; i++) {
-			options[i].color = (optionIndex == i) ? Color.cyan : Color.white;
-			if (i < 2) {
-				IntVariable option = (IntVariable)optionValues[i];
-				optionTexts[i].text = option.value.ToString();
-			}
-			else {
-				BoolVariable option = (BoolVariable)optionValues[i];
-				optionCheckmarks[i].enabled = option.value;
-			}
+			options[i].UpdateUI();
 		}
 	}
 

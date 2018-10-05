@@ -12,6 +12,8 @@ public class MapCreator : MonoBehaviour {
 	public IntVariable cursorY;
 	public IntVariable currentTurn;
 	public float reinforcementDelay = 0.75f;
+	public IntVariable slowGameSpeed;
+	public IntVariable currentGameSpeed;
 	
 	public Transform tilePrefab;
 	public Transform blockTilePrefab;
@@ -33,6 +35,7 @@ public class MapCreator : MonoBehaviour {
 	public UnityEvent cursorMoveEvent;
 	public UnityEvent finishedReinforcementEvent;
 	public UnityEvent startDialogueEvent;
+	public UnityEvent noDialogueEvent;
 
 	[HideInInspector] public MapTile[] tiles;
 	[HideInInspector] public List<MapTile> breakables = new List<MapTile>();
@@ -99,9 +102,9 @@ public class MapCreator : MonoBehaviour {
 		}
 	}
 	
-	public void ClearReachable() {
+	public void ClearDangerous() {
 		for (int i = 0; i < tiles.Length; i++) {
-			tiles[i].reachable = false;
+			tiles[i].dangerous = false;
 		}
 	}
 
@@ -167,7 +170,7 @@ public class MapCreator : MonoBehaviour {
 				continue;
 
 			if (isDanger) {
-				tiles[i].reachable = true;
+				tiles[i].dangerous = true;
 			}
 			else if (tiles[i].IsEmpty() || tiles[i].currentCharacter.faction != faction) {
 				tiles[i].attackable = true;
@@ -256,7 +259,7 @@ public class MapCreator : MonoBehaviour {
 		}
 
 		tiles = mappus.ToArray();
-		Debug.Log("Data read");
+		Debug.Log("Data read and map created");
 	}
 
 	/// <summary>
@@ -406,17 +409,20 @@ public class MapCreator : MonoBehaviour {
 					SkillsContainer skills = new SkillsContainer(pos.skills);
 
 					SpawnEnemyCharacter(pos.x, pos.y, stats, inventory, skills, new List<FightQuote>(), AggroType.CHARGE);
-					yield return new WaitForSeconds(reinforcementDelay);
+					Debug.Log("Hello there!     " + (reinforcementDelay * slowGameSpeed.value / currentGameSpeed.value));
+					yield return new WaitForSeconds(reinforcementDelay * slowGameSpeed.value / currentGameSpeed.value);
 				}
 			}
 		}
+		Debug.Log("DONE!");
 		finishedReinforcementEvent.Invoke();
+		Debug.Log("DONE2!");
 		yield break;
 	}
 
 	public void CheckDialogues() {
 		MapEntry map = (MapEntry)currentMap.value;
-		for (int i = 0; i < map.reinforcements.Count; i++) {
+		for (int i = 0; i < map.turnEvents.Count; i++) {
 			TurnEvent pos = map.turnEvents[i];
 			if (currentTurn.value == pos.turn) {
 				Debug.Log("It's time!");
@@ -424,9 +430,10 @@ public class MapCreator : MonoBehaviour {
 				currentDialogueMode.value = (int)DialogueMode.EVENT;
 				lockControls.value = false;
 				startDialogueEvent.Invoke();
-				break;
+				return;
 			}
 		}
+		noDialogueEvent.Invoke();
 	}
 
 	private TerrainTile GetTerrainFromPixel(Color32 pixelColor) {

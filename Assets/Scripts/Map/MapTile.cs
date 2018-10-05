@@ -8,6 +8,7 @@ public class MapTile : MonoBehaviour {
 	public MapCreator mapCreator;
 	public TacticsMove currentCharacter;
 	public GameObject highlight;
+	public GameObject dangerZone;
 
 	[Header("Selectable")]
 	public bool current;
@@ -16,7 +17,7 @@ public class MapTile : MonoBehaviour {
 	public bool selectable;
 	public bool attackable;
 	public bool supportable;
-	public bool reachable;
+	public bool dangerous;
 
 	[Header("Map values")]
 	public int posx;
@@ -36,11 +37,11 @@ public class MapTile : MonoBehaviour {
 	public WeaponItem gift;
 	public TacticsMove ally;
 
-	private SpriteRenderer _rend;
+	private SpriteRenderer _rendHighlight;
 
 
 	private void Start () {
-		_rend = highlight.GetComponent<SpriteRenderer>();
+		_rendHighlight = highlight.GetComponent<SpriteRenderer>();
 	}
 	
 	private void Update () {
@@ -83,15 +84,12 @@ public class MapTile : MonoBehaviour {
 			tileColor = Color.green;
 			tileColor.a = 0.35f;
 		}
-		else if (reachable) {
-			tileColor = Color.yellow;
-			tileColor.a = 0.35f;
-		}
 		else {
 			tileColor.a = 0f;
 		}
 
-		_rend.color = tileColor;
+		_rendHighlight.color = tileColor;
+		dangerZone.SetActive(dangerous);
 	}
 
 	public void SetTerrain(TerrainTile terrainData) {
@@ -159,7 +157,7 @@ public class MapTile : MonoBehaviour {
 			return false;
 	
 		if (isDanger) {
-			checkTile.reachable = true;
+			checkTile.dangerous = true;
 		}
 		else if (checkTile.currentCharacter == null) {
 			checkTile.selectable = (checkTile.currentCharacter == null);

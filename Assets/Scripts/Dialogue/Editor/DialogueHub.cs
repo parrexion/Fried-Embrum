@@ -158,6 +158,7 @@ public class DialogueHub {
 		if (res) {
 			Debug.Log("Removed dialogue: " + de.uuid);
 			selDialogue = -1;
+			SelectDialogue();
 		}
 	}
 }

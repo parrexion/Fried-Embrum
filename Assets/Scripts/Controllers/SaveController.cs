@@ -47,6 +47,7 @@ public class SaveController : MonoBehaviour {
 	[Header("Options")]
 	public IntVariable musicVolume;
 	public IntVariable sfxVolume;
+	public IntVariable gameSpeed;
 	public BoolVariable useAnimations;
 	public BoolVariable trueHit;
 	public BoolVariable autoEnd;
@@ -71,6 +72,7 @@ public class SaveController : MonoBehaviour {
 		// Setup save data
 		saveFileData.musicVolume = 10;
 		saveFileData.sfxVolume = 10;
+		saveFileData.gameSpeed = 5;
 		saveFileData.useAnimations = true;
 		saveFileData.trueHit = true;
 		saveFileData.autoEnd = true;
@@ -92,6 +94,7 @@ public class SaveController : MonoBehaviour {
 		// Options
 		saveFileData.musicVolume = musicVolume.value;
 		saveFileData.sfxVolume = sfxVolume.value;
+		saveFileData.gameSpeed = gameSpeed.value;
 		saveFileData.useAnimations = useAnimations.value;
 		saveFileData.trueHit = trueHit.value;
 		saveFileData.autoEnd = autoEnd.value;
@@ -150,6 +153,7 @@ public class SaveController : MonoBehaviour {
 		// Options
 		musicVolume.value = saveFileData.musicVolume;
 		sfxVolume.value = saveFileData.sfxVolume;
+		gameSpeed.value = saveFileData.gameSpeed;
 		useAnimations.value = saveFileData.useAnimations;
 		trueHit.value = saveFileData.trueHit;
 		autoEnd.value = saveFileData.autoEnd;
@@ -205,6 +209,7 @@ public class SaveController : MonoBehaviour {
 public class SavePackage {
 	public int musicVolume;
 	public int sfxVolume;
+	public int gameSpeed;
 	public bool useAnimations;
 	public bool trueHit;
 	public bool autoEnd;

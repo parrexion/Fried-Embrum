@@ -171,6 +171,30 @@ public class MapInputController : InputReceiver {
 		}
 	}
 
+    public override void OnXButton() {
+		if (!active)
+			return;
+
+		clicker.DangerAreaToggle(true);
+	}
+
+    public override void OnRButton() {
+		if (!active)
+			return;
+
+		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL || currentMode.value == ActionMode.TRADE) {
+			int prev = targetIndex.value;
+			targetIndex.value = (targetIndex.value + 1) % targetList.values.Count;
+			target.value = targetList.values[targetIndex.value];
+			if (prev != targetIndex.value)
+				menuMoveEvent.Invoke();
+		}
+		else {
+			clicker.JumpCursor();
+			menuMoveEvent.Invoke();
+		}
+		cursorMovedEvent.Invoke();
+	}
 
 	/// <summary>
 	/// Triggered when battles end and updates the current menu mode.
@@ -190,7 +214,7 @@ public class MapInputController : InputReceiver {
 		StartCoroutine(MenuChangeDelay());
 	}
 
-    public override void OnSp1Button() {}
-    public override void OnSp2Button() {}
+    public override void OnYButton() { }
+    public override void OnLButton() { }
     public override void OnStartButton() {}
 }

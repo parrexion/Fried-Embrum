@@ -58,6 +58,13 @@ public class ScrObjLibraryVariable : ScriptableObject {
 		return list[Random.Range(0,list.Count)];
 	}
 
+	/// <summary>
+	/// Filters out the entries given a filter and a search string.
+	/// Use "" to ignore a parameter.
+	/// </summary>
+	/// <param name="filter"></param>
+	/// <param name="search"></param>
+	/// <returns></returns>
 	public GUIContent[] GetRepresentations(string filter, string search) {
 		GenerateDictionary();
 

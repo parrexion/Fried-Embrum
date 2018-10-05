@@ -3,9 +3,11 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+public enum FilterType { DEFAULT, PRE, POST, QUOTE, VILLAGE, DEATH }
+
 public class DialogueListWindow : EditorWindow {
 
-	const int DIALOGUE_HEIGHT = 280;
+	const int DIALOGUE_HEIGHT = 350;
 
 	static DialogueListWindow dlw;
 	static DialogueActionWindow daw;
@@ -37,8 +39,9 @@ public class DialogueListWindow : EditorWindow {
 	public Rect actionRect = new Rect();
 
 	//Private stuff
-	// string filterEnum;
-	// string filterString;
+	FilterType filter;
+	string filterEnum;
+	string filterString;
 	Vector2 frameScrollPos;
 	Vector2 dialogueScrollPos;
 
@@ -145,7 +148,6 @@ public class DialogueListWindow : EditorWindow {
 		GUI.DrawTexture(actionListRect, frameBackground);
 	}
 
-	
 	/// <summary>
 	/// Renders the frames and dialogues available and dialogue creation.
 	/// </summary>
@@ -155,19 +157,19 @@ public class DialogueListWindow : EditorWindow {
 
 		GUILayout.Label("Dialogues", EditorStyles.boldLabel);
 
-		// //Filter
-		// GUILayout.BeginHorizontal();
-		// filter = (Constants.CHAPTER)EditorGUILayout.EnumPopup("Filter",filter, GUILayout.Width(dialogueRect.width/2 - 10));
-		// filterEnum = (filter == Constants.CHAPTER.DEFAULT) ? "" : filter.ToString();
-		// filterString = EditorGUILayout.TextField("Search", filterString, GUILayout.Width(dialogueRect.width/2 - 10));
-		// GUILayout.EndHorizontal();
+		//Filter
+		GUILayout.BeginHorizontal();
+		filter = (FilterType)EditorGUILayout.EnumPopup("Filter",filter, GUILayout.Width(dialogueRect.width/2 - 10));
+		filterEnum = (filter == FilterType.DEFAULT) ? "" : filter.ToString();
+		filterString = EditorGUILayout.TextField("Search", filterString, GUILayout.Width(dialogueRect.width/2 - 10));
+		GUILayout.EndHorizontal();
 
 		// Dialogue scroll
 		dialogueScrollPos = GUILayout.BeginScrollView(dialogueScrollPos, GUILayout.Width(dialogueRect.width), 
 					GUILayout.Height(dialogueRect.height-90));
 		
 		int oldSelected = hub.selDialogue;
-		GUIContent[] guic = dialogueLibrary.GetRepresentations("","");//(filterEnum, filterString);
+		GUIContent[] guic = dialogueLibrary.GetRepresentations(filterEnum, filterString);
 		if (guic.Length > 0)
 			hub.selDialogue = GUILayout.SelectionGrid(hub.selDialogue, guic,2);
 
@@ -182,18 +184,21 @@ public class DialogueListWindow : EditorWindow {
 		GUILayout.Space(5);
 
 		//Dialogue creation
-		EditorGUIUtility.labelWidth = 120;
-		hub.dialogueUuid = EditorGUILayout.TextField("Dialogue uuid", hub.dialogueUuid);
+		EditorGUIUtility.labelWidth = 150;
+		hub.dialogueUuid = EditorGUILayout.TextField("Create Dialogue - UUid", hub.dialogueUuid);
 		GUILayout.BeginHorizontal();
 		if (GUILayout.Button("Create dialogue")) {
 			hub.InstansiateDialogue();
 		}
+		EditorGUI.BeginDisabledGroup(true);
 		if (GUILayout.Button("Copy dialogue")) {
 
 		}
+		EditorGUI.EndDisabledGroup();
 		if (GUILayout.Button("Delete dialogue")) {
 			hub.DeleteDialogue();
 		}
+		EditorGUIUtility.labelWidth = 120;
 		GUILayout.EndHorizontal();
 		GUILayout.EndArea();
 	}
@@ -206,7 +211,7 @@ public class DialogueListWindow : EditorWindow {
 		EditorGUILayout.SelectableLabel("Selected Dialogue    UUID: " + hub.dialogueValues.uuid, EditorStyles.boldLabel, GUILayout.Height(20));
 		if (hub.selAction != -1) {
 			hub.dialogueValues.entryName = EditorGUILayout.TextField("Dialogue name", hub.dialogueValues.entryName, GUILayout.Width(400));
-			// hub.dialogueValues.TagEnum = (Constants.CHAPTER)EditorGUILayout.EnumPopup("Tag",hub.dialogueValues.TagEnum);
+			hub.dialogueValues.tag = EditorGUILayout.EnumPopup("Tag", (FilterType)System.Enum.Parse(typeof(FilterType),hub.dialogueValues.tag)).ToString();
 		}
 		GUILayout.Space(5);
 

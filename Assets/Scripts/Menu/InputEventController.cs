@@ -44,14 +44,21 @@ public class InputEventController : MonoBehaviour {
 	[Header("Button Events")]
 	public UnityEvent okButtonEvent;
 	public UnityEvent backButtonEvent;
-	public UnityEvent sp1ButtonEvent;
-	public UnityEvent sp2ButtonEvent;
+	public UnityEvent lButtonEvent;
+	public UnityEvent rButtonEvent;
+	public UnityEvent xButtonEvent;
+	public UnityEvent yButtonEvent;
 	public UnityEvent startButtonEvent;
 
 	private int holdUp;
 	private int holdDown;
 	private int holdLeft;
 	private int holdRight;
+
+	private bool axisUp;
+	private bool axisDown;
+	private bool axisLeft;
+	private bool axisRight;
 
 
 	private void Setup() {
@@ -70,71 +77,82 @@ public class InputEventController : MonoBehaviour {
 		if (lockAllControls.value)
 			return;
 
-		// if (!lockMoveControls.value) {
+		//Button holds
+		if (Input.GetKey(KeyCode.UpArrow) || Input.GetAxis("DpadVertical") == 1 || Input.GetAxis("LstickVertical") == 1) {
+			holdUp++;
+		}
+		if (Input.GetKey(KeyCode.DownArrow) || Input.GetAxis("DpadVertical") == -1 || Input.GetAxis("LstickVertical") == -1) {
+			holdDown++;
+		}
+		if (Input.GetKey(KeyCode.LeftArrow) || Input.GetAxis("DpadHorizontal") == -1 || Input.GetAxis("LstickHorizontal") == -1) {
+			holdLeft++;
+		}
+		if (Input.GetKey(KeyCode.RightArrow) || Input.GetAxis("DpadHorizontal") == 1 || Input.GetAxis("LstickHorizontal") == 1) {
+			holdRight++;
+		}
 
-			//Button holds
-			if (Input.GetKey(KeyCode.UpArrow)) {
-				holdUp++;
-			}
-			if (Input.GetKey(KeyCode.DownArrow)) {
-				holdDown++;
-			}
-			if (Input.GetKey(KeyCode.LeftArrow)) {
-				holdLeft++;
-			}
-			if (Input.GetKey(KeyCode.RightArrow)) {
-				holdRight++;
-			}
+		//Button releases
+		if (Input.GetKeyUp(KeyCode.UpArrow) && Input.GetAxis("DpadVertical") == 0 && Input.GetAxis("LstickVertical") == 0) {
+			holdUp = 0;
+			axisUp = false;
+		}
+		if (Input.GetKeyUp(KeyCode.DownArrow) && Input.GetAxis("DpadVertical") == 0 && Input.GetAxis("LstickVertical") == 0) {
+			holdDown = 0;
+			axisDown = false;
+		}
+		if (Input.GetKeyUp(KeyCode.LeftArrow) && Input.GetAxis("DpadHorizontal") == 0 && Input.GetAxis("LstickHorizontal") == 0) {
+			holdLeft = 0;
+			axisLeft = false;
+		}
+		if (Input.GetKeyUp(KeyCode.RightArrow) && Input.GetAxis("DpadHorizontal") == 0 && Input.GetAxis("LstickHorizontal") == 0) {
+			holdRight = 0;
+			axisRight = false;
+		}
 
-			//Button releases
-			if (Input.GetKeyUp(KeyCode.UpArrow)) {
-				holdUp = 0;
-			}
-			if (Input.GetKeyUp(KeyCode.DownArrow)) {
-				holdDown = 0;
-			}
-			if (Input.GetKeyUp(KeyCode.LeftArrow)) {
-				holdLeft = 0;
-			}
-			if (Input.GetKeyUp(KeyCode.RightArrow)) {
-				holdRight = 0;
-			}
+		// Arrow presses
+		if (Input.GetKeyDown(KeyCode.UpArrow) || holdUp > holdDelay || (!axisUp && (Input.GetAxis("DpadVertical") == 1 || Input.GetAxis("LstickVertical") == 1))) {
+			upArrowEvent.Invoke();
+			holdUp -= scrollSpeed;
+			axisUp = true;
+		}
+		if (Input.GetKeyDown(KeyCode.DownArrow) || holdDown > holdDelay || (!axisDown && (Input.GetAxis("DpadVertical") == -1 || Input.GetAxis("LstickVertical") == -1))) {
+			downArrowEvent.Invoke();
+			holdDown -= scrollSpeed;
+			axisDown = true;
+		}
+		if (Input.GetKeyDown(KeyCode.LeftArrow) || holdLeft > holdDelay || (!axisLeft && (Input.GetAxis("DpadHorizontal") == -1 || Input.GetAxis("LstickHorizontal") == -1))) {
+			leftArrowEvent.Invoke();
+			holdLeft -= scrollSpeed;
+			axisLeft = true;
+		}
+		if (Input.GetKeyDown(KeyCode.RightArrow) || holdRight > holdDelay || (!axisRight && (Input.GetAxis("DpadHorizontal") == 1 || Input.GetAxis("LstickHorizontal") == 1))) {
+			rightArrowEvent.Invoke();
+			holdRight -= scrollSpeed;
+			axisRight = true;
+		}
 
-			// Arrow presses
-			if (Input.GetKeyDown(KeyCode.UpArrow) || holdUp > holdDelay) {
-				upArrowEvent.Invoke();
-				holdUp -= scrollSpeed;
-			}
-			if (Input.GetKeyDown(KeyCode.DownArrow) || holdDown > holdDelay) {
-				downArrowEvent.Invoke();
-				holdDown -= scrollSpeed;
-			}
-			if (Input.GetKeyDown(KeyCode.LeftArrow) || holdLeft > holdDelay) {
-				leftArrowEvent.Invoke();
-				holdLeft -= scrollSpeed;
-			}
-			if (Input.GetKeyDown(KeyCode.RightArrow) || holdRight > holdDelay) {
-				rightArrowEvent.Invoke();
-				holdRight -= scrollSpeed;
-			}
-		// }
-
-		if (Input.GetKeyDown(KeyCode.Z)) {
+		if (Input.GetKeyDown(KeyCode.Z) || Input.GetKeyDown(KeyCode.JoystickButton0)) {
 			okButtonEvent.Invoke();
 		}
-		if (Input.GetKeyDown(KeyCode.X)) {
+		if (Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.JoystickButton1)) {
 			backButtonEvent.Invoke();
 		}
-		if (Input.GetKeyDown(KeyCode.A)) {
-			sp1ButtonEvent.Invoke();
+		if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.JoystickButton4)) {
+			lButtonEvent.Invoke();
 		}
-		if (Input.GetKeyDown(KeyCode.S)) {
-			sp2ButtonEvent.Invoke();
+		if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton5)) {
+			rButtonEvent.Invoke();
 		}
-		if (Input.GetKeyDown(KeyCode.Escape)) {
+		if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.JoystickButton3)) {
+			xButtonEvent.Invoke();
+		}
+		if (Input.GetKeyDown(KeyCode.C) || Input.GetKeyDown(KeyCode.JoystickButton2)) {
+			yButtonEvent.Invoke();
+		}
+		if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.JoystickButton6)) {
 			startButtonEvent.Invoke();
 		}
-		if (Input.GetKeyDown(KeyCode.Return)) {
+		if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.JoystickButton7)) {
 			startButtonEvent.Invoke();
 		}
 	}

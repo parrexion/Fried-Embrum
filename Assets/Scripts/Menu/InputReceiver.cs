@@ -28,8 +28,10 @@ public abstract class InputReceiver : MonoBehaviour {
 
 	public abstract void OnOkButton();
 	public abstract void OnBackButton();
-	public abstract void OnSp1Button();
-	public abstract void OnSp2Button();
+	public abstract void OnLButton();
+	public abstract void OnRButton();
+	public abstract void OnXButton();
+	public abstract void OnYButton();
 	public abstract void OnStartButton();
 
 

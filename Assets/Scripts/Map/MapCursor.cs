@@ -15,6 +15,7 @@ public class MapCursor : MonoBehaviour {
 	public TacticsMoveVariable selectCharacter;
 	public MapTileVariable selectTile;
 	public MapTileVariable target;
+	public CharacterListVariable playerCharacters;
 	public CharacterListVariable enemyCharacters;
 
 	[Header("Cursor")]
@@ -40,6 +41,55 @@ public class MapCursor : MonoBehaviour {
 	private void Start() {
 		ResetTargets();
 		DangerAreaToggle(false);
+	}
+
+	public void JumpCursor() {
+		if (selectCharacter.value == null) {
+			for (int i = 0; i < playerCharacters.values.Count; i++) {
+				if (!playerCharacters.values[i].hasMoved) {
+					cursorX.value = playerCharacters.values[i].posx;
+					cursorY.value = playerCharacters.values[i].posy;
+					CursorHover();
+					break;
+				}
+			}
+		}
+		else if (selectCharacter.value.faction == Faction.PLAYER) {
+			int pos = 0;
+			for (int i = 0; i < playerCharacters.values.Count; i++) {
+				pos = i;
+				TacticsMove tactics = playerCharacters.values[i];
+				if (tactics.posx == cursorX.value && tactics.posy == cursorY.value)
+					break;
+			}
+			do {
+				pos++;
+				if (pos >= playerCharacters.values.Count)
+					pos = 0;
+			} while (playerCharacters.values[pos].hasMoved);
+
+			cursorX.value = playerCharacters.values[pos].posx;
+			cursorY.value = playerCharacters.values[pos].posy;
+			CursorHover();
+		}
+		else if (selectCharacter.value.faction == Faction.ENEMY) {
+			int pos = 0;
+			for (int i = 0; i < enemyCharacters.values.Count; i++) {
+				pos = i;
+				TacticsMove tactics = enemyCharacters.values[i];
+				if (tactics.posx == cursorX.value && tactics.posy == cursorY.value)
+					break;
+			}
+			do {
+				pos++;
+				if (pos >= enemyCharacters.values.Count)
+					pos = 0;
+			} while (enemyCharacters.values[pos].hasMoved);
+
+			cursorX.value = enemyCharacters.values[pos].posx;
+			cursorY.value = enemyCharacters.values[pos].posy;
+			CursorHover();
+		}
 	}
 
 	/// <summary>
@@ -91,7 +141,7 @@ public class MapCursor : MonoBehaviour {
 		MapTile tile = mapCreator.GetTile(x, y);
 		startTile = tile;
 		selectTile.value = tile;
-		selectCharacter.value = tile.currentCharacter;
+		selectCharacter.value = (tile) ? tile.currentCharacter : null;
 		if (selectCharacter.value != null && (alwaysShowMovement.value || !selectCharacter.value.hasMoved)) {
 			selectCharacter.value.FindAllMoveTiles(false);
 		}
@@ -193,18 +243,34 @@ public class MapCursor : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Toggles the danger area if toggle is true. Disables it otherwise.
+	/// Toggles the danger area if doToggle is true. Always disables it otherwise.
 	/// </summary>
-	/// <param name="toggle"></param>
-	public void DangerAreaToggle(bool toggle) {
-		_dangerAreaActive = (toggle) ? !_dangerAreaActive : false;
+	/// <param name="doToggle"></param>
+	public void DangerAreaToggle(bool doToggle) {
+		_dangerAreaActive = (doToggle) ? !_dangerAreaActive : false;
 		
-		mapCreator.ClearReachable();
+		mapCreator.ClearDangerous();
 		if (_dangerAreaActive) {
 			for (int i = 0; i < enemyCharacters.values.Count; i++) {
 				enemyCharacters.values[i].FindAllMoveTiles(true);
 			}
 		}
+		if (doToggle) {
+			CursorHover();
+		}
+	}
+
+	public void UpdateDangerArea() {
+		if (!_dangerAreaActive)
+			return;
+
+		mapCreator.ClearDangerous();
+		if (_dangerAreaActive) {
+			for (int i = 0; i < enemyCharacters.values.Count; i++) {
+				enemyCharacters.values[i].FindAllMoveTiles(true);
+			}
+		}
+		CursorHover();
 	}
 
 }

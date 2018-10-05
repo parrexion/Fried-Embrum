@@ -15,7 +15,7 @@ public class PortraitEditorWindow {
 	Rect selectRect = new Rect();
 	Texture2D selectTex;
 	Vector2 scrollPos;
-	int selCharacter = -1;
+	int selEntry = -1;
 	string filterStr = "";
 
 	// Display screen
@@ -73,9 +73,9 @@ public class PortraitEditorWindow {
 
 		GUILayout.BeginHorizontal();
 		GUILayout.Label("Character Editor", EditorStyles.boldLabel);
-		if (selCharacter != -1) {
+		if (selEntry != -1) {
 			if (GUILayout.Button("Save Character")){
-				SaveSelectedCharacter();
+				SaveSelectedEntry();
 			}
 		}
 		GUILayout.EndHorizontal();
@@ -83,7 +83,7 @@ public class PortraitEditorWindow {
 		GenerateAreas();
 		DrawBackgrounds();
 		DrawEntryList();
-		if (selCharacter != -1)
+		if (selEntry != -1)
 			DrawDisplayWindow();
 	}
 
@@ -118,22 +118,22 @@ public class PortraitEditorWindow {
 		scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(selectRect.width), 
 						GUILayout.Height(selectRect.height-150));
 
-		int oldSelected = selCharacter;
-		selCharacter = GUILayout.SelectionGrid(selCharacter, currentEntryList,1);
+		int oldSelected = selEntry;
+		selEntry = GUILayout.SelectionGrid(selEntry, currentEntryList,1);
 		EditorGUILayout.EndScrollView();
 
-		if (oldSelected != selCharacter)
-			SelectCharacter();
+		if (oldSelected != selEntry)
+			SelectEntry();
 
 		EditorGUIUtility.labelWidth = 110;
 		GUILayout.Label("Create new character", EditorStyles.boldLabel);
 		uuid = EditorGUILayout.TextField("Character Name", uuid);
 		repColor = EditorGUILayout.ColorField("Display Color", repColor);
 		if (GUILayout.Button("Create new")) {
-			InstansiateCharacter();
+			InstansiateEntry();
 		}
 		if (GUILayout.Button("Delete character")) {
-			DeleteCharacter();
+			DeleteEntry();
 		}
 
 		GUILayout.EndArea();
@@ -170,27 +170,27 @@ public class PortraitEditorWindow {
 		GUILayout.EndArea();
 	}
 
-	void SelectCharacter() {
+	void SelectEntry() {
 		GUI.FocusControl(null);
-		if (selCharacter == -1) {
+		if (selEntry == -1) {
 			// Nothing selected
 			portraitValues.ResetValues();
 		}
 		else {
 			// Something selected
-			PortraitEntry ce = (PortraitEntry)portraitLibrary.GetEntryByIndex(selCharacter);
+			PortraitEntry ce = (PortraitEntry)portraitLibrary.GetEntryByIndex(selEntry);
 			portraitValues.CopyValues(ce);
 		}
 	}
 
-	void SaveSelectedCharacter() {
-		PortraitEntry ce = (PortraitEntry)portraitLibrary.GetEntryByIndex(selCharacter);
+	void SaveSelectedEntry() {
+		PortraitEntry ce = (PortraitEntry)portraitLibrary.GetEntryByIndex(selEntry);
 		ce.CopyValues(portraitValues);
-		Undo.RecordObject(ce, "Updated character");
+		Undo.RecordObject(ce, "Updated portrait");
 		EditorUtility.SetDirty(ce);
 	}
 
-	void InstansiateCharacter() {
+	void InstansiateEntry() {
 		GUI.FocusControl(null);
 		if (portraitLibrary.ContainsID(uuid)) {
 			Debug.Log("uuid already exists!");
@@ -201,28 +201,28 @@ public class PortraitEditorWindow {
 		c.uuid = uuid;
 		c.entryName = uuid;
 		c.repColor = repColor;
-		string path = "Assets/LibraryData/Characters/" + uuid + ".asset";
+		string path = "Assets/LibraryData/Portraits/" + uuid + ".asset";
 
 		AssetDatabase.CreateAsset(c, path);
 		portraitLibrary.InsertEntry(c, 0);
-		Undo.RecordObject(portraitLibrary, "Added character");
+		Undo.RecordObject(portraitLibrary, "Added portrait");
 		EditorUtility.SetDirty(portraitLibrary);
 		AssetDatabase.SaveAssets();
 		AssetDatabase.Refresh();
 
 		currentEntryList = portraitLibrary.GetRepresentations("",filterStr);
 		uuid = "";
-		selCharacter = 0;
-		SelectCharacter();
+		selEntry = 0;
+		SelectEntry();
 	}
 
-	void DeleteCharacter() {
+	void DeleteEntry() {
 		GUI.FocusControl(null);
-		PortraitEntry c = (PortraitEntry)portraitLibrary.GetEntryByIndex(selCharacter);
-		string path = "Assets/LibraryData/Characters/" + c.uuid + ".asset";
+		PortraitEntry c = (PortraitEntry)portraitLibrary.GetEntryByIndex(selEntry);
+		string path = "Assets/LibraryData/Portraits/" + c.uuid + ".asset";
 
-		portraitLibrary.RemoveEntryByIndex(selCharacter);
-		Undo.RecordObject(portraitLibrary, "Deleted character");
+		portraitLibrary.RemoveEntryByIndex(selEntry);
+		Undo.RecordObject(portraitLibrary, "Deleted portrait");
 		EditorUtility.SetDirty(portraitLibrary);
 		bool res = AssetDatabase.MoveAssetToTrash(path);
 		AssetDatabase.SaveAssets();
@@ -231,8 +231,8 @@ public class PortraitEditorWindow {
 		currentEntryList = portraitLibrary.GetRepresentations("",filterStr);
 
 		if (res) {
-			Debug.Log("Removed character: " + c.uuid);
-			selCharacter = -1;
+			Debug.Log("Removed portrait: " + c.uuid);
+			selEntry = -1;
 		}
 	}
 }

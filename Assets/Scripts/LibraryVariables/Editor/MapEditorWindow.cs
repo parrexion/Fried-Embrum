@@ -239,6 +239,9 @@ public class MapEditorWindow {
 		GUILayout.EndArea();
 	}
 
+	/// <summary>
+	/// Draws the list of player spawn position and joining characters.
+	/// </summary>
 	private void DrawPlayerStuff() {
 		GUILayout.Space(5);
 		for (int i = 0; i < mapValues.spawnPoints.Count; i++) {

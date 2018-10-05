@@ -160,22 +160,9 @@ public class InventoryMenuController : InputReceiver {
 
     public override void OnLeftArrow() { }
     public override void OnRightArrow() { }
-    public override void OnSp1Button() { }
-    public override void OnSp2Button() { }
+    public override void OnLButton() { }
+    public override void OnRButton() { }
+    public override void OnXButton() { }
+    public override void OnYButton() { }
     public override void OnStartButton() { }
 }
-
-	// private void ShowTooltip() {
-	// 	if (string.IsNullOrEmpty(tooltipMessage.value)) {
-	// 		hideTooltipEvent.Invoke();
-	// 		return;
-	// 	}
-	// 	tooltipObject.SetActive(true);
-	// 	tooltipText.text = tooltipMessage.value;
-	// }
-
-	// public void HideTooltip() {
-	// 	selectedItem.value = -1;
-	// 	tooltipObject.SetActive(false);
-	// 	inventoryMenu.SetActive(false);
-	// }

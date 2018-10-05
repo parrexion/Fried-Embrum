@@ -131,7 +131,6 @@ public class TradeController : InputReceiver {
 		else {
 			active = false;
 			currentMenuMode.value = (int)MenuMode.UNIT;
-			Debug.Log("Now with UNiT!");
 			currentMode.value = ActionMode.MOVE;
 			StartCoroutine(MenuChangeDelay());
 			selectedIndex = -1;
@@ -140,6 +139,9 @@ public class TradeController : InputReceiver {
 		menuAcceptEvent.Invoke();
     }
 
+	/// <summary>
+	/// Updates the UI to show the current state of the inventories.
+	/// </summary>
 	private void UpdateInventories() {
 		if (!active)
 			return;
@@ -159,6 +161,9 @@ public class TradeController : InputReceiver {
 		}
 	}
 
+	/// <summary>
+	/// Updates the current trade menu selection.
+	/// </summary>
 	private void UpdateSelection() {
 		if (!active)
 			return;
@@ -169,16 +174,18 @@ public class TradeController : InputReceiver {
 		}
 	}
 
+	/// <summary>
+	/// Swaps the two items selected by menuPosition and selectedIndex and the updates the inventories.
+	/// </summary>
 	private void SwapItems() {
 		selectedCharacter.value.canUndoMove = false;
 		TacticsMove targetCharacter = targetTile.value.currentCharacter;
-		InventoryTuple tup1 = (selectedIndex > InventoryContainer.INVENTORY_SIZE) ? 
+		InventoryTuple tup1 = (selectedIndex >= InventoryContainer.INVENTORY_SIZE) ? 
 				targetCharacter.inventory.GetItem(selectedIndex-InventoryContainer.INVENTORY_SIZE) : 
 				selectedCharacter.value.inventory.GetItem(selectedIndex);
-		InventoryTuple tup2 = (menuPosition > InventoryContainer.INVENTORY_SIZE) ? 
+		InventoryTuple tup2 = (menuPosition >= InventoryContainer.INVENTORY_SIZE) ? 
 				targetCharacter.inventory.GetItem(menuPosition-InventoryContainer.INVENTORY_SIZE) : 
 				selectedCharacter.value.inventory.GetItem(menuPosition);
-
 		InventoryTuple temp = new InventoryTuple();
 		temp.charge = tup1.charge;
 		temp.droppable = tup1.droppable;
@@ -191,11 +198,15 @@ public class TradeController : InputReceiver {
 		tup2.item = temp.item;
 
 		selectedIndex = -1;
+		targetCharacter.inventory.CleanupInventory();
+		selectedCharacter.value.inventory.CleanupInventory();
 		UpdateInventories();
 		UpdateSelection();
 	}
 
-    public override void OnSp1Button() { }
-    public override void OnSp2Button() { }
+    public override void OnLButton() { }
+    public override void OnRButton() { }
+    public override void OnXButton() { }
+    public override void OnYButton() { }
     public override void OnStartButton() { }
 }

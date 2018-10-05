@@ -88,8 +88,10 @@ public class ForcastInputController : InputReceiver {
 
 	public override void OnUpArrow() {}
 	public override void OnDownArrow() {}
-	public override void OnSp1Button() {}
-	public override void OnSp2Button() {}
+    public override void OnLButton() {}
+    public override void OnRButton() {}
+	public override void OnXButton() {}
+	public override void OnYButton() {}
 	public override void OnStartButton() {}
 
 }

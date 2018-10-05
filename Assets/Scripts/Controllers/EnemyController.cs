@@ -15,6 +15,8 @@ public class EnemyController : MonoBehaviour {
 	public IntVariable currentPage;
 	public IntVariable cursorX;
 	public IntVariable cursorY;
+	public IntVariable slowGameSpeed;
+	public IntVariable currentGameSpeed;
 
 	[Header("Events")]
 	public UnityEvent charClicked;
@@ -57,7 +59,7 @@ public class EnemyController : MonoBehaviour {
 			cursorY.value = enemy.posy;
 			cursorMovedEvent.Invoke();
 
-			yield return new WaitForSeconds(1f);
+			yield return new WaitForSeconds(1f * slowGameSpeed.value / currentGameSpeed.value);
 
 			// Calculate the tile to move towards and wait for the character to move there
 			// Debug.Log("Move time");

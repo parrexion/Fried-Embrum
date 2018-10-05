@@ -137,6 +137,12 @@ public class InventoryContainer {
 		}
 	}
 
+	/// <summary>
+	/// Returns a list of all usable items for the given category and the player's skills.
+	/// </summary>
+	/// <param name="category"></param>
+	/// <param name="player"></param>
+	/// <returns></returns>
 	public List<InventoryTuple> GetAllUsableItemTuple(ItemCategory category, StatsContainer player) {
 		List<InventoryTuple> list = new List<InventoryTuple>();
 		for (int i = 0; i < inventory.Length; i++) {
@@ -149,6 +155,10 @@ public class InventoryContainer {
 		return list;
 	}
 
+	/// <summary>
+	/// Reduces the weapon charges for the first item for the category.
+	/// </summary>
+	/// <param name="category"></param>
 	public void ReduceItemCharge(ItemCategory category) {
 		for (int i = 0; i < inventory.Length; i++) {
 			if (inventory[i].item == null)
@@ -179,7 +189,6 @@ public class InventoryContainer {
 				pos++;
 			}
 		}
-		Debug.Log("Cleaned up inventory");
 	}
 
 	/// <summary>
