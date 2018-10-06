@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum TerrainType { FIELD, FOREST, MOUNTAIN, WALL }
-
 [System.Serializable]
 public class RoughnessTuple {
 	public ClassType type;

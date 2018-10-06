@@ -58,8 +58,6 @@ public class BattleContainer : MonoBehaviour {
 	public BoolVariable musicFocus;
 	public SfxEntry levelupFanfare;
 	public SfxEntry levelupFill;
-	public SfxEntry brokenItemFanfare;
-	public SfxEntry droppedItemFanfare;
 	public SfxEntry missedAttackSfx;
 	public SfxEntry hitAttackSfx;
 	public SfxEntry leathalAttackSfx;
@@ -429,7 +427,7 @@ public class BattleContainer : MonoBehaviour {
 					CharacterSkill skill = player.stats.classData.AwardSkills(player.stats.level);
 					if (skill) {
 						player.skills.GainSkill(skill);
-						yield return StartCoroutine(popup.ShowPopup(skill.icon,  "gained: " + skill.entryName, droppedItemFanfare));
+						yield return StartCoroutine(popup.ShowPopup(skill.icon,  "gained: " + skill.entryName, popup.droppedItemFanfare));
 					}
 					expMeter.gameObject.SetActive(true);
 					sfxQueue.Enqueue(levelupFill);
@@ -450,19 +448,19 @@ public class BattleContainer : MonoBehaviour {
 		if (actions[0].isDamage) {
 			InventoryTuple invTup = actions[0].weaponAtk;
 			if (invTup.item != null && invTup.charge <= 0) {
-				yield return StartCoroutine(popup.ShowPopup(invTup.item.icon, invTup.item.entryName + " broke!", brokenItemFanfare));
+				yield return StartCoroutine(popup.ShowPopup(invTup.item.icon, invTup.item.entryName + " broke!", popup.brokenItemFanfare));
 				actions[0].attacker.inventory.CleanupInventory();
 			}
 			invTup = actions[0].weaponDef;
 			if (invTup != null && invTup.charge <= 0) {
-				yield return StartCoroutine(popup.ShowPopup(invTup.item.icon, invTup.item.entryName + " broke!", brokenItemFanfare));
+				yield return StartCoroutine(popup.ShowPopup(invTup.item.icon, invTup.item.entryName + " broke!", popup.brokenItemFanfare));
 				actions[0].defender.inventory.CleanupInventory();
 			}
 		}
 		else {
 			InventoryTuple invTup = actions[0].staffAtk;
 			if (invTup != null && invTup.charge <= 0) {
-				yield return StartCoroutine(popup.ShowPopup(invTup.item.icon, invTup.item.entryName + " broke!", brokenItemFanfare));
+				yield return StartCoroutine(popup.ShowPopup(invTup.item.icon, invTup.item.entryName + " broke!", popup.brokenItemFanfare));
 				actions[0].attacker.inventory.CleanupInventory();
 			}
 		}
@@ -478,7 +476,7 @@ public class BattleContainer : MonoBehaviour {
 			itemTup.droppable = false;
 			receiver.inventory.GainItem(itemTup);
 
-			yield return StartCoroutine(popup.ShowPopup(itemTup.item.icon, "Gained " + itemTup.item.entryName, droppedItemFanfare));
+			yield return StartCoroutine(popup.ShowPopup(itemTup.item.icon, "Gained " + itemTup.item.entryName, popup.droppedItemFanfare));
 		}
 		yield break;
 	}

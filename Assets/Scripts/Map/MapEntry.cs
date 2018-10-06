@@ -129,6 +129,7 @@ public class EnemyPosition {
 	public AggroType aggroType;
 	public bool hasQuotes;
 	public List<FightQuote> quotes = new List<FightQuote>();
+	public int huntX, huntY;
 }
 
 public enum InteractType { NONE, BLOCK, DIALOGUE, VILLAGE, SEIZE, CHEST }

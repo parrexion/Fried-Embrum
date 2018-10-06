@@ -15,6 +15,10 @@ public class PopupController : MonoBehaviour {
 	public AudioQueueVariable sfxQueue;
 	public UnityEvent playSfxEvent;
 
+	[Header("Sound clips")]
+	public SfxEntry brokenItemFanfare;
+	public SfxEntry droppedItemFanfare;
+
 	[Header("Default Values")]
 	public float defaultDuration = 2f;
 	public float defaultCooldown = 0.5f;

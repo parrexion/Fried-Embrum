@@ -9723,8 +9723,6 @@ MonoBehaviour:
   musicFocus: {fileID: 11400000, guid: 7293c60ce7ba5ec458d4ee7f2b4c5119, type: 2}
   levelupFanfare: {fileID: 11400000, guid: 4fc14e47bebe94649bc49c826ed56e8f, type: 2}
   levelupFill: {fileID: 11400000, guid: 7ce17b4f6a58d814c946e3502586971d, type: 2}
-  brokenItemFanfare: {fileID: 11400000, guid: 2d94491249efff74f907741cc602624b, type: 2}
-  droppedItemFanfare: {fileID: 11400000, guid: ba2be5c664667f24c9f51d6aae11d798, type: 2}
   missedAttackSfx: {fileID: 11400000, guid: e71555a45ad0e884595085760babe61f, type: 2}
   hitAttackSfx: {fileID: 11400000, guid: 7460251cbc0f8b448b4cea487b3bbf38, type: 2}
   leathalAttackSfx: {fileID: 11400000, guid: d999e697503aebb49b74fb05709844d5, type: 2}
@@ -19613,24 +19611,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &1006307170
-RectTransform:
+--- !u!4 &1006307170
+Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1006307169}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1803605348}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 1600, y: 192.5}
-  m_SizeDelta: {x: 350, y: 185}
-  m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &1006307171
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22314,24 +22307,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &1110140013
-RectTransform:
+--- !u!4 &1110140013
+Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1110140012}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1803605348}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 1600, y: 192.5}
-  m_SizeDelta: {x: 350, y: 185}
-  m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &1110140014
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28626,24 +28614,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &1524331736
-RectTransform:
+--- !u!4 &1524331736
+Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1524331735}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 90}
-  m_LocalScale: {x: 0.012222222, y: 0.012222222, z: 0.012222222}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1803605348}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 7, y: 4.5}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1524331737
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28675,6 +28658,8 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  brokenItemFanfare: {fileID: 11400000, guid: 2d94491249efff74f907741cc602624b, type: 2}
+  droppedItemFanfare: {fileID: 11400000, guid: ba2be5c664667f24c9f51d6aae11d798, type: 2}
   defaultDuration: 2
   defaultCooldown: 0.5
 --- !u!1 &1524480652
@@ -38521,6 +38506,8 @@ GameObject:
   - component: {fileID: 1931585851}
   - component: {fileID: 1931585850}
   - component: {fileID: 1931585852}
+  - component: {fileID: 1931585853}
+  - component: {fileID: 1931585854}
   m_Layer: 0
   m_Name: EnemyController
   m_TagString: Untagged
@@ -38549,6 +38536,7 @@ MonoBehaviour:
   cursorY: {fileID: 11400000, guid: bc83df26fa1b9664593c316923606033, type: 2}
   slowGameSpeed: {fileID: 11400000, guid: 208d37ab76bc94c4c849779521ed5319, type: 2}
   currentGameSpeed: {fileID: 11400000, guid: 956f89e305f8cf743a1cdd2a56705734, type: 2}
+  popup: {fileID: 1524331737}
   charClicked:
     m_PersistentCalls:
       m_Calls:
@@ -38626,7 +38614,63 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1931585850}
-        m_MethodName: BattleFinishedQue
+        m_MethodName: ActionFinishedQue
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+--- !u!114 &1931585853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1931585849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14602ab6441821f43883d0b13d4f57c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  evnt: {fileID: 11400000, guid: 63f4c58857bcdde48a9c63fd6ecb5e64, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1931585850}
+        m_MethodName: IncomingDestruction
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+--- !u!114 &1931585854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1931585849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14602ab6441821f43883d0b13d4f57c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  evnt: {fileID: 11400000, guid: 5ee3e8863f601c440a287f99db8fca13, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1931585850}
+        m_MethodName: ActionFinishedQue
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

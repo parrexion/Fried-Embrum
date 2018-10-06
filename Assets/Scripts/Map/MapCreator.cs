@@ -235,6 +235,7 @@ public class MapCreator : MonoBehaviour {
 				else if (interPos.interactType == InteractType.VILLAGE) {
 					tempTile.interactType = InteractType.VILLAGE;
 					tempTile.SetTerrain(tileHouse);
+					tempTile.alternativeTerrain = GetTerrainFromPixel(colorData[pos]);
 					tempTile.dialogue = interPos.dialogue;
 					tempTile.gift = interPos.gift;
 					if (interPos.ally.stats != null) {
@@ -326,8 +327,9 @@ public class MapCreator : MonoBehaviour {
 				fight.activated = false;
 				quotes.Add(fight);
 			}
+			MapTile huntTile = (pos.aggroType == AggroType.HUNT) ? GetTile(pos.huntX, pos.huntY) : null; 
 
-			SpawnEnemyCharacter(pos.x, pos.y, stats, inventory, skills, quotes, pos.aggroType);
+			SpawnEnemyCharacter(pos.x, pos.y, stats, inventory, skills, quotes, pos.aggroType, huntTile);
 		}
 	}
 
@@ -368,7 +370,7 @@ public class MapCreator : MonoBehaviour {
 	/// <param name="skills"></param>
 	/// <param name="quotes"></param>
 	/// <param name="aggro"></param>
-	private void SpawnEnemyCharacter(int x, int y, StatsContainer stats, InventoryContainer inventory, SkillsContainer skills, List<FightQuote> quotes, AggroType aggro) {
+	private void SpawnEnemyCharacter(int x, int y, StatsContainer stats, InventoryContainer inventory, SkillsContainer skills, List<FightQuote> quotes, AggroType aggro, MapTile huntTile) {
 		Transform enemyTransform = Instantiate(enemyPrefab, enemyParent);
 		enemyTransform.position = new Vector3(x, y);
 
@@ -381,6 +383,7 @@ public class MapCreator : MonoBehaviour {
 		tactics.skills = skills;
 		tactics.fightQuotes = quotes;
 		tactics.aggroType = aggro;
+		tactics.huntTile = huntTile;
 		tactics.Setup();
 	}
 	
@@ -407,7 +410,7 @@ public class MapCreator : MonoBehaviour {
 					InventoryContainer inventory = new InventoryContainer(pos.inventory);
 					SkillsContainer skills = new SkillsContainer(pos.skills);
 
-					SpawnEnemyCharacter(pos.x, pos.y, stats, inventory, skills, new List<FightQuote>(), AggroType.CHARGE);
+					SpawnEnemyCharacter(pos.x, pos.y, stats, inventory, skills, new List<FightQuote>(), AggroType.CHARGE, null);
 					// Debug.Log("Hello there!     " + (reinforcementDelay * slowGameSpeed.value / currentGameSpeed.value));
 					yield return new WaitForSeconds(reinforcementDelay * slowGameSpeed.value / currentGameSpeed.value);
 				}

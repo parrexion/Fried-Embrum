@@ -17,12 +17,14 @@ public class EnemyController : MonoBehaviour {
 	public IntVariable cursorY;
 	public IntVariable slowGameSpeed;
 	public IntVariable currentGameSpeed;
+	public PopupController popup;
 
 	[Header("Events")]
 	public UnityEvent charClicked;
 	public UnityEvent cursorMovedEvent;
 	public UnityEvent endTurnEvent;
 	
+	private NPCMove enemy;
 	private bool isRunning;
 	private bool waitForNextAction;
 
@@ -53,7 +55,7 @@ public class EnemyController : MonoBehaviour {
 			Debug.Log(enemyList.values[i].gameObject.name + " turn");
 			selectCharacter.value = enemyList.values[i];
 			selectTile.value = selectCharacter.value.currentTile;
-			NPCMove enemy = (NPCMove)enemyList.values[i];
+			enemy = (NPCMove)enemyList.values[i];
 			enemy.FindAllMoveTiles(false);
 			cursorX.value = enemy.posx;
 			cursorY.value = enemy.posy;
@@ -63,8 +65,8 @@ public class EnemyController : MonoBehaviour {
 
 			// Calculate the tile to move towards and wait for the character to move there
 			// Debug.Log("Move time");
-			enemy.CalculateMovement();
-			while (enemy.isMoving)
+			waitForNextAction = enemy.CalculateMovement();
+			while (waitForNextAction)
 				yield return null;
 
 			// Calculate which character to attack/support and waits for the battle scene to finish
@@ -88,7 +90,19 @@ public class EnemyController : MonoBehaviour {
 	/// <summary>
 	/// Sets the wait bool to false which means the enemy loop will continue.
 	/// </summary>
-	public void BattleFinishedQue() {
+	public void ActionFinishedQue() {
+		waitForNextAction = false;
+	}
+
+	public void IncomingDestruction() {
+		if (enemy != null) {
+			StartCoroutine(DestroyTile());
+		}
+	}
+	
+	private IEnumerator DestroyTile() {
+		string destroyType = (enemy.currentTile.interactType == InteractType.VILLAGE) ? "Village" : "???";
+		yield return StartCoroutine(popup.ShowPopup(null, destroyType + " was destroyed!", popup.brokenItemFanfare));
 		waitForNextAction = false;
 	}
 }

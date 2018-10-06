@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
-public enum AggroType { WAIT, CHARGE, GUARD, BOSS }
+public enum AggroType { WAIT, CHARGE, GUARD, BOSS, HUNT }
 
 public class NPCMove : TacticsMove {
 
@@ -10,6 +11,10 @@ public class NPCMove : TacticsMove {
 	public AggroType aggroType;
 	public MapTileVariable moveTile;
 	public SpriteRenderer bossCrest;
+	public MapTile huntTile;
+
+	public UnityEvent finishedMovingEvent;
+	public UnityEvent destroyedTileEvent;
 
 
 	/// <summary>
@@ -29,7 +34,7 @@ public class NPCMove : TacticsMove {
 	/// <summary>
 	/// Generates possible moves and selects and moves the AI to the best one found.
 	/// </summary>
-	public void CalculateMovement() {
+	public bool CalculateMovement() {
 		MapTile tileBestWpn = null, tileGoodWpn = null, tileBestStf = null, tileGoodStf = null;
 		List<InventoryTuple> weapon = inventory.GetAllUsableItemTuple(ItemCategory.WEAPON, stats);
 		List<InventoryTuple> staff = inventory.GetAllUsableItemTuple(ItemCategory.STAFF, stats);
@@ -47,10 +52,12 @@ public class NPCMove : TacticsMove {
 		//Nowhere to move
 		if (moveTile.value == null) {
 			EndMovement();
+			return false;
 		}
 		else {
 			ShowMove(moveTile.value);
 			StartMove();
+			return true;
 		}
 	}
 
@@ -67,9 +74,20 @@ public class NPCMove : TacticsMove {
 		GenerateHitTiles(weapons);
 		BFS();
 
-		int moveSpeed = (aggroType == AggroType.WAIT || aggroType == AggroType.CHARGE) ? stats.GetMovespeed() : 0;
+		int moveSpeed = (aggroType == AggroType.GUARD || aggroType == AggroType.BOSS) ? 0 : stats.GetMovespeed();
 		MapTile bestTile = null; // Reachable this turn
 		MapTile goodTile = null; // Reachable in multiple turns
+
+		//Hunting AI
+		if (aggroType == AggroType.HUNT) {
+			tileBest = huntTile;
+			tileGood = null;
+			while(tileBest.distance > moveSpeed) {
+				tileBest = tileBest.parent;
+			}
+			tileBest.PrintPos();
+			return;
+		}
 
 		// Go through all tiles and find the best one to move to or towards
 		for (int i = 0; i < mapCreator.tiles.Length; i++) {
@@ -191,6 +209,16 @@ public class NPCMove : TacticsMove {
 		isMoving = false;
 		mapCreator.ResetMap();
 		currentTile.current = true;
+
+		if (aggroType == AggroType.HUNT && currentTile == huntTile) {
+			aggroType = AggroType.CHARGE;
+			huntTile.SetTerrain(huntTile.alternativeTerrain);
+			destroyedTileEvent.Invoke();
+		}
+		else {
+			Debug.Log("FALSE");
+			finishedMovingEvent.Invoke();
+		}
 	}
 
 

@@ -317,9 +317,16 @@ public class MapEditorWindow {
 				GUILayout.BeginHorizontal();
 				mapValues.enemies[i].level = EditorGUILayout.IntField("Level", mapValues.enemies[i].level);
 				mapValues.enemies[i].aggroType = (AggroType)EditorGUILayout.EnumPopup("Aggro", mapValues.enemies[i].aggroType);
-				EditorGUIUtility.labelWidth = 120;
 				GUILayout.EndHorizontal();
 			
+				if (mapValues.enemies[i].aggroType == AggroType.HUNT){
+					GUILayout.BeginHorizontal();
+					GUILayout.Label("Hunt tile");
+					mapValues.enemies[i].huntX = EditorGUILayout.IntField("", mapValues.enemies[i].huntX);
+					mapValues.enemies[i].huntY = EditorGUILayout.IntField("", mapValues.enemies[i].huntY);
+					GUILayout.EndHorizontal();
+				}
+
 				// Inventory
 				for (int j = 0; j < mapValues.enemies[i].inventory.Count; j++) {
 					EditorGUIUtility.labelWidth = 70;
