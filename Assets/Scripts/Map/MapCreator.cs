@@ -33,9 +33,8 @@ public class MapCreator : MonoBehaviour {
 
 	[Header("Events")]
 	public UnityEvent cursorMoveEvent;
-	public UnityEvent finishedReinforcementEvent;
+	public UnityEvent nextTurnStateEvent;
 	public UnityEvent startDialogueEvent;
-	public UnityEvent noDialogueEvent;
 
 	[HideInInspector] public MapTile[] tiles;
 	[HideInInspector] public List<MapTile> breakables = new List<MapTile>();
@@ -409,13 +408,13 @@ public class MapCreator : MonoBehaviour {
 					SkillsContainer skills = new SkillsContainer(pos.skills);
 
 					SpawnEnemyCharacter(pos.x, pos.y, stats, inventory, skills, new List<FightQuote>(), AggroType.CHARGE);
-					Debug.Log("Hello there!     " + (reinforcementDelay * slowGameSpeed.value / currentGameSpeed.value));
+					// Debug.Log("Hello there!     " + (reinforcementDelay * slowGameSpeed.value / currentGameSpeed.value));
 					yield return new WaitForSeconds(reinforcementDelay * slowGameSpeed.value / currentGameSpeed.value);
 				}
 			}
 		}
 		Debug.Log("DONE!");
-		finishedReinforcementEvent.Invoke();
+		nextTurnStateEvent.Invoke();
 		Debug.Log("DONE2!");
 		yield break;
 	}
@@ -433,7 +432,7 @@ public class MapCreator : MonoBehaviour {
 				return;
 			}
 		}
-		noDialogueEvent.Invoke();
+		nextTurnStateEvent.Invoke();
 	}
 
 	private TerrainTile GetTerrainFromPixel(Color32 pixelColor) {

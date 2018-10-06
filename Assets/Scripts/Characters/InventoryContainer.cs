@@ -36,7 +36,6 @@ public class InventoryContainer {
 	}
 
 	private void SetupValues(ScrObjLibraryVariable iLib, CharacterSaveData saveData) {
-		
 		inventory = new InventoryTuple[INVENTORY_SIZE];
 		for (int i = 0; i < inventory.Length; i++) {
 			if (i < saveData.inventory.Count) {

@@ -136,15 +136,6 @@ public class InventoryInputController : InputReceiver {
 		}
     }
 
-    public override void OnLButton() {
-		// bool hidden = (selectCharacter.value == null || currentMenuMode.value == (int)MenuMode.ATTACK || currentMenuMode.value == (int)MenuMode.HEAL);
-		// bool spec = (currentDialogueMode.value != (int)DialogueMode.NONE || currentMenuMode.value == (int)MenuMode.STATS || currentMenuMode.value == (int)MenuMode.INV);
-		// if (!hidden && !spec) {
-		// 	menuMoveEvent.Invoke();
-		// 	ChangeStatsScreen(-1);
-		// }
-    }
-
     public override void OnYButton() {
 		bool hidden = (selectCharacter.value == null || currentMenuMode.value == (int)MenuMode.ATTACK || currentMenuMode.value == (int)MenuMode.HEAL);
 		bool spec = (currentDialogueMode.value != (int)DialogueMode.NONE || currentMenuMode.value == (int)MenuMode.STATS || currentMenuMode.value == (int)MenuMode.INV);
@@ -171,6 +162,7 @@ public class InventoryInputController : InputReceiver {
     public override void OnLeftArrow() { }
     public override void OnRightArrow() { }
     public override void OnXButton() { }
+    public override void OnLButton() { }
     public override void OnRButton() { }
     public override void OnStartButton() { }
 

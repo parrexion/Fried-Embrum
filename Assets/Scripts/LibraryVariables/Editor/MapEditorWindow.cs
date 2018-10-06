@@ -143,16 +143,19 @@ public class MapEditorWindow {
 		mapValues.entryName = EditorGUILayout.TextField("Map Name", mapValues.entryName);
 
 		GUILayout.Space(10);
-		GUILayout.Label("Win/Lose", EditorStyles.boldLabel);
-		mapValues.winCondition = (WinCondition)EditorGUILayout.EnumPopup("",mapValues.winCondition);
-		mapValues.loseCondition = (LoseCondition)EditorGUILayout.EnumPopup("",mapValues.loseCondition);
+		GUILayout.Label("Map objectives", EditorStyles.boldLabel);
+		EditorGUIUtility.labelWidth = 80;
+		GUILayout.BeginHorizontal();
+		mapValues.winCondition = (WinCondition)EditorGUILayout.EnumPopup("Win",mapValues.winCondition);
+		GUILayout.Space(20);
+		mapValues.loseCondition = (LoseCondition)EditorGUILayout.EnumPopup("Lose",mapValues.loseCondition);
+		GUILayout.EndHorizontal();
 
 		GUILayout.Space(10);
 
 		GUILayout.Label("Map Size", EditorStyles.boldLabel);
 		mapValues.mapSprite = (Texture2D)EditorGUILayout.ObjectField("Map Info Sprite",mapValues.mapSprite, typeof(Texture2D),false);
 		GUILayout.BeginHorizontal();
-		EditorGUIUtility.labelWidth = 80;
 		mapValues.sizeX = EditorGUILayout.IntField("Size X", mapValues.sizeX);
 		mapValues.sizeY = EditorGUILayout.IntField("Size Y", mapValues.sizeY);
 		EditorGUIUtility.labelWidth = 120;
@@ -170,7 +173,7 @@ public class MapEditorWindow {
 		mapValues.owMusic = (MusicEntry)EditorGUILayout.ObjectField("OW music",mapValues.owMusic, typeof(MusicEntry),false);
 		mapValues.battleMusic = (MusicEntry)EditorGUILayout.ObjectField("Battle music",mapValues.battleMusic, typeof(MusicEntry),false);
 		mapValues.healMusic = (MusicEntry)EditorGUILayout.ObjectField("Heal music",mapValues.healMusic, typeof(MusicEntry),false);
-
+		
 		GUILayout.Space(10);
 
 		// Player stuff

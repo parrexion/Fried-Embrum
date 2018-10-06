@@ -17,8 +17,6 @@ public class BattleContainer : MonoBehaviour {
 	public BoolVariable lockControls;
 	public FloatVariable cameraPosX;
 	public FloatVariable cameraPosY;
-	// public IntVariable cursorX;
-	// public IntVariable cursorY;
 	public PopupController popup;
 
 	[Header("Dialogue")]
@@ -176,6 +174,9 @@ public class BattleContainer : MonoBehaviour {
 				Debug.Log("Action!");
 			}
 		}
+		else {
+			Debug.Log("NOPE");
+		}
 	}
 
 	private void SetupBattle() {
@@ -212,10 +213,10 @@ public class BattleContainer : MonoBehaviour {
 		}
 		for (int i = 0; i < actions.Count; i++) {
 			BattleAction act = actions[i];
-			if (act.isDamage && act.attacker.GetFirstUsableInventoryTuple(ItemCategory.WEAPON).charge <= 0) {
+			if (act.isDamage && act.attacker.inventory.GetFirstUsableItemTuple(ItemCategory.WEAPON, act.attacker.stats).charge <= 0) {
 				continue; //Broken weapon
 			}
-			if (!act.isDamage && act.attacker.GetFirstUsableInventoryTuple(ItemCategory.STAFF).charge <= 0) {
+			if (!act.isDamage && act.attacker.inventory.GetFirstUsableItemTuple(ItemCategory.STAFF, act.attacker.stats).charge <= 0) {
 				continue; //Broken staff
 			}
 			
@@ -274,7 +275,7 @@ public class BattleContainer : MonoBehaviour {
 					else
 						leftTransform.GetComponent<SpriteRenderer>().color = new Color(0.4f,0.4f,0.4f);
 				}
-				act.attacker.ReduceWeaponCharge(ItemCategory.WEAPON);
+				act.attacker.inventory.ReduceItemCharge(ItemCategory.WEAPON);
 				act.attacker.stats.GiveWpnExp(act.attacker.GetEquippedWeapon(ItemCategory.WEAPON));
 			}
 			else {
@@ -286,7 +287,7 @@ public class BattleContainer : MonoBehaviour {
 				else if (act.staffAtk.item.itemType == ItemType.BUFF) {
 					act.defender.ReceiveBuff(act.attacker.GetEquippedWeapon(ItemCategory.STAFF).boost, true, true);
 				}
-				act.attacker.ReduceWeaponCharge(ItemCategory.STAFF);
+				act.attacker.inventory.ReduceItemCharge(ItemCategory.STAFF);
 				act.attacker.stats.GiveWpnExp(act.attacker.GetEquippedWeapon(ItemCategory.STAFF));
 				_attackerDealtDamage = true;
 			}
@@ -317,15 +318,9 @@ public class BattleContainer : MonoBehaviour {
 					Debug.Log("Death quote");
 					runningLoop = true;
 					dialogueMode.value = (int)DialogueMode.QUOTE;
-					currentDialogue.value = act.defender.stats.charData.deathQuote;
+					currentDialogue.value = dialogue = act.defender.stats.charData.deathQuote;
 					showDialogueEvent.Invoke();
 					lockControls.value = false;
-
-					if (act.defender.faction == Faction.PLAYER) {
-						MapEntry map = (MapEntry)currentMap.value;
-						subMusic.value = map.deathMusic.clip;
-						playSubMusicEvent.Invoke();
-					}
 
 					while(runningLoop) {
 						yield return null;
@@ -367,8 +362,6 @@ public class BattleContainer : MonoBehaviour {
 		if (currentTurn.value == Faction.PLAYER)
 			lockControls.value = false;
 		_currentCharacter.End();
-		// cursorX.value = _currentCharacter.posx;
-		// cursorY.value = _currentCharacter.posy;
 		_currentCharacter = null;
 		
 		yield return new WaitForSeconds(0.5f);

@@ -239,7 +239,6 @@ public class NPCMove : TacticsMove {
 		}
 
 		hits.Shuffle();
-		Debug.Log("Target is at " + hits[0].posx + " , " + hits[0].posy);
 		return hits[0];
 	}
 	

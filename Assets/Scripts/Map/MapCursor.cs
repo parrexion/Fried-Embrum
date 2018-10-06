@@ -115,6 +115,14 @@ public class MapCursor : MonoBehaviour {
 		return false;
 	}
 
+	public bool ShowIngameMenu() {
+		if (currentActionMode.value == ActionMode.NONE) {
+			showIngameMenuEvent.Invoke();
+			return true;
+		}
+		return false;
+	}
+
 	public void CursorBack() {
 		if (currentActionMode.value == ActionMode.MOVE) {
 			cursorX.value = startTile.posx;
@@ -188,7 +196,6 @@ public class MapCursor : MonoBehaviour {
 				return false;
 		}
 		else {
-			Debug.Log("Show other menu. End turn etc.");
 			showIngameMenuEvent.Invoke();
 		}
 		return true;

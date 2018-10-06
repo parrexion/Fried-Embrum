@@ -75,7 +75,6 @@ public class ForecastUI : MonoBehaviour {
 			}
 		}
 		else {
-			defendCharacter.value.PrintPos();
 			CalculateShowForecast(selectCharacter.value, defendCharacter.value);
 		}
 	}

@@ -321,6 +321,7 @@ public abstract class TacticsMove : MonoBehaviour {
 		GetComponent<SpriteRenderer>().color = new Color(0.66f,0.66f,0.66f);
 		mapCreator.ResetMap();
 		currentTile.current = true;
+		Debug.Log("This is the end!");
 		waitEvent.Invoke();
 	}
 
@@ -412,14 +413,6 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// <returns></returns>
 	public float GetHealthPercent() {
 		return Mathf.Clamp01(currentHealth / (float)stats.hp);
-	}
-
-	/// <summary>
-	/// Returns the tile the character is standing on.
-	/// </summary>
-	/// <returns></returns>
-	public TerrainTile GetTerrain() {
-		return currentTile.terrain;
 	}
 
 	/// <summary>
@@ -580,23 +573,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	public WeaponItem GetEquippedWeapon(ItemCategory category) {
 		return inventory.GetFirstUsableItem(category, stats);
 	}
-	
-	/// <summary>
-	/// Returns the first usable item tuple from the inventory of the given category.
-	/// </summary>
-	/// <param name="category"></param>
-	/// <returns></returns>
-	public InventoryTuple GetFirstUsableInventoryTuple(ItemCategory category) {
-		return inventory.GetFirstUsableItemTuple(category, stats);
-	}
-	
-	/// <summary>
-	/// Reduces the weapon charge of the first weapon with the given category
-	/// </summary>
-	/// <param name="category"></param>
-	public void ReduceWeaponCharge(ItemCategory category) {
-		inventory.ReduceItemCharge(category);
-	}
+
 
 	//SKills
 

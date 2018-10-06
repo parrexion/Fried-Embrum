@@ -168,12 +168,14 @@ public class DialogueListWindow : EditorWindow {
 		dialogueScrollPos = GUILayout.BeginScrollView(dialogueScrollPos, GUILayout.Width(dialogueRect.width), 
 					GUILayout.Height(dialogueRect.height-90));
 		
-		int oldSelected = hub.selDialogue;
+		int newSelected = hub.selDialogue;
 		GUIContent[] guic = dialogueLibrary.GetRepresentations(filterEnum, filterString);
 		if (guic.Length > 0)
-			hub.selDialogue = GUILayout.SelectionGrid(hub.selDialogue, guic,2);
+			newSelected = GUILayout.SelectionGrid(hub.selDialogue, guic,2);
 
-		if (oldSelected != hub.selDialogue) {
+		if (newSelected != hub.selDialogue) {
+			hub.SaveSelectedDialogue();
+			hub.selDialogue = newSelected;
 			GUI.FocusControl(null);
 			hub.SelectDialogue();
 			daw.Repaint();
@@ -214,6 +216,14 @@ public class DialogueListWindow : EditorWindow {
 			hub.dialogueValues.tag = EditorGUILayout.EnumPopup("Tag", (FilterType)System.Enum.Parse(typeof(FilterType),hub.dialogueValues.tag)).ToString();
 		}
 		GUILayout.Space(5);
+
+		//SAVE
+		if (hub.selAction != -1) {
+			if (GUILayout.Button("SAVE")) {
+				hub.SaveSelectedDialogue();
+			}
+			GUILayout.Space(5);
+		}
 
 		// Frame scroll
 		GUILayout.Label("Actions", EditorStyles.boldLabel);

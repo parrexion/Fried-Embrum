@@ -58,7 +58,6 @@ public class SimpleCharacterUI : MonoBehaviour {
 	public Text weighDownValue2;
 	public Image[] weaponSkillIcons;
 	public Text[] weaponSkillRating;
-	public GameObject equipIndicator;
 	public Image[] inventoryHighlight;
 	public Text[] inventoryFields;
 	public Text[] inventoryValues;
@@ -109,7 +108,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 		avoidText.text = "Avo:  " + BattleCalc.GetAvoid(stats);
 
 		//Terrain
-		boostAvoid.enabled = (tactics.GetTerrain().avoid > 0);
+		boostAvoid.enabled = (tactics.currentTile.terrain.avoid > 0);
 		
 		statsObject.SetActive(false);
 		basicObject.SetActive(true);
@@ -196,10 +195,6 @@ public class SimpleCharacterUI : MonoBehaviour {
 				weaponSkillRating[i].text = WeaponItem.GetRankLetter(stats.wpnSkills[(int)stats.classData.weaponSkills[i]]);
 			}
 		}
-		
-		InventoryTuple first = inventory.GetItem(0);
-		bool equipped = (first.item != null && first.item.itemCategory == ItemCategory.WEAPON);
-		equipIndicator.SetActive(equipped);
 
 		// Set up inventory list
 		for (int i = 0; i < 5; i++) {

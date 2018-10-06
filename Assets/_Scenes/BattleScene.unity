@@ -5065,6 +5065,7 @@ GameObject:
   - component: {fileID: 102152792}
   - component: {fileID: 102152801}
   - component: {fileID: 102152803}
+  - component: {fileID: 102152804}
   m_Layer: 0
   m_Name: MapInputController
   m_TagString: Untagged
@@ -5483,6 +5484,34 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 102152793}
         m_MethodName: OnXButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+--- !u!114 &102152804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 102152790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14602ab6441821f43883d0b13d4f57c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  evnt: {fileID: 11400000, guid: 05d76028287e26e4eb77ccea91c6351e, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 102152793}
+        m_MethodName: OnStartButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -15375,10 +15404,7 @@ GameObject:
   - component: {fileID: 760330654}
   - component: {fileID: 760330652}
   - component: {fileID: 760330655}
-  - component: {fileID: 760330659}
   - component: {fileID: 760330660}
-  - component: {fileID: 760330658}
-  - component: {fileID: 760330653}
   m_Layer: 0
   m_Name: TurnController
   m_TagString: Untagged
@@ -15414,34 +15440,6 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
---- !u!114 &760330653
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 760330651}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14602ab6441821f43883d0b13d4f57c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  evnt: {fileID: 11400000, guid: 75abbc6a534d9764bab06b6ccdf7aa50, type: 2}
-  response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 760330656}
-        m_MethodName: ShowNextTurnDisplay
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!114 &760330654
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15457,6 +15455,17 @@ MonoBehaviour:
   response:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 760330656}
+        m_MethodName: CheckGameFinished
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 760330656}
         m_MethodName: CheckEndTurn
         m_Mode: 1
@@ -15523,6 +15532,7 @@ MonoBehaviour:
     type: 2}
   currentDialogue: {fileID: 11400000, guid: 4aca8b6ac3dbaa943963a062568cc6b4, type: 2}
   autoEndTurn: {fileID: 11400000, guid: 27e8cb1b44794c44da7921a16f5d1041, type: 2}
+  currentState: 0
   turnChangeDisplay: {fileID: 1102929061}
   turnChangeText: {fileID: 189031125}
   mainMusic: {fileID: 11400000, guid: 40f826d9f1abd9e4f9f0972569193a0f, type: 2}
@@ -15676,62 +15686,6 @@ Transform:
   m_Father: {fileID: 1803605348}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &760330658
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 760330651}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14602ab6441821f43883d0b13d4f57c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  evnt: {fileID: 11400000, guid: d5709e287f3eaea42a8638af3a7ac385, type: 2}
-  response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 760330656}
-        m_MethodName: CheckDialogues
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
---- !u!114 &760330659
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 760330651}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14602ab6441821f43883d0b13d4f57c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  evnt: {fileID: 11400000, guid: 98a16466807c9e245bd86ff603c43198, type: 2}
-  response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 760330656}
-        m_MethodName: CheckGameFinished
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!114 &760330660
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15743,12 +15697,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14602ab6441821f43883d0b13d4f57c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  evnt: {fileID: 11400000, guid: 2f98415647653934f994a0ff2618339f, type: 2}
+  evnt: {fileID: 11400000, guid: 69c3f8f0ba50da54f85f11632f92f61e, type: 2}
   response:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 760330656}
-        m_MethodName: StartGame
+        m_MethodName: TriggerNextStep
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -29153,7 +29107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14602ab6441821f43883d0b13d4f57c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  evnt: {fileID: 11400000, guid: d5709e287f3eaea42a8638af3a7ac385, type: 2}
+  evnt: {fileID: 11400000, guid: 69c3f8f0ba50da54f85f11632f92f61e, type: 2}
   response:
     m_PersistentCalls:
       m_Calls:
@@ -34073,7 +34027,6 @@ MonoBehaviour:
   - {fileID: 1050504258}
   - {fileID: 1868045111}
   - {fileID: 67252423}
-  equipIndicator: {fileID: 1162750709}
   inventoryHighlight:
   - {fileID: 254229803}
   - {fileID: 595989765}
@@ -36110,7 +36063,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1803605348}
   - component: {fileID: 1803605350}
-  - component: {fileID: 1803605349}
   - component: {fileID: 1803605351}
   - component: {fileID: 1803605352}
   m_Layer: 0
@@ -36140,34 +36092,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1803605349
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1803605347}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14602ab6441821f43883d0b13d4f57c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  evnt: {fileID: 11400000, guid: 2f98415647653934f994a0ff2618339f, type: 2}
-  response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1803605350}
-        m_MethodName: ActivateStuff
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!114 &1803605350
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40818,10 +40742,10 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  finishedReinforcementEvent:
+  nextTurnStateEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11400000, guid: d5709e287f3eaea42a8638af3a7ac385, type: 2}
+      - m_Target: {fileID: 11400000, guid: 69c3f8f0ba50da54f85f11632f92f61e, type: 2}
         m_MethodName: Raise
         m_Mode: 1
         m_Arguments:
@@ -40838,22 +40762,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11400000, guid: 6f15e75a555993c48a97e8b2c7be0718, type: 2}
-        m_MethodName: Raise
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  noDialogueEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11400000, guid: 75abbc6a534d9764bab06b6ccdf7aa50, type: 2}
         m_MethodName: Raise
         m_Mode: 1
         m_Arguments:

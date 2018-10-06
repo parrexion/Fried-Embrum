@@ -13,7 +13,6 @@ public class DialogueSceneController : MonoBehaviour {
 	public BoolVariable musicFocusSource;
 
 	[Header("Events")]
-	public UnityEvent beginBattleEvent;
 	public UnityEvent resumeBattleEvent;
 	public UnityEvent resumeTurnEvent;
 	public UnityEvent playSubMusicEvent;
@@ -43,7 +42,7 @@ public class DialogueSceneController : MonoBehaviour {
 		switch (currentDialogueMode.value)
 		{
 			case (int)DialogueMode.PRE:
-				beginBattleEvent.Invoke();
+				resumeTurnEvent.Invoke();
 				ActivateStuff(false);
 				break;
 			case (int)DialogueMode.POST:

@@ -23,7 +23,6 @@ public class MapEntry : ScrObjLibraryEntry {
 	public MusicEntry owMusic;
 	public MusicEntry battleMusic;
 	public MusicEntry healMusic;
-	public MusicEntry deathMusic;
 
 	[Header("Players")]
 	public List<PlayerPosition> spawnPoints = new List<PlayerPosition>();

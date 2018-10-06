@@ -5,6 +5,8 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+public enum TurnState { INIT, ACTION, REINFORCE, EVENTS, FINISHED }
+
 /// <summary>
 /// Class which handles changing turns and triggers functionality when the turn is changed.
 /// </summary>
@@ -24,8 +26,9 @@ public class TurnController : MonoBehaviour {
 	public BoolVariable triggeredWin;
 	public IntVariable currentDialogueMode;
 	public ScrObjEntryReference currentDialogue;
-
 	public BoolVariable autoEndTurn;
+
+	public TurnState currentState;
 
 	[Header("UI")]
 	public GameObject turnChangeDisplay;
@@ -62,6 +65,7 @@ public class TurnController : MonoBehaviour {
 	/// Clears character lists and prepares for the player's first turn.
 	/// </summary>
 	private void Start() {
+		currentState = TurnState.INIT;
 		currentTurn.value = 1;
 		currentFactionTurn.value = Faction.PLAYER;
 		triggeredWin.value = false;
@@ -69,30 +73,51 @@ public class TurnController : MonoBehaviour {
 		enemyList.values.Clear();
 	}
 
+	public void TriggerNextStep() {
+		switch (currentState)
+		{
+			case TurnState.INIT:
+				StartGame();
+				currentState = TurnState.ACTION;
+				break;
+			case TurnState.ACTION:
+				EndChangeTurn();
+				break;
+			case TurnState.REINFORCE:
+				currentState = TurnState.EVENTS;
+				checkDialoguesEvent.Invoke();
+				break;
+			case TurnState.EVENTS:
+				currentDialogueMode.value = (int)DialogueMode.NONE;
+				currentState = TurnState.ACTION;
+				StartCoroutine(DisplayTurnChange(1.5f));
+				break;
+			case TurnState.FINISHED:
+				break;
+		}
+	}
+
 	/// <summary>
 	/// Starts the game and enables the music and shows the turn change.
 	/// </summary>
-	public void StartGame() {
-		Debug.Log("Start");
-		SetupMusic();
+	private void StartGame() {
 		currentMenuMode.value = (int)MenuMode.MAP;
 		menuModeChangedEvent.Invoke();
-		StartCoroutine(DisplayTurnChange(1.5f));
-	}
 
-	private void SetupMusic() {
 		MapEntry map = (MapEntry)currentMap.value;
 		musicFocus.value = true;
 		mainMusic.value = map.owMusic.clip;
 		subMusic.value = null;
 		playBkgMusicEvent.Invoke();
+		
+		StartCoroutine(DisplayTurnChange(1.5f));
 	}
 
 	/// <summary>
 	/// Auto-ends the turn if all the player characters have taken their turn if enabled.
 	/// </summary>
 	public void CheckEndTurn() {
-		if (!autoEndTurn.value || currentFactionTurn.value != Faction.PLAYER)
+		if (!autoEndTurn.value || currentFactionTurn.value != Faction.PLAYER || currentState == TurnState.FINISHED)
 			return;
 
 		for (int i = 0; i < playerList.values.Count; i++) {
@@ -115,6 +140,7 @@ public class TurnController : MonoBehaviour {
 			for (int i = 0; i < playerList.values.Count; i++) {
 				playerList.values[i].OnEndTurn();
 			}
+			currentState = TurnState.EVENTS;
 			checkDialoguesEvent.Invoke();
 		}
 		else if (currentFactionTurn.value == Faction.ENEMY) {
@@ -123,20 +149,12 @@ public class TurnController : MonoBehaviour {
 				enemyList.values[i].OnEndTurn();
 			}
 			currentTurn.value++;
+			currentState = TurnState.REINFORCE;
 			checkReinforcementsEvent.Invoke();
 		}
 		else {
 			Debug.LogError("Wrong state!");
 		}
-	}
-
-	public void CheckDialogues() {
-		checkDialoguesEvent.Invoke();
-	}
-
-	public void ShowNextTurnDisplay() {
-		currentDialogueMode.value = (int)DialogueMode.NONE;
-		StartCoroutine(DisplayTurnChange(1.5f));
 	}
 
 	/// <summary>
@@ -151,10 +169,10 @@ public class TurnController : MonoBehaviour {
 			for (int i = 0; i < playerList.values.Count; i++) {
 				if (playerList.values[i].IsAlive()) {
 					gameFinished = false;
-					break;
 				}
 				else if (playerList.values[i].stats.charData.mustSurvive) {
 					gameFinished = true;
+					Debug.Log("Uh oh!");
 					break;
 				}
 			}
@@ -234,6 +252,7 @@ public class TurnController : MonoBehaviour {
 	/// </summary>
 	/// <returns></returns>
 	private IEnumerator EndGameLose() {
+		currentState = TurnState.FINISHED;
 		gameFinishText.text = "GAME OVER";
 		gameFinishText.gameObject.SetActive(true);
 		gameFinishObject.SetActive(true);

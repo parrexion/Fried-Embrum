@@ -182,7 +182,7 @@ public class DialogueActionWindow: EditorWindow {
 				GUI.FocusControl(null);
 				hub.InsertAction((DActionType)(i+2));
 				listWindow.Repaint();
-				hub.SaveSelectedDialogue();
+				hub.UpdateToCurrentFrame();
 			}
 		}
 

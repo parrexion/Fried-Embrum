@@ -196,6 +196,11 @@ public class MapInputController : InputReceiver {
 		cursorMovedEvent.Invoke();
 	}
 
+    public override void OnStartButton() {
+		if (clicker.ShowIngameMenu())
+			menuAcceptEvent.Invoke();
+	}
+
 	/// <summary>
 	/// Triggered when battles end and updates the current menu mode.
 	/// </summary>
@@ -216,5 +221,4 @@ public class MapInputController : InputReceiver {
 
     public override void OnYButton() { }
     public override void OnLButton() { }
-    public override void OnStartButton() {}
 }

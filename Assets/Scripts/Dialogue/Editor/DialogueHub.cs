@@ -85,10 +85,13 @@ public class DialogueHub {
 	}
 
 	public void SaveSelectedDialogue() {
+		if (selDialogue == -1)
+			return;
 		DialogueEntry de = (DialogueEntry)dialogueLibrary.GetEntryByIndex(selDialogue);
 		de.CopyValues(dialogueValues);
 		Undo.RecordObject(de, "Updated dialogue");
 		EditorUtility.SetDirty(de);
+		Debug.Log("SAVED");
 	}
 
 	public void InsertAction(DActionType type) {

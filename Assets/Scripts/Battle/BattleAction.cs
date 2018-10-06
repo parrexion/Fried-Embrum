@@ -20,10 +20,10 @@ public class BattleAction {
 		isDamage = damage;
 		attacker = atk;
 		defender = def;
-		weaponAtk = attacker.GetFirstUsableInventoryTuple(ItemCategory.WEAPON);
-		weaponDef = defender.GetFirstUsableInventoryTuple(ItemCategory.WEAPON);
-		staffAtk = attacker.GetFirstUsableInventoryTuple(ItemCategory.STAFF);
-		terrainDef = defender.GetTerrain();
+		weaponAtk = attacker.inventory.GetFirstUsableItemTuple(ItemCategory.WEAPON, attacker.stats);
+		weaponDef = defender.inventory.GetFirstUsableItemTuple(ItemCategory.WEAPON, defender.stats);
+		staffAtk = attacker.inventory.GetFirstUsableItemTuple(ItemCategory.STAFF, attacker.stats);
+		terrainDef = defender.currentTile.terrain;
 	}
 
 	/// <summary>
