@@ -5,7 +5,7 @@ using UnityEngine.Video;
 
 public class MapTile : MonoBehaviour {
 
-	public MapCreator mapCreator;
+	public BattleMap battlemap;
 	public TacticsMove currentCharacter;
 	public GameObject highlight;
 	public GameObject dangerZone;
@@ -123,16 +123,16 @@ public class MapTile : MonoBehaviour {
 	}
 
 	public void FindNeighbours(Queue<MapTile> progress, int currentDistance, TacticsMove tactics, int moveSpeed, WeaponRange weapon, WeaponRange staff, bool showAttack, bool isDanger, bool isBuff) {
-		MapTile tile = mapCreator.GetTile(posx-1, posy);
+		MapTile tile = battlemap.GetTile(posx-1, posy);
 		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.classData.classType, weapon, staff, showAttack, isDanger, isBuff))
 			progress.Enqueue(tile);
-		tile = mapCreator.GetTile(posx+1, posy);
+		tile = battlemap.GetTile(posx+1, posy);
 		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.classData.classType, weapon, staff, showAttack, isDanger, isBuff))
 			progress.Enqueue(tile);
-		tile = mapCreator.GetTile(posx, posy-1);
+		tile = battlemap.GetTile(posx, posy-1);
 		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.classData.classType, weapon, staff, showAttack, isDanger, isBuff))
 			progress.Enqueue(tile);
-		tile = mapCreator.GetTile(posx, posy+1);
+		tile = battlemap.GetTile(posx, posy+1);
 		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.classData.classType, weapon, staff, showAttack, isDanger, isBuff))
 			progress.Enqueue(tile);
 	}
@@ -164,11 +164,11 @@ public class MapTile : MonoBehaviour {
 		}
 			
 		if (weapon != null && showAttack) {
-			mapCreator.ShowAttackTiles(checkTile, weapon, faction, isDanger);
+			battlemap.ShowAttackTiles(checkTile, weapon, faction, isDanger);
 		}
 			
 		if (support != null && showAttack) {
-			mapCreator.ShowSupportTiles(checkTile, support, faction, isDanger, isBuff);
+			battlemap.ShowSupportTiles(checkTile, support, faction, isDanger, isBuff);
 		}
 		
 		checkTile.parent = this;

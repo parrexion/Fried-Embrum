@@ -148,7 +148,7 @@ public class ActionInputController : InputReceiver {
 				StartCoroutine(WaitForItemGain());
 			}
 			else if (selectedCharacter.value.currentTile.ally != null) {
-				MapTile closest = selectedCharacter.value.mapCreator.GetClosestEmptyTile(selectedCharacter.value.currentTile);
+				MapTile closest = selectedCharacter.value.battleMap.GetClosestEmptyTile(selectedCharacter.value.currentTile);
 				TacticsMove tactics = selectedCharacter.value.currentTile.ally;
 				tactics.posx = closest.posx;
 				tactics.posy = closest.posy;

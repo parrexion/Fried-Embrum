@@ -11,7 +11,7 @@ using UnityEngine.UI;
 /// </summary>
 public abstract class TacticsMove : MonoBehaviour {
 	public BoolVariable lockControls;
-	public MapCreator mapCreator;
+	public BattleMap battleMap;
 	public MapTileVariable targetTile;
 	public CharacterListVariable playerList;
 	public CharacterListVariable enemyList;
@@ -75,7 +75,7 @@ public abstract class TacticsMove : MonoBehaviour {
 		gameObject.name = stats.charData.entryName;
 		currentHealth = stats.hp;
 		GetComponent<SpriteRenderer>().sprite = stats.charData.battleSprite;
-		currentTile = mapCreator.GetTile(posx, posy);
+		currentTile = battleMap.GetTile(posx, posy);
 		currentTile.currentCharacter = this;
 		transform.position = new Vector3(currentTile.transform.position.x, currentTile.transform.position.y, 0);
 		gameObject.SetActive(true);
@@ -123,7 +123,7 @@ public abstract class TacticsMove : MonoBehaviour {
 		}
 		else {
 			currentTile.currentCharacter = null;
-			currentTile = mapCreator.GetTile(Mathf.RoundToInt(transform.localPosition.x),Mathf.RoundToInt(transform.localPosition.y));
+			currentTile = battleMap.GetTile(Mathf.RoundToInt(transform.localPosition.x),Mathf.RoundToInt(transform.localPosition.y));
 			currentTile.currentCharacter = this;
 			posx = currentTile.posx;
 			posy = currentTile.posy;
@@ -137,7 +137,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// </summary>
 	/// <param name="isDanger"></param>
 	public void FindAllMoveTiles(bool isDanger) {
-		mapCreator.ResetMap();
+		battleMap.ResetMap();
 		Queue<MapTile> process = new Queue<MapTile>();
 		process.Enqueue(currentTile);
 		currentTile.distance = 0;
@@ -150,10 +150,10 @@ public abstract class TacticsMove : MonoBehaviour {
 
 		bool isBuff = false;
 		if (weapon.max > 0)
-			mapCreator.ShowAttackTiles(currentTile, weapon, faction, isDanger);
+			battleMap.ShowAttackTiles(currentTile, weapon, faction, isDanger);
 		if (staff.max > 0) {
 			isBuff = (inventory.GetFirstUsableItem(ItemType.BUFF, stats) != null);
-			mapCreator.ShowSupportTiles(currentTile, staff, faction, isDanger, isBuff);
+			battleMap.ShowSupportTiles(currentTile, staff, faction, isDanger, isBuff);
 		}
 
 		while(process.Count > 0) {
@@ -170,7 +170,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// </summary>
 	/// <param name="endTile"></param>
 	public void ShowMove(MapTile endTile) {
-		mapCreator.ClearMovement();
+		battleMap.ClearMovement();
 		endTile.target = true;
 		path.Clear();
 		MapTile cTile = endTile;
@@ -197,7 +197,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// </summary>
 	/// <param name="startTile"></param>
 	public void UndoMove(MapTile startTile) {
-		mapCreator.ClearMovement();
+		battleMap.ClearMovement();
 		currentTile.currentCharacter = null;
 		currentTile = startTile;
 		currentTile.currentCharacter = this;
@@ -216,7 +216,7 @@ public abstract class TacticsMove : MonoBehaviour {
 		List<MapTile> enemies = new List<MapTile>();
 		// currentTile.current = true;
 		for (int i = 0; i < enemyList.values.Count; i++) {
-			int tempDist = MapCreator.DistanceTo(this, enemyList.values[i]);
+			int tempDist = BattleMap.DistanceTo(this, enemyList.values[i]);
 			for (int w = 0; w < weaponList.Count; w++) {
 				if (weaponList[w].item == null)
 					continue;
@@ -226,13 +226,13 @@ public abstract class TacticsMove : MonoBehaviour {
 				}
 			}
 		}
-		for (int i = 0; i < mapCreator.breakables.Count; i++) {
-			int tempDist = MapCreator.DistanceTo(this, mapCreator.breakables[i]);
+		for (int i = 0; i < battleMap.breakables.Count; i++) {
+			int tempDist = BattleMap.DistanceTo(this, battleMap.breakables[i]);
 			for (int w = 0; w < weaponList.Count; w++) {
 				if (weaponList[w].item == null)
 					continue;
 				if (weaponList[w].item.InRange(tempDist)) {
-					enemies.Add(mapCreator.breakables[i]);
+					enemies.Add(battleMap.breakables[i]);
 					break;
 				}
 			}
@@ -251,7 +251,7 @@ public abstract class TacticsMove : MonoBehaviour {
 			if (this == playerList.values[i] || !playerList.values[i].IsInjured())
 				continue;
 
-			int tempDist = MapCreator.DistanceTo(this, playerList.values[i]);
+			int tempDist = BattleMap.DistanceTo(this, playerList.values[i]);
 			if (staff.InRange(tempDist) && faction == playerList.values[i].faction)
 				supportables.Add(playerList.values[i].currentTile);
 		}
@@ -269,7 +269,7 @@ public abstract class TacticsMove : MonoBehaviour {
 				if (this == playerList.values[i] || !playerList.values[i].IsAlive())
 					continue;
 
-				if (MapCreator.DistanceTo(this, playerList.values[i]) == 1)
+				if (BattleMap.DistanceTo(this, playerList.values[i]) == 1)
 					supportables.Add(playerList.values[i].currentTile);
 			}
 		}
@@ -278,7 +278,7 @@ public abstract class TacticsMove : MonoBehaviour {
 				if (!enemyList.values[i].IsAlive())
 					continue;
 
-				if (MapCreator.DistanceTo(this, enemyList.values[i]) == 1)
+				if (BattleMap.DistanceTo(this, enemyList.values[i]) == 1)
 					supportables.Add(enemyList.values[i].currentTile);
 			}
 		}
@@ -319,7 +319,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	public void End() {
 		hasMoved = true;
 		GetComponent<SpriteRenderer>().color = new Color(0.66f,0.66f,0.66f);
-		mapCreator.ResetMap();
+		battleMap.ResetMap();
 		currentTile.current = true;
 		Debug.Log("This is the end!");
 		waitEvent.Invoke();
@@ -490,15 +490,15 @@ public abstract class TacticsMove : MonoBehaviour {
 		for (int i = 0; i < enemyList.values.Count; i++) {
 			if (!enemyList.values[i].IsAlive())
 				continue;
-			int distance = MapCreator.DistanceTo(this, enemyList.values[i]);
+			int distance = BattleMap.DistanceTo(this, enemyList.values[i]);
 			if (range.InRange(distance)) {
 				return true;
 			}
 		}
-		for (int i = 0; i < mapCreator.breakables.Count; i++) {
-			if (!mapCreator.breakables[i].blockMove.IsAlive())
+		for (int i = 0; i < battleMap.breakables.Count; i++) {
+			if (!battleMap.breakables[i].blockMove.IsAlive())
 				continue;
-			int distance = MapCreator.DistanceTo(this, mapCreator.breakables[i]);
+			int distance = BattleMap.DistanceTo(this, battleMap.breakables[i]);
 			if (range.InRange(distance)) {
 				return true;
 			}
@@ -528,7 +528,7 @@ public abstract class TacticsMove : MonoBehaviour {
 			bool usable = (playerList.values[i].IsAlive() && playerList.values[i].IsInjured() || isBuff);
 			if (!usable || playerList.values[i] == this)
 				continue;
-			int distance = MapCreator.DistanceTo(this, playerList.values[i]);
+			int distance = BattleMap.DistanceTo(this, playerList.values[i]);
 			if (range.InRange(distance)) {
 				return true;
 			}

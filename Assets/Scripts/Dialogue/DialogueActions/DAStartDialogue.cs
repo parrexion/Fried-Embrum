@@ -17,7 +17,7 @@ public class DAStartDialogue : DialogueAction {
 			Debug.LogWarning("No music set for the scene");
 		}
 
-		for (int i = 0; i < Constants.DIALOGUE_PLAYERS_COUNT; i++) {
+		for (int i = 0; i < Utility.DIALOGUE_PLAYERS_COUNT; i++) {
 			scene.characters[i].value = data.entries[i+2];
 		}
 
@@ -30,7 +30,7 @@ public class DAStartDialogue : DialogueAction {
 
 		data.entries.Add(null);
 
-		for (int i = 0; i < Constants.DIALOGUE_PLAYERS_COUNT; i++) {
+		for (int i = 0; i < Utility.DIALOGUE_PLAYERS_COUNT; i++) {
 			data.entries.Add(null);
 			data.values.Add(-1);
 		}

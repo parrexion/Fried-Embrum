@@ -64,7 +64,7 @@ public class DialogueLines : MonoBehaviour {
 			DialogueAction da = DialogueAction.CreateAction(data.type);
 			bool res = da.Act(scene, data);
 			if (data.type == DActionType.MOVEMENT) {
-				for (int i = 0; i < Constants.DIALOGUE_PLAYERS_COUNT+2; i++) {
+				for (int i = 0; i < Utility.DIALOGUE_PLAYERS_COUNT+Utility.DIALOGUE_PLAYERS_OUTSIDE_COUNT; i++) {
 					float speed = data.values[0] * 0.001f;
 					scene.characterTransforms[i].MoveCharacter(speed);
 				}

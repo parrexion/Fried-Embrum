@@ -7,7 +7,7 @@ public class DASetCharacters : DialogueAction {
 
 	public override bool Act (DialogueScene scene, DialogueActionData data)
 	{
-		for (int i = 0; i < Constants.DIALOGUE_PLAYERS_COUNT+2; i++) {
+		for (int i = 0; i < Utility.DIALOGUE_PLAYERS_COUNT+Utility.DIALOGUE_PLAYERS_OUTSIDE_COUNT; i++) {
 			scene.characters[i].value = data.entries[i];
 			scene.poses[i].value = data.values[i];
 		}
@@ -22,7 +22,7 @@ public class DASetCharacters : DialogueAction {
 		data.type = DActionType.SET_CHARS;
 		data.autoContinue = true;
 		data.useDelay = false;
-		for (int i = 0; i < Constants.DIALOGUE_PLAYERS_COUNT+2; i++) {
+		for (int i = 0; i < Utility.DIALOGUE_PLAYERS_COUNT+Utility.DIALOGUE_PLAYERS_OUTSIDE_COUNT; i++) {
 			data.entries.Add(null);
 			data.values.Add(-1);
 		}

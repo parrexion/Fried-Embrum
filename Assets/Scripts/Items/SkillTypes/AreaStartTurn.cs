@@ -16,7 +16,7 @@ public class AreaStartTurn : CharacterSkill {
         for (int i = 0; i < list.values.Count; i++) {
             if (list.values[i] == user && !useOnSelf)
                 continue;
-            int distance = MapCreator.DistanceTo(user, list.values[i]);
+            int distance = BattleMap.DistanceTo(user, list.values[i]);
             if (distance <= range)
                 list.values[i].ReceiveBuff(boost, true, true);
         }

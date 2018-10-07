@@ -6,6 +6,8 @@ using UnityEngine.Events;
 public class MapCreator : MonoBehaviour {
 
 	public ScrObjEntryReference currentMap;
+	public SaveListVariable availableCharacters;
+	public BattleMap battleMap;
 	public MapCursor mapClicker;
 
 	public IntVariable cursorX;
@@ -15,16 +17,11 @@ public class MapCreator : MonoBehaviour {
 	public IntVariable slowGameSpeed;
 	public IntVariable currentGameSpeed;
 	
+	[Header("Prefabs")]
+	public Transform playerPrefab;
+	public Transform enemyPrefab;
 	public Transform tilePrefab;
 	public Transform blockTilePrefab;
-	
-	[Header("Characters")]
-	public Transform enemyParent;
-	public Transform enemyPrefab;
-
-	public Transform playerParent;
-	public Transform playerPrefab;
-	public SaveListVariable availableCharacters;
 	
 	[Header("Dialogues")]
 	public BoolVariable lockControls;
@@ -35,9 +32,6 @@ public class MapCreator : MonoBehaviour {
 	public UnityEvent cursorMoveEvent;
 	public UnityEvent nextTurnStateEvent;
 	public UnityEvent startDialogueEvent;
-
-	[HideInInspector] public MapTile[] tiles;
-	[HideInInspector] public List<MapTile> breakables = new List<MapTile>();
 	
 	[Header("Terrain Tiles")]
 	public TerrainTile tileNormal;
@@ -69,6 +63,7 @@ public class MapCreator : MonoBehaviour {
 		MapEntry map = (MapEntry)currentMap.value;
 		_sizeX = map.sizeX;
 		_sizeY = map.sizeY;
+		battleMap.SetupMap(map);
 		
 		TacticsCamera.boxCollider.size = new Vector2(_sizeX+1, _sizeY+1);
 		TacticsCamera.boxCollider.center = new Vector3((_sizeX-1)/2.0f, (_sizeY-1)/2.0f, 0);
@@ -81,120 +76,6 @@ public class MapCreator : MonoBehaviour {
 		SpawnCharacters();
 		Debug.Log("Finished creating map");
 	}
-	
-	public void ResetMap() {
-		for (int i = 0; i < tiles.Length; i++) {
-			tiles[i].Reset();
-		}
-	}
-
-	public void ClearTargets() {
-		for (int i = 0; i < tiles.Length; i++) {
-			tiles[i].target = false;
-		}
-	}
-
-	public void ClearMovement() {
-		for (int i = 0; i < tiles.Length; i++) {
-			tiles[i].target = false;
-			tiles[i].pathable = false;
-		}
-	}
-	
-	public void ClearDangerous() {
-		for (int i = 0; i < tiles.Length; i++) {
-			tiles[i].dangerous = false;
-		}
-	}
-
-	private int TilePosition(int x, int y) {
-		return x + y * _sizeX;
-	}
-
-	/// <summary>
-	/// Returns the tile for the given coordinates.
-	/// </summary>
-	/// <param name="x"></param>
-	/// <param name="y"></param>
-	/// <returns></returns>
-	public MapTile GetTile(int x, int y) {
-		if (x < 0 || y < 0 || x >= _sizeX || y >= _sizeY)
-			return null;
-
-		return tiles[TilePosition(x, y)];
-	}
-
-	public static int DistanceTo(MapTile startTile, MapTile tile) {
-		return Mathf.Abs(startTile.posx - tile.posx) + Mathf.Abs(startTile.posy - tile.posy);
-	}
-
-	public static int DistanceTo(TacticsMove character, MapTile tile) {
-		return Mathf.Abs(character.posx - tile.posx) + Mathf.Abs(character.posy - tile.posy);
-	}
-
-	public static int DistanceTo(TacticsMove character, TacticsMove other) {
-		return Mathf.Abs(character.posx - other.posx) + Mathf.Abs(character.posy - other.posy);
-	}
-
-	/// <summary>
-	/// Checks all tiles to see which closest tile is empty.
-	/// </summary>
-	/// <param name="startTile"></param>
-	/// <returns></returns>
-	public MapTile GetClosestEmptyTile(MapTile startTile) {
-		int bestRange = 99;
-		MapTile bestTile = startTile;
-		for (int i = 0; i < tiles.Length; i++) {
-			int tempDist = DistanceTo(startTile, tiles[i]);
-			if (tempDist < bestRange && tiles[i].currentCharacter == null) {
-				bestRange = tempDist;
-				bestTile = tiles[i];
-			}
-		}
-		return bestTile;
-	}
-
-	/// <summary>
-	/// Shows which tiles are attackable from the startTile given the weapon range.
-	/// isDanger is used to show the enemy danger area.
-	/// </summary>
-	/// <param name="startTile"></param>
-	/// <param name="range"></param>
-	/// <param name="faction"></param>
-	/// <param name="isDanger"></param>
-	public void ShowAttackTiles(MapTile startTile, WeaponRange range, Faction faction, bool isDanger) {
-		for (int i = 0; i < tiles.Length; i++) {
-			int tempDist = DistanceTo(startTile, tiles[i]);
-			if (!range.InRange(tempDist))
-				continue;
-
-			if (isDanger) {
-				tiles[i].dangerous = true;
-			}
-			else if (tiles[i].IsEmpty() || tiles[i].currentCharacter.faction != faction) {
-				tiles[i].attackable = true;
-			}
-		}
-	}
-	
-	public void ShowSupportTiles(MapTile startTile, WeaponRange range, Faction faction, bool isDanger, bool isBuff) {
-		if (isDanger)
-			return;
-		
-		for (int i = 0; i < tiles.Length; i++) {
-			int tempDist = DistanceTo(startTile, tiles[i]);
-			if (!range.InRange(tempDist))
-				continue;
-
-			if (tiles[i].IsEmpty()) {
-				tiles[i].supportable = true;
-			}
-			else if(tiles[i].currentCharacter.faction == faction) {
-				if (isBuff || tiles[i].currentCharacter.IsInjured())
-					tiles[i].supportable = true;
-			}
-		}
-	}
 
 	/// <summary>
 	/// Takes a texture representing the map and generates tiles from the pixels' color values.
@@ -205,17 +86,17 @@ public class MapCreator : MonoBehaviour {
 		Color32[] colorData = texMap.GetPixels32();
 		int pos = 0;
 		List<MapTile> mappus = new List<MapTile>();
-		breakables.Clear();
+		battleMap.breakables.Clear();
 		
 		for (int j = 0; j < _sizeY; j++) {
 			for (int i = 0; i < _sizeX; i++) {
 				InteractPosition interPos = GetInteractable(map, i, j);
 				Transform tile = (interPos != null && interPos.interactType == InteractType.BLOCK) ? Instantiate(blockTilePrefab) : Instantiate(tilePrefab);
 				tile.position = new Vector3(i,j,0);
-				tile.parent = transform;
+				tile.SetParent(battleMap.tileParent);
 
 				MapTile tempTile = tile.GetComponent<MapTile>();
-				tempTile.mapCreator = this;
+				tempTile.battlemap = battleMap;
 				tempTile.posx = i;
 				tempTile.posy = j;
 				if (interPos == null) {
@@ -225,7 +106,7 @@ public class MapCreator : MonoBehaviour {
 					tempTile.interactType = InteractType.BLOCK;
 					tempTile.SetTerrain(tileBreakable);
 					tempTile.alternativeTerrain = GetTerrainFromPixel(colorData[pos]);
-					breakables.Add(tempTile);
+					battleMap.breakables.Add(tempTile);
 					
 					BlockMove block = tempTile.GetComponent<BlockMove>();
 					block.currentTile = tempTile;
@@ -258,7 +139,7 @@ public class MapCreator : MonoBehaviour {
 			}
 		}
 
-		tiles = mappus.ToArray();
+		battleMap.tiles = mappus.ToArray();
 		Debug.Log("Data read and map created");
 	}
 
@@ -300,7 +181,7 @@ public class MapCreator : MonoBehaviour {
 				availableCharacters.skills.Add(skills);
 			}
 			else if (i >= availableCharacters.stats.Count) {
-				GetTile(pos.x, pos.y).selectable = true;
+				battleMap.GetTile(pos.x, pos.y).selectable = true;
 				continue;
 			}
 			else {
@@ -327,7 +208,7 @@ public class MapCreator : MonoBehaviour {
 				fight.activated = false;
 				quotes.Add(fight);
 			}
-			MapTile huntTile = (pos.aggroType == AggroType.HUNT) ? GetTile(pos.huntX, pos.huntY) : null; 
+			MapTile huntTile = (pos.aggroType == AggroType.HUNT) ? battleMap.GetTile(pos.huntX, pos.huntY) : null; 
 
 			SpawnEnemyCharacter(pos.x, pos.y, stats, inventory, skills, quotes, pos.aggroType, huntTile);
 		}
@@ -342,11 +223,11 @@ public class MapCreator : MonoBehaviour {
 	/// <param name="inventory"></param>
 	/// <param name="skills"></param>
 	private TacticsMove SpawnPlayerCharacter(int x, int y, StatsContainer stats, InventoryContainer inventory, SkillsContainer skills, bool active) {
-		Transform playerTransform = Instantiate(playerPrefab, playerParent);
+		Transform playerTransform = Instantiate(playerPrefab, battleMap.playerParent);
 		playerTransform.position = new Vector3(x, y);
 
 		TacticsMove tactics = playerTransform.GetComponent<TacticsMove>();
-		tactics.mapCreator = this;
+		tactics.battleMap = battleMap;
 		tactics.posx = x;
 		tactics.posy = y;
 		tactics.stats = stats;
@@ -371,11 +252,11 @@ public class MapCreator : MonoBehaviour {
 	/// <param name="quotes"></param>
 	/// <param name="aggro"></param>
 	private void SpawnEnemyCharacter(int x, int y, StatsContainer stats, InventoryContainer inventory, SkillsContainer skills, List<FightQuote> quotes, AggroType aggro, MapTile huntTile) {
-		Transform enemyTransform = Instantiate(enemyPrefab, enemyParent);
+		Transform enemyTransform = Instantiate(enemyPrefab, battleMap.enemyParent);
 		enemyTransform.position = new Vector3(x, y);
 
 		NPCMove tactics = enemyTransform.GetComponent<NPCMove>();
-		tactics.mapCreator = this;
+		tactics.battleMap = battleMap;
 		tactics.posx = x;
 		tactics.posy = y;
 		tactics.stats = stats;
@@ -404,7 +285,7 @@ public class MapCreator : MonoBehaviour {
 		for (int i = 0; i < map.reinforcements.Count; i++) {
 			EnemyPosition pos = map.reinforcements[i];
 			if (currentTurn.value == pos.spawnTurn) {
-				MapTile tile = GetTile(pos.x, pos.y);
+				MapTile tile = battleMap.GetTile(pos.x, pos.y);
 				if (tile.currentCharacter == null) {
 					StatsContainer stats = new StatsContainer(pos.stats, pos.level);
 					InventoryContainer inventory = new InventoryContainer(pos.inventory);

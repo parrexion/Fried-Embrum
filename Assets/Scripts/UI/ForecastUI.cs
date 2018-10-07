@@ -98,7 +98,7 @@ public class ForecastUI : MonoBehaviour {
 				if (inBattle)
 					backgroundInBattle.SetActive(true);
 
-				int distance = MapCreator.DistanceTo(defender, walkTile.value);
+				int distance = BattleMap.DistanceTo(defender, walkTile.value);
 				int atk = (act1.weaponAtk.item.InRange(distance)) ? act1.GetDamage() : -1;
 				int ret = -1;
 				int spd = 0;
@@ -132,7 +132,7 @@ public class ForecastUI : MonoBehaviour {
 
 				BattleAction act2 = new BattleAction(false, true, defender, attacker);
 				act2.weaponDef = attacker.inventory.GetItem(battleWeaponIndex.value);
-				int distance = MapCreator.DistanceTo(defender, walkTile.value);
+				int distance = BattleMap.DistanceTo(defender, walkTile.value);
 				int atk = (act1.weaponAtk.item.InRange(distance)) ? act1.GetDamage() : -1;
 				int ret = (act1.DefenderInRange(distance)) ? act2.GetDamage() : -1;
 				int spd = act1.GetSpeedDifference();

@@ -90,8 +90,8 @@ public class NPCMove : TacticsMove {
 		}
 
 		// Go through all tiles and find the best one to move to or towards
-		for (int i = 0; i < mapCreator.tiles.Length; i++) {
-			MapTile tempTile = mapCreator.tiles[i];
+		for (int i = 0; i < battleMap.tiles.Length; i++) {
+			MapTile tempTile = battleMap.tiles[i];
 			if ((!tempTile.attackable && !tempTile.supportable) || !tempTile.selectable)
 				continue;
 			
@@ -143,7 +143,7 @@ public class NPCMove : TacticsMove {
 	/// </summary>
 	/// <param name="weapon"></param>
 	private void GenerateHitTiles(List<InventoryTuple> weapons) {
-		mapCreator.ResetMap();
+		battleMap.ResetMap();
 
 		//Calculate range
 
@@ -207,7 +207,7 @@ public class NPCMove : TacticsMove {
 	protected override void EndMovement() {
 		Debug.Log("Finished move");
 		isMoving = false;
-		mapCreator.ResetMap();
+		battleMap.ResetMap();
 		currentTile.current = true;
 
 		if (aggroType == AggroType.HUNT && currentTile == huntTile) {
@@ -233,13 +233,13 @@ public class NPCMove : TacticsMove {
 
 		if (currentMode.value == ActionMode.ATTACK) {
 			targetTile.value = FindRandomTarget(playerList, ItemCategory.WEAPON, false);
-			int distance = MapCreator.DistanceTo(this, targetTile.value);
+			int distance = BattleMap.DistanceTo(this, targetTile.value);
 			inventory.EquipFirstInRangeItem(ItemCategory.WEAPON, stats, distance);
             Attack(targetTile.value);
 		}
 		else {
 			targetTile.value = FindRandomTarget(enemyList, ItemCategory.STAFF, true);
-			int distance = MapCreator.DistanceTo(this, targetTile.value);
+			int distance = BattleMap.DistanceTo(this, targetTile.value);
 			inventory.EquipFirstInRangeItem(ItemCategory.STAFF, stats, distance);
             Heal(targetTile.value);
 		}
@@ -260,7 +260,7 @@ public class NPCMove : TacticsMove {
 		for (int i = 0; i < list.values.Count; i++) {
 			if (list.values[i] == this || !list.values[i].IsAlive() || (checkInjured && !list.values[i].IsInjured()))
 				continue;
-			int distance = MapCreator.DistanceTo(this, list.values[i]);
+			int distance = BattleMap.DistanceTo(this, list.values[i]);
 			if (range.InRange(distance)) {
 				hits.Add(list.values[i].currentTile);
 			}
@@ -279,9 +279,9 @@ public class NPCMove : TacticsMove {
 		if (!IsAlive())
 			return;
 
-		for (int i = 0; i < mapCreator.tiles.Length; i++) {			
-			if (range.InRange(MapCreator.DistanceTo(this, mapCreator.tiles[i])))
-				mapCreator.tiles[i].supportable = true;
+		for (int i = 0; i < battleMap.tiles.Length; i++) {			
+			if (range.InRange(BattleMap.DistanceTo(this, battleMap.tiles[i])))
+				battleMap.tiles[i].supportable = true;
 		}
 	}
 }

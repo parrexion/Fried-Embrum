@@ -197,6 +197,9 @@ public class MapInputController : InputReceiver {
 	}
 
     public override void OnStartButton() {
+		if (!active)
+			return;
+
 		if (clicker.ShowIngameMenu())
 			menuAcceptEvent.Invoke();
 	}

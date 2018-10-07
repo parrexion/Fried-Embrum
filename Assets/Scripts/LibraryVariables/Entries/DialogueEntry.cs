@@ -59,7 +59,7 @@ public class DialogueEntry : ScrObjLibraryEntry {
 		GUIContent content;
 		for (int i = 0; i < actions.Count; i++) {
 			content = new GUIContent();
-			content.text = actions[i].type.ToString();
+			content.text = i + ". " + actions[i].type.ToString();
 			if (i < 3 || actions[i].type == DActionType.END_SCENE) {
 				content.image = GenerateColorTexture(Color.black);
 			}

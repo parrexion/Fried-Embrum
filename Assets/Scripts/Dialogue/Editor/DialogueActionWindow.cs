@@ -33,13 +33,13 @@ public class DialogueActionWindow: EditorWindow {
 
 	string[] editModeStrings = new string[] { "TEXT", "CHARS", "BKG", "MUSIC", "SFX", "MOVE", "FLASH", "SHAKE", "DELAY" };
 	string[] poseList = new string[] { "Normal", "Sad", "Happy", "Angry", "Dead", "Hmm", "Pleased", "Surprised", "Worried", "Grumpy" };
-	string[] talkingPositionStrings = new string[] { "<", "x", "x", "x", "x", ">" };
-	int[] talkingIndexConversion = new int[] { 1, 2, 3, 4, 0, 5 };
-	int[] talkingIndexConversionReverse = new int[] { 4, 0, 1, 2, 3, 5 };
+	string[] talkingPositionStrings = new string[] { "<", "<", "x", "x", "x", "x", ">", ">" };
+	int[] talkingIndexConversion = new int[] { 2, 3, 4, 5, 0, 1, 6, 7 };
+	int[] talkingIndexConversionReverse = new int[] { 4, 5, 0, 1, 2, 3, 6, 7 };
 
 	//Other rects
 	Rect bkgRect = new Rect(100,100,250,125);
-	Rect[] characterRects = new Rect[6];
+	Rect[] characterRects = new Rect[Utility.DIALOGUE_PLAYERS_COUNT + Utility.DIALOGUE_PLAYERS_OUTSIDE_COUNT];
 
 	// Selected things
 	Vector2 actionScrollPos;
@@ -123,8 +123,10 @@ public class DialogueActionWindow: EditorWindow {
 		characterRects[1] = new Rect(editRect.width*0.25f,HEADER_HEIGHT,editRect.width*0.25f,editRect.height);
 		characterRects[2] = new Rect(editRect.width*0.5f,HEADER_HEIGHT,editRect.width*0.25f,editRect.height);
 		characterRects[3] = new Rect(editRect.width*0.75f,HEADER_HEIGHT,editRect.width*0.25f,editRect.height);
+		characterRects[5] = new Rect(editRect.width*0.25f,HEADER_HEIGHT + CHARACTER_HEIGHT,editRect.width*0.25f,editRect.height);
 		characterRects[4] = new Rect(editRect.width*0f,HEADER_HEIGHT + CHARACTER_HEIGHT,editRect.width*0.25f,editRect.height);
-		characterRects[5] = new Rect(editRect.width*0.75f,HEADER_HEIGHT + CHARACTER_HEIGHT,editRect.width*0.25f,editRect.height);
+		characterRects[6] = new Rect(editRect.width*0.5f,HEADER_HEIGHT + CHARACTER_HEIGHT,editRect.width*0.25f,editRect.height);
+		characterRects[7] = new Rect(editRect.width*0.75f,HEADER_HEIGHT + CHARACTER_HEIGHT,editRect.width*0.25f,editRect.height);
 	}
 
 	private void DrawBackgrounds() {
@@ -267,7 +269,7 @@ public class DialogueActionWindow: EditorWindow {
 
 		GUIContent[] filteredList = new GUIContent[5];
 		GUIContent content;
-		for (int i = 0; i < Constants.DIALOGUE_PLAYERS_COUNT; i++) {
+		for (int i = 0; i < Utility.DIALOGUE_PLAYERS_COUNT; i++) {
 			content = new GUIContent();
 			filteredList[i] = content;
 			content.text = "Talking";
@@ -323,7 +325,7 @@ public class DialogueActionWindow: EditorWindow {
 		EditorGUIUtility.labelWidth = fieldWidth;
 		
 		GUILayout.Label("Set character and poses", EditorStyles.boldLabel);
-		for (int j = 0; j < 6; j++) {
+		for (int j = 0; j < Utility.DIALOGUE_PLAYERS_COUNT + Utility.DIALOGUE_PLAYERS_OUTSIDE_COUNT; j++) {
 			GUILayout.BeginArea(characterRects[j]);
 			if (hub.dialogueValues.actions[hub.selAction].entries[j] != null)
 				GUILayout.Label(hub.dialogueValues.actions[hub.selAction].entries[j].entryName, EditorStyles.boldLabel);
@@ -355,7 +357,7 @@ public class DialogueActionWindow: EditorWindow {
 
 			GUILayout.Space(20);
 
-			if (j < 4) {
+			if (j < Utility.DIALOGUE_PLAYERS_COUNT) {
 				if (hub.dialogueValues.actions[hub.selAction].entries[j] == null) {
 					GUILayout.BeginHorizontal();
 					GUILayout.FlexibleSpace();
@@ -478,11 +480,11 @@ public class DialogueActionWindow: EditorWindow {
 		for (int i = 1; i < hub.dialogueValues.actions[hub.selAction].values.Count; i+=2) {
 			GUILayout.BeginHorizontal();
 			int index = talkingIndexConversion[hub.dialogueValues.actions[hub.selAction].values[i]];
-			index = GUILayout.SelectionGrid(index, talkingPositionStrings, 6);
+			index = GUILayout.SelectionGrid(index, talkingPositionStrings, Utility.DIALOGUE_PLAYERS_COUNT+Utility.DIALOGUE_PLAYERS_OUTSIDE_COUNT);
 			hub.dialogueValues.actions[hub.selAction].values[i] = talkingIndexConversionReverse[index];
 			GUILayout.Label("    ->", GUILayout.Width(50));
 			index = talkingIndexConversion[hub.dialogueValues.actions[hub.selAction].values[i+1]];
-			index = GUILayout.SelectionGrid(index, talkingPositionStrings, 6);
+			index = GUILayout.SelectionGrid(index, talkingPositionStrings, Utility.DIALOGUE_PLAYERS_COUNT+Utility.DIALOGUE_PLAYERS_OUTSIDE_COUNT);
 			hub.dialogueValues.actions[hub.selAction].values[i+1] = talkingIndexConversionReverse[index];
 			GUIStyle style = new GUIStyle(GUI.skin.button);
 			GUILayout.Space(20);

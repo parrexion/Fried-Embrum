@@ -10,8 +10,8 @@ public class DAChangePosition : DialogueAction {
 		scene.effectStartDuration.value = data.values[0] * 0.001f;
 		scene.effectEndDuration.value = 0;
 
-		ScrObjLibraryEntry[] originalCharacters = new ScrObjLibraryEntry[Constants.DIALOGUE_PLAYERS_COUNT+2];
-		int[] originalPoses = new int[Constants.DIALOGUE_PLAYERS_COUNT+2];
+		ScrObjLibraryEntry[] originalCharacters = new ScrObjLibraryEntry[Utility.DIALOGUE_PLAYERS_COUNT+Utility.DIALOGUE_PLAYERS_OUTSIDE_COUNT];
+		int[] originalPoses = new int[Utility.DIALOGUE_PLAYERS_COUNT+Utility.DIALOGUE_PLAYERS_OUTSIDE_COUNT];
 		for (int i = 0; i < scene.characters.Length; i++) {
 			originalCharacters[i] = scene.characters[i].value;
 			originalPoses[i] = scene.poses[i].value;
@@ -21,14 +21,12 @@ public class DAChangePosition : DialogueAction {
 			scene.characters[data.values[i+1]].value = originalCharacters[data.values[i]];
 			scene.poses[data.values[i+1]].value = originalPoses[data.values[i]];
 
-			Debug.Log("Checking index:  " + data.values[i]);
 			if (scene.characters[data.values[i]].value.IsEqual(originalCharacters[data.values[i]])) {
 				scene.characters[data.values[i]].value = null;
 				scene.poses[data.values[i]].value = -1;
 			}
 
 			scene.characterTransforms[data.values[i+1]].SetMoveDirection(scene.characterTransforms[data.values[i]].transform.position, data.values[i]);
-			Debug.Log("MOVE   " + data.values[i] + " ->  " + data.values[i+1]);
 		}
 
 		return true;

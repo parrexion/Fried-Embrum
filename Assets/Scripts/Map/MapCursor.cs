@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 public class MapCursor : MonoBehaviour {
 
-	public MapCreator mapCreator;
+	public BattleMap battleMap;
 	public ActionModeVariable currentActionMode;
 
 	[Header("Targets")]
@@ -43,6 +43,9 @@ public class MapCursor : MonoBehaviour {
 		DangerAreaToggle(false);
 	}
 
+	/// <summary>
+	/// Makes the cursor jump to the next character in line.
+	/// </summary>
 	public void JumpCursor() {
 		if (selectCharacter.value == null) {
 			for (int i = 0; i < playerCharacters.values.Count; i++) {
@@ -107,6 +110,10 @@ public class MapCursor : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Executes a cursor click on the location depending on the current action mode.
+	/// </summary>
+	/// <returns></returns>
 	public bool CursorClick() {
 		if (currentActionMode.value == ActionMode.NONE)
 			return SelectCharacter();
@@ -115,6 +122,10 @@ public class MapCursor : MonoBehaviour {
 		return false;
 	}
 
+	/// <summary>
+	/// Send an event to display the in-game menu if nothing else is currently going on.
+	/// </summary>
+	/// <returns></returns>
 	public bool ShowIngameMenu() {
 		if (currentActionMode.value == ActionMode.NONE) {
 			showIngameMenuEvent.Invoke();
@@ -123,6 +134,9 @@ public class MapCursor : MonoBehaviour {
 		return false;
 	}
 
+	/// <summary>
+	/// Backs out of the current state depending on the current state.
+	/// </summary>
 	public void CursorBack() {
 		if (currentActionMode.value == ActionMode.MOVE) {
 			cursorX.value = startTile.posx;
@@ -130,12 +144,10 @@ public class MapCursor : MonoBehaviour {
 			currentActionMode.value = ActionMode.NONE;
 			ResetTargets();
 			cursorMovedEvent.Invoke();
-			Debug.Log("Go back to the shadows!");
 		}
 		else if (currentActionMode.value == ActionMode.ATTACK || currentActionMode.value == ActionMode.HEAL || currentActionMode.value == ActionMode.TRADE) {
 			currentActionMode.value = ActionMode.MOVE;
 			MoveCursor();
-			Debug.Log("Let's do something else");
 		}
 	}
 
@@ -146,7 +158,7 @@ public class MapCursor : MonoBehaviour {
 	/// <param name="x"></param>
 	/// <param name="y"></param>
 	private void NormalHover(int x, int y) {
-		MapTile tile = mapCreator.GetTile(x, y);
+		MapTile tile = battleMap.GetTile(x, y);
 		startTile = tile;
 		selectTile.value = tile;
 		selectCharacter.value = (tile) ? tile.currentCharacter : null;
@@ -154,7 +166,7 @@ public class MapCursor : MonoBehaviour {
 			selectCharacter.value.FindAllMoveTiles(false);
 		}
 		else {
-			mapCreator.ResetMap();
+			battleMap.ResetMap();
 		}
 		updateCharacterUI.Invoke();
 	}
@@ -165,7 +177,7 @@ public class MapCursor : MonoBehaviour {
 	/// <param name="x"></param>
 	/// <param name="y"></param>
 	private void MoveHover(int x, int y) {
-		MapTile tile = mapCreator.GetTile(x, y);
+		MapTile tile = battleMap.GetTile(x, y);
 		if (tile.selectable) {
 			moveTile.value = tile;
 			selectCharacter.value.ShowMove(tile);
@@ -173,7 +185,7 @@ public class MapCursor : MonoBehaviour {
 		}
 		else {
 			moveTile.value = null;
-			mapCreator.ClearMovement();
+			battleMap.ClearMovement();
 		}
 
 		// Add features to allow the play to attack and heal target with movement.
@@ -187,7 +199,7 @@ public class MapCursor : MonoBehaviour {
 		if (selectCharacter.value != null && !selectCharacter.value.hasMoved) {
 			if (selectCharacter.value.faction == Faction.PLAYER) {
 				currentActionMode.value = ActionMode.MOVE;
-				moveTile.value = mapCreator.GetTile(cursorX.value, cursorY.value);
+				moveTile.value = battleMap.GetTile(cursorX.value, cursorY.value);
 				moveTile.value.current = true;
 				selectCharacter.value.path.Clear();
 				Debug.Log("Click!   X:  " + cursorX.value + "  Y:  " + cursorY.value);
@@ -246,7 +258,7 @@ public class MapCursor : MonoBehaviour {
 		selectTile.value = null;
 		selectCharacter.value = null;
 		moveTile.value = null;
-		mapCreator.ResetMap();
+		battleMap.ResetMap();
 	}
 
 	/// <summary>
@@ -256,7 +268,7 @@ public class MapCursor : MonoBehaviour {
 	public void DangerAreaToggle(bool doToggle) {
 		_dangerAreaActive = (doToggle) ? !_dangerAreaActive : false;
 		
-		mapCreator.ClearDangerous();
+		battleMap.ClearDangerous();
 		if (_dangerAreaActive) {
 			for (int i = 0; i < enemyCharacters.values.Count; i++) {
 				enemyCharacters.values[i].FindAllMoveTiles(true);
@@ -267,11 +279,14 @@ public class MapCursor : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Updates the reach of the danger area.
+	/// </summary>
 	public void UpdateDangerArea() {
 		if (!_dangerAreaActive)
 			return;
 
-		mapCreator.ClearDangerous();
+		battleMap.ClearDangerous();
 		if (_dangerAreaActive) {
 			for (int i = 0; i < enemyCharacters.values.Count; i++) {
 				enemyCharacters.values[i].FindAllMoveTiles(true);

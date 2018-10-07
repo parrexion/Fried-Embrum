@@ -37,9 +37,9 @@ public class PlayerMove : TacticsMove {
 		if (!IsAlive())
 			return;
 
-		for (int i = 0; i < mapCreator.tiles.Length; i++) {			
-			if (range.InRange(MapCreator.DistanceTo(this, mapCreator.tiles[i])))
-				mapCreator.tiles[i].attackable = true;
+		for (int i = 0; i < battleMap.tiles.Length; i++) {			
+			if (range.InRange(BattleMap.DistanceTo(this, battleMap.tiles[i])))
+				battleMap.tiles[i].attackable = true;
 		}
 	}
 }

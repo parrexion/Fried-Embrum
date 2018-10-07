@@ -163,13 +163,13 @@ public class SaveFileController : MonoBehaviour {
 				emptyFileText[i].gameObject.SetActive(false);
 				chapterIndexTexts[i].text = "Ch " + chapterIndex[i].value;
 				levelNameTexts[i].text = "All maps cleared!";
-				playTimeTexts[i].text = Constants.PlayTimeFromInt(playTimes[i].value,false);
+				playTimeTexts[i].text = Utility.PlayTimeFromInt(playTimes[i].value,false);
 			}
 			else {
 				emptyFileText[i].gameObject.SetActive(false);
 				chapterIndexTexts[i].text = "Ch " + chapterIndex[i].value;
 				levelNameTexts[i].text = chapterList.values[chapterIndex[i].value].entryName;
-				playTimeTexts[i].text = Constants.PlayTimeFromInt(playTimes[i].value,false);
+				playTimeTexts[i].text = Utility.PlayTimeFromInt(playTimes[i].value,false);
 			}
 		}
 		SetupSaveFileSelection();

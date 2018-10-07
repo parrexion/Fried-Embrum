@@ -1,9 +1,10 @@
 ﻿using System;
 
-public static class Constants {
+public static class Utility {
 
 	//Dialogue
 	public const int DIALOGUE_PLAYERS_COUNT = 4;
+	public const int DIALOGUE_PLAYERS_OUTSIDE_COUNT = 4;
 
 
 	/// UTILITY FUNCTIONS
