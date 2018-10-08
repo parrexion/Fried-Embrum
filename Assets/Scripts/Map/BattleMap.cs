@@ -35,6 +35,15 @@ public class BattleMap : MonoBehaviour {
 		}
 	}
 
+	public void ClearMovable() {
+		for (int i = 0; i < tiles.Length; i++) {
+			tiles[i].target = false;
+			tiles[i].pathable = false;
+			tiles[i].selectable = false;
+			tiles[i].attackable = false;
+		}
+	}
+
 	public void ClearMovement() {
 		for (int i = 0; i < tiles.Length; i++) {
 			tiles[i].target = false;

@@ -34,7 +34,7 @@ public class NPCMove : TacticsMove {
 	/// <summary>
 	/// Generates possible moves and selects and moves the AI to the best one found.
 	/// </summary>
-	public bool CalculateMovement() {
+	public MapTile CalculateMovement() {
 		MapTile tileBestWpn = null, tileGoodWpn = null, tileBestStf = null, tileGoodStf = null;
 		List<InventoryTuple> weapon = inventory.GetAllUsableItemTuple(ItemCategory.WEAPON, stats);
 		List<InventoryTuple> staff = inventory.GetAllUsableItemTuple(ItemCategory.STAFF, stats);
@@ -49,16 +49,8 @@ public class NPCMove : TacticsMove {
 					(tileBestStf != null) ? tileBestStf :
 					(tileGoodWpn != null) ? tileGoodWpn : tileGoodStf;
 
-		//Nowhere to move
-		if (moveTile.value == null) {
-			EndMovement();
-			return false;
-		}
-		else {
-			ShowMove(moveTile.value);
-			StartMove();
-			return true;
-		}
+		battleMap.ClearMovable();
+		return moveTile.value;
 	}
 
 	/// <summary>
@@ -204,7 +196,7 @@ public class NPCMove : TacticsMove {
 	/// <summary>
 	/// Ends the character's movement and clears the map.
 	/// </summary>
-	protected override void EndMovement() {
+	public override void EndMovement() {
 		Debug.Log("Finished move");
 		isMoving = false;
 		battleMap.ResetMap();

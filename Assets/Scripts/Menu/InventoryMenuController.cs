@@ -151,7 +151,7 @@ public class InventoryMenuController : InputReceiver {
 	/// Drops the selected item.
 	/// </summary>
 	public void DropItem() {
-		selectedCharacter.value.inventory.DropItem(inventoryIndex.value);
+		selectedCharacter.value.inventory.DropItem(inventoryIndex.value, selectedCharacter.value.stats);
 		inventoryChangedEvent.Invoke();
 		currentMenuMode.value = (int)MenuMode.STATS;
 		StartCoroutine(MenuChangeDelay());

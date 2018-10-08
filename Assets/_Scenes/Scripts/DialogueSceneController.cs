@@ -19,6 +19,7 @@ public class DialogueSceneController : MonoBehaviour {
 
 
 	private void Start () {
+		currentDialogueMode.value = 0;
 		ActivateStuff(false);
 	}
 

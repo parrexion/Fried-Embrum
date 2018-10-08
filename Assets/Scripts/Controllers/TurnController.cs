@@ -5,7 +5,7 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public enum TurnState { INIT, ACTION, REINFORCE, EVENTS, FINISHED }
+public enum TurnState { INIT, ACTION, REINFORCE, EVENTS, MAPCHANGE, FINISHED }
 
 /// <summary>
 /// Class which handles changing turns and triggers functionality when the turn is changed.
@@ -17,6 +17,7 @@ public class TurnController : MonoBehaviour {
 	public CharacterListVariable playerList;
 	public CharacterListVariable enemyList;
 
+	[Header("References")]
 	public BoolVariable lockControls;
 	public ScrObjEntryReference currentMap;
 	public IntVariable currentTurn;
@@ -27,6 +28,7 @@ public class TurnController : MonoBehaviour {
 	public IntVariable currentDialogueMode;
 	public ScrObjEntryReference currentDialogue;
 	public BoolVariable autoEndTurn;
+	public IntVariable cursorX, cursorY;
 
 	public TurnState currentState;
 
@@ -56,6 +58,8 @@ public class TurnController : MonoBehaviour {
 	public UnityEvent playSfxEvent;
 	public UnityEvent checkReinforcementsEvent;
 	public UnityEvent checkDialoguesEvent;
+	public UnityEvent checkMapChangeEvent;
+	public UnityEvent moveCursorEvent;
 	
 	private bool gameover;
 	public BoolVariable autoWin;
@@ -84,11 +88,16 @@ public class TurnController : MonoBehaviour {
 				EndChangeTurn();
 				break;
 			case TurnState.REINFORCE:
+				currentFactionTurn.value = Faction.PLAYER;
 				currentState = TurnState.EVENTS;
 				checkDialoguesEvent.Invoke();
 				break;
 			case TurnState.EVENTS:
 				currentDialogueMode.value = (int)DialogueMode.NONE;
+				currentState = TurnState.MAPCHANGE;
+				checkMapChangeEvent.Invoke();
+				break;
+			case TurnState.MAPCHANGE:
 				currentState = TurnState.ACTION;
 				StartCoroutine(DisplayTurnChange(1.5f));
 				break;
@@ -144,7 +153,6 @@ public class TurnController : MonoBehaviour {
 			checkDialoguesEvent.Invoke();
 		}
 		else if (currentFactionTurn.value == Faction.ENEMY) {
-			currentFactionTurn.value = Faction.PLAYER;
 			for (int i = 0; i < enemyList.values.Count; i++) {
 				enemyList.values[i].OnEndTurn();
 			}
@@ -172,7 +180,6 @@ public class TurnController : MonoBehaviour {
 				}
 				else if (playerList.values[i].stats.charData.mustSurvive) {
 					gameFinished = true;
-					Debug.Log("Uh oh!");
 					break;
 				}
 			}
@@ -307,6 +314,9 @@ public class TurnController : MonoBehaviour {
 			for (int i = 0; i < playerList.values.Count; i++) {
 				playerList.values[i].OnStartTurn();
 			}
+			cursorX.value = playerList.values[0].posx;
+			cursorY.value = playerList.values[0].posy;
+			moveCursorEvent.Invoke();
 			lockControls.value = false;
 			currentMenuMode.value = (int)MenuMode.MAP;
 		}

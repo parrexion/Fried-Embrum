@@ -557,7 +557,7 @@ public class MapEditorWindow {
 					pos.x = EditorGUILayout.IntField("X", pos.x);
 					pos.y = EditorGUILayout.IntField("Y", pos.y);
 					GUILayout.EndHorizontal();
-					pos.changeTile = (MapTile)EditorGUILayout.ObjectField("New Tile",pos.changeTile, typeof(MapTile),false);
+					pos.changeTerrain = (TerrainTile)EditorGUILayout.ObjectField("New Tile",pos.changeTerrain, typeof(TerrainTile),false);
 					break;
 				case TurnEventType.DIALOGUE:
 					pos.dialogue = (DialogueEntry)EditorGUILayout.ObjectField("Dialogue",pos.dialogue, typeof(DialogueEntry),false);

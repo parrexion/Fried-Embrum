@@ -9697,6 +9697,8 @@ MonoBehaviour:
   cameraPosX: {fileID: 11400000, guid: 5fcaf7ab6f079a9449bae7d25fdbd14c, type: 2}
   cameraPosY: {fileID: 11400000, guid: 747064599a94f4948b0dd3477828466f, type: 2}
   popup: {fileID: 1524331737}
+  slowGameSpeed: {fileID: 11400000, guid: 208d37ab76bc94c4c849779521ed5319, type: 2}
+  currentGameSpeed: {fileID: 11400000, guid: 956f89e305f8cf743a1cdd2a56705734, type: 2}
   dialogueMode: {fileID: 11400000, guid: 9ebc847de791cc24bbd938f1f28012e7, type: 2}
   currentDialogue: {fileID: 11400000, guid: 4aca8b6ac3dbaa943963a062568cc6b4, type: 2}
   useTrueHit: {fileID: 11400000, guid: a367362d22cab4441bd8aed3d1f6ad83, type: 2}
@@ -15578,6 +15580,8 @@ MonoBehaviour:
     type: 2}
   currentDialogue: {fileID: 11400000, guid: 4aca8b6ac3dbaa943963a062568cc6b4, type: 2}
   autoEndTurn: {fileID: 11400000, guid: 27e8cb1b44794c44da7921a16f5d1041, type: 2}
+  cursorX: {fileID: 11400000, guid: c2b3aa3e1e995d545b1165460053d109, type: 2}
+  cursorY: {fileID: 11400000, guid: bc83df26fa1b9664593c316923606033, type: 2}
   currentState: 0
   turnChangeDisplay: {fileID: 1102929061}
   turnChangeText: {fileID: 189031125}
@@ -15706,6 +15710,38 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11400000, guid: 51f157df6dbb76541ae371e38871fb36, type: 2}
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  checkMapChangeEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 08e148840a52a88499ec4cb2dd2b0924, type: 2}
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  moveCursorEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 2d602ae12a5de354395e1c957b158428, type: 2}
         m_MethodName: Raise
         m_Mode: 1
         m_Arguments:
@@ -29070,6 +29106,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   battleMap: {fileID: 526369253}
   currentActionMode: {fileID: 11400000, guid: b0e392ad086e2ab4e9c4feb871cf0d41, type: 2}
+  currentFaction: {fileID: 11400000, guid: 03872b965811b8f4eb110ecb93bea4ca, type: 2}
   moveTile: {fileID: 11400000, guid: 3a98548c39c09914ba5bd9f128964722, type: 2}
   selectCharacter: {fileID: 11400000, guid: 9514266d05ac5174781ef48f42fe570e, type: 2}
   selectTile: {fileID: 11400000, guid: cc6b23f7f6b66384fbcd3092e9bbc82a, type: 2}
@@ -40806,6 +40843,7 @@ GameObject:
   - component: {fileID: 2074500939}
   - component: {fileID: 2074500940}
   - component: {fileID: 2074500941}
+  - component: {fileID: 2074500942}
   m_Layer: 0
   m_Name: MapCreator
   m_TagString: Untagged
@@ -40832,6 +40870,7 @@ MonoBehaviour:
   cursorX: {fileID: 11400000, guid: c2b3aa3e1e995d545b1165460053d109, type: 2}
   cursorY: {fileID: 11400000, guid: bc83df26fa1b9664593c316923606033, type: 2}
   currentTurn: {fileID: 11400000, guid: 2ce1ea33e4d27044db0a8b97d2dcf10f, type: 2}
+  currentFaction: {fileID: 11400000, guid: 03872b965811b8f4eb110ecb93bea4ca, type: 2}
   reinforcementDelay: 0.75
   slowGameSpeed: {fileID: 11400000, guid: 208d37ab76bc94c4c849779521ed5319, type: 2}
   currentGameSpeed: {fileID: 11400000, guid: 956f89e305f8cf743a1cdd2a56705734, type: 2}
@@ -41017,6 +41056,34 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2074500936}
         m_MethodName: CheckDialogues
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+--- !u!114 &2074500942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2074500935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14602ab6441821f43883d0b13d4f57c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  evnt: {fileID: 11400000, guid: 08e148840a52a88499ec4cb2dd2b0924, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2074500936}
+        m_MethodName: CheckMapChange
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

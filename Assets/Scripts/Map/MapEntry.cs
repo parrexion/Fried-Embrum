@@ -154,7 +154,7 @@ public class TurnEvent {
 	public DialogueEntry dialogue;
 	public int x;
 	public int y;
-	public MapTile changeTile;
+	public TerrainTile changeTerrain;
 }
 
 [System.Serializable]

@@ -93,7 +93,7 @@ public class BattleAction {
 	/// <param name="distance"></param>
 	/// <returns></returns>
 	public bool DefenderInRange(int distance) {
-		if (weaponDef == null)
+		if (weaponDef.item == null || weaponDef.charge <= 0)
 			return false;
 
 		return weaponDef.item.InRange(distance);

@@ -7,7 +7,7 @@ public class InventoryContainer {
 
 	public const int INVENTORY_SIZE = 5;
 	
-	[SerializeField] private InventoryTuple[] inventory;
+	[SerializeField] private List<InventoryTuple> inventory = new List<InventoryTuple>();
 
 
 	public InventoryContainer(ScrObjLibraryVariable iLib, CharacterSaveData saveData) {
@@ -15,41 +15,41 @@ public class InventoryContainer {
 	}
 
 	public InventoryContainer(List<WeaponTuple> presetInventory) {
-		inventory = new InventoryTuple[INVENTORY_SIZE];
+		inventory = new List<InventoryTuple>();
 		for (int i = 0; i < INVENTORY_SIZE; i++) {
 			if (i < presetInventory.Count && presetInventory[i].item != null) {
-				inventory[i] = new InventoryTuple {
+				inventory.Add(new InventoryTuple {
 					index = i,
 					item = presetInventory[i].item,
 					charge = presetInventory[i].item.maxCharge,
 					droppable = presetInventory[i].droppable
-				};
+				});
 			}
 			else {
-				inventory[i] = new InventoryTuple {
+				inventory.Add(new InventoryTuple {
 					index = i,
 					charge = 0,
 					droppable = false
-				};
+				});
 			}
 		}
 	}
 
 	private void SetupValues(ScrObjLibraryVariable iLib, CharacterSaveData saveData) {
-		inventory = new InventoryTuple[INVENTORY_SIZE];
-		for (int i = 0; i < inventory.Length; i++) {
+		inventory = new List<InventoryTuple>();
+		for (int i = 0; i < inventory.Count; i++) {
 			if (i < saveData.inventory.Count) {
-				inventory[i] = new InventoryTuple {
+				inventory.Add(new InventoryTuple {
 					index = i,
 					item = (WeaponItem) iLib.GetEntry(saveData.inventory[i]),
 					charge = saveData.invCharges[i]
-				};
+				});
 			}
 			else {
-				inventory[i] = new InventoryTuple {
+				inventory.Add(new InventoryTuple {
 					index = i,
 					charge = 0
-				};
+				});
 			}
 		}
 	}
@@ -61,7 +61,7 @@ public class InventoryContainer {
 	/// <returns></returns>
 	public WeaponRange GetReach(ItemCategory category) {
 		int close = 99, far = 0;
-		for (int i = 0; i < inventory.Length; i++) {
+		for (int i = 0; i < inventory.Count; i++) {
 			if (inventory[i].item == null || inventory[i].item.itemCategory != category)
 				continue;
 			close = Mathf.Min(close, inventory[i].item.range.min);
@@ -73,12 +73,13 @@ public class InventoryContainer {
 
 	/// <summary>
 	/// Returns the first item in the inventory the player can use matching the item category.
+	/// Returns null if there is not item that can be used.
 	/// </summary>
 	/// <param name="category"></param>
 	/// <param name="player"></param>
 	/// <returns></returns>
 	public WeaponItem GetFirstUsableItem(ItemCategory category, StatsContainer player) {
-		for (int i = 0; i < inventory.Length; i++) {
+		for (int i = 0; i < inventory.Count; i++) {
 			if (inventory[i].item == null)
 				continue;
 			int skill = player.GetWpnSkill(inventory[i].item);
@@ -90,12 +91,13 @@ public class InventoryContainer {
 
 	/// <summary>
 	/// Returns the first item in the inventory the player can use matching the item type.
+	/// Returns null if there is not item that can be used.
 	/// </summary>
 	/// <param name="category"></param>
 	/// <param name="player"></param>
 	/// <returns></returns>
 	public WeaponItem GetFirstUsableItem(ItemType type, StatsContainer player) {
-		for (int i = 0; i < inventory.Length; i++) {
+		for (int i = 0; i < inventory.Count; i++) {
 			if (inventory[i].item == null)
 				continue;
 			int skill = player.GetWpnSkill(inventory[i].item);
@@ -106,12 +108,26 @@ public class InventoryContainer {
 	}
 
 	public InventoryTuple GetFirstUsableItemTuple(ItemCategory category, StatsContainer player) {
-		for (int i = 0; i < inventory.Length; i++) {
+		for (int i = 0; i < inventory.Count; i++) {
 			if (inventory[i].item == null)
 				continue;
 			int skill = player.GetWpnSkill(inventory[i].item);
-			if (inventory[i].item.itemCategory == category && inventory[i].item.CanUse(skill))
+			if (inventory[i].item.itemCategory == category && inventory[i].item.CanUse(skill) && inventory[i].charge > 0)
 				return inventory[i];
+		}
+		return new InventoryTuple();
+	}
+
+	/// <summary>
+	/// Returns the first empty InventoryTuple in the inventory.
+	/// Returns null if the inventory is already full.
+	/// </summary>
+	/// <returns></returns>
+	public InventoryTuple GetFirstEmptyItemTuple() {
+		for (int i = 0; i < inventory.Count; i++) {
+			if (inventory[i].item == null) {
+				return inventory[i];
+			}
 		}
 		return null;
 	}
@@ -125,7 +141,7 @@ public class InventoryContainer {
 	/// <param name="range"></param>
 	/// <returns></returns>
 	public void EquipFirstInRangeItem(ItemCategory category, StatsContainer player, int range) {
-		for (int i = 0; i < inventory.Length; i++) {
+		for (int i = 0; i < inventory.Count; i++) {
 			if (inventory[i].item == null)
 				continue;
 			int skill = player.GetWpnSkill(inventory[i].item);
@@ -144,7 +160,7 @@ public class InventoryContainer {
 	/// <returns></returns>
 	public List<InventoryTuple> GetAllUsableItemTuple(ItemCategory category, StatsContainer player) {
 		List<InventoryTuple> list = new List<InventoryTuple>();
-		for (int i = 0; i < inventory.Length; i++) {
+		for (int i = 0; i < inventory.Count; i++) {
 			if (inventory[i].item == null)
 				continue;
 			int skill = player.GetWpnSkill(inventory[i].item);
@@ -159,7 +175,7 @@ public class InventoryContainer {
 	/// </summary>
 	/// <param name="category"></param>
 	public void ReduceItemCharge(ItemCategory category) {
-		for (int i = 0; i < inventory.Length; i++) {
+		for (int i = 0; i < inventory.Count; i++) {
 			if (inventory[i].item == null)
 				continue;
 			if (inventory[i].item.itemCategory == category)
@@ -172,21 +188,42 @@ public class InventoryContainer {
 	/// Removes all broken and dropped weapons without any charges.
 	/// Also moves the items upward to fill out the gaps in the inventory.
 	/// </summary>
-	public void CleanupInventory() {
+	public void CleanupInventory(StatsContainer stats) {
 		int pos = 0;
-		for (int i = 0; i < inventory.Length; i++) {
-			if (inventory[i].item == null)
-				continue;
-			if (inventory[i].charge <= 0) {
-				inventory[i].item = null;
-				Debug.Log("Weapon broke!");
+
+		for (int i = 0; i < INVENTORY_SIZE; i++) {
+			if (inventory[pos].item == null) {
+				InventoryTuple tup = inventory[pos];
+				inventory.RemoveAt(pos);
+				inventory.Add(tup);
 			}
 			else {
-				InventoryTuple temp = inventory[i];
-				inventory[i] = inventory[pos];
-				inventory[pos] = temp;
 				pos++;
 			}
+		}
+		for (int i = 0; i < INVENTORY_SIZE; i++) {
+			inventory[i].index = i;
+		}
+
+		if (inventory[0].item != null) {
+			int skill = stats.GetWpnSkill(inventory[0].item);
+			if (!inventory[0].item.CanUse(skill) || inventory[0].charge <= 0) {
+				InventoryTuple tup = GetFirstUsableItemTuple(ItemCategory.WEAPON, stats);
+				if (tup.item != null) {
+					inventory.RemoveAt(tup.index);
+					inventory.Insert(0, tup);
+				}
+				else if (!inventory[0].item.CanUse(skill)) {
+					tup = GetFirstEmptyItemTuple();
+					if (tup != null) {
+						inventory.RemoveAt(tup.index);
+						inventory.Insert(0, tup);
+					}
+				}
+			}
+		}
+		for (int i = 0; i < INVENTORY_SIZE; i++) {
+			inventory[i].index = i;
 		}
 	}
 
@@ -238,7 +275,7 @@ public class InventoryContainer {
 		useItem.charge--;
 		if (useItem.charge <= 0) {
 			inventory[index].item = null;
-			CleanupInventory();
+			CleanupInventory(player.stats);
 		}
 		
 		player.End();
@@ -248,9 +285,9 @@ public class InventoryContainer {
 	/// Drops the item at the given index.
 	/// </summary>
 	/// <param name="index"></param>
-	public void DropItem(int index) {
+	public void DropItem(int index, StatsContainer stats) {
 		inventory[index].charge = 0;
-		CleanupInventory();
+		CleanupInventory(stats);
 	}
 
 	/// <summary>
@@ -260,8 +297,8 @@ public class InventoryContainer {
 	/// <param name="pickup"></param>
 	/// <returns></returns>
 	public bool GainItem(InventoryTuple pickup) {
-		for (int i = 0; i < inventory.Length; i++) {
-			if (inventory[i] == null) {
+		for (int i = 0; i < inventory.Count; i++) {
+			if (inventory[i].item == null) {
 				inventory[i] = pickup;
 				Debug.Log("Added the item to position " + i);
 				return true;

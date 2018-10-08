@@ -13,6 +13,7 @@ public class MapCreator : MonoBehaviour {
 	public IntVariable cursorX;
 	public IntVariable cursorY;
 	public IntVariable currentTurn;
+	public FactionVariable currentFaction;
 	public float reinforcementDelay = 0.75f;
 	public IntVariable slowGameSpeed;
 	public IntVariable currentGameSpeed;
@@ -292,6 +293,9 @@ public class MapCreator : MonoBehaviour {
 					SkillsContainer skills = new SkillsContainer(pos.skills);
 
 					SpawnEnemyCharacter(pos.x, pos.y, stats, inventory, skills, new List<FightQuote>(), AggroType.CHARGE, null);
+					cursorX.value = pos.x;
+					cursorY.value = pos.y;
+					cursorMoveEvent.Invoke();
 					// Debug.Log("Hello there!     " + (reinforcementDelay * slowGameSpeed.value / currentGameSpeed.value));
 					yield return new WaitForSeconds(reinforcementDelay * slowGameSpeed.value / currentGameSpeed.value);
 				}
@@ -307,13 +311,26 @@ public class MapCreator : MonoBehaviour {
 		MapEntry map = (MapEntry)currentMap.value;
 		for (int i = 0; i < map.turnEvents.Count; i++) {
 			TurnEvent pos = map.turnEvents[i];
-			if (currentTurn.value == pos.turn) {
+			if (currentTurn.value == pos.turn && currentFaction.value == pos.factionTurn && pos.type == TurnEventType.DIALOGUE) {
 				Debug.Log("It's time!");
 				currentDialogue.value = pos.dialogue;
 				currentDialogueMode.value = (int)DialogueMode.EVENT;
 				lockControls.value = false;
 				startDialogueEvent.Invoke();
 				return;
+			}
+		}
+		nextTurnStateEvent.Invoke();
+	}
+
+	public void CheckMapChange() {
+		MapEntry map = (MapEntry)currentMap.value;
+		for (int i = 0; i < map.turnEvents.Count; i++) {
+			TurnEvent pos = map.turnEvents[i];
+			if (currentTurn.value == pos.turn && currentFaction.value == pos.factionTurn && pos.type == TurnEventType.MAPCHANGE) {
+				Debug.Log("It's time!");
+				MapTile tile = battleMap.GetTile(pos.x, pos.y);
+				tile.SetTerrain(pos.changeTerrain);
 			}
 		}
 		nextTurnStateEvent.Invoke();

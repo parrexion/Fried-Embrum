@@ -18,6 +18,8 @@ public class BattleContainer : MonoBehaviour {
 	public FloatVariable cameraPosX;
 	public FloatVariable cameraPosY;
 	public PopupController popup;
+	public IntVariable slowGameSpeed;
+	public IntVariable currentGameSpeed;
 
 	[Header("Dialogue")]
 	public IntVariable dialogueMode;
@@ -96,19 +98,22 @@ public class BattleContainer : MonoBehaviour {
 			defender.ActivateSkills(Activation.PRECOMBAT, attacker);
 			
 			_currentCharacter = attacker;
+			InventoryTuple atkTup = attacker.GetEquippedWeapon(ItemCategory.WEAPON);
+			InventoryTuple defTup = defender.GetEquippedWeapon(ItemCategory.WEAPON);
 			actions.Clear();
 			actions.Add(new BattleAction(true, true, attacker, defender));
 			int range = Mathf.Abs(attacker.posx - defender.posx) + Mathf.Abs(attacker.posy - defender.posy);
-			if (defender.GetEquippedWeapon(ItemCategory.WEAPON) != null && defender.GetEquippedWeapon(ItemCategory.WEAPON).InRange(range)) {
+			if (defTup.item != null && defTup.charge > 0 && defender.GetEquippedWeapon(ItemCategory.WEAPON).item.InRange(range)) {
 				actions.Add(new BattleAction(false, true, defender, attacker));
 			}
 			//Compare speeds
 			int spdDiff = actions[0].GetSpeedDifference();
 			if (spdDiff >= doublingSpeed.value) {
-				actions.Add(new BattleAction(true, true, attacker, defender));
+				if (atkTup.charge > 1)
+					actions.Add(new BattleAction(true, true, attacker, defender));
 			}
 			else if (spdDiff <= - doublingSpeed.value) {
-				if (defender.GetEquippedWeapon(ItemCategory.WEAPON) != null && defender.GetEquippedWeapon(ItemCategory.WEAPON).InRange(range)) {
+				if (defTup.item != null && defTup.charge > 0 && defender.GetEquippedWeapon(ItemCategory.WEAPON).item.InRange(range)) {
 					actions.Add(new BattleAction(false, true, defender, attacker));
 				}
 			}
@@ -229,13 +234,13 @@ public class BattleContainer : MonoBehaviour {
 				rightHealth.fillAmount = actions[0].defender.GetHealthPercent();
 			}
 			
-			yield return new WaitForSeconds(1f);
+			yield return new WaitForSeconds(1f * slowGameSpeed.value / currentGameSpeed.value);
 			
 			//Move forward
 			float f = 0;
 			// Debug.Log("Start moving");
 			while(f < 0.5f) {
-				f += Time.deltaTime * speed;
+				f += Time.deltaTime * speed * currentGameSpeed.value / slowGameSpeed.value;
 				attackTransform.position = Vector3.Lerp(startPos, enemyPos, f);
 				yield return null;
 			}
@@ -274,7 +279,7 @@ public class BattleContainer : MonoBehaviour {
 						leftTransform.GetComponent<SpriteRenderer>().color = new Color(0.4f,0.4f,0.4f);
 				}
 				act.attacker.inventory.ReduceItemCharge(ItemCategory.WEAPON);
-				act.attacker.stats.GiveWpnExp(act.attacker.GetEquippedWeapon(ItemCategory.WEAPON));
+				act.attacker.stats.GiveWpnExp(act.attacker.GetEquippedWeapon(ItemCategory.WEAPON).item);
 			}
 			else {
 				if (act.staffAtk.item.itemType == ItemType.HEAL) {
@@ -283,10 +288,10 @@ public class BattleContainer : MonoBehaviour {
 					StartCoroutine(DamageDisplay(act.leftSide, health, false, false));
 				}
 				else if (act.staffAtk.item.itemType == ItemType.BUFF) {
-					act.defender.ReceiveBuff(act.attacker.GetEquippedWeapon(ItemCategory.STAFF).boost, true, true);
+					act.defender.ReceiveBuff(act.attacker.GetEquippedWeapon(ItemCategory.STAFF).item.boost, true, true);
 				}
 				act.attacker.inventory.ReduceItemCharge(ItemCategory.STAFF);
-				act.attacker.stats.GiveWpnExp(act.attacker.GetEquippedWeapon(ItemCategory.STAFF));
+				act.attacker.stats.GiveWpnExp(act.attacker.GetEquippedWeapon(ItemCategory.STAFF).item);
 				_attackerDealtDamage = true;
 			}
 			//Update health
@@ -311,7 +316,7 @@ public class BattleContainer : MonoBehaviour {
 			//Check Death
 			// Debug.Log("Check death");
 			if (!act.defender.IsAlive()) {
-				yield return new WaitForSeconds(1f);
+				yield return new WaitForSeconds(1f * slowGameSpeed.value / currentGameSpeed.value);
 				if (act.defender.stats.charData.deathQuote != null) {
 					Debug.Log("Death quote");
 					runningLoop = true;
@@ -362,7 +367,7 @@ public class BattleContainer : MonoBehaviour {
 		_currentCharacter.End();
 		_currentCharacter = null;
 		
-		yield return new WaitForSeconds(0.5f);
+		yield return new WaitForSeconds(0.5f * slowGameSpeed.value / currentGameSpeed.value);
 
 		//Music
 		subMusic.value = null;
@@ -398,7 +403,7 @@ public class BattleContainer : MonoBehaviour {
 		
 		if (player == null) {
 			Debug.Log("Nothing to give exp for");
-			yield return new WaitForSeconds(0.5f);
+			yield return new WaitForSeconds(0.5f * slowGameSpeed.value / currentGameSpeed.value);
 			yield break;
 		}
 
@@ -408,7 +413,7 @@ public class BattleContainer : MonoBehaviour {
 			expMeter.gameObject.SetActive(true);
 			expMeter.currentExp = player.stats.currentExp;
 			Debug.Log("Exp is currently: " + player.stats.currentExp);
-			yield return new WaitForSeconds(0.5f);
+			yield return new WaitForSeconds(0.5f * slowGameSpeed.value / currentGameSpeed.value);
 			sfxQueue.Enqueue(levelupFill);
 			playSfxEvent.Invoke();
 			while(exp > 0) {
@@ -417,7 +422,7 @@ public class BattleContainer : MonoBehaviour {
 				if (expMeter.currentExp == 100) {
 					expMeter.currentExp = 0;
 					stopSfxEvent.Invoke();
-					yield return new WaitForSeconds(1f);
+					yield return new WaitForSeconds(1f * slowGameSpeed.value / currentGameSpeed.value);
 					expMeter.gameObject.SetActive(false);
 					levelupScript.SetupStats(player.stats.level,player.stats);
 					Debug.Log("LEVELUP!");
@@ -436,7 +441,7 @@ public class BattleContainer : MonoBehaviour {
 				yield return null;
 			}
 			stopSfxEvent.Invoke();
-			yield return new WaitForSeconds(0.5f);
+			yield return new WaitForSeconds(0.5f * slowGameSpeed.value / currentGameSpeed.value);
 			expMeter.gameObject.SetActive(false);
 			player.stats.currentExp = expMeter.currentExp;
 			Debug.Log("Exp is now: " + player.stats.currentExp);
@@ -448,20 +453,20 @@ public class BattleContainer : MonoBehaviour {
 		if (actions[0].isDamage) {
 			InventoryTuple invTup = actions[0].weaponAtk;
 			if (invTup.item != null && invTup.charge <= 0) {
-				yield return StartCoroutine(popup.ShowPopup(invTup.item.icon, invTup.item.entryName + " broke!", popup.brokenItemFanfare));
-				actions[0].attacker.inventory.CleanupInventory();
+				yield return StartCoroutine(popup.ShowPopup(invTup.item.icon, invTup.item.entryName + " is out of ammo!", popup.brokenItemFanfare));
+				actions[0].attacker.inventory.CleanupInventory(actions[0].attacker.stats);
 			}
 			invTup = actions[0].weaponDef;
-			if (invTup != null && invTup.charge <= 0) {
-				yield return StartCoroutine(popup.ShowPopup(invTup.item.icon, invTup.item.entryName + " broke!", popup.brokenItemFanfare));
-				actions[0].defender.inventory.CleanupInventory();
+			if (invTup.item != null && invTup.charge <= 0) {
+				yield return StartCoroutine(popup.ShowPopup(invTup.item.icon, invTup.item.entryName + " is out of ammo!", popup.brokenItemFanfare));
+				actions[0].defender.inventory.CleanupInventory(actions[0].defender.stats);
 			}
 		}
 		else {
 			InventoryTuple invTup = actions[0].staffAtk;
-			if (invTup != null && invTup.charge <= 0) {
-				yield return StartCoroutine(popup.ShowPopup(invTup.item.icon, invTup.item.entryName + " broke!", popup.brokenItemFanfare));
-				actions[0].attacker.inventory.CleanupInventory();
+			if (invTup.item != null && invTup.charge <= 0) {
+				yield return StartCoroutine(popup.ShowPopup(invTup.item.icon, invTup.item.entryName + " is out of ammo!", popup.brokenItemFanfare));
+				actions[0].attacker.inventory.CleanupInventory(actions[0].attacker.stats);
 			}
 		}
 	}

@@ -8,6 +8,7 @@ public class MapCursor : MonoBehaviour {
 
 	public BattleMap battleMap;
 	public ActionModeVariable currentActionMode;
+	public FactionVariable currentFaction;
 
 	[Header("Targets")]
 	private MapTile startTile;
@@ -158,11 +159,12 @@ public class MapCursor : MonoBehaviour {
 	/// <param name="x"></param>
 	/// <param name="y"></param>
 	private void NormalHover(int x, int y) {
+		// Debug.Log("Normal hover:  "+ currentFaction.value);
 		MapTile tile = battleMap.GetTile(x, y);
 		startTile = tile;
 		selectTile.value = tile;
 		selectCharacter.value = (tile) ? tile.currentCharacter : null;
-		if (selectCharacter.value != null && (alwaysShowMovement.value || !selectCharacter.value.hasMoved)) {
+		if (currentFaction.value == Faction.PLAYER && selectCharacter.value != null && (alwaysShowMovement.value || !selectCharacter.value.hasMoved)) {
 			selectCharacter.value.FindAllMoveTiles(false);
 		}
 		else {

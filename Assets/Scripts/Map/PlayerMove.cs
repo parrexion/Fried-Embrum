@@ -20,7 +20,7 @@ public class PlayerMove : TacticsMove {
 	/// <summary>
 	/// Additional functions which run when the player ends their turn.
 	/// </summary>
-	protected override void EndMovement() {
+	public override void EndMovement() {
 		Debug.Log("Finished move");
 		isMoving = false;
 		lockControls.value = false;

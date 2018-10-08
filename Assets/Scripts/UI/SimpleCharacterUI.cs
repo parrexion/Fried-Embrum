@@ -86,7 +86,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 		weakIcon1.sprite = weaknessImages[(int)stats.classData.classType];
 		weakIcon1.enabled = (weakIcon1.sprite != null);
 
-		WeaponItem weapon = tactics.GetEquippedWeapon(ItemCategory.WEAPON);
+		WeaponItem weapon = tactics.GetEquippedWeapon(ItemCategory.WEAPON).item;
 		wpnIcon.sprite = (weapon != null) ? weapon.icon : null;
 		wpnName.text = (weapon != null) ? weapon.entryName : "";
 		
@@ -132,7 +132,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 		defText.color = (stats.bDef != 0) ? Color.green : Color.black;
 		resText.color = (stats.bRes != 0) ? Color.green : Color.black;
 		
-		WeaponItem weapon = tactics.GetEquippedWeapon(ItemCategory.WEAPON);
+		WeaponItem weapon = tactics.GetEquippedWeapon(ItemCategory.WEAPON).item;
 		int penalty = stats.GetConPenalty(weapon);
 		if (penalty > 0) {
 			spdText.text = BattleCalc.GetAttackSpeed(weapon, stats).ToString();
@@ -175,7 +175,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 		inventoryObject.SetActive(true);
 		characterName.text = stats.charData.entryName;
 
-		WeaponItem weapon = tactics.GetEquippedWeapon(ItemCategory.WEAPON);
+		WeaponItem weapon = tactics.GetEquippedWeapon(ItemCategory.WEAPON).item;
 		conText.text = stats.GetConstitution().ToString();
 		int atkSpeed = BattleCalc.GetAttackSpeed(weapon, stats);
 		if (atkSpeed < stats.spd) {

@@ -198,8 +198,8 @@ public class TradeController : InputReceiver {
 		tup2.item = temp.item;
 
 		selectedIndex = -1;
-		targetCharacter.inventory.CleanupInventory();
-		selectedCharacter.value.inventory.CleanupInventory();
+		targetCharacter.inventory.CleanupInventory(targetCharacter.stats);
+		selectedCharacter.value.inventory.CleanupInventory(selectedCharacter.value.stats);
 		UpdateInventories();
 		UpdateSelection();
 	}

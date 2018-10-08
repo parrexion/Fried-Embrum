@@ -169,10 +169,10 @@ public class ForecastUI : MonoBehaviour {
 		portrait.sprite = tactics.stats.charData.portrait;
 		wpnAdvantage.enabled = (atkAdv != 0);
 		wpnAdvantage.sprite = (atkAdv == 1) ? advArrow : disArrow;
-		wpnIcon.sprite = (InvTup != null) ? InvTup.item.icon : null;
-		wpnName.text = (InvTup != null) ? InvTup.item.entryName : "";
+		wpnIcon.sprite = (InvTup.item != null) ? InvTup.item.icon : null;
+		wpnName.text = (InvTup.item != null) ? InvTup.item.entryName : "";
 		if (wpnCharge)
-			wpnCharge.text = (InvTup != null) ? InvTup.charge.ToString() : "";
+			wpnCharge.text = (InvTup.item != null) ? InvTup.charge.ToString() : "";
 
 		hpText.text = tactics.currentHealth.ToString();
 		dmgText.text = (damage != -1) ? damage.ToString() : "--";
@@ -189,10 +189,10 @@ public class ForecastUI : MonoBehaviour {
 		ePortrait.sprite = tactics.stats.charData.portrait;
 		eWpnAdvantage.enabled = (defAdv != 0);
 		eWpnAdvantage.sprite = (defAdv == 1) ? advArrow : disArrow;
-		eWpnIcon.sprite = (invTup != null) ? invTup.item.icon : null;
-		eWpnName.text = (invTup != null) ? invTup.item.entryName : "";
+		eWpnIcon.sprite = (invTup.item != null) ? invTup.item.icon : null;
+		eWpnName.text = (invTup.item != null) ? invTup.item.entryName : "";
 		if (eWpnCharge)
-			eWpnCharge.text = (invTup != null) ? invTup.charge.ToString() : "";
+			eWpnCharge.text = (invTup.item != null) ? invTup.charge.ToString() : "";
 
 		eHpText.text = tactics.currentHealth.ToString();
 		eDmgText.text = (damage != -1) ? damage.ToString() : "--";

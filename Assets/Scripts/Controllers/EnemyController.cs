@@ -56,16 +56,26 @@ public class EnemyController : MonoBehaviour {
 			selectCharacter.value = enemyList.values[i];
 			selectTile.value = selectCharacter.value.currentTile;
 			enemy = (NPCMove)enemyList.values[i];
-			enemy.FindAllMoveTiles(false);
+			// enemy.FindAllMoveTiles(false);
 			cursorX.value = enemy.posx;
 			cursorY.value = enemy.posy;
 			cursorMovedEvent.Invoke();
 
-			yield return new WaitForSeconds(1f * slowGameSpeed.value / currentGameSpeed.value);
+			// Calculate the tile to move towards and wait for the character to move there if any
+			MapTile moveTile = enemy.CalculateMovement();
+			if (moveTile == null) {
+				enemy.EndMovement();
+				waitForNextAction = false;
+			}
+			else {
+				enemy.ShowMove(moveTile);
+				waitForNextAction = true;
+			}
 
-			// Calculate the tile to move towards and wait for the character to move there
-			// Debug.Log("Move time");
-			waitForNextAction = enemy.CalculateMovement();
+			if (waitForNextAction) {
+				yield return new WaitForSeconds(1f * slowGameSpeed.value / currentGameSpeed.value);
+				enemy.StartMove();
+			}
 			while (waitForNextAction)
 				yield return null;
 
@@ -94,12 +104,19 @@ public class EnemyController : MonoBehaviour {
 		waitForNextAction = false;
 	}
 
+	/// <summary>
+	/// Called when an enemy is going to destroy a tile and pauses for that to happen.
+	/// </summary>
 	public void IncomingDestruction() {
 		if (enemy != null) {
 			StartCoroutine(DestroyTile());
 		}
 	}
 	
+	/// <summary>
+	/// Runs the action of destroying the tile and showing a message to the player.
+	/// </summary>
+	/// <returns></returns>
 	private IEnumerator DestroyTile() {
 		string destroyType = (enemy.currentTile.interactType == InteractType.VILLAGE) ? "Village" : "???";
 		yield return StartCoroutine(popup.ShowPopup(null, destroyType + " was destroyed!", popup.brokenItemFanfare));

@@ -74,6 +74,7 @@ public abstract class TacticsMove : MonoBehaviour {
 		stats.CalculateStats();
 		gameObject.name = stats.charData.entryName;
 		currentHealth = stats.hp;
+		inventory.CleanupInventory(stats);
 		GetComponent<SpriteRenderer>().sprite = stats.charData.battleSprite;
 		currentTile = battleMap.GetTile(posx, posy);
 		currentTile.currentCharacter = this;
@@ -90,7 +91,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// <summary>
 	/// Additional functions which should be run when movement ends.
 	/// </summary>
-	protected abstract void EndMovement();
+	public abstract void EndMovement();
 
 
 	/// <summary>
@@ -570,8 +571,11 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// </summary>
 	/// <param name="category"></param>
 	/// <returns></returns>
-	public WeaponItem GetEquippedWeapon(ItemCategory category) {
-		return inventory.GetFirstUsableItem(category, stats);
+	public InventoryTuple GetEquippedWeapon(ItemCategory category) {
+		if (category == ItemCategory.WEAPON) {
+			return inventory.GetItem(0);
+		}
+		return inventory.GetFirstUsableItemTuple(category, stats);
 	}
 
 

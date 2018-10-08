@@ -13,7 +13,7 @@ public class BlockMove : TacticsMove {
 	/// <summary>
 	/// Additional functions which run when the player ends their turn.
 	/// </summary>
-	protected override void EndMovement() { }
+	public override void EndMovement() { }
 	
 	protected override IEnumerator OnDeath() {
 		GetComponent<SpriteRenderer>().color = new Color(0.4f,0.4f,0.4f);
