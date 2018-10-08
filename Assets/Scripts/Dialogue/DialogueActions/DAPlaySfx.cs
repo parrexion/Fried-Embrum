@@ -12,7 +12,7 @@ public class DAPlaySfx : DialogueAction {
 			return true;
 		}
 
-		scene.sfxClip.value = sfx.clip;
+		scene.sfxClip.Enqueue(sfx);
 		scene.effectStartDuration.value = data.values[0] * 0.001f;
 		scene.effectEndDuration.value = 0;
 
