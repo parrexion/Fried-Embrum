@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class InventoryInputController : InputReceiver {
+public enum InventoryStatsType { BASIC, STATS, INVENTORY }
 
-	public enum StatsType { BASIC, STATS, INVENTORY }
+public class InventoryInputController : InputReceiver {
 
 	public SimpleCharacterUI ui;
 	public GameObject background;
@@ -69,13 +69,13 @@ public class InventoryInputController : InputReceiver {
 		if (selectCharacter.value == null && selectTile.value.interactType != InteractType.NONE) {
 			ui.ShowObjectStats(tile);
 		}
-		else if (currentPage.value == (int)StatsType.INVENTORY || currentMenuMode.value == (int)MenuMode.STATS || currentMenuMode.value == (int)MenuMode.INV || currentMode.value == ActionMode.TRADE) {
+		else if (currentPage.value == (int)InventoryStatsType.INVENTORY || currentMenuMode.value == (int)MenuMode.STATS || currentMenuMode.value == (int)MenuMode.INV || currentMode.value == ActionMode.TRADE) {
 			ui.ShowInventoryStats(tactics);
 		}
-		else if (currentPage.value == (int)StatsType.STATS) {
+		else if (currentPage.value == (int)InventoryStatsType.STATS) {
 			ui.ShowStatsStats(tactics);
 		}
-		else if (currentPage.value == (int)StatsType.BASIC)
+		else if (currentPage.value == (int)InventoryStatsType.BASIC)
 			ui.ShowBasicStats(tactics);
 	}
 

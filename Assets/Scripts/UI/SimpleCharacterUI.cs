@@ -179,10 +179,12 @@ public class SimpleCharacterUI : MonoBehaviour {
 		conText.text = stats.GetConstitution().ToString();
 		int atkSpeed = BattleCalc.GetAttackSpeed(weapon, stats);
 		if (atkSpeed < stats.spd) {
+			weighDownValue2.color = new Color(0.5f,0.2f,0.2f);
 			weighDownValue2.text = "Penalty:  " + (atkSpeed - stats.spd).ToString();
 		}
 		else {
-			weighDownValue2.text = "";
+			weighDownValue2.color = Color.grey;
+			weighDownValue2.text = "No penalty";
 		}
 
 		for (int i = 0; i < weaponSkillIcons.Length; i++) {
@@ -275,7 +277,8 @@ public class SimpleCharacterUI : MonoBehaviour {
 		helpButtons.SetActive(currentMenuMode.value != (int)MenuMode.STATS && currentMenuMode.value != (int)MenuMode.INV);
 
 		//Tooltip
-		tooltipObject.SetActive(currentMenuMode.value == (int)MenuMode.STATS);
+		bool visible = (currentMenuMode.value == (int)MenuMode.STATS || currentMenuMode.value == (int)MenuMode.TOOL);
+		tooltipObject.SetActive(visible);
 		if (inventoryIndex.value != -1) {
 			InventoryTuple item = tactics.inventory.GetItem(inventoryIndex.value);
 			tooltipText.text = (item.item != null) ? item.item.GetDescription() : "";

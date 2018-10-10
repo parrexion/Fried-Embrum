@@ -204,6 +204,14 @@ public class MapInputController : InputReceiver {
 			menuAcceptEvent.Invoke();
 	}
 
+    public override void OnLButton() {
+		if (!active || clicker.selectCharacter.value == null)
+			return;
+
+		currentMenuMode.value = (int)MenuMode.TOOL;
+		StartCoroutine(MenuChangeDelay());
+	}
+
 	/// <summary>
 	/// Triggered when battles end and updates the current menu mode.
 	/// </summary>
@@ -223,5 +231,4 @@ public class MapInputController : InputReceiver {
 	}
 
     public override void OnYButton() { }
-    public override void OnLButton() { }
 }
