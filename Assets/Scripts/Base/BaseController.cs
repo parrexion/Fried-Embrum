@@ -5,13 +5,14 @@ using UnityEngine;
 public class BaseController : InputReceiver {
 
 	public List<Transform> areas;
+	public BoolVariable lockControls;
 	public float speed = 1;
 	public int widthOffset;
+	public List<MenuMode> screens = new List<MenuMode>();
 
 	private int currentArea;
 	private int width;
 	private int height;
-	private bool transitioning;
 
 
     private void Start () {
@@ -24,26 +25,27 @@ public class BaseController : InputReceiver {
 	}
 
     public override void OnLButton() {
-		if (transitioning)
-			return;
-		
 		Transform a = areas[areas.Count-1];
 		areas.RemoveAt(areas.Count-1);
 		areas.Insert(0, a);
+		MenuMode mode = screens[screens.Count-1];
+		screens.RemoveAt(screens.Count-1);
+		screens.Insert(0, mode);
 		StartCoroutine(ChangeArea(1));
     }
 
     public override void OnRButton() {
-		if (transitioning)
-			return;
 		Transform a = areas[0];
 		areas.RemoveAt(0);
 		areas.Add(a);
+		MenuMode mode = screens[0];
+		screens.RemoveAt(0);
+		screens.Add(mode);
 		StartCoroutine(ChangeArea(-1));
     }
 
 	private IEnumerator ChangeArea(int direction) {
-		transitioning = true;
+		lockControls.value = true;
 		float f = 0;
 		while (f < 1) {
 			f += Time.deltaTime * speed;
@@ -51,7 +53,9 @@ public class BaseController : InputReceiver {
 			SetAreaPositions(offset);
 			yield return null;
 		}
-		transitioning = false;
+		currentMenuMode.value = (int)screens[1];
+		StartCoroutine(MenuChangeDelay());
+		lockControls.value = false;
 	}
 
 	private void SetAreaPositions(float offset) {

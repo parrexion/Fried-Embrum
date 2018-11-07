@@ -168,7 +168,7 @@ public class SaveController : MonoBehaviour {
 		
 		Debug.Log("Successfully pre-loaded the save data!");
 
-		if (SceneManager.GetActiveScene().name == "BattleScene") {
+		if (SceneManager.GetActiveScene().name == "BattleScene" || SceneManager.GetActiveScene().name == "BaseScene") {
 			Load();
 		}
 	}

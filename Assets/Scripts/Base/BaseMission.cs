@@ -19,7 +19,16 @@ public class BaseMission : InputReceiver {
 		SetupButtons();
 	}
 
+    public override void OnMenuModeChanged() {
+		active = (currentMenuMode.value == (int)MenuMode.BASE_MISSION);
+		currentIndex.value = 0;
+		UpdateButtons();
+	}
+
     public override void OnUpArrow() {
+		if (!active)
+			return;
+
 		currentIndex.value--;
 		if (currentIndex.value < 0) {
 			currentIndex.value = maps.Length-1;
@@ -29,6 +38,9 @@ public class BaseMission : InputReceiver {
 	}
 
     public override void OnDownArrow() {
+		if (!active)
+			return;
+
 		currentIndex.value++;
 		if (currentIndex.value >= maps.Length) {
 			currentIndex.value = 0;
@@ -66,7 +78,6 @@ public class BaseMission : InputReceiver {
 
     public override void OnLButton() { }
     public override void OnLeftArrow() { }
-    public override void OnMenuModeChanged() { }
     public override void OnRButton() { }
     public override void OnRightArrow() { }
     public override void OnStartButton() { }
