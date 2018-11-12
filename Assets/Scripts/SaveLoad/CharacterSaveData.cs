@@ -32,6 +32,9 @@ public class CharacterSaveData {
 	public float eLck;
 	public float eDef;
 	public float eRes;
+
+	[Header("Supports")]
+	public List<SupportLevel> supports;
 	
 
 	public CharacterSaveData() {
@@ -50,15 +53,17 @@ public class CharacterSaveData {
 		for (int i = 0; i < stats.wpnSkills.Length; i++) {
 			wpnSkills[i] = stats.wpnSkills[i];
 		}
+		
 		inventory = new List<string>();
 		invCharges = new List<int>();
-		skills = new List<string>();
 		for (int i = 0; i < InventoryContainer.INVENTORY_SIZE; i++) {
 			if (invCont.GetItem(i).item == null)
 				continue;
 			inventory.Add(invCont.GetItem(i).item.uuid);
 			invCharges.Add(invCont.GetItem(i).charge);
 		}
+
+		skills = new List<string>();
 		for (int i = 0; i < skillCont.skills.Length; i++) {
 			if (!skillCont.skills[i])
 				continue;
@@ -80,6 +85,11 @@ public class CharacterSaveData {
 		eLck = stats.eLck;
 		eDef = stats.eDef;
 		eRes = stats.eRes;
+
+		supports = new List<SupportLevel>();
+		for (int i = 0; i < supports.Count; i++) {
+			supports.Add(stats.supportValues[i]);
+		}
 	}
 
 }

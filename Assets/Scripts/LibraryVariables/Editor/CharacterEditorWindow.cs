@@ -22,6 +22,7 @@ public class CharacterEditorWindow {
 	Texture2D dispTex;
 	Vector2 dispScrollPos;
 	Vector2 floatRangeRep;
+	private bool showStats;
 
 	//Creation
 	string charUuid;
@@ -167,11 +168,15 @@ public class CharacterEditorWindow {
 		charValues.charClass = (CharClass)EditorGUILayout.ObjectField("Class", charValues.charClass, typeof(CharClass),false);
 		charValues.personalSkill = (CharacterSkill)EditorGUILayout.ObjectField("Personal skill", charValues.personalSkill, typeof(CharacterSkill),false);
 
-		GUILayout.Space(10);
+		GUILayout.Space(30);
 
 		if (charValues.charClass != null) {
-			ShowBaseStats();
-			ShowGrowths();
+			showStats = EditorGUILayout.Toggle("Show stats", showStats);
+			if (showStats) {
+				ShowBaseStats();
+				ShowGrowths();
+			}
+			ShowSupports();
 		}
 
 		GUILayout.EndScrollView();
@@ -256,6 +261,36 @@ public class CharacterEditorWindow {
 		GUILayout.EndHorizontal();
 	}
 	
+	private void ShowSupports() {
+		GUILayout.Label("Supports", EditorStyles.boldLabel);
+		GUILayout.Space(5);
+		for (int i = 0; i < charValues.supports.Count; i++) {
+			GUILayout.Label("Support " + (i+1));
+			GUILayout.BeginHorizontal();
+			charValues.supports[i].partner = (CharData)EditorGUILayout.ObjectField("Partner",charValues.supports[i].partner, typeof(CharData),false);
+			if (GUILayout.Button("X", GUILayout.Width(50))) {
+				GUI.FocusControl(null);
+				charValues.supports.RemoveAt(i);
+				i--;
+			}
+			GUILayout.EndHorizontal();
+			
+			if (charValues.supports[i].partner != null) {
+				GUILayout.BeginHorizontal();
+				EditorGUIUtility.labelWidth = 70;
+				charValues.supports[i].maxlevel = (SupportTuple.SupportLevel)EditorGUILayout.EnumPopup("Max level", charValues.supports[i].maxlevel);
+				charValues.supports[i].speed = (SupportTuple.SupportSpeed)EditorGUILayout.EnumPopup("Level", charValues.supports[i].speed);
+				EditorGUIUtility.labelWidth = 120;
+				GUILayout.EndHorizontal();
+			}
+
+			LibraryEditorWindow.HorizontalLine(Color.black);
+		}
+		if (GUILayout.Button("+")) {
+			charValues.supports.Add(new SupportTuple());
+		}
+	}
+
 	void SelectEntry() {
 		GUI.FocusControl(null);
 		// Nothing selected

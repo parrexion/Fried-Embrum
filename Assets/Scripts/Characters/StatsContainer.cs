@@ -55,6 +55,9 @@ public class StatsContainer {
 	[SerializeField]
 	public List<Boost> boosts = new List<Boost>();
 
+	[Header("Supports")]
+	public List<SupportLevel> supportValues = new List<SupportLevel>();
+
 
 	public StatsContainer(CharacterSaveData saveData, CharData cStats, CharClass charClass) {
 		SetupValues(saveData, cStats, charClass);
@@ -65,7 +68,7 @@ public class StatsContainer {
 		charData = cStats;
 		classData = cStats.charClass;
 		GenerateIV();
-		wpnSkills = cStats.charClass.GenerateBaseWpnSkill();
+		wpnSkills = classData.GenerateBaseWpnSkill();
 	}
 
 	private void SetupValues(CharacterSaveData saveData, CharData cStats, CharClass charClass) {
@@ -101,6 +104,11 @@ public class StatsContainer {
 		eLck = saveData.eLck;
 		eDef = saveData.eDef;
 		eRes = saveData.eRes;
+
+		supportValues = new List<SupportLevel>();
+		for (int i = 0; i < saveData.supports.Count; i++) {
+			supportValues.Add(saveData.supports[i]);
+		}
 		
 		CalculateStats();
 	}

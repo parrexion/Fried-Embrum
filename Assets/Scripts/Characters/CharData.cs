@@ -33,6 +33,9 @@ public class CharData : ScrObjLibraryEntry {
 	public int gDef;
 	public int gRes;
 
+	[Header("Supports")]
+	public List<SupportTuple> supports;
+
 	[Header("Other Data")]
 	public bool mustSurvive;
 	public DialogueEntry deathQuote;
@@ -63,6 +66,8 @@ public class CharData : ScrObjLibraryEntry {
 		gLck = 0;
 		gDef = 0;
 		gRes = 0;
+
+		supports = new List<SupportTuple>();
 
 		mustSurvive = false;
 		deathQuote = null;
@@ -95,7 +100,20 @@ public class CharData : ScrObjLibraryEntry {
 		gDef = cd.gDef;
 		gRes = cd.gRes;
 
+		supports = new List<SupportTuple>();
+		for (int i = 0; i < cd.supports.Count; i++) {
+			supports.Add(cd.supports[i]);
+		}
+
 		mustSurvive = cd.mustSurvive;
 		deathQuote = cd.deathQuote;
+	}
+
+	public SupportTuple GetSupport(CharData partner) {
+		for (int i = 0; i < supports.Count; i++) {
+			if (supports[i].partner.uuid == partner.uuid)
+				return supports[i];
+		}
+		return null;
 	}
 }

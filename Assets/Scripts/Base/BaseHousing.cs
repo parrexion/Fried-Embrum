@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class BaseHousing : InputReceiver {
 
@@ -16,19 +17,30 @@ public class BaseHousing : InputReceiver {
     private House[] houses;
 	private House selectedHouse;
 
+	[Header("Information")]
+	public Text roomNumber;
+	public Text characterName;
+	public Text characterClass;
+	public Text characterLevel;
+	public Image portrait;
+	public Text neighbourStats1;
+	public Text neighbourStats2;
 
-	private void Start () {
+	private int menuMode;
+	private Room targetRoom;
+
+
+	private void Start() {
 		currentIndex.value = 0;
+		menuMode = 0;
 		SetupButtons();
         houses = roomGrid.GetComponentsInChildren<House>();
         for (int i = 0; i < houses.Length; i++) {
-            houses[i].SetupRooms(null,null,null);
+            houses[i].SetupRooms(i+1,null,null,null);
         }
-		houses[0].SetupRooms(saveList.stats[0].charData, null, null);
-		houses[1].SetupRooms(null, saveList.stats[1].charData, null);
-		houses[2].SetupRooms(null, null, saveList.stats[2].charData);
-
-		selectedHouse = houses[0].SelectRoom(0);
+		houses[0].SetupRooms(1, saveList.stats[0], null, null);
+		houses[1].SetupRooms(2, null, saveList.stats[1], null);
+		houses[2].SetupRooms(3, null, null, saveList.stats[2]);
 	}
 
     public override void OnMenuModeChanged() {
@@ -36,32 +48,75 @@ public class BaseHousing : InputReceiver {
 		UpdateButtons();
 	}
 
+	public override void OnOkButton() {
+		if (menuMode == 0) {
+			if (currentIndex.value == 0) {
+				selectedHouse = houses[0].HoverRoom(0);
+				UpdateSelectedHouse();
+				menuMode = 1;
+				menuAcceptEvent.Invoke();
+			}
+		}
+		else if (menuMode == 1) {
+			if (!targetRoom) {
+				selectedHouse.SelectRoom(true);
+				targetRoom = selectedHouse.GetSelectedRoom();
+			}
+			else {
+				Room secondRoom = selectedHouse.GetSelectedRoom();
+				Room.SwapRoom(targetRoom, secondRoom);
+				targetRoom = null;
+				secondRoom.SetHover(true);
+				UpdateSelectedHouse();
+			}
+		}
+	}
+
+	public override void OnBackButton() {
+		if (menuMode == 0) {
+
+		}
+		else if (menuMode == 1) {
+			selectedHouse.HideRoom();
+			menuMode = 0;
+			menuBackEvent.Invoke();
+		}
+	}
+
     public override void OnUpArrow() {
 		if (!active)
 			return;
 
-		// currentIndex.value--;
-		// if (currentIndex.value < 0) {
-		// 	currentIndex.value = saveList.stats.Count-1;
-		// }
-		// UpdateButtons();
-		// housingChangedEvent.Invoke();
-
-		selectedHouse = selectedHouse.MoveUp();
+		if (menuMode == 0) {
+			currentIndex.value--;
+			if (currentIndex.value < 0) {
+				currentIndex.value = saveList.stats.Count-1;
+			}
+			UpdateButtons();
+			housingChangedEvent.Invoke();
+		}
+		else if (menuMode == 1) {
+			selectedHouse = selectedHouse.MoveUp();
+			UpdateSelectedHouse();
+		}
 	}
 
     public override void OnDownArrow() {
 		if (!active)
 			return;
 
-		// currentIndex.value++;
-		// if (currentIndex.value >= saveList.stats.Count) {
-		// 	currentIndex.value = 0;
-		// }
-		// UpdateButtons();
-		// housingChangedEvent.Invoke();
-
-		selectedHouse = selectedHouse.MoveDown();
+		if (menuMode == 0) {
+			currentIndex.value++;
+			if (currentIndex.value >= saveList.stats.Count) {
+				currentIndex.value = 0;
+			}
+			UpdateButtons();
+			housingChangedEvent.Invoke();
+		}
+		else if (menuMode == 1) {
+			selectedHouse = selectedHouse.MoveDown();
+			UpdateSelectedHouse();
+		}
 	}
     
 	public void SetupButtons() {
@@ -83,18 +138,66 @@ public class BaseHousing : InputReceiver {
 	}
 
     public override void OnLeftArrow() {
-		selectedHouse = selectedHouse.MoveLeft();
+		if (menuMode == 1) {
+			selectedHouse = selectedHouse.MoveLeft();
+			UpdateSelectedHouse();
+		}
 	}
     
     public override void OnRightArrow() {
-		
-		selectedHouse = selectedHouse.MoveRight();
+		if (menuMode == 1) {
+			selectedHouse = selectedHouse.MoveRight();
+			UpdateSelectedHouse();
+		}
+	}
+
+	private void UpdateSelectedHouse() {
+		Room currentRoom = selectedHouse.GetSelectedRoom();
+		StatsContainer data = currentRoom.resident;
+		roomNumber.text = string.Format("Room  {0} - {1}", selectedHouse.number, currentRoom.number);
+		characterName.text = (data != null) ? data.charData.entryName : "";
+		characterClass.text = (data != null) ? /*"Lv 20  " +*/ data.classData.entryName : "";
+		characterLevel.text = (data != null) ? "Level  " + data.level : "";
+		portrait.sprite = (data != null) ? data.charData.bigPortrait : null;
+
+		List<Room> neighbours = selectedHouse.GetNeighbours();
+		string nr1 = "", nr2 = "";
+		if (data != null) {
+			if (neighbours.Count > 0) {
+				nr1 += neighbours[0].resident.charData.entryName;
+				SupportTuple support = neighbours[0].resident.charData.GetSupport(data.charData);
+				if (support != null) {
+					nr1 += "\nRank " + support.maxlevel + "  " + support.GetSpeedString();
+				}
+				else {
+					nr1 += "\nRank -  (x)";
+				}
+			}
+			else {
+				nr1 = "-Empty-";
+			}
+
+			if (neighbours.Count > 1) {
+				nr2 += neighbours[1].resident.charData.entryName;
+				SupportTuple support = neighbours[1].resident.charData.GetSupport(data.charData);
+				if (support != null) {
+					nr2 += "\nRank " + support.maxlevel + "  " + support.GetSpeedString();
+				}
+				else {
+					nr2 += "\nRank -  (x)";
+				}
+			}
+			else {
+				nr2 = "-Empty-";
+			}
+		}
+
+		neighbourStats1.text = nr1;
+		neighbourStats2.text = nr2;
 	}
 
 
-    public override void OnBackButton() { }
     public override void OnLButton() { }
-    public override void OnOkButton() { }
     public override void OnRButton() { }
     public override void OnStartButton() { }
     public override void OnXButton() { }
