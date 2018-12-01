@@ -34,7 +34,7 @@ public class CharacterSaveData {
 	public float eRes;
 
 	[Header("Supports")]
-	public List<SupportLevel> supports;
+	public List<SupportValue> supports;
 	
 
 	public CharacterSaveData() {
@@ -86,8 +86,8 @@ public class CharacterSaveData {
 		eDef = stats.eDef;
 		eRes = stats.eRes;
 
-		supports = new List<SupportLevel>();
-		for (int i = 0; i < supports.Count; i++) {
+		supports = new List<SupportValue>();
+		for (int i = 0; i < stats.supportValues.Count; i++) {
 			supports.Add(stats.supportValues[i]);
 		}
 	}

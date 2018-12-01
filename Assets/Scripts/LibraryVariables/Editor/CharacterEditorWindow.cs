@@ -278,7 +278,7 @@ public class CharacterEditorWindow {
 			if (charValues.supports[i].partner != null) {
 				GUILayout.BeginHorizontal();
 				EditorGUIUtility.labelWidth = 70;
-				charValues.supports[i].maxlevel = (SupportTuple.SupportLevel)EditorGUILayout.EnumPopup("Max level", charValues.supports[i].maxlevel);
+				charValues.supports[i].maxlevel = (SupportTuple.SupportLetter)EditorGUILayout.EnumPopup("Max level", charValues.supports[i].maxlevel);
 				charValues.supports[i].speed = (SupportTuple.SupportSpeed)EditorGUILayout.EnumPopup("Level", charValues.supports[i].speed);
 				EditorGUIUtility.labelWidth = 120;
 				GUILayout.EndHorizontal();

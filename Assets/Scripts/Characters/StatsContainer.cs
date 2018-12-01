@@ -56,7 +56,7 @@ public class StatsContainer {
 	public List<Boost> boosts = new List<Boost>();
 
 	[Header("Supports")]
-	public List<SupportLevel> supportValues = new List<SupportLevel>();
+	public List<SupportValue> supportValues = new List<SupportValue>();
 
 
 	public StatsContainer(CharacterSaveData saveData, CharData cStats, CharClass charClass) {
@@ -105,9 +105,13 @@ public class StatsContainer {
 		eDef = saveData.eDef;
 		eRes = saveData.eRes;
 
-		supportValues = new List<SupportLevel>();
+		supportValues = new List<SupportValue>();
+		// for (int i = 0; i < charData.supports.Count; i++) {
+		// 	supportValues.Add(new SupportValue(){uuid = charData.supports[i].partner.uuid});
+		// }
 		for (int i = 0; i < saveData.supports.Count; i++) {
 			supportValues.Add(saveData.supports[i]);
+			Debug.Log("Added support value " + supportValues[i].uuid + " = " + supportValues[i].value);
 		}
 		
 		CalculateStats();
@@ -221,4 +225,11 @@ public class StatsContainer {
 		CalculateStats();
 	}
 
+	public int GetSupportValue(string id) {
+		for (int i = 0; i < supportValues.Count; i++) {
+			if (supportValues[i].uuid == id)
+				return supportValues[i].value;
+		}
+		return 0;
+	}
 }

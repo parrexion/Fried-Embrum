@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class SupportLevel {
+public class SupportValue {
 
 	public string uuid;
 	public int value;
@@ -12,11 +12,11 @@ public class SupportLevel {
 
 [System.Serializable]
 public class SupportTuple {
-	public enum SupportLevel { NONE, C, B, A, S }
+	public enum SupportLetter { NONE, C, B, A, S, X }
 	public enum SupportSpeed { NORMAL, FAST, VERYFAST, SLOW, VERYSLOW }
 
 	public CharData partner;
-	public SupportLevel maxlevel;
+	public SupportLetter maxlevel;
 	public SupportSpeed speed;
 
 	public string GetSpeedString(){
@@ -35,5 +35,23 @@ public class SupportTuple {
 		}
 
 		return ("(N/A)");
+	}
+
+	public SupportLetter CalculateLevel(int value) {
+		if (value >= 1000) {
+			return SupportLetter.S;
+		}
+		else if (value >= 750) {
+			return SupportLetter.A;
+		}
+		else if (value >= 500) {
+			return SupportLetter.B;
+		}
+		else if (value >= 250) {
+			return SupportLetter.C;
+		}
+		else {
+			return SupportLetter.X;
+		}
 	}
 }

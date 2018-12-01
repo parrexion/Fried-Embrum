@@ -156,10 +156,10 @@ public class BaseHousing : InputReceiver {
 		StatsContainer data = currentRoom.resident;
 		roomNumber.text = string.Format("Room  {0} - {1}", selectedHouse.number, currentRoom.number);
 		characterName.text = (data != null) ? data.charData.entryName : "";
-		characterClass.text = (data != null) ? /*"Lv 20  " +*/ data.classData.entryName : "";
+		characterClass.text = (data != null) ? data.classData.entryName : "";
 		characterLevel.text = (data != null) ? "Level  " + data.level : "";
 		portrait.sprite = (data != null) ? data.charData.bigPortrait : null;
-
+Fixa support level lista
 		List<Room> neighbours = selectedHouse.GetNeighbours();
 		string nr1 = "", nr2 = "";
 		if (data != null) {
@@ -167,7 +167,8 @@ public class BaseHousing : InputReceiver {
 				nr1 += neighbours[0].resident.charData.entryName;
 				SupportTuple support = neighbours[0].resident.charData.GetSupport(data.charData);
 				if (support != null) {
-					nr1 += "\nRank " + support.maxlevel + "  " + support.GetSpeedString();
+					int supportValue = data.GetSupportValue(neighbours[0].resident.charData.uuid);
+					nr1 += "\nRank " + support.CalculateLevel(supportValue) + "  " + support.GetSpeedString();
 				}
 				else {
 					nr1 += "\nRank -  (x)";
@@ -181,7 +182,8 @@ public class BaseHousing : InputReceiver {
 				nr2 += neighbours[1].resident.charData.entryName;
 				SupportTuple support = neighbours[1].resident.charData.GetSupport(data.charData);
 				if (support != null) {
-					nr2 += "\nRank " + support.maxlevel + "  " + support.GetSpeedString();
+					int supportValue = data.GetSupportValue(neighbours[1].resident.charData.uuid);
+					nr2 += "\nRank " + support.CalculateLevel(supportValue) + "  " + support.GetSpeedString();
 				}
 				else {
 					nr2 += "\nRank -  (x)";
