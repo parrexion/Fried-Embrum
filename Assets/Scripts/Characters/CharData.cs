@@ -116,4 +116,12 @@ public class CharData : ScrObjLibraryEntry {
 		}
 		return null;
 	}
+
+	public SupportTuple GetSupport(string uuid) {
+		for (int i = 0; i < supports.Count; i++) {
+			if (supports[i].partner.uuid == uuid)
+				return supports[i];
+		}
+		return null;
+	}
 }

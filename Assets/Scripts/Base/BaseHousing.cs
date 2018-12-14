@@ -9,8 +9,12 @@ public class BaseHousing : InputReceiver {
 	[Header("Button menu")]
 	public MyButton[] buttons;
     public SaveListVariable saveList;
-	public IntVariable currentIndex;
     public UnityEvent housingChangedEvent;
+
+	[Header("Canvases")]
+	public GameObject basicCanvas;
+	public GameObject houseCanvas;
+	public GameObject supportCanvas;
 
     [Header("Housing")]
     public GameObject roomGrid;
@@ -26,14 +30,17 @@ public class BaseHousing : InputReceiver {
 	public Text neighbourStats1;
 	public Text neighbourStats2;
 
+	[Header("Supports")]
+	public SupportList supportList;
+
+	private int currentIndex;
 	private int menuMode;
 	private Room targetRoom;
 
 
 	private void Start() {
-		currentIndex.value = 0;
+		currentIndex = 0;
 		menuMode = 0;
-		SetupButtons();
         houses = roomGrid.GetComponentsInChildren<House>();
         for (int i = 0; i < houses.Length; i++) {
             houses[i].SetupRooms(i+1,null,null,null);
@@ -41,6 +48,9 @@ public class BaseHousing : InputReceiver {
 		houses[0].SetupRooms(1, saveList.stats[0], null, null);
 		houses[1].SetupRooms(2, null, saveList.stats[1], null);
 		houses[2].SetupRooms(3, null, null, saveList.stats[2]);
+		basicCanvas.SetActive(true);
+		houseCanvas.SetActive(false);
+		supportCanvas.SetActive(false);
 	}
 
     public override void OnMenuModeChanged() {
@@ -50,10 +60,18 @@ public class BaseHousing : InputReceiver {
 
 	public override void OnOkButton() {
 		if (menuMode == 0) {
-			if (currentIndex.value == 0) {
+			if (currentIndex == 0) {
+				basicCanvas.SetActive(false);
+				houseCanvas.SetActive(true);
 				selectedHouse = houses[0].HoverRoom(0);
 				UpdateSelectedHouse();
 				menuMode = 1;
+				menuAcceptEvent.Invoke();
+			}
+			else if (currentIndex == 1) {
+				basicCanvas.SetActive(false);
+				supportCanvas.SetActive(true);
+				menuMode = 2;
 				menuAcceptEvent.Invoke();
 			}
 		}
@@ -70,6 +88,9 @@ public class BaseHousing : InputReceiver {
 				UpdateSelectedHouse();
 			}
 		}
+		else if (menuMode == 2) {
+			supportList.SelectCharacter();
+		}
 	}
 
 	public override void OnBackButton() {
@@ -77,9 +98,20 @@ public class BaseHousing : InputReceiver {
 
 		}
 		else if (menuMode == 1) {
+			basicCanvas.SetActive(true);
+			houseCanvas.SetActive(false);
 			selectedHouse.HideRoom();
 			menuMode = 0;
 			menuBackEvent.Invoke();
+		}
+		else if (menuMode == 2) {
+			bool res = supportList.DeselectCharacter();
+			if (res) {
+				basicCanvas.SetActive(true);
+				supportCanvas.SetActive(false);
+				menuMode = 0;
+				menuBackEvent.Invoke();
+			}
 		}
 	}
 
@@ -88,16 +120,16 @@ public class BaseHousing : InputReceiver {
 			return;
 
 		if (menuMode == 0) {
-			currentIndex.value--;
-			if (currentIndex.value < 0) {
-				currentIndex.value = saveList.stats.Count-1;
-			}
+			currentIndex = OPMath.FullLoop(0, saveList.stats.Count-1, currentIndex-1);
 			UpdateButtons();
 			housingChangedEvent.Invoke();
 		}
 		else if (menuMode == 1) {
 			selectedHouse = selectedHouse.MoveUp();
 			UpdateSelectedHouse();
+		}
+		else if (menuMode == 2) {
+			supportList.MoveSelection(-1);
 		}
 	}
 
@@ -106,10 +138,7 @@ public class BaseHousing : InputReceiver {
 			return;
 
 		if (menuMode == 0) {
-			currentIndex.value++;
-			if (currentIndex.value >= saveList.stats.Count) {
-				currentIndex.value = 0;
-			}
+			currentIndex = OPMath.FullLoop(0, saveList.stats.Count-1, currentIndex+1);
 			UpdateButtons();
 			housingChangedEvent.Invoke();
 		}
@@ -117,23 +146,14 @@ public class BaseHousing : InputReceiver {
 			selectedHouse = selectedHouse.MoveDown();
 			UpdateSelectedHouse();
 		}
-	}
-    
-	public void SetupButtons() {
-		// for (int i = 0; i < buttons.Length; i++) {
-		// 	if (i < saveList.stats.Count) {
-		// 		buttons[i].buttonText.text = saveList.stats[i].charData.entryName;
-		// 		buttons[i].SetSelected(i == currentIndex.value);
-		// 	}
-		// 	else {
-		// 		buttons[i].gameObject.SetActive(false);
-		// 	}
-		// }
+		else if (menuMode == 2) {
+			supportList.MoveSelection(1);
+		}
 	}
 
 	private void UpdateButtons() {
 		for (int i = 0; i < saveList.stats.Count; i++) {
-			buttons[i].SetSelected(i == currentIndex.value);
+			buttons[i].SetSelected(i == currentIndex);
 		}
 	}
 
@@ -159,7 +179,7 @@ public class BaseHousing : InputReceiver {
 		characterClass.text = (data != null) ? data.classData.entryName : "";
 		characterLevel.text = (data != null) ? "Level  " + data.level : "";
 		portrait.sprite = (data != null) ? data.charData.bigPortrait : null;
-Fixa support level lista
+
 		List<Room> neighbours = selectedHouse.GetNeighbours();
 		string nr1 = "", nr2 = "";
 		if (data != null) {

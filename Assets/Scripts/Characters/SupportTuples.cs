@@ -10,10 +10,12 @@ public class SupportValue {
 }
 
 
+
+public enum SupportLetter { NONE = 0, C = 1, B = 2, A = 3, S = 4, X = -1 }
+public enum SupportSpeed { NORMAL, FAST, VERYFAST, SLOW, VERYSLOW }
+
 [System.Serializable]
 public class SupportTuple {
-	public enum SupportLetter { NONE, C, B, A, S, X }
-	public enum SupportSpeed { NORMAL, FAST, VERYFAST, SLOW, VERYSLOW }
 
 	public CharData partner;
 	public SupportLetter maxlevel;

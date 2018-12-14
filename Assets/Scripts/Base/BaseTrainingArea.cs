@@ -8,8 +8,8 @@ public class BaseTrainingArea : InputReceiver {
 
 	[Header("Button menu")]
 	public MyButton[] buttons;
+	public Text menuTitle;
     public SaveListVariable saveList;
-	public IntVariable currentIndex;
     public UnityEvent characterChangedEvent;
 
 	[Header("Information box")]
@@ -35,10 +35,15 @@ public class BaseTrainingArea : InputReceiver {
 	public Text currentExp;
 	public IntVariable totalBonusExp;
 
+	private int menuMode;
+	private int currentIndex;
+	private int characterIndex;
+
 
 	private void Start () {
-		currentIndex.value = 0;
-		SetupButtons();
+		menuTitle.text = "TRAINING";
+		menuMode = 0;
+		currentIndex = 0;
 	}
 
     public override void OnMenuModeChanged() {
@@ -49,32 +54,47 @@ public class BaseTrainingArea : InputReceiver {
     public override void OnUpArrow() {
 		if (!active)
 			return;
-
-		currentIndex.value--;
-		if (currentIndex.value < 0) {
-			currentIndex.value = saveList.stats.Count-1;
+		if (menuMode == 0) {
+			currentIndex = OPMath.FullLoop(0, buttons.Length-1, currentIndex-1);
+			UpdateButtons();
 		}
-		UpdateButtons();
-		characterChangedEvent.Invoke();
+		else if (menuMode == 1) {
+			characterIndex = OPMath.FullLoop(0, saveList.stats.Count-1, characterIndex-1);
+			characterChangedEvent.Invoke();
+		}
+		else if (menuMode == 2) {
+			characterIndex = OPMath.FullLoop(0, saveList.stats.Count-1, characterIndex-1);
+			characterChangedEvent.Invoke();
+		}
 	}
 
     public override void OnDownArrow() {
 		if (!active)
 			return;
-
-		currentIndex.value++;
-		if (currentIndex.value >= saveList.stats.Count) {
-			currentIndex.value = 0;
+		if (menuMode == 0) {
+			currentIndex = OPMath.FullLoop(0, buttons.Length-1, currentIndex+1);
+			UpdateButtons();
 		}
-		UpdateButtons();
-		characterChangedEvent.Invoke();
+		else if (menuMode == 1) {
+			characterIndex = OPMath.FullLoop(0, buttons.Length-1, characterIndex+1);
+			characterChangedEvent.Invoke();
+		}
+		else if (menuMode == 2) {
+			characterIndex = OPMath.FullLoop(0, buttons.Length-1, characterIndex+1);
+			characterChangedEvent.Invoke();
+		}
 	}
+
+    public override void OnOkButton() { }
+    public override void OnBackButton() { }
+    public override void OnLeftArrow() { }
+    public override void OnRightArrow() { }
 
 	public void SetupButtons() {
 		for (int i = 0; i < buttons.Length; i++) {
 			if (i < saveList.stats.Count) {
 				buttons[i].buttonText.text = saveList.stats[i].charData.entryName;
-				buttons[i].SetSelected(i == currentIndex.value);
+				buttons[i].SetSelected(i == currentIndex);
 			}
 			else {
 				buttons[i].gameObject.SetActive(false);
@@ -83,16 +103,22 @@ public class BaseTrainingArea : InputReceiver {
 	}
 
 	private void UpdateButtons() {
-		for (int i = 0; i < saveList.stats.Count; i++) {
-			buttons[i].SetSelected(i == currentIndex.value);
+		if (menuMode == 0) {
+			for (int i = 0; i < buttons.Length; i++) {
+				buttons[i].SetSelected(i == currentIndex);
+			}
 		}
-        // previousItem.sprite = upgradedItem.sprite = upgrades[currentIndex.value].item.icon;
-		ShowCharacter();
-		ShowBonusExp();
+		else {
+			for (int i = 0; i < saveList.stats.Count; i++) {
+				buttons[i].SetSelected(i == characterIndex);
+			}
+			ShowCharacter();
+			ShowBonusExp();
+		}
 	}
 
 	private void ShowCharacter() {
-		StatsContainer stats = saveList.stats[currentIndex.value];
+		StatsContainer stats = saveList.stats[characterIndex];
 
 		characterName.text = stats.charData.entryName;
 		level.text = "Level:  " + stats.level.ToString();
@@ -110,7 +136,7 @@ public class BaseTrainingArea : InputReceiver {
 	}
 
 	private void ShowBonusExp() {
-		StatsContainer stats = saveList.stats[currentIndex.value];
+		StatsContainer stats = saveList.stats[characterIndex];
 		portrait.sprite = stats.charData.portrait;
 		bonusExp.text = "Available EXP:  " + totalBonusExp.value;
 		spendExp.text = "34";
@@ -119,12 +145,8 @@ public class BaseTrainingArea : InputReceiver {
 	}
 
 
-    public override void OnBackButton() { }
     public override void OnLButton() { }
-    public override void OnLeftArrow() { }
-    public override void OnOkButton() { }
     public override void OnRButton() { }
-    public override void OnRightArrow() { }
     public override void OnStartButton() { }
     public override void OnXButton() { }
     public override void OnYButton() { }
