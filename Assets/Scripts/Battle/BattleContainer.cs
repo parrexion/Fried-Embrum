@@ -426,7 +426,7 @@ public class BattleContainer : MonoBehaviour {
 					expMeter.gameObject.SetActive(false);
 					levelupScript.SetupStats(player.stats.level,player.stats);
 					Debug.Log("LEVELUP!");
-					sfxQueue.value.Enqueue(levelupFanfare.clip);
+					sfxQueue.Enqueue(levelupFanfare);
 					playSfxEvent.Invoke();
 					yield return StartCoroutine(levelupScript.RunLevelup(player.stats));
 					CharacterSkill skill = player.stats.classData.AwardSkills(player.stats.level);

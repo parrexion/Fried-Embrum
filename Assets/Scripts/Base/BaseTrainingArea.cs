@@ -9,31 +9,15 @@ public class BaseTrainingArea : InputReceiver {
 	[Header("Button menu")]
 	public MyButton[] buttons;
 	public Text menuTitle;
-    public SaveListVariable saveList;
-    public UnityEvent characterChangedEvent;
 
-	[Header("Information box")]
-	public Text characterName;
-	public Text level;
-	public Text className;
+	[Header("Views")]
+	public GameObject basicView;
+	public GameObject bexpView;
+	public GameObject classView;
 
-	public Text hpText;
-	public Text atkText;
-	public Text sklText;
-	public Text spdText;
-	public Text lckText;
-	public Text defText;
-	public Text resText;
-	public Text conText;
-	public Text movText;
-
-	[Header("Bonus EXP")]
-	public Image portrait;
-	public Text bonusExp;
-	public Text spendExp;
-	public Text currentLevel;
-	public Text currentExp;
-	public IntVariable totalBonusExp;
+	[Header("Handlers")]
+	public BexpController bexpController;
+	public ClassChangeController changeController;
 
 	private int menuMode;
 	private int currentIndex;
@@ -44,6 +28,9 @@ public class BaseTrainingArea : InputReceiver {
 		menuTitle.text = "TRAINING";
 		menuMode = 0;
 		currentIndex = 0;
+		basicView.SetActive(true);
+		bexpView.SetActive(false);
+		classView.SetActive(false);
 	}
 
     public override void OnMenuModeChanged() {
@@ -59,12 +46,10 @@ public class BaseTrainingArea : InputReceiver {
 			UpdateButtons();
 		}
 		else if (menuMode == 1) {
-			characterIndex = OPMath.FullLoop(0, saveList.stats.Count-1, characterIndex-1);
-			characterChangedEvent.Invoke();
+			bexpController.MoveSelection(-1);
 		}
 		else if (menuMode == 2) {
-			characterIndex = OPMath.FullLoop(0, saveList.stats.Count-1, characterIndex-1);
-			characterChangedEvent.Invoke();
+			changeController.MoveSelection(-1);
 		}
 	}
 
@@ -76,72 +61,75 @@ public class BaseTrainingArea : InputReceiver {
 			UpdateButtons();
 		}
 		else if (menuMode == 1) {
-			characterIndex = OPMath.FullLoop(0, buttons.Length-1, characterIndex+1);
-			characterChangedEvent.Invoke();
+			bexpController.MoveSelection(1);
 		}
 		else if (menuMode == 2) {
-			characterIndex = OPMath.FullLoop(0, buttons.Length-1, characterIndex+1);
-			characterChangedEvent.Invoke();
+			changeController.MoveSelection(1);
 		}
 	}
 
-    public override void OnOkButton() { }
-    public override void OnBackButton() { }
-    public override void OnLeftArrow() { }
-    public override void OnRightArrow() { }
-
-	public void SetupButtons() {
-		for (int i = 0; i < buttons.Length; i++) {
-			if (i < saveList.stats.Count) {
-				buttons[i].buttonText.text = saveList.stats[i].charData.entryName;
-				buttons[i].SetSelected(i == currentIndex);
+    public override void OnOkButton() {
+		if (menuMode == 0) {
+			if (currentIndex == 0) {
+				menuMode = 1;
+				menuTitle.text = "BEXP";
+				bexpView.SetActive(true);
+				basicView.SetActive(false);
+				// bexpList.
 			}
-			else {
-				buttons[i].gameObject.SetActive(false);
+			else if (currentIndex == 1) {
+				menuMode = 2;
+				menuTitle.text = "CLASS";
+				classView.SetActive(true);
+				basicView.SetActive(false);
+			}
+		}
+		else if (menuMode == 1) {
+			bexpController.SelectCharacter();
+		}
+		else if (menuMode == 2) {
+			changeController.SelectCharacter();
+		}
+	}
+
+    public override void OnBackButton() {
+		if (menuMode == 0) {
+
+		}
+		else if (menuMode == 1) {
+			if (bexpController.DeselectCharacter()) {
+				menuMode = 0;
+				menuTitle.text = "TRAINING";
+				basicView.SetActive(true);
+				bexpView.SetActive(false);
+			}
+		}
+		else if (menuMode == 2) {
+			if (changeController.DeselectCharacter()) {
+				menuMode = 0;
+				menuTitle.text = "TRAINING";
+				basicView.SetActive(true);
+				classView.SetActive(false);
 			}
 		}
 	}
+
+    public override void OnLeftArrow() {
+		if (menuMode == 1) {
+			bexpController.UpdateAwardExp(-1);
+		}
+	}
+    public override void OnRightArrow() {
+		if (menuMode == 1) {
+			bexpController.UpdateAwardExp(1);
+		}
+	}
+
 
 	private void UpdateButtons() {
-		if (menuMode == 0) {
-			for (int i = 0; i < buttons.Length; i++) {
-				buttons[i].SetSelected(i == currentIndex);
-			}
+		for (int i = 0; i < buttons.Length; i++) {
+			buttons[i].SetSelected(i == currentIndex);
 		}
-		else {
-			for (int i = 0; i < saveList.stats.Count; i++) {
-				buttons[i].SetSelected(i == characterIndex);
-			}
-			ShowCharacter();
-			ShowBonusExp();
-		}
-	}
-
-	private void ShowCharacter() {
-		StatsContainer stats = saveList.stats[characterIndex];
-
-		characterName.text = stats.charData.entryName;
-		level.text = "Level:  " + stats.level.ToString();
-		className.text = stats.classData.entryName;
-
-		hpText.text  = "HP:  " + stats.hp.ToString();
-		atkText.text = "Atk:  " + stats.atk.ToString();
-		sklText.text = "Skl:  " + stats.skl.ToString();
-		spdText.text = "Spd:  " + stats.spd.ToString();
-		lckText.text = "Lck:  " + stats.lck.ToString();
-		defText.text = "Def:  " + stats.def.ToString();
-		resText.text = "Res:  " + stats.res.ToString();
-		conText.text = "Con:  " + stats.GetConstitution().ToString();
-		movText.text = "Mov:  " + stats.GetMovespeed().ToString();
-	}
-
-	private void ShowBonusExp() {
-		StatsContainer stats = saveList.stats[characterIndex];
-		portrait.sprite = stats.charData.portrait;
-		bonusExp.text = "Available EXP:  " + totalBonusExp.value;
-		spendExp.text = "34";
-		currentLevel.text = "Current level:  " + stats.level;
-		currentExp.text = "Current EXP:   " + stats.currentExp;
 	}
 
 
