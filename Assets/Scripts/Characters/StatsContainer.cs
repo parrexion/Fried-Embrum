@@ -13,6 +13,7 @@ public class StatsContainer {
 	
 	[Header("Player stuff")]
 	public int level;
+	public int currentLevel;
 	public int currentExp;
 	public int[] wpnSkills = new int[WPN_SKILLS];
 
@@ -25,23 +26,14 @@ public class StatsContainer {
 	public int def;
 	public int res;
 
-	[Header("IV values")]
-	public float iHp;
-	public float iAtk;
-	public float iSpd;
-	public float iSkl;
-	public float iLck;
-	public float iDef;
-	public float iRes;
-
 	[Header("EV values")]
-	public float eHp;
-	public float eAtk;
-	public float eSpd;
-	public float eSkl;
-	public float eLck;
-	public float eDef;
-	public float eRes;
+	public int eHp;
+	public int eAtk;
+	public int eSpd;
+	public int eSkl;
+	public int eLck;
+	public int eDef;
+	public int eRes;
 
 	[Header("Boost values")]
 	public int bHp;
@@ -63,11 +55,11 @@ public class StatsContainer {
 		SetupValues(saveData, cStats, charClass);
 	}
 
-	public StatsContainer(CharData cStats, int level) {
+	public StatsContainer(CharData cStats, CharClass cClass, int level) {
 		this.level = level;
 		charData = cStats;
-		classData = cStats.charClass;
-		GenerateIV();
+		classData = cClass;
+		GenerateStartingStats();
 		wpnSkills = classData.GenerateBaseWpnSkill();
 	}
 
@@ -78,8 +70,9 @@ public class StatsContainer {
 		if (saveData == null) {
 			return;
 		}
-
+// Fixa level och current level överallt
 		level = saveData.level;
+		currentLevel = saveData.currentLevel;
 		if (level == -1)
 			return;
 		currentExp = saveData.currentExp;
@@ -88,14 +81,6 @@ public class StatsContainer {
 		for (int i = 0; i < saveData.wpnSkills.Length; i++) {
 			wpnSkills[i] = saveData.wpnSkills[i];
 		}
-
-		iHp = saveData.iHp;
-		iAtk = saveData.iAtk;
-		iSpd = saveData.iSpd;
-		iSkl = saveData.iSkl;
-		iLck = saveData.iLck;
-		iDef = saveData.iDef;
-		iRes = saveData.iRes;
 	
 		eHp = saveData.eHp;
 		eAtk = saveData.eAtk;
@@ -117,19 +102,24 @@ public class StatsContainer {
 		CalculateStats();
 	}
 
-	/// <summary>
-	/// Generates new IV values. Overwrites the previous ones.
-	/// </summary>
-	public void GenerateIV() {
-		iHp = Random.Range(0f,1f);
-		iAtk = Random.Range(0f,1f);
-		iSkl = Random.Range(0f,1f);
-		iSpd = Random.Range(0f,1f);
-		iLck = Random.Range(0f,1f);
-		iDef = Random.Range(0f,1f);
-		iRes = Random.Range(0f,1f);
+	public void GenerateStartingStats() {
+		eHp = charData.hp + classData.hp;
+		eAtk = charData.atk + classData.atk;
+		eSpd = charData.spd + classData.spd;
+		eSkl = charData.skl + classData.skl;
+		eLck = charData.lck + classData.lck;
+		eDef = charData.def + classData.def;
+		eRes = charData.res + classData.res;
+
+		for (int i = 1; i < level; i++) {
+			GainLevel();
+			level--;
+		}
 	}
 
+	/// <summary>
+	/// Sums up the stat boosts the character has active at the moment.
+	/// </summary>
 	private void GenerateBoosts() {
 		bHp = 0;
 		bAtk = 0;
@@ -154,14 +144,44 @@ public class StatsContainer {
 		if (charData == null)
 			return;
 		GenerateBoosts();
-		int calcLevel = level - 1;
-		hp = charData.hp + classData.hp + bHp + (int)(0.01f * calcLevel * (classData.gHp+charData.gHp) + iHp + eHp);
-		atk = charData.atk + classData.atk + bAtk + (int)(0.01f * calcLevel * (classData.gAtk+charData.gAtk) + iAtk + eAtk);
-		spd = charData.spd + classData.spd + bSpd + (int)(0.01f * calcLevel * (classData.gSpd+charData.gSpd) + iSpd + eSpd);
-		skl = charData.skl + classData.skl + bSkl + (int)(0.01f * calcLevel * (classData.gSkl+charData.gSkl) + iSkl + eSkl);
-		lck = charData.lck + classData.lck + bLck + (int)(0.01f * calcLevel * (classData.gLck+charData.gLck) + iLck + eLck);
-		def = charData.def + classData.def + bDef + (int)(0.01f * calcLevel * (classData.gDef+charData.gDef) + iDef + eDef);
-		res = charData.res + classData.res + bRes + (int)(0.01f * calcLevel * (classData.gRes+charData.gRes) + iRes + eRes);
+		hp = bHp + eHp;
+		atk = bAtk + eAtk;
+		spd = bSpd + eSpd;
+		skl = bSkl + eSkl;
+		lck = bLck + eLck;
+		def = bDef + eDef;
+		res = bRes + eRes;
+	}
+
+	public void GainLevel() {
+		level++;
+		currentLevel++;
+		eHp += (int)(0.01f * (classData.gHp+charData.gHp + Random.Range(0,100)));
+		eAtk += (int)(0.01f * (classData.gAtk+charData.gAtk + Random.Range(0,100)));
+		eSpd += (int)(0.01f * (classData.gSpd+charData.gSpd + Random.Range(0,100)));
+		eSkl += (int)(0.01f * (classData.gSkl+charData.gSkl + Random.Range(0,100)));
+		eLck += (int)(0.01f * (classData.gLck+charData.gLck + Random.Range(0,100)));
+		eDef += (int)(0.01f * (classData.gDef+charData.gDef + Random.Range(0,100)));
+		eRes += (int)(0.01f * (classData.gRes+charData.gRes + Random.Range(0,100)));
+
+		CalculateStats();
+	}
+
+	public void ChangeClass(CharClass newClass) {
+		while(currentLevel <= 20) {
+			level++;
+			currentLevel++;
+		}
+		currentLevel = 1;
+		eHp += newClass.hp - classData.hp;
+		eAtk += newClass.atk - classData.atk;
+		eSpd += newClass.spd - classData.spd;
+		eSkl += newClass.skl - classData.skl;
+		eLck += newClass.lck - classData.lck;
+		eDef += newClass.def - classData.def;
+		eRes += newClass.res - classData.res;
+		classData = newClass;
+		CalculateStats();
 	}
 
 	/// <summary>
@@ -202,13 +222,13 @@ public class StatsContainer {
 	}
 
 	public void BoostBaseStats(Boost boost) {
-		iHp += boost.hp;
-		iAtk += boost.atk;
-		iSpd += boost.spd;
-		iSkl += boost.skl;
-		iLck += boost.lck;
-		iDef += boost.def;
-		iRes += boost.res;
+		eHp += boost.hp;
+		eAtk += boost.atk;
+		eSpd += boost.spd;
+		eSkl += boost.skl;
+		eLck += boost.lck;
+		eDef += boost.def;
+		eRes += boost.res;
 		CalculateStats();
 	}
 

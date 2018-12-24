@@ -136,7 +136,7 @@ public class BexpController : MonoBehaviour {
 		characterName.text = stats.charData.entryName;
 		portrait.sprite = entryList[currentListIndex].portrait.sprite;
 		className.text = stats.classData.entryName;
-		level.text = "Level: " + stats.level.ToString();
+		level.text = "Level: " + stats.currentLevel.ToString();
 		exp.text = "EXP: " + stats.currentExp.ToString();
 
 		hpText.text  = "HP:  " + stats.hp.ToString();
@@ -180,8 +180,9 @@ public class BexpController : MonoBehaviour {
 				stopSfxEvent.Invoke();
 				yield return new WaitForSeconds(1f * slowGameSpeed.value / currentGameSpeed.value);
 				expMeter.gameObject.SetActive(false);
-				levelupScript.SetupStats(stats.level,stats);
+				levelupScript.SetupStats(stats, true);
 				Debug.Log("LEVELUP!");
+				stats.GainLevel();
 				sfxQueue.Enqueue(levelupFanfare);
 				playSfxEvent.Invoke();
 				yield return StartCoroutine(levelupScript.RunLevelup(stats));

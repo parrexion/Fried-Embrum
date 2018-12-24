@@ -8,6 +8,7 @@ public class LevelupScript : MonoBehaviour {
 
 	public GameObject blackout;
 	public GameObject levelupCongrats;
+	public GameObject classChangeCongrats;
 	public GameObject levelupStats;
 
 	[Header("Sound")]
@@ -57,13 +58,14 @@ public class LevelupScript : MonoBehaviour {
 		resText.text = _res.ToString();
 	}
 
-	public void SetupStats(int playerLevel, StatsContainer characterStats) {
+	public void SetupStats(StatsContainer characterStats, bool levelup) {
 		if (blackout != null)
 			blackout.SetActive(true);
-		levelupCongrats.SetActive(true);
+		levelupCongrats.SetActive(levelup);
+		classChangeCongrats.SetActive(!levelup);
 		levelupStats.SetActive(false);
 
-		_level = playerLevel;
+		_level = characterStats.currentLevel;
 		_hp = characterStats.hp;
 		_atk = characterStats.atk;
 		_spd = characterStats.spd;
@@ -83,67 +85,65 @@ public class LevelupScript : MonoBehaviour {
 	}
 
 	public IEnumerator RunLevelup(StatsContainer stats) {
-
 		yield return new WaitForSeconds(2f);
 
 		levelupCongrats.SetActive(false);
+		classChangeCongrats.SetActive(false);
 		levelupStats.SetActive(true);
-
+	
 		yield return new WaitForSeconds(1.5f);
 
-		_level++;
-		stats.level++;
-		levelLevel.text = "+1";
-		stats.CalculateStats();
+		levelLevel.text = (stats.currentLevel - _level > 0) ? "+1" : "New";
+		_level = stats.currentLevel;
 		sfxQueue.Enqueue(levelupPing);
 		playSfxEvent.Invoke();
 		yield return new WaitForSeconds(0.2f);
 
-		if (stats.hp > _hp) {
-			_hp++;
-			levelHp.text = "+1";
+		if (stats.hp != _hp) {
+			levelHp.text = (stats.hp - _hp > 0) ? "+"+(stats.hp - _hp) : (stats.hp - _hp).ToString();
+			_hp = stats.hp;
 			sfxQueue.Enqueue(levelupPing);
 			playSfxEvent.Invoke();
 			yield return new WaitForSeconds(0.2f);
 		}
-		if (stats.atk > _atk) {
-			_atk++;
-			levelAtk.text = "+1";
+		if (stats.atk != _atk) {
+			levelAtk.text = (stats.atk - _atk > 0) ? "+"+(stats.atk - _atk) : (stats.atk - _atk).ToString();
+			_atk = stats.atk;
 			sfxQueue.Enqueue(levelupPing);
 			playSfxEvent.Invoke();
 			yield return new WaitForSeconds(0.2f);
 		}
-		if (stats.spd > _spd) {
-			_spd++;
-			levelSpd.text = "+1";
+		if (stats.spd != _spd) {
+			levelSpd.text = (stats.spd - _spd > 0) ? "+"+(stats.spd - _spd) : (stats.spd - _spd).ToString();
+			_spd = stats.spd;
 			sfxQueue.Enqueue(levelupPing);
 			playSfxEvent.Invoke();
 			yield return new WaitForSeconds(0.2f);
 		}
-		if (stats.skl > _skl) {
-			_skl++;
-			levelSkl.text = "+1";
+		if (stats.skl != _skl) {
+			levelSkl.text = (stats.skl - _skl > 0) ? "+"+(stats.skl - _skl) : (stats.skl - _skl).ToString();
+			_skl = stats.skl;
 			sfxQueue.Enqueue(levelupPing);
 			playSfxEvent.Invoke();
 			yield return new WaitForSeconds(0.2f);
 		}
-		if (stats.lck > _lck) {
-			_lck++;
-			levelLck.text = "+1";
+		if (stats.lck != _lck) {
+			levelLck.text = (stats.lck - _lck > 0) ? "+"+(stats.lck - _lck) : (stats.lck - _lck).ToString();
+			_lck = stats.lck;
 			sfxQueue.Enqueue(levelupPing);
 			playSfxEvent.Invoke();
 			yield return new WaitForSeconds(0.2f);
 		}
-		if (stats.def > _def) {
-			_def++;
-			levelDef.text = "+1";
+		if (stats.def != _def) {
+			levelDef.text = (stats.def - _def > 0) ? "+"+(stats.def - _def) : (stats.def - _def).ToString();
+			_def = stats.def;
 			sfxQueue.Enqueue(levelupPing);
 			playSfxEvent.Invoke();
 			yield return new WaitForSeconds(0.2f);
 		}
-		if (stats.res > _res) {
-			_res++;
-			levelRes.text = "+1";
+		if (stats.res != _res) {
+			levelRes.text = (stats.res - _res > 0) ? "+"+(stats.res - _res) : (stats.res - _res).ToString();
+			_res = stats.res;
 			sfxQueue.Enqueue(levelupPing);
 			playSfxEvent.Invoke();
 			yield return new WaitForSeconds(0.2f);

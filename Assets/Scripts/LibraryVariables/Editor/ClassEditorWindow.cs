@@ -197,6 +197,24 @@ public class ClassEditorWindow {
 		if (GUILayout.Button("+")) {
 			classValues.skillGains.Add(new SkillTuple());
 		}
+		
+		GUILayout.Space(10);
+
+		GUILayout.Label("Class changes", EditorStyles.boldLabel);
+		for (int i = 0; i < classValues.nextClass.Count; i++) {
+			GUILayout.BeginHorizontal();
+			classValues.nextClass[i] = (CharClass)EditorGUILayout.ObjectField("Class",classValues.nextClass[i], typeof(CharClass),false);
+			if (GUILayout.Button("X", GUILayout.Width(50))){
+				classValues.nextClass.RemoveAt(i);
+				i--;
+				continue;
+			}
+			GUILayout.EndHorizontal();
+			LibraryEditorWindow.HorizontalLine(Color.black);
+		}
+		if (GUILayout.Button("+")) {
+			classValues.nextClass.Add(null);
+		}
 
 		GUILayout.EndScrollView();
 		GUILayout.EndArea();

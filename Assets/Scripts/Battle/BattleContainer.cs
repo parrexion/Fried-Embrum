@@ -424,8 +424,9 @@ public class BattleContainer : MonoBehaviour {
 					stopSfxEvent.Invoke();
 					yield return new WaitForSeconds(1f * slowGameSpeed.value / currentGameSpeed.value);
 					expMeter.gameObject.SetActive(false);
-					levelupScript.SetupStats(player.stats.level,player.stats);
+					levelupScript.SetupStats(player.stats, true);
 					Debug.Log("LEVELUP!");
+					player.stats.GainLevel();
 					sfxQueue.Enqueue(levelupFanfare);
 					playSfxEvent.Invoke();
 					yield return StartCoroutine(levelupScript.RunLevelup(player.stats));

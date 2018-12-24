@@ -33,6 +33,9 @@ public class CharClass : ScrObjLibraryEntry {
 	public List<ItemType> weaponSkills = new List<ItemType>();
 	public List<int> weaponLevels = new List<int>();
 	public List<SkillTuple> skillGains = new List<SkillTuple>();
+
+	[Header("Upgrade class")]
+	public List<CharClass> nextClass = new List<CharClass>();
 	
 
 	public override void ResetValues() {
@@ -60,6 +63,8 @@ public class CharClass : ScrObjLibraryEntry {
 		weaponSkills = new List<ItemType>();
 		weaponLevels = new List<int>();
 		skillGains = new List<SkillTuple>();
+
+		nextClass = new List<CharClass>();
 	}
 	
 	public override void CopyValues(ScrObjLibraryEntry other) {
@@ -95,6 +100,11 @@ public class CharClass : ScrObjLibraryEntry {
 		skillGains = new List<SkillTuple>();
 		for (int i = 0; i < cc.skillGains.Count; i++) {
 			skillGains.Add(cc.skillGains[i]);
+		}
+		
+		nextClass = new List<CharClass>();
+		for (int i = 0; i < cc.nextClass.Count; i++) {
+			nextClass.Add(cc.nextClass[i]);
 		}
 	}
 

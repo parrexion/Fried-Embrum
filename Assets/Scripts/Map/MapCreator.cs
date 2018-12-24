@@ -121,7 +121,7 @@ public class MapCreator : MonoBehaviour {
 					tempTile.dialogue = interPos.dialogue;
 					tempTile.gift = interPos.gift;
 					if (interPos.ally.stats != null) {
-						StatsContainer stats = new StatsContainer(interPos.ally.stats, interPos.ally.level);
+						StatsContainer stats = new StatsContainer(interPos.ally.stats, interPos.ally.stats.charClass, interPos.ally.level);
 						InventoryContainer inventory = new InventoryContainer(interPos.ally.inventory);
 						SkillsContainer skills = new SkillsContainer(interPos.ally.skills);
 						tempTile.ally = SpawnPlayerCharacter(interPos.x, interPos.y, stats, inventory, skills, false);
@@ -174,7 +174,7 @@ public class MapCreator : MonoBehaviour {
 			SkillsContainer skills;
 
 			if (pos.stats != null) {
-				stats = new StatsContainer(pos.stats, pos.level);
+				stats = new StatsContainer(pos.stats, pos.stats.charClass, pos.level);
 				inventory = new InventoryContainer(pos.inventory);
 				skills = new SkillsContainer(pos.skills);
 				availableCharacters.stats.Add(stats);
@@ -198,7 +198,7 @@ public class MapCreator : MonoBehaviour {
 		for (int i = 0; i < map.enemies.Count; i++) {
 			EnemyPosition pos = map.enemies[i];
 
-			StatsContainer stats = new StatsContainer(pos.stats, pos.level);
+			StatsContainer stats = new StatsContainer(pos.stats, pos.stats.charClass, pos.level);
 			InventoryContainer inventory = new InventoryContainer(pos.inventory);
 			SkillsContainer skills = new SkillsContainer(pos.skills);
 			List<FightQuote> quotes = new List<FightQuote>();
@@ -288,7 +288,7 @@ public class MapCreator : MonoBehaviour {
 			if (currentTurn.value == pos.spawnTurn) {
 				MapTile tile = battleMap.GetTile(pos.x, pos.y);
 				if (tile.currentCharacter == null) {
-					StatsContainer stats = new StatsContainer(pos.stats, pos.level);
+					StatsContainer stats = new StatsContainer(pos.stats, pos.stats.charClass, pos.level);
 					InventoryContainer inventory = new InventoryContainer(pos.inventory);
 					SkillsContainer skills = new SkillsContainer(pos.skills);
 

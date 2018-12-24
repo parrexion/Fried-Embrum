@@ -21,9 +21,9 @@ public class TrainingListEntry : MonoBehaviour {
 	public void FillData(StatsContainer stats) {
 		portrait.sprite = stats.charData.portrait;
 		entryName.text = stats.charData.entryName;
-		level.text = stats.level.ToString();
+		level.text = stats.currentLevel.ToString();
 		exp.text = stats.currentExp.ToString();
-		currentClass.text = stats.charData.charClass.entryName;
+		currentClass.text = stats.classData.entryName;
 	}
 
 	/// <summary>

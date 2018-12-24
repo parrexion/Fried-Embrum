@@ -7,6 +7,7 @@ public class CharacterSaveData {
 	public string id;
 	public string classID;
 	public int level;
+	public int currentLevel;
 	public int currentExp;
 
 	[Header("Inventory and skills")]
@@ -15,23 +16,14 @@ public class CharacterSaveData {
 	public List<int> invCharges;
 	public List<string> skills;
 
-	[Header("IV values")]
-	public float iHp;
-	public float iAtk;
-	public float iSpd;
-	public float iSkl;
-	public float iLck;
-	public float iDef;
-	public float iRes;
-
 	[Header("EV values")]
-	public float eHp;
-	public float eAtk;
-	public float eSpd;
-	public float eSkl;
-	public float eLck;
-	public float eDef;
-	public float eRes;
+	public int eHp;
+	public int eAtk;
+	public int eSpd;
+	public int eSkl;
+	public int eLck;
+	public int eDef;
+	public int eRes;
 
 	[Header("Supports")]
 	public List<SupportValue> supports;
@@ -40,6 +32,7 @@ public class CharacterSaveData {
 	public CharacterSaveData() {
 		id = "";
 		level = -1;
+		currentLevel = -1;
 	}
 
 	public void StoreData(StatsContainer stats, InventoryContainer invCont, SkillsContainer skillCont) {
@@ -47,6 +40,7 @@ public class CharacterSaveData {
 		classID = stats.classData.uuid;
 		
 		level = stats.level;
+		currentLevel = stats.currentLevel;
 		currentExp = stats.currentExp;
 
 		wpnSkills = new int[StatsContainer.WPN_SKILLS];
@@ -70,14 +64,8 @@ public class CharacterSaveData {
 			skills.Add(skillCont.skills[i].uuid);
 		}
 
-		iHp = stats.iHp;
-		iAtk = stats.iAtk;
-		iSpd = stats.iSpd;
-		iSkl = stats.iSkl;
-		iLck = stats.iLck;
-		iDef = stats.iDef;
-		iRes = stats.iRes;
-		
+		stats.GenerateStartingStats();
+
 		eHp = stats.eHp;
 		eAtk = stats.eAtk;
 		eSpd = stats.eSpd;
