@@ -5,8 +5,8 @@ using UnityEngine;
 public enum ItemCategory { WEAPON, STAFF, CONSUME }
 public enum ItemType {NONE, SWORD, LANCE, AXE, MAGIC, THROW, BOW, HEAL, BUFF, CHEAL, CSTATS}
 
-[CreateAssetMenu(menuName = "LibraryEntries/WeaponItem")]
-public class WeaponItem : ScrObjLibraryEntry {
+[CreateAssetMenu(menuName = "LibraryEntries/ItemEntry")]
+public class ItemEntry : ScrObjLibraryEntry {
 
     public Sprite icon;
     public string description;
@@ -18,9 +18,9 @@ public class WeaponItem : ScrObjLibraryEntry {
     public int maxCharge;
     public int hitRate;
     public int critRate;
-    public WeaponRange range;
+    public WeaponRange range = new WeaponRange(1, 1);
 
-    public int skillReq;
+	public int skillReq;
     public int weight;
     public int cost;
     
@@ -62,7 +62,7 @@ public class WeaponItem : ScrObjLibraryEntry {
 	/// <param name="other"></param>
 	public override void CopyValues(ScrObjLibraryEntry other) {
 		base.CopyValues(other);
-		WeaponItem item = (WeaponItem)other;
+		ItemEntry item = (ItemEntry)other;
 
 		icon = item.icon;
         description = item.description;
@@ -117,7 +117,7 @@ public class WeaponItem : ScrObjLibraryEntry {
     /// </summary>
     /// <param name="otherWeapon"></param>
     /// <returns></returns>
-    public int GetAdvantage(WeaponItem otherWeapon) {
+    public int GetAdvantage(ItemEntry otherWeapon) {
         if (otherWeapon == null)
             return 0;
         switch(itemType) 
@@ -206,11 +206,11 @@ public class WeaponItem : ScrObjLibraryEntry {
         if (itemCategory == ItemCategory.WEAPON) {
             desc += "\nRange: " + rangeStr + ", Power: " + power + 
                     "\nHit: " + hitRate + ", Crit: " + critRate +
-                    "\nWeight: " + weight + ", Req: " + WeaponItem.GetRankLetter(skillReq);
+                    "\nWeight: " + weight + ", Req: " + ItemEntry.GetRankLetter(skillReq);
         }
         else if (itemCategory == ItemCategory.STAFF) {
             desc += "\nRange: " + rangeStr + ", Power: " + power +
-                    "\nReq: " + WeaponItem.GetRankLetter(skillReq);
+                    "\nReq: " + ItemEntry.GetRankLetter(skillReq);
         }
         return desc;
     }

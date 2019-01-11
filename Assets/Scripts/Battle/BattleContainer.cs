@@ -430,7 +430,7 @@ public class BattleContainer : MonoBehaviour {
 					sfxQueue.Enqueue(levelupFanfare);
 					playSfxEvent.Invoke();
 					yield return StartCoroutine(levelupScript.RunLevelup(player.stats));
-					CharacterSkill skill = player.stats.classData.AwardSkills(player.stats.level);
+					CharacterSkill skill = player.stats.classData.AwardSkills(player.stats.currentLevel);
 					if (skill) {
 						player.skills.GainSkill(skill);
 						yield return StartCoroutine(popup.ShowPopup(skill.icon,  "gained: " + skill.entryName, popup.droppedItemFanfare));

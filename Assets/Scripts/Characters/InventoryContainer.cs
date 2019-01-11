@@ -41,7 +41,7 @@ public class InventoryContainer {
 			if (i < saveData.inventory.Count) {
 				inventory.Add(new InventoryTuple {
 					index = i,
-					item = (WeaponItem) iLib.GetEntry(saveData.inventory[i]),
+					item = (ItemEntry) iLib.GetEntry(saveData.inventory[i]),
 					charge = saveData.invCharges[i]
 				});
 			}
@@ -78,7 +78,7 @@ public class InventoryContainer {
 	/// <param name="category"></param>
 	/// <param name="player"></param>
 	/// <returns></returns>
-	public WeaponItem GetFirstUsableItem(ItemCategory category, StatsContainer player) {
+	public ItemEntry GetFirstUsableItem(ItemCategory category, StatsContainer player) {
 		for (int i = 0; i < inventory.Count; i++) {
 			if (inventory[i].item == null)
 				continue;
@@ -96,7 +96,7 @@ public class InventoryContainer {
 	/// <param name="category"></param>
 	/// <param name="player"></param>
 	/// <returns></returns>
-	public WeaponItem GetFirstUsableItem(ItemType type, StatsContainer player) {
+	public ItemEntry GetFirstUsableItem(ItemType type, StatsContainer player) {
 		for (int i = 0; i < inventory.Count; i++) {
 			if (inventory[i].item == null)
 				continue;

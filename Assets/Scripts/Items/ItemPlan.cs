@@ -7,7 +7,7 @@ public class ItemPlan : ScriptableObject {
 
 	public string planName;
 	public bool invention;
-	public WeaponItem item;
+	public ItemEntry item;
 	public int level;
 	public int cost;
 	public int boost;

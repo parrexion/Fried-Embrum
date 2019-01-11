@@ -19,4 +19,11 @@ public class WeaponRange {
 		return (min <= distance && distance <= max);
 	}
 
+    public override string ToString() {
+        if (min != max) {
+            return min + "-" + max;
+        }
+        return min.ToString();
+    }
+
 }

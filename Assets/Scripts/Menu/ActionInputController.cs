@@ -165,7 +165,7 @@ public class ActionInputController : InputReceiver {
 	}
 
 	private IEnumerator WaitForItemGain() {
-		WeaponItem item = selectedCharacter.value.currentTile.gift;
+		ItemEntry item = selectedCharacter.value.currentTile.gift;
 		yield return StartCoroutine(popup.ShowPopup(item.icon, item.entryName, gainItemSfx, 2f, 0f));
 		selectedCharacter.value.End();
 	}

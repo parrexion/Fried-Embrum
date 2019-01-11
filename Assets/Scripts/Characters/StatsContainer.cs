@@ -57,6 +57,7 @@ public class StatsContainer {
 
 	public StatsContainer(CharData cStats, CharClass cClass, int level) {
 		this.level = level;
+		currentLevel = level % 20;
 		charData = cStats;
 		classData = cClass;
 		GenerateStartingStats();
@@ -196,11 +197,11 @@ public class StatsContainer {
 		return charData.con + classData.con;
 	}
 
-	public int GetConPenalty(WeaponItem item) {
+	public int GetConPenalty(ItemEntry item) {
 		return (item) ? Mathf.Max(item.weight - GetConstitution(),0) : 0;
 	}
 
-	public void GiveWpnExp(WeaponItem usedItem) {
+	public void GiveWpnExp(ItemEntry usedItem) {
 		if (usedItem.itemCategory == ItemCategory.WEAPON) {
             wpnSkills[(int)usedItem.itemType] += 3;
 		}
@@ -214,7 +215,7 @@ public class StatsContainer {
 	/// </summary>
 	/// <param name="weapon"></param>
 	/// <returns></returns>
-	public int GetWpnSkill(WeaponItem weapon) {
+	public int GetWpnSkill(ItemEntry weapon) {
 		if (weapon == null)
 			return 0;
 		int skill = Mathf.Clamp((int)weapon.itemType, 0, wpnSkills.Length-1);

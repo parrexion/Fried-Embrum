@@ -35,8 +35,8 @@ public class PreaparationController : MonoBehaviour {
 
 
     private void SetupCharacter() {
-//        for (int i = 0; i < availableUnits.values.Length; i++) {
-//            availableUnits.values[i] = new StatsContainer(null, null);
+//        for (int i = 0; i < playerData.values.Length; i++) {
+//            playerData.values[i] = new StatsContainer(null, null);
 //        }
     }
 

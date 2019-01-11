@@ -177,7 +177,7 @@ public class BaseHousing : InputReceiver {
 		roomNumber.text = string.Format("Room  {0} - {1}", selectedHouse.number, currentRoom.number);
 		characterName.text = (data != null) ? data.charData.entryName : "";
 		characterClass.text = (data != null) ? data.classData.entryName : "";
-		characterLevel.text = (data != null) ? "Level  " + data.level : "";
+		characterLevel.text = (data != null) ? "Level  " + data.currentLevel : "";
 		portrait.sprite = (data != null) ? data.charData.bigPortrait : null;
 
 		List<Room> neighbours = selectedHouse.GetNeighbours();

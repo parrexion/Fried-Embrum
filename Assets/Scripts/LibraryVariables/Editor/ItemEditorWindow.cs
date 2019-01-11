@@ -7,7 +7,7 @@ using System.Collections.Generic;
 public class ItemEditorWindow {
 
 	public ScrObjLibraryVariable itemLibrary;
-	public WeaponItem itemValues;
+	public ItemEntry itemValues;
 	private GUIContent[] currentEntryList;
 
 	// Selection screen
@@ -33,7 +33,7 @@ public class ItemEditorWindow {
 	/// </summary>
 	/// <param name="entries"></param>
 	/// <param name="container"></param>
-	public ItemEditorWindow(ScrObjLibraryVariable entries, WeaponItem container){
+	public ItemEditorWindow(ScrObjLibraryVariable entries, ItemEntry container){
 		itemLibrary = entries;
 		itemValues = container;
 		LoadLibrary();
@@ -214,13 +214,13 @@ public class ItemEditorWindow {
 		}
 		else {
 			// Something selected
-			WeaponItem ce = (WeaponItem)itemLibrary.GetEntryByIndex(selItem);
+			ItemEntry ce = (ItemEntry)itemLibrary.GetEntryByIndex(selItem);
 			itemValues.CopyValues(ce);
 		}
 	}
 
 	void SaveSelectedItem() {
-		WeaponItem ce = (WeaponItem)itemLibrary.GetEntryByIndex(selItem);
+		ItemEntry ce = (ItemEntry)itemLibrary.GetEntryByIndex(selItem);
 		ce.CopyValues(itemValues);
 		Undo.RecordObject(ce, "Updated item");
 		EditorUtility.SetDirty(ce);
@@ -232,7 +232,7 @@ public class ItemEditorWindow {
 			Debug.Log("uuid already exists!");
 			return;
 		}
-		WeaponItem c = Editor.CreateInstance<WeaponItem>();
+		ItemEntry c = Editor.CreateInstance<ItemEntry>();
 		c.name = uuid;
 		c.uuid = uuid;
 		c.entryName = uuid;
@@ -254,7 +254,7 @@ public class ItemEditorWindow {
 
 	void DeleteItem() {
 		GUI.FocusControl(null);
-		WeaponItem c = (WeaponItem)itemLibrary.GetEntryByIndex(selItem);
+		ItemEntry c = (ItemEntry)itemLibrary.GetEntryByIndex(selItem);
 		string path = "Assets/LibraryData/Items/" + c.uuid + ".asset";
 
 		itemLibrary.RemoveEntryByIndex(selItem);

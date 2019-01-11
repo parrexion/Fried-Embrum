@@ -267,7 +267,7 @@ public class MapEditorWindow {
 				EditorGUIUtility.labelWidth = 70;
 				for (int j = 0; j < mapValues.spawnPoints[i].inventory.Count; j++) {
 					GUILayout.BeginHorizontal();
-					mapValues.spawnPoints[i].inventory[j].item = (WeaponItem)EditorGUILayout.ObjectField("Item",mapValues.spawnPoints[i].inventory[j].item, typeof(WeaponItem),false);
+					mapValues.spawnPoints[i].inventory[j].item = (ItemEntry)EditorGUILayout.ObjectField("Item",mapValues.spawnPoints[i].inventory[j].item, typeof(ItemEntry),false);
 					if (GUILayout.Button("X", GUILayout.Width(50))) {
 						GUI.FocusControl(null);
 						mapValues.spawnPoints[i].inventory.RemoveAt(j);
@@ -331,7 +331,7 @@ public class MapEditorWindow {
 				for (int j = 0; j < mapValues.enemies[i].inventory.Count; j++) {
 					EditorGUIUtility.labelWidth = 70;
 					GUILayout.BeginHorizontal();
-					mapValues.enemies[i].inventory[j].item = (WeaponItem)EditorGUILayout.ObjectField("Item",mapValues.enemies[i].inventory[j].item, typeof(WeaponItem),false);
+					mapValues.enemies[i].inventory[j].item = (ItemEntry)EditorGUILayout.ObjectField("Item",mapValues.enemies[i].inventory[j].item, typeof(ItemEntry),false);
 					EditorGUIUtility.labelWidth = 35;
 					mapValues.enemies[i].inventory[j].droppable = EditorGUILayout.Toggle("Drop", mapValues.enemies[i].inventory[j].droppable, GUILayout.Width(50));
 					if (GUILayout.Button("X", GUILayout.Width(50))) {
@@ -415,7 +415,7 @@ public class MapEditorWindow {
 				for (int j = 0; j < pos.inventory.Count; j++) {
 					EditorGUIUtility.labelWidth = 70;
 					GUILayout.BeginHorizontal();
-					pos.inventory[j].item = (WeaponItem)EditorGUILayout.ObjectField("Item",pos.inventory[j].item, typeof(WeaponItem),false);
+					pos.inventory[j].item = (ItemEntry)EditorGUILayout.ObjectField("Item",pos.inventory[j].item, typeof(ItemEntry),false);
 					EditorGUIUtility.labelWidth = 35;
 					pos.inventory[j].droppable = EditorGUILayout.Toggle("Drop", pos.inventory[j].droppable, GUILayout.Width(50));
 					if (GUILayout.Button("X", GUILayout.Width(50))) {
@@ -496,7 +496,7 @@ public class MapEditorWindow {
 					break;
 				case InteractType.VILLAGE:
 					pos.dialogue = (DialogueEntry)EditorGUILayout.ObjectField("Dialogue",pos.dialogue, typeof(DialogueEntry),false);
-					pos.gift = (WeaponItem)EditorGUILayout.ObjectField("Gift",pos.gift, typeof(WeaponItem),false);
+					pos.gift = (ItemEntry)EditorGUILayout.ObjectField("Gift",pos.gift, typeof(ItemEntry),false);
 					pos.ally.stats = (CharData)EditorGUILayout.ObjectField("New ally",pos.ally.stats, typeof(CharData),false);
 					if (pos.ally.stats != null) {
 						pos.ally.level = EditorGUILayout.IntField("Level", pos.ally.level);
@@ -504,7 +504,7 @@ public class MapEditorWindow {
 						EditorGUIUtility.labelWidth = 70;
 						for (int j = 0; j < pos.ally.inventory.Count; j++) {
 							GUILayout.BeginHorizontal();
-							pos.ally.inventory[j].item = (WeaponItem)EditorGUILayout.ObjectField("Item",pos.ally.inventory[j].item, typeof(WeaponItem),false);
+							pos.ally.inventory[j].item = (ItemEntry)EditorGUILayout.ObjectField("Item",pos.ally.inventory[j].item, typeof(ItemEntry),false);
 							if (GUILayout.Button("X", GUILayout.Width(50))) {
 								GUI.FocusControl(null);
 								pos.ally.inventory.RemoveAt(j);

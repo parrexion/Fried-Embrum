@@ -21,7 +21,7 @@ public class ExplanationObject : MonoBehaviour {
 	public virtual string GetTooltip() {
 
 		if (inventorySlot != null) {
-			return (inventorySlot.value != null) ? ((WeaponItem)inventorySlot.value).description : "-EMPTY-";
+			return (inventorySlot.value != null) ? ((ItemEntry)inventorySlot.value).description : "-EMPTY-";
 		}
 
 		return fallbackString;

@@ -14,6 +14,10 @@ public static class OPMath {
 	/// <returns></returns>
 	public static int FullLoop(int lower, int upper, int value) {
 		int diff = 1 + upper - lower;
+        if (diff <= 0) {
+            Debug.LogError("Loop is not proper -  Min: " + lower + "  Max: " + upper);
+            return lower;
+        }
 		while (value < lower)
 			value += diff;
 		while (value > upper)

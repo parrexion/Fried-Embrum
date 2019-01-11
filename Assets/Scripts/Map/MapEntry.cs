@@ -113,7 +113,7 @@ public class PlayerPosition {
 
 [System.Serializable]
 public class WeaponTuple {
-	public WeaponItem item;
+	public ItemEntry item;
 	public bool droppable;
 }
 
@@ -141,7 +141,7 @@ public class InteractPosition {
 	public InteractType interactType;
 	public int health;
 	public DialogueEntry dialogue;
-	public WeaponItem gift;
+	public ItemEntry gift;
 	public PlayerPosition ally = new PlayerPosition();
 }
 

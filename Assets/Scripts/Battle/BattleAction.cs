@@ -32,7 +32,7 @@ public class BattleAction {
 	/// </summary>
 	/// <returns></returns>
 	public int GetSpeedDifference() {
-		WeaponItem wpn = (weaponDef != null) ? weaponDef.item : null;
+		ItemEntry wpn = (weaponDef != null) ? weaponDef.item : null;
 		return BattleCalc.GetAttackSpeed(weaponAtk.item, attacker.stats) - BattleCalc.GetAttackSpeed(wpn, defender.stats);
 	}
 
@@ -42,13 +42,13 @@ public class BattleAction {
 	/// </summary>
 	/// <returns></returns>
 	public int GetAdvantage() {
-		WeaponItem wpn1 = (weaponAtk != null) ? weaponAtk.item : null;
-		WeaponItem wpn2 = (weaponDef != null) ? weaponDef.item : null;
+		ItemEntry wpn1 = (weaponAtk != null) ? weaponAtk.item : null;
+		ItemEntry wpn2 = (weaponDef != null) ? weaponDef.item : null;
 		return BattleCalc.GetWeaponAdvantage(wpn1, wpn2);
 	}
 
 	public int GetDamage() {
-		WeaponItem wpn = (weaponDef != null) ? weaponDef.item : null;
+		ItemEntry wpn = (weaponDef != null) ? weaponDef.item : null;
 		return BattleCalc.CalculateDamageBattle(weaponAtk.item, wpn, attacker.stats, defender.stats, terrainDef);
 	}
 
@@ -57,7 +57,7 @@ public class BattleAction {
 	}
 
 	public int GetHitRate() {
-		WeaponItem wpn = (weaponDef != null) ? weaponDef.item : null;
+		ItemEntry wpn = (weaponDef != null) ? weaponDef.item : null;
 		return BattleCalc.GetHitRateBattle(weaponAtk.item, wpn, attacker.stats, defender.stats, terrainDef);
 	}
 
@@ -66,7 +66,7 @@ public class BattleAction {
 	}
 
 	public bool CheckWeaponWeakness() {
-		WeaponItem wpn = (weaponAtk != null) ? weaponAtk.item : null;
+		ItemEntry wpn = (weaponAtk != null) ? weaponAtk.item : null;
 		return BattleCalc.CheckWeaponWeakness(wpn, defender.stats);
 	}
 

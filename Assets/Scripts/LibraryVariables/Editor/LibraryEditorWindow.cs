@@ -29,7 +29,7 @@ public class LibraryEditorWindow : EditorWindow {
 
 	public ItemEditorWindow itemEditor;
 	public ScrObjLibraryVariable itemLibrary;
-	public WeaponItem itemContainer;
+	public ItemEntry itemContainer;
 
 	public ItemEditorWindow skillEditor;
 	public ScrObjLibraryVariable skillLibrary;

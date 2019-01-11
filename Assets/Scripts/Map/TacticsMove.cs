@@ -246,7 +246,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// </summary>
 	/// <returns></returns>
 	public List<MapTile> FindSupportablesInRange() {
-		WeaponItem staff = inventory.GetFirstUsableItem(ItemCategory.STAFF, stats);
+		ItemEntry staff = inventory.GetFirstUsableItem(ItemCategory.STAFF, stats);
 		List<MapTile> supportables = new List<MapTile>();
 		for (int i = 0; i < playerList.values.Count; i++) {
 			if (this == playerList.values[i] || !playerList.values[i].IsInjured())

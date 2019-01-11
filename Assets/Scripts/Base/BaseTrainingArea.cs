@@ -69,6 +69,8 @@ public class BaseTrainingArea : InputReceiver {
 	}
 
     public override void OnOkButton() {
+		if (!active)
+			return;
 		if (menuMode == 0) {
 			if (currentIndex == 0) {
 				menuMode = 1;
@@ -93,6 +95,8 @@ public class BaseTrainingArea : InputReceiver {
 	}
 
     public override void OnBackButton() {
+		if (!active)
+			return;
 		if (menuMode == 0) {
 
 		}
@@ -115,11 +119,15 @@ public class BaseTrainingArea : InputReceiver {
 	}
 
     public override void OnLeftArrow() {
+		if (!active)
+			return;
 		if (menuMode == 1) {
 			bexpController.UpdateAwardExp(-1);
 		}
 	}
     public override void OnRightArrow() {
+		if (!active)
+			return;
 		if (menuMode == 1) {
 			bexpController.UpdateAwardExp(1);
 		}

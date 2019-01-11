@@ -27,16 +27,18 @@ public class SaveController : MonoBehaviour {
 	#endregion
 	
 	public ScrObjEntryReference currentMap;
-	public SaveListVariable availableUnits;
+	public SaveListVariable playerData;
 	public IntVariable saveIndex;
+
+	[Header("Simple Data")]
+	public IntVariable[] simpleChapterIndex;
+	public IntVariable[] simplePlayTimes;
 
 	[Header("Current Data")]
 	public IntVariable currentChapterIndex;
 	public IntVariable currentPlayTime;
-
-	[Header("Simple Data")]
-	public IntVariable[] chapterIndex;
-	public IntVariable[] playTimes;
+	public IntVariable currentMoney;
+	public IntVariable currentBexp;
 
 	[Header("Libraries")]
 	public ScrObjLibraryVariable itemLibrary;
@@ -67,15 +69,15 @@ public class SaveController : MonoBehaviour {
 	}
 
 	public void EmptySave() {
-		saveFileData = new SavePackage();
-
 		// Setup save data
-		saveFileData.musicVolume = 10;
-		saveFileData.sfxVolume = 10;
-		saveFileData.gameSpeed = 5;
-		saveFileData.useAnimations = true;
-		saveFileData.trueHit = true;
-		saveFileData.autoEnd = true;
+		saveFileData = new SavePackage {
+			musicVolume = 10,
+			sfxVolume = 10,
+			gameSpeed = 5,
+			useAnimations = true,
+			trueHit = true,
+			autoEnd = true
+		};
 		for (int i = 0; i < SAVE_FILES_COUNT; i++) {
 			SaveData data = new SaveData(){chapterIndex = 1, playTime = 0};
 			saveFileData.saveFiles[i] = data;
@@ -101,19 +103,27 @@ public class SaveController : MonoBehaviour {
 
 		if (!onlyOptions) {
 			// Update data
-			chapterIndex[saveIndex.value].value = currentChapterIndex.value;
-			playTimes[saveIndex.value].value = currentPlayTime.value;
+			simpleChapterIndex[saveIndex.value].value = currentChapterIndex.value;
+			simplePlayTimes[saveIndex.value].value = currentPlayTime.value;
 
 			// Setup save data
-			SaveData data = new SaveData();
-			data.chapterIndex = chapterIndex[saveIndex.value].value;
-			data.playTime = playTimes[saveIndex.value].value;
-			for (int i = 0; i < availableUnits.stats.Count; i++) {
-				if (availableUnits.stats[i].charData == null)
+			SaveData data = new SaveData {
+				chapterIndex = simpleChapterIndex[saveIndex.value].value,
+				playTime = simplePlayTimes[saveIndex.value].value,
+				money = currentMoney.value,
+				bexp = currentBexp.value
+			};
+			for (int i = 0; i < playerData.stats.Count; i++) {
+				if (playerData.stats[i].charData == null)
 					continue;
 				CharacterSaveData c = new CharacterSaveData();
-				c.StoreData(availableUnits.stats[i], availableUnits.inventory[i], availableUnits.skills[i]);
+				c.StoreData(playerData.stats[i], playerData.inventory[i], playerData.skills[i]);
 				data.characters.Add(c);
+			}
+			for (int i = 0; i < playerData.items.Count; i++) {
+				ItemSaveData item = new ItemSaveData();
+				item.StoreData(playerData.items[i]);
+				data.items.Add(item);
 			}
 			saveFileData.saveFiles[saveIndex.value] = data;
 		}
@@ -162,8 +172,8 @@ public class SaveController : MonoBehaviour {
 		for (int i = 0; i < saveFileData.saveFiles.Length; i++) {
 			if (saveFileData.saveFiles[i] == null)
 				continue;
-			chapterIndex[i].value = saveFileData.saveFiles[i].chapterIndex;
-			playTimes[i].value = saveFileData.saveFiles[i].playTime;
+			simpleChapterIndex[i].value = saveFileData.saveFiles[i].chapterIndex;
+			simplePlayTimes[i].value = saveFileData.saveFiles[i].playTime;
 		}
 		
 		Debug.Log("Successfully pre-loaded the save data!");
@@ -183,22 +193,29 @@ public class SaveController : MonoBehaviour {
 		}
 		
 		// Set basic data
-		currentChapterIndex.value = chapterIndex[saveIndex.value].value;
-		currentPlayTime.value = playTimes[saveIndex.value].value;
+		currentChapterIndex.value = simpleChapterIndex[saveIndex.value].value;
+		currentPlayTime.value = simplePlayTimes[saveIndex.value].value;
 
 		// Read data in save file
 		SaveData loadedData = saveFileData.saveFiles[saveIndex.value];
+		currentMoney.value = loadedData.money;
+		currentBexp.value = loadedData.bexp;
+
 		Debug.Log("Characters:  " + loadedData.characters.Count);
-		availableUnits.stats = new List<StatsContainer>();
-		availableUnits.inventory = new List<InventoryContainer>();
-		availableUnits.skills = new List<SkillsContainer>();
+		playerData.stats = new List<StatsContainer>();
+		playerData.inventory = new List<InventoryContainer>();
+		playerData.skills = new List<SkillsContainer>();
 		for (int i = 0; i < loadedData.characters.Count; i++) {
 			CharData cStats = (CharData)characterLibrary.GetEntry(loadedData.characters[i].id);
 			CharClass cClass = (CharClass)classLibrary.GetEntry(loadedData.characters[i].classID);
-			availableUnits.stats.Add(new StatsContainer(loadedData.characters[i], cStats, cClass));
-			availableUnits.inventory.Add(new InventoryContainer(itemLibrary, loadedData.characters[i]));
-			availableUnits.skills.Add(new SkillsContainer(skillLibrary, loadedData.characters[i]));
+			playerData.stats.Add(new StatsContainer(loadedData.characters[i], cStats, cClass));
+			playerData.inventory.Add(new InventoryContainer(itemLibrary, loadedData.characters[i]));
+			playerData.skills.Add(new SkillsContainer(skillLibrary, loadedData.characters[i]));
 			Debug.Log("Done loading " + cStats.entryName);
+		}
+		for (int i = 0; i < loadedData.items.Count; i++) {
+			ItemEntry item = (ItemEntry)itemLibrary.GetEntry(loadedData.items[i].id);
+			playerData.items.Add(new InventoryItem { item = item, charges = loadedData.items[i].charges });
 		}
 		Debug.Log("Successfully loaded the save data!");
 		loadFinishedEvent.Invoke();
@@ -221,5 +238,8 @@ public class SaveData {
 	public int chapterIndex;
 	public string levelName;
 	public int playTime;
+	public int money;
+	public int bexp;
 	public List<CharacterSaveData> characters = new List<CharacterSaveData>();
+	public List<ItemSaveData> items = new List<ItemSaveData>();
 }

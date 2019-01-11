@@ -86,7 +86,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 		weakIcon1.sprite = weaknessImages[(int)stats.classData.classType];
 		weakIcon1.enabled = (weakIcon1.sprite != null);
 
-		WeaponItem weapon = tactics.GetEquippedWeapon(ItemCategory.WEAPON).item;
+		ItemEntry weapon = tactics.GetEquippedWeapon(ItemCategory.WEAPON).item;
 		wpnIcon.sprite = (weapon != null) ? weapon.icon : null;
 		wpnName.text = (weapon != null) ? weapon.entryName : "";
 		
@@ -132,7 +132,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 		defText.color = (stats.bDef != 0) ? Color.green : Color.black;
 		resText.color = (stats.bRes != 0) ? Color.green : Color.black;
 		
-		WeaponItem weapon = tactics.GetEquippedWeapon(ItemCategory.WEAPON).item;
+		ItemEntry weapon = tactics.GetEquippedWeapon(ItemCategory.WEAPON).item;
 		int penalty = stats.GetConPenalty(weapon);
 		if (penalty > 0) {
 			spdText.text = BattleCalc.GetAttackSpeed(weapon, stats).ToString();
@@ -151,7 +151,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 			weighDownSklValue.text = "";
 		}
 
-		levelText.text = stats.level.ToString();
+		levelText.text = stats.currentLevel.ToString();
 		expText.text = stats.currentExp.ToString();
 		hpText.text = stats.hp.ToString();
 		atkText.text = stats.atk.ToString();
@@ -175,7 +175,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 		inventoryObject.SetActive(true);
 		characterName.text = stats.charData.entryName;
 
-		WeaponItem weapon = tactics.GetEquippedWeapon(ItemCategory.WEAPON).item;
+		ItemEntry weapon = tactics.GetEquippedWeapon(ItemCategory.WEAPON).item;
 		conText.text = stats.GetConstitution().ToString();
 		int atkSpeed = BattleCalc.GetAttackSpeed(weapon, stats);
 		if (atkSpeed < stats.spd) {
@@ -194,7 +194,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 			else {
 				weaponSkillIcons[i].transform.parent.gameObject.SetActive(true);
 				weaponSkillIcons[i].sprite = weaponSkillImages[(int)stats.classData.weaponSkills[i]];
-				weaponSkillRating[i].text = WeaponItem.GetRankLetter(stats.wpnSkills[(int)stats.classData.weaponSkills[i]]);
+				weaponSkillRating[i].text = ItemEntry.GetRankLetter(stats.wpnSkills[(int)stats.classData.weaponSkills[i]]);
 			}
 		}
 
