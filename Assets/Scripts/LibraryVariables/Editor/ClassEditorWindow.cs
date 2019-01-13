@@ -18,9 +18,12 @@ public class ClassEditorWindow {
 	Rect selectRect = new Rect();
 	Texture2D selectTex;
 	Vector2 selScrollPos;
-	string classUuid;
 	int selIndex = -1;
 	string filterStr = "";
+
+	//Creation
+	string uuid;
+	Color repColor = new Color(0, 0, 0, 1f);
 
 
 	public ClassEditorWindow(ScrObjLibraryVariable entries, CharClass container){
@@ -54,7 +57,7 @@ public class ClassEditorWindow {
 		filterStr = "";
 	}
 
-	public void DrawWindow() {
+	public void DrawWindow(int screenWidth, int screenHeight) {
 		GUILayout.BeginHorizontal();
 		GUILayout.Label("Class Editor", EditorStyles.boldLabel);
 		if (selIndex != -1) {
@@ -64,28 +67,28 @@ public class ClassEditorWindow {
 		}
 		GUILayout.EndHorizontal();
 
-		GenerateAreas();
+		GenerateAreas(screenWidth, screenHeight);
 		DrawBackgrounds();
 		DrawEntryList();
 		if (selIndex != -1)
 			DrawDisplayWindow();
 	}
 
-	void GenerateAreas() {
+	void GenerateAreas(int screenWidth, int screenHeight) {
 		selectRect.x = 0;
 		selectRect.y = 50;
 		selectRect.width = 200;
-		selectRect.height = Screen.height - 50;
+		selectRect.height = screenHeight - 50;
 
 		dispRect.x = 200;
 		dispRect.y = 50;
-		dispRect.width = Screen.width - 200;
-		dispRect.height = Screen.height - 50;
+		dispRect.width = screenWidth - 200;
+		dispRect.height = screenHeight - 50;
 
 		dispRect2.x = 200;
 		dispRect2.y = 50;
-		dispRect2.width = Screen.width - 205;
-		dispRect2.height = Screen.height - 50;
+		dispRect2.width = screenWidth - 205;
+		dispRect2.height = screenHeight - 50;
 	}
 
 	void DrawBackgrounds() {
@@ -104,7 +107,7 @@ public class ClassEditorWindow {
 			currentEntryList = classLibrary.GetRepresentations("",filterStr);
 
 		selScrollPos = EditorGUILayout.BeginScrollView(selScrollPos, GUILayout.Width(selectRect.width), 
-							GUILayout.Height(selectRect.height-110));
+							GUILayout.Height(selectRect.height-130));
 
 		int oldSelected = selIndex;
 		selIndex = GUILayout.SelectionGrid(selIndex, currentEntryList,1);
@@ -115,7 +118,9 @@ public class ClassEditorWindow {
 			SelectEntry();
 		}
 
-		classUuid = EditorGUILayout.TextField("Class uuid", classUuid);
+		GUILayout.Label("Create new class", EditorStyles.boldLabel);
+		uuid = EditorGUILayout.TextField("Class uuid", uuid);
+		repColor = EditorGUILayout.ColorField("Display Color", repColor);
 		if (GUILayout.Button("Create New")) {
 			InstansiateEntry();
 		}
@@ -241,15 +246,16 @@ public class ClassEditorWindow {
 
 	void InstansiateEntry() {
 		GUI.FocusControl(null);
-		if (classLibrary.ContainsID(classUuid)) {
+		if (classLibrary.ContainsID(uuid)) {
 			Debug.Log("uuid already exists!");
 			return;
 		}
 		CharClass cc = Editor.CreateInstance<CharClass>();
-		cc.name = classUuid;
-		cc.uuid = classUuid;
-		cc.entryName = classUuid;
-		string path = "Assets/LibraryData/Classes/" + classUuid + ".asset";
+		cc.name = uuid;
+		cc.uuid = uuid;
+		cc.repColor = repColor;
+		cc.entryName = uuid;
+		string path = "Assets/LibraryData/Classes/" + uuid + ".asset";
 
 		classLibrary.InsertEntry(cc,0);
 		Undo.RecordObject(classLibrary, "Added entry");
@@ -259,7 +265,7 @@ public class ClassEditorWindow {
 		AssetDatabase.Refresh();
 
 		currentEntryList = classLibrary.GetRepresentations("",filterStr);
-		classUuid = "";
+		uuid = "";
 		selIndex = 0;
 		SelectEntry();
 	}

@@ -48,14 +48,16 @@ public class MusicLibraryEditorWindow : EditorWindow {
 	/// </summary>
 	void OnGUI() {
 		DrawHeader();
-		
+		int width = (int)position.width;
+		int height = (int)position.height;
+
 		switch ((State)currentWindow.value)
 		{
 			case State.CLIP:
-				musicEditor.DrawWindow();
+				musicEditor.DrawWindow(width, height);
 				break;
 			case State.SONGLIST:
-				songlistEditor.DrawWindow();
+				songlistEditor.DrawWindow(width, height);
 				break;
 			case State.AREA:
 				// areaMusicEditor.DrawWindow();

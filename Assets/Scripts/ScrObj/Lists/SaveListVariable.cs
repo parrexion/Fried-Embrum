@@ -12,4 +12,7 @@ public class SaveListVariable : ScriptableObject {
 
 	// Item storage
 	public List<InventoryItem> items = new List<InventoryItem>();
-}
+
+	// Science
+	public List<UpgradeEntry> upgrades = new List<UpgradeEntry>();
+} 

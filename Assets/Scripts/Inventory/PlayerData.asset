@@ -12,7 +12,193 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fb49472baaac6c4f9557c06ae2494c1, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: 
-  stats: []
-  inventory: []
-  skills: []
-  items: []
+  stats:
+  - charData: {fileID: 11400000, guid: ebe64c7e451dc494fbc8211be6f10d6a, type: 2}
+    classData: {fileID: 11400000, guid: 46169fca396b47d43add3446fcc356fe, type: 2}
+    level: 2
+    currentLevel: 3
+    currentExp: 20
+    wpnSkills: 0000000001000000000000000000000000000000000000000000000000000000
+    hp: 17
+    atk: 4
+    spd: 10
+    skl: 8
+    lck: 6
+    def: 3
+    res: 0
+    eHp: 17
+    eAtk: 4
+    eSpd: 10
+    eSkl: 8
+    eLck: 6
+    eDef: 3
+    eRes: 0
+    bHp: 0
+    bAtk: 0
+    bSpd: 0
+    bSkl: 0
+    bLck: 0
+    bDef: 0
+    bRes: 0
+    boosts: []
+    supportValues:
+    - uuid: Kent
+      value: 450
+  - charData: {fileID: 11400000, guid: cf951a3da37e1794b9cd29749c715911, type: 2}
+    classData: {fileID: 11400000, guid: 2f7a88298f4c1c34db14c3ccd176d8a4, type: 2}
+    level: 1
+    currentLevel: 1
+    currentExp: 40
+    wpnSkills: 0000000001000000010000000000000000000000000000000000000000000000
+    hp: 20
+    atk: 6
+    spd: 7
+    skl: 6
+    lck: 2
+    def: 5
+    res: 1
+    eHp: 20
+    eAtk: 6
+    eSpd: 7
+    eSkl: 6
+    eLck: 2
+    eDef: 5
+    eRes: 1
+    bHp: 0
+    bAtk: 0
+    bSpd: 0
+    bSkl: 0
+    bLck: 0
+    bDef: 0
+    bRes: 0
+    boosts: []
+    supportValues:
+    - uuid: Lyn
+      value: 760
+    - uuid: Sain
+      value: 230
+  - charData: {fileID: 11400000, guid: 0bf81bfd9c0d55f49a76297d05c3a788, type: 2}
+    classData: {fileID: 11400000, guid: 2f7a88298f4c1c34db14c3ccd176d8a4, type: 2}
+    level: 1
+    currentLevel: 1
+    currentExp: 50
+    wpnSkills: 0000000001000000010000000000000000000000000000000000000000000000
+    hp: 19
+    atk: 8
+    spd: 6
+    skl: 5
+    lck: 4
+    def: 6
+    res: 0
+    eHp: 19
+    eAtk: 8
+    eSpd: 6
+    eSkl: 5
+    eLck: 4
+    eDef: 6
+    eRes: 0
+    bHp: 0
+    bAtk: 0
+    bSpd: 0
+    bSkl: 0
+    bLck: 0
+    bDef: 0
+    bRes: 0
+    boosts: []
+    supportValues:
+    - uuid: Kent
+      value: 340
+  inventory:
+  - inventory:
+    - index: 0
+      item: {fileID: 11400000, guid: 21e0cdf65dcd3c64f99de572c0526714, type: 2}
+      charge: 46
+      droppable: 0
+    - index: 1
+      item: {fileID: 11400000, guid: 4f62fac29e57cf149a77b69982270829, type: 2}
+      charge: 3
+      droppable: 0
+    - index: 2
+      item: {fileID: 11400000, guid: 4f62fac29e57cf149a77b69982270829, type: 2}
+      charge: 3
+      droppable: 0
+    - index: 3
+      item: {fileID: 0}
+      charge: 0
+      droppable: 0
+    - index: 4
+      item: {fileID: 0}
+      charge: 0
+      droppable: 0
+  - inventory:
+    - index: 0
+      item: {fileID: 11400000, guid: 21e0cdf65dcd3c64f99de572c0526714, type: 2}
+      charge: 46
+      droppable: 0
+    - index: 1
+      item: {fileID: 11400000, guid: 70a69ddf23ff8c4479dae28fb5396f18, type: 2}
+      charge: 45
+      droppable: 0
+    - index: 2
+      item: {fileID: 11400000, guid: 4f62fac29e57cf149a77b69982270829, type: 2}
+      charge: 3
+      droppable: 0
+    - index: 3
+      item: {fileID: 0}
+      charge: 0
+      droppable: 0
+    - index: 4
+      item: {fileID: 0}
+      charge: 0
+      droppable: 0
+  - inventory:
+    - index: 0
+      item: {fileID: 11400000, guid: 70a69ddf23ff8c4479dae28fb5396f18, type: 2}
+      charge: 45
+      droppable: 0
+    - index: 1
+      item: {fileID: 11400000, guid: 21e0cdf65dcd3c64f99de572c0526714, type: 2}
+      charge: 46
+      droppable: 0
+    - index: 2
+      item: {fileID: 0}
+      charge: 0
+      droppable: 0
+    - index: 3
+      item: {fileID: 0}
+      charge: 0
+      droppable: 0
+    - index: 4
+      item: {fileID: 0}
+      charge: 0
+      droppable: 0
+  skills:
+  - skills:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+  - skills:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+  - skills:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+  items:
+  - item: {fileID: 11400000, guid: 21e0cdf65dcd3c64f99de572c0526714, type: 2}
+    charges: 46
+  - item: {fileID: 11400000, guid: 127117ee097ca8c41bb381cff26da503, type: 2}
+    charges: 30
+  - item: {fileID: 11400000, guid: ff9ea282dd22b8f408577dc57bbdbfac, type: 2}
+    charges: 20
+  - item: {fileID: 11400000, guid: 4f62fac29e57cf149a77b69982270829, type: 2}
+    charges: 3
+  - item: {fileID: 11400000, guid: 4f62fac29e57cf149a77b69982270829, type: 2}
+    charges: 3

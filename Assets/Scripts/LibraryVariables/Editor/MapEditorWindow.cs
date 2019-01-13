@@ -18,10 +18,13 @@ public class MapEditorWindow {
 	Rect selectRect = new Rect();
 	Texture2D selectTex;
 	Vector2 selScrollPos;
-	string mapUuid;
 	int selIndex = -1;
 	string filterStr = "";
-	
+
+	//Creation
+	string uuid;
+	Color repColor = new Color(0, 0, 0, 1f);
+
 	private bool showPlayerStuff = false;
 	private bool showEnemyStuff = false;
 	private bool showInteractStuff = false;
@@ -60,7 +63,7 @@ public class MapEditorWindow {
 		filterStr = "";
 	}
 
-	public void DrawWindow() {
+	public void DrawWindow(int screenWidth, int screenHeight) {
 		GUILayout.BeginHorizontal();
 		GUILayout.Label("Map Editor", EditorStyles.boldLabel);
 		if (selIndex != -1) {
@@ -70,28 +73,28 @@ public class MapEditorWindow {
 		}
 		GUILayout.EndHorizontal();
 
-		GenerateAreas();
+		GenerateAreas(screenWidth, screenHeight);
 		DrawBackgrounds();
 		DrawEntryList();
 		if (selIndex != -1)
 			DrawDisplayWindow();
 	}
 
-	void GenerateAreas() {
+	void GenerateAreas(int screenWidth, int screenHeight) {
 		selectRect.x = 0;
 		selectRect.y = 50;
 		selectRect.width = 200;
-		selectRect.height = Screen.height - 50;
+		selectRect.height = screenHeight - 50;
 
 		dispRect.x = 200;
 		dispRect.y = 50;
-		dispRect.width = Screen.width - 200;
-		dispRect.height = Screen.height - 50;
+		dispRect.width = screenWidth - 200;
+		dispRect.height = screenHeight - 50;
 
 		dispRect2.x = 200;
 		dispRect2.y = 50;
-		dispRect2.width = Screen.width - 200;
-		dispRect2.height = Screen.height - 50;
+		dispRect2.width = screenWidth - 200;
+		dispRect2.height = screenHeight - 50;
 	}
 
 	void DrawBackgrounds() {
@@ -110,7 +113,7 @@ public class MapEditorWindow {
 			currentEntryList = mapLibrary.GetRepresentations("",filterStr);
 
 		selScrollPos = EditorGUILayout.BeginScrollView(selScrollPos, GUILayout.Width(selectRect.width), 
-							GUILayout.Height(selectRect.height-110));
+							GUILayout.Height(selectRect.height-130));
 
 		int oldSelected = selIndex;
 		selIndex = GUILayout.SelectionGrid(selIndex, currentEntryList,1);
@@ -121,7 +124,10 @@ public class MapEditorWindow {
 			SelectEntry();
 		}
 
-		mapUuid = EditorGUILayout.TextField("Map uuid", mapUuid);
+		EditorGUIUtility.labelWidth = 110;
+		GUILayout.Label("Create new map", EditorStyles.boldLabel);
+		uuid = EditorGUILayout.TextField("Map uuid", uuid);
+		repColor = EditorGUILayout.ColorField("Display Color", repColor);
 		if (GUILayout.Button("Create new")) {
 			InstansiateEntry();
 		}
@@ -299,7 +305,7 @@ public class MapEditorWindow {
 			GUILayout.Label("Position");
 			mapValues.enemies[i].x = EditorGUILayout.IntField("X", mapValues.enemies[i].x);
 			mapValues.enemies[i].y = EditorGUILayout.IntField("Y", mapValues.enemies[i].y);
-			//  = (ClassType)EditorGUILayout.EnumPopup("",itemValues.advantageType[i]);
+			//  = (ClassType)EditorGUILayout.EnumPopup("",entryValues.advantageType[i]);
 			if (GUILayout.Button("X", GUILayout.Width(50))) {
 				GUI.FocusControl(null);
 				mapValues.enemies.RemoveAt(i);
@@ -592,15 +598,16 @@ public class MapEditorWindow {
 
 	void InstansiateEntry() {
 		GUI.FocusControl(null);
-		if (mapLibrary.ContainsID(mapUuid)) {
+		if (mapLibrary.ContainsID(uuid)) {
 			Debug.Log("uuid already exists!");
 			return;
 		}
 		MapEntry me = Editor.CreateInstance<MapEntry>();
-		me.name = mapUuid;
-		me.uuid = mapUuid;
-		me.entryName = mapUuid;
-		string path = "Assets/LibraryData/Maps/" + mapUuid + ".asset";
+		me.name = uuid;
+		me.uuid = uuid;
+		me.repColor = repColor;
+		me.entryName = uuid;
+		string path = "Assets/LibraryData/Maps/" + uuid + ".asset";
 
 		mapLibrary.InsertEntry(me,0);
 		Undo.RecordObject(mapLibrary, "Added entry");
@@ -610,7 +617,7 @@ public class MapEditorWindow {
 		AssetDatabase.Refresh();
 
 		currentEntryList = mapLibrary.GetRepresentations("",filterStr);
-		mapUuid = "";
+		uuid = "";
 		selIndex = 0;
 		SelectEntry();
 	}

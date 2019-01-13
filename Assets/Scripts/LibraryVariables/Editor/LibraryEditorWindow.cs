@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 public class LibraryEditorWindow : EditorWindow {
 
-	private enum State { MAPS, CHARACTERS, CLASSES, ITEMS, SKILLS, BACKGROUND, PORTRAITS }
+	private enum State { MAPS, CHARACTERS, CLASSES, ITEMS, UPGRADE, SKILLS, BACKGROUND, PORTRAITS }
 
 	// Header
 	Rect headerRect = new Rect();
@@ -31,6 +31,10 @@ public class LibraryEditorWindow : EditorWindow {
 	public ScrObjLibraryVariable itemLibrary;
 	public ItemEntry itemContainer;
 
+	public UpgradeEditorWindow upgradeEditor;
+	public ScrObjLibraryVariable upgradeLibrary;
+	public UpgradeEntry upgradeContainer;
+
 	public ItemEditorWindow skillEditor;
 	public ScrObjLibraryVariable skillLibrary;
 	public CharacterSkill skillContainer;
@@ -44,7 +48,7 @@ public class LibraryEditorWindow : EditorWindow {
 	public PortraitEntry portraitContainer;
 	public SpriteListVariable poseList;
 
-	private string[] toolbarStrings = new string[] {"Maps", "Characters", "Classes", "Items", "Skills", "Background", "Portraits"};
+	private string[] toolbarStrings = new string[] {"Maps", "Characters", "Classes", "Items", "Upgrades", "Skills", "Background", "Portraits"};
 
 
 	[MenuItem("Window/LibraryEditor")]
@@ -66,29 +70,33 @@ public class LibraryEditorWindow : EditorWindow {
 	/// </summary>
 	void OnGUI() {
 		DrawHeader();
-		
+		int width = (int)position.width;
+		int height = (int)position.height;
 		switch ((State)currentWindow.value)
 		{
 			case State.MAPS:
-				mapEditor.DrawWindow();
+				mapEditor.DrawWindow(width, height);
 				break;
 			case State.CHARACTERS:
-				characterEditor.DrawWindow();
+				characterEditor.DrawWindow(width, height);
 				break;
 			case State.CLASSES:
-				classEditor.DrawWindow();
+				classEditor.DrawWindow(width, height);
 				break;
 			case State.ITEMS:
-				itemEditor.DrawWindow();
+				itemEditor.DrawWindow(width, height);
+				break;
+			case State.UPGRADE:
+				upgradeEditor.DrawWindow(width, height);
 				break;
 			case State.SKILLS:
-				// skillEditor.DrawWindow();
+				// skillEditor.DrawWindow(width, height);
 				break;
 			case State.BACKGROUND:
-				backgroundEditor.DrawWindow();
+				backgroundEditor.DrawWindow(width, height);
 				break;
 			case State.PORTRAITS:
-				portraitEditor.DrawWindow();
+				portraitEditor.DrawWindow(width, height);
 				break;
 		}
 	}
@@ -112,7 +120,8 @@ public class LibraryEditorWindow : EditorWindow {
 		characterEditor = new CharacterEditorWindow(characterLibrary, characterContainer);
 		classEditor = new ClassEditorWindow(classLibrary, classContainer);
 		itemEditor = new ItemEditorWindow(itemLibrary, itemContainer);
-		// skillEditor = new ItemEditorWindow(itemLibrary, skillContainer);
+		upgradeEditor = new UpgradeEditorWindow(upgradeLibrary, upgradeContainer);
+		// skillEditor = new ItemEditorWindow(entryLibrary, skillContainer);
 		backgroundEditor = new BackgroundEditorWindow(backgroundLibrary, backgroundContainer);
 		portraitEditor = new PortraitEditorWindow(portraitLibrary, portraitContainer, poseList);
 
@@ -137,6 +146,7 @@ public class LibraryEditorWindow : EditorWindow {
 		characterEditor.InitializeWindow();
 		classEditor.InitializeWindow();
 		itemEditor.InitializeWindow();
+		upgradeEditor.InitializeWindow();
 		backgroundEditor.InitializeWindow();
 		portraitEditor.InitializeWindow();
 	}

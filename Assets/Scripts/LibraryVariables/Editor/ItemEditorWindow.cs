@@ -67,7 +67,7 @@ public class ItemEditorWindow {
 	}
 
 
-	public void DrawWindow() {
+	public void DrawWindow(int screenWidth, int screenHeight) {
 		GUILayout.BeginHorizontal();
 		GUILayout.Label("Item Equip Editor", EditorStyles.boldLabel);
 		if (selItem != -1) {
@@ -77,23 +77,23 @@ public class ItemEditorWindow {
 		}
 		GUILayout.EndHorizontal();
 
-		GenerateAreas();
+		GenerateAreas(screenWidth, screenHeight);
 		DrawBackgrounds();
 		DrawEntryList();
 		if (selItem != -1)
 			DrawDisplayWindow();
 	}
 
-	void GenerateAreas() {
+	void GenerateAreas(int screenWidth, int screenHeight) {
 		selectRect.x = 0;
 		selectRect.y = 50;
 		selectRect.width = 200;
-		selectRect.height = Screen.height - 50;
+		selectRect.height = screenHeight - 50;
 
 		dispRect.x = 200;
 		dispRect.y = 50;
-		dispRect.width = Screen.width - 200;
-		dispRect.height = Screen.height - 50;
+		dispRect.width = screenWidth - 200;
+		dispRect.height = screenHeight - 50;
 	}
 
 	void DrawBackgrounds() {
@@ -112,7 +112,7 @@ public class ItemEditorWindow {
 			currentEntryList = itemLibrary.GetRepresentations("",filterStr);
 
 		scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(selectRect.width), 
-						GUILayout.Height(selectRect.height-150));
+						GUILayout.Height(selectRect.height-130));
 
 		int oldSelected = selItem;
 		selItem = GUILayout.SelectionGrid(selItem, currentEntryList,1);

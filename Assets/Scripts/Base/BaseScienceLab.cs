@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class BaseScienceLab : InputReceiver {
 
 	public MyButton[] buttons;
-    public ItemPlan[] upgrades;
+    public UpgradeEntry[] upgrades;
 
     public IntVariable currentMoney;
     public Text currentMoneyText;
@@ -53,7 +53,7 @@ public class BaseScienceLab : InputReceiver {
 	private void SetupButtons() {
 		for (int i = 0; i < buttons.Length; i++) {
 			if (i < upgrades.Length) {
-				buttons[i].buttonText.text = upgrades[i].planName;
+				buttons[i].buttonText.text = upgrades[i].entryName;
 				buttons[i].SetSelected(i == currentIndex.value);
 			}
 			else {
@@ -64,9 +64,9 @@ public class BaseScienceLab : InputReceiver {
 
 	private void UpdateButtons() {
         currentMoneyText.text = "Currency:  " + currentMoney.value;
-        ItemPlan item = upgrades[currentIndex.value];
-        upgradeInfo.SetActive(!item.invention);
-        developInfo.SetActive(item.invention);
+        UpgradeEntry upgrade = upgrades[currentIndex.value];
+        upgradeInfo.SetActive(upgrade.type == UpgradeType.UPGRADE);
+        developInfo.SetActive(upgrade.type == UpgradeType.INVENTION);
         
 		for (int i = 0; i < upgrades.Length; i++) {
 			buttons[i].SetSelected(i == currentIndex.value);

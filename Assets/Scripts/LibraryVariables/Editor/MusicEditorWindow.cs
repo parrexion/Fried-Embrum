@@ -73,7 +73,7 @@ public class MusicEditorWindow {
 		filterStr = "";
 	}
 
-	public void DrawWindow() {
+	public void DrawWindow(int screenWidth, int screenHeight) {
 		GUILayout.BeginHorizontal();
 		GUILayout.Label("Music Editor", EditorStyles.boldLabel);
 		if (selMusic != -1) {
@@ -83,7 +83,7 @@ public class MusicEditorWindow {
 		}
 		GUILayout.EndHorizontal();
 
-		GenerateAreas();
+		GenerateAreas(screenWidth, screenHeight);
 		DrawBackgrounds();
 		DrawEntryList();
 		if (selMusic != -1){
@@ -94,16 +94,16 @@ public class MusicEditorWindow {
 		}
 	}
 
-	void GenerateAreas() {
+	void GenerateAreas(int screenWidth, int screenHeight) {
 		selectRect.x = 0;
 		selectRect.y = 50;
 		selectRect.width = 200;
-		selectRect.height = Screen.height - 50;
+		selectRect.height = screenHeight - 50;
 
 		dispRect.x = 200;
 		dispRect.y = 50;
-		dispRect.width = Screen.width - 200;
-		dispRect.height = Screen.height - 50;
+		dispRect.width = screenWidth - 200;
+		dispRect.height = screenHeight - 50;
 	}
 
 	void DrawBackgrounds() {
@@ -131,7 +131,7 @@ public class MusicEditorWindow {
 			currentEntryList = (soundType == 0) ? musicLibrary.GetRepresentations("",filterStr) : sfxLibrary.GetRepresentations("",filterStr);
 
 		scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(selectRect.width), 
-						GUILayout.Height(selectRect.height-170));
+						GUILayout.Height(selectRect.height-150));
 
 		int oldSelected = selMusic;
 		selMusic = GUILayout.SelectionGrid(selMusic, currentEntryList,1);

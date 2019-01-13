@@ -4,11 +4,10 @@ using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
-public class PortraitEditorWindow {
+public class UpgradeEditorWindow {
 
-	public ScrObjLibraryVariable portraitLibrary;
-	public PortraitEntry portraitValues;
-	public SpriteListVariable poseLibrary;
+	public ScrObjLibraryVariable entryLibrary;
+	public UpgradeEntry entryValues;
 	private GUIContent[] currentEntryList;
 
 	// Selection screen
@@ -34,20 +33,19 @@ public class PortraitEditorWindow {
 	/// </summary>
 	/// <param name="entries"></param>
 	/// <param name="container"></param>
-	public PortraitEditorWindow(ScrObjLibraryVariable entries, PortraitEntry container, SpriteListVariable poses){
-		portraitLibrary = entries;
-		portraitValues = container;
-		poseLibrary = poses;
+	public UpgradeEditorWindow(ScrObjLibraryVariable entries, UpgradeEntry container){
+		entryLibrary = entries;
+		entryValues = container;
 		LoadLibrary();
 	}
 
 	void LoadLibrary() {
 
-		Debug.Log("Loading character libraries...");
+		Debug.Log("Loading upgrade libraries...");
 
-		portraitLibrary.GenerateDictionary();
+		entryLibrary.GenerateDictionary();
 
-		Debug.Log("Finished loading character libraries");
+		Debug.Log("Finished loading upgrade libraries");
 
 		InitializeWindow();
 	}
@@ -58,22 +56,22 @@ public class PortraitEditorWindow {
 		selectTex.Apply();
 
 		dispTex = new Texture2D(1, 1);
-		dispTex.SetPixel(0, 0, new Color(0.8f, 0.5f, 0.2f));
+		dispTex.SetPixel(0, 0, new Color(0.3f, 0.8f, 0.4f));
 		dispTex.Apply();
 
 		dispOffset.right = 10;
 
-		portraitValues.ResetValues();
-		currentEntryList = portraitLibrary.GetRepresentations("","");
+		entryValues.ResetValues();
+		currentEntryList = entryLibrary.GetRepresentations("","");
 		filterStr = "";
 	}
 
 
 	public void DrawWindow(int screenWidth, int screenHeight) {
 		GUILayout.BeginHorizontal();
-		GUILayout.Label("Character Editor", EditorStyles.boldLabel);
+		GUILayout.Label("Upgrade Editor", EditorStyles.boldLabel);
 		if (selEntry != -1) {
-			if (GUILayout.Button("Save Character")){
+			if (GUILayout.Button("Save Upgrade")){
 				SaveSelectedEntry();
 			}
 		}
@@ -111,7 +109,7 @@ public class PortraitEditorWindow {
 		string oldFilter = filterStr;
 		filterStr = EditorGUILayout.TextField("Filter", filterStr);
 		if (filterStr != oldFilter)
-			currentEntryList = portraitLibrary.GetRepresentations("",filterStr);
+			currentEntryList = entryLibrary.GetRepresentations("",filterStr);
 
 		scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(selectRect.width), 
 						GUILayout.Height(selectRect.height-130));
@@ -124,13 +122,13 @@ public class PortraitEditorWindow {
 			SelectEntry();
 
 		EditorGUIUtility.labelWidth = 110;
-		GUILayout.Label("Create new character", EditorStyles.boldLabel);
-		uuid = EditorGUILayout.TextField("Character Name", uuid);
+		GUILayout.Label("Create new entry", EditorStyles.boldLabel);
+		uuid = EditorGUILayout.TextField("Entry Name", uuid);
 		repColor = EditorGUILayout.ColorField("Display Color", repColor);
-		if (GUILayout.Button("Create new")) {
+		if (GUILayout.Button("Create New")) {
 			InstansiateEntry();
 		}
-		if (GUILayout.Button("Delete character")) {
+		if (GUILayout.Button("Delete Entry")) {
 			DeleteEntry();
 		}
 
@@ -144,26 +142,31 @@ public class PortraitEditorWindow {
 
 		GUI.skin.textField.margin.right = 20;
 
-		GUILayout.Label("Selected Character", EditorStyles.boldLabel);
-		EditorGUILayout.SelectableLabel("UUID: " + portraitValues.uuid);
-		portraitValues.repColor = EditorGUILayout.ColorField("List color", portraitValues.repColor);
+		GUILayout.Label("Selected Entry", EditorStyles.boldLabel);
+		EditorGUILayout.SelectableLabel("UUID: " + entryValues.uuid);
 
-		GUILayout.Space(20);
+		GUILayout.Space(10);
 
-		portraitValues.entryName = EditorGUILayout.TextField("Name", portraitValues.entryName);
+		entryValues.entryName = EditorGUILayout.TextField("Name", entryValues.entryName);
+		entryValues.type = (UpgradeType)EditorGUILayout.EnumPopup("Upgrade Type",entryValues.type);
+		entryValues.item = (ItemEntry)EditorGUILayout.ObjectField("Related item", entryValues.item, typeof(ItemEntry), false);
+		entryValues.cost = EditorGUILayout.IntField("Cost", entryValues.cost);
 
-		if (portraitValues.poses.Length < poseLibrary.values.Length){
-            System.Array.Resize(ref portraitValues.poses, poseLibrary.values.Length);
+		GUILayout.Space(10);
+
+		if (entryValues.type == UpgradeType.UPGRADE) {
+			GUILayout.Label("Improvements", EditorStyles.boldLabel);
+			entryValues.level = EditorGUILayout.IntField("Level", entryValues.level);
+			entryValues.hit = EditorGUILayout.IntField("Hit Rate", entryValues.hit);
+			entryValues.power = EditorGUILayout.IntField("Power", entryValues.power);
+			entryValues.weight = EditorGUILayout.IntField("Weight", entryValues.weight);
+			GUILayout.Label("Range modification");
+			GUILayout.BeginHorizontal();
+			entryValues.minRange = EditorGUILayout.IntField("Min", entryValues.minRange);
+			entryValues.maxRange = EditorGUILayout.IntField("Max", entryValues.maxRange);
+			GUILayout.EndHorizontal();
 		}
-		// Poses
-		GUILayout.Label("Poses", EditorStyles.boldLabel);
-		for (int i = 0; i < poseLibrary.values.Length; i++) {
-			if (portraitValues.poses[i] == null)
-				portraitValues.poses[i] = (Sprite)EditorGUILayout.ObjectField(poseLibrary.values[i].name, poseLibrary.values[i], typeof(Sprite),false);
-			else
-				portraitValues.poses[i] = (Sprite)EditorGUILayout.ObjectField(poseLibrary.values[i].name, portraitValues.poses[i], typeof(Sprite),false);
-		}
-
+		
 		GUILayout.EndScrollView();
 		GUILayout.EndArea();
 	}
@@ -172,43 +175,43 @@ public class PortraitEditorWindow {
 		GUI.FocusControl(null);
 		if (selEntry == -1) {
 			// Nothing selected
-			portraitValues.ResetValues();
+			entryValues.ResetValues();
 		}
 		else {
 			// Something selected
-			PortraitEntry ce = (PortraitEntry)portraitLibrary.GetEntryByIndex(selEntry);
-			portraitValues.CopyValues(ce);
+			UpgradeEntry ue = (UpgradeEntry)entryLibrary.GetEntryByIndex(selEntry);
+			entryValues.CopyValues(ue);
 		}
 	}
 
 	void SaveSelectedEntry() {
-		PortraitEntry ce = (PortraitEntry)portraitLibrary.GetEntryByIndex(selEntry);
-		ce.CopyValues(portraitValues);
-		Undo.RecordObject(ce, "Updated portrait");
+		UpgradeEntry ce = (UpgradeEntry)entryLibrary.GetEntryByIndex(selEntry);
+		ce.CopyValues(entryValues);
+		Undo.RecordObject(ce, "Updated entry");
 		EditorUtility.SetDirty(ce);
 	}
 
 	void InstansiateEntry() {
 		GUI.FocusControl(null);
-		if (portraitLibrary.ContainsID(uuid)) {
+		if (entryLibrary.ContainsID(uuid)) {
 			Debug.Log("uuid already exists!");
 			return;
 		}
-		PortraitEntry c = Editor.CreateInstance<PortraitEntry>();
+		UpgradeEntry c = Editor.CreateInstance<UpgradeEntry>();
 		c.name = uuid;
 		c.uuid = uuid;
 		c.entryName = uuid;
 		c.repColor = repColor;
-		string path = "Assets/LibraryData/Portraits/" + uuid + ".asset";
+		string path = "Assets/LibraryData/Upgrades/" + uuid + ".asset";
 
 		AssetDatabase.CreateAsset(c, path);
-		portraitLibrary.InsertEntry(c, 0);
-		Undo.RecordObject(portraitLibrary, "Added portrait");
-		EditorUtility.SetDirty(portraitLibrary);
+		entryLibrary.InsertEntry(c, 0);
+		Undo.RecordObject(entryLibrary, "Added entry");
+		EditorUtility.SetDirty(entryLibrary);
 		AssetDatabase.SaveAssets();
 		AssetDatabase.Refresh();
 
-		currentEntryList = portraitLibrary.GetRepresentations("",filterStr);
+		currentEntryList = entryLibrary.GetRepresentations("",filterStr);
 		uuid = "";
 		selEntry = 0;
 		SelectEntry();
@@ -216,20 +219,20 @@ public class PortraitEditorWindow {
 
 	void DeleteEntry() {
 		GUI.FocusControl(null);
-		PortraitEntry c = (PortraitEntry)portraitLibrary.GetEntryByIndex(selEntry);
-		string path = "Assets/LibraryData/Portraits/" + c.uuid + ".asset";
+		UpgradeEntry c = (UpgradeEntry)entryLibrary.GetEntryByIndex(selEntry);
+		string path = "Assets/LibraryData/Upgrades/" + c.uuid + ".asset";
 
-		portraitLibrary.RemoveEntryByIndex(selEntry);
-		Undo.RecordObject(portraitLibrary, "Deleted portrait");
-		EditorUtility.SetDirty(portraitLibrary);
+		entryLibrary.RemoveEntryByIndex(selEntry);
+		Undo.RecordObject(entryLibrary, "Deleted entry");
+		EditorUtility.SetDirty(entryLibrary);
 		bool res = AssetDatabase.MoveAssetToTrash(path);
 		AssetDatabase.SaveAssets();
 		AssetDatabase.Refresh();
 
-		currentEntryList = portraitLibrary.GetRepresentations("",filterStr);
+		currentEntryList = entryLibrary.GetRepresentations("",filterStr);
 
 		if (res) {
-			Debug.Log("Removed portrait: " + c.uuid);
+			Debug.Log("Removed entry: " + c.uuid);
 			selEntry = -1;
 		}
 	}

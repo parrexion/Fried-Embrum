@@ -5,7 +5,7 @@ using UnityEngine;
 public enum ItemCategory { WEAPON, STAFF, CONSUME }
 public enum ItemType {NONE, SWORD, LANCE, AXE, MAGIC, THROW, BOW, HEAL, BUFF, CHEAL, CSTATS}
 
-[CreateAssetMenu(menuName = "LibraryEntries/ItemEntry")]
+[CreateAssetMenu(menuName = "LibraryEntries/Item")]
 public class ItemEntry : ScrObjLibraryEntry {
 
     public Sprite icon;
