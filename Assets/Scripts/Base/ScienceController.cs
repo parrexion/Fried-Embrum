@@ -6,28 +6,45 @@ using UnityEngine.UI;
 
 public class ScienceController : MonoBehaviour {
 
-	[Header("Entry List")]
+	[Header("Data")]
 	public SaveListVariable playerData;
 	public IntVariable totalScrap;
 	public IntVariable totalMoney;
-    public Transform listParent;
-	public Transform entryPrefab;
+
+	[Header("Entry List")]
+    public MyButton[] listButtons;
 	private bool upgradeMode;
 	private int currentListIndex;
 	private int listSize;
 	private List<UpgradeListEntry> entryList = new List<UpgradeListEntry>();
 
-	[Header("Information box")]
+	[Header("Upgrade Box")]
+	public Text TotalScrapText;
 	public Text TotalMoneyText;
-	public Text itemName;
 	public Image itemIcon;
 
+	[Header("Information box")]
+	public Text upgradeName;
+	public Text relatedItem;
+	public Text costMoney;
+	public Text costScrap;
+	public Text level;
+
+	[Header("Upgrade info")]
+	public GameObject upgradeInfoObject;
 	public Text pwrText;
 	public Text rangeText;
 	public Text hitText;
-	public Text critText;
-	public Text reqText;
 	public Text weightText;
+
+	[Header("Invention info")]
+	public GameObject inventionInfoObject;
+	public Text invPwrText;
+	public Text invRangeText;
+	public Text invHitText;
+	public Text invCritText;
+	public Text invWeightText;
+	public Text invReqText;
 
 	[Header("Buy upgrade promt")]
 	public GameObject promptView;
@@ -45,49 +62,63 @@ public class ScienceController : MonoBehaviour {
 		currentListIndex = 0;
 		MoveSelection(0);
 	}
-Visa uppgraderingar och sedan spara dem.
 
     private void GenerateList() {
+		TotalScrapText.text = "Scraps:  " + totalScrap.value;
 		TotalMoneyText.text = "Money:  " + totalMoney.value;
-        for (int i = listParent.childCount - 1; i > 2; i--) {
-            GameObject.Destroy(listParent.GetChild(i).gameObject);
-        }
 
         entryList = new List<UpgradeListEntry>();
-        listSize = playerData.upgrades.Count;
-        int tempListSize = 0;
+		listSize = 0;
+        int tempListSize = playerData.upgrader.listSize;
 		UpgradeType currentType = (upgradeMode) ? UpgradeType.UPGRADE : UpgradeType.INVENTION;
-        for (int i = 0; i < listSize; i++) {
-			if (playerData.upgrades[i].type == currentType) {
-                CreateListEntry(i, playerData.upgrades[i]);
-                tempListSize++;
+        for (int i = 0; i < tempListSize; i++) {
+			if (playerData.upgrader.upgrades[i].upgrade.type == currentType) {
+                CreateListEntry(i, playerData.upgrader.upgrades[i].upgrade, playerData.upgrader.upgrades[i].researched);
+                listSize++;
             }
         }
-        listSize = tempListSize;
-        entryPrefab.gameObject.SetActive(false);
-    }
+		upgradeInfoObject.SetActive(upgradeMode);
+		inventionInfoObject.SetActive(!upgradeMode);
+	}
 
-	private void CreateListEntry(int index, UpgradeEntry item) {
-		Transform t = Instantiate(entryPrefab, listParent);
-
-		UpgradeListEntry entry = t.GetComponent<UpgradeListEntry>();
-		entry.FillData(index, item, totalScrap.value, totalMoney.value);
-		entry.SetHighlight(false);
-		entryList.Add(entry);
-
-		t.gameObject.SetActive(true);
+	private void CreateListEntry(int index, UpgradeEntry upgrade, bool done) {
+		UpgradeListEntry entry = new UpgradeListEntry();
+		entry.FillData(index, upgrade, done, totalScrap.value, totalMoney.value);
+		if (done)
+			entryList.Add(entry);
+		else
+			entryList.Insert(0, entry);
 	}
 
 	public void MoveSelection(int dir) {
-		if (!promptMode) {
-			if (entryList.Count > 0) {
-				currentListIndex = OPMath.FullLoop(0, listSize-1, currentListIndex + dir);
-				for (int i = 0; i < listSize; i++) {
-					entryList[i].SetHighlight(currentListIndex == i);
-				}
+		if (promptMode || entryList.Count == 0)
+			return;
+
+		currentListIndex = OPMath.FullLoop(0, listSize-1, currentListIndex + dir);
+		for (int i = 0; i < listButtons.Length; i++) {
+			if (entryList.Count <= i) {
+				listButtons[i].buttonText.text = "DONE";
+				break;
 			}
-            SetupItemInfo();
-        }
+			listButtons[i].buttonText.text = entryList[i].upgrade.entryName;
+			listButtons[i].buttonText.fontStyle = (entryList[i].done) ? FontStyle.Italic : FontStyle.Normal;
+			listButtons[i].highlight.color = (entryList[i].done) ? new Color(0.2f, 0.5f, 0.75f) : 
+											 (entryList[i].affordable) ? new Color(0.3f, 0.75f, 0.55f) : Color.grey;
+			listButtons[i].SetSelected(i == currentListIndex);
+		}
+		if (upgradeMode)
+			SetupUpgradeInfo();
+		else
+			SetupDevelopInfo();
+	}
+
+	public void MovePromt(int dir) {
+		if (!promptMode)
+			return;
+
+		promptPosition = OPMath.FullLoop(0, 1, promptPosition + dir);
+		promptYesButton.SetSelected(promptPosition == 0);
+		promptNoButton.SetSelected(promptPosition == 1);
 	}
 
 	public void SelectItem(bool isUpgrade) {
@@ -95,14 +126,17 @@ Visa uppgraderingar och sedan spara dem.
 			return;
 		}
 		else if (!promptMode) {
-			promptMode = true;
-			SetupTradePrompt(isUpgrade);
-			promptView.SetActive(true);
+			if (entryList[currentListIndex].affordable) {
+				SetupTradePrompt(isUpgrade);
+			}
 		}
 		else {
 			if (promptPosition == 0) {
 				Debug.Log((isUpgrade) ? "Upgrade" : "Invent");
-				
+				totalMoney.value -= entryList[currentListIndex].upgrade.cost;
+				totalScrap.value -= entryList[currentListIndex].upgrade.scrap;
+				playerData.upgrader.upgrades[entryList[currentListIndex].index].researched = true;
+				playerData.upgrader.CalculateResearch();
 			}
 			GenerateList();
 			DeselectItem();
@@ -121,34 +155,99 @@ Visa uppgraderingar och sedan spara dem.
 	}
 
 	private void SetupTradePrompt(bool isUpgrade) {
+		promptMode = true;
 		promptText.text = (isUpgrade) ? "Buy upgrade?" : "Develop item?";
 		promptPosition = 0;
+		MovePromt(0);
+		promptView.SetActive(true);
 	}
 
-	private void SetupItemInfo() {
+	private void SetupUpgradeInfo() {
 		if (entryList.Count == 0) {
-			itemName.text = "";
+			upgradeName.text = "";
 			itemIcon.sprite = null;
 
-			pwrText.text = "Pwr:  ";
-			rangeText.text = "Range:  ";
-			hitText.text = "Hit:  ";
-			critText.text = "Crit:  ";
-			reqText.text = "Req:  ";
-			weightText.text = "Weight:  ";
+			costMoney.text = "Cost:";
+			costScrap.text = "Scrap:";
+			level.text = "Level:";
+			relatedItem.text = "Item:";
+
+			pwrText.gameObject.SetActive(false);
+			rangeText.gameObject.SetActive(false);
+			hitText.gameObject.SetActive(false);
+			weightText.gameObject.SetActive(false);
 			return;
 		}
 
-		UpgradeEntry item = entryList[currentListIndex].upgrade;
-		itemName.text = item.entryName;
-		itemIcon.sprite = entryList[currentListIndex].icon.sprite;
+		UpgradeEntry upgrade = entryList[currentListIndex].upgrade;
+		upgradeName.text = upgrade.entryName;
+		relatedItem.text = "Item:  " + upgrade.item.entryName;
+		itemIcon.sprite = upgrade.item.icon;
+		itemIcon.color = upgrade.repColor;
 
-		pwrText.text  = "Pwr:  " + item.power.ToString();
-		//rangeText.text = "Range:  " + item.range.ToString();
-		hitText.text = "Hit:  " + item.hit.ToString();
-		//critText.text = "Crit:  " + item.critRate.ToString();
-		//reqText.text = "Req:  " + item.skillReq.ToString();
-		weightText.text = "Weight:  " + item.weight.ToString();
+		if (entryList[currentListIndex].done) {
+			costMoney.text = "";
+			costScrap.text = "";
+			level.text = "Researched!";
+		}
+		else {
+			costMoney.text = "Cost:  " + upgrade.cost;
+			costScrap.text = "Scrap:  " + upgrade.scrap;
+			level.text = "Level:  " + upgrade.level;
+		}
+
+		rangeText.text = upgrade.minRange + " - " + upgrade.maxRange + " Range";
+		rangeText.gameObject.SetActive(upgrade.minRange != 0 && upgrade.maxRange != 0);
+		pwrText.text = "Power:  " + upgrade.item.power + "  ->  " + (upgrade.item.power + upgrade.power);
+		pwrText.gameObject.SetActive(upgrade.power != 0);
+		hitText.text = "Hit Rate:  " + upgrade.item.hitRate + "  ->  " + (upgrade.item.hitRate + upgrade.hit);
+		hitText.gameObject.SetActive(upgrade.hit != 0);
+		weightText.text = "Weight:  " + upgrade.item.weight + "  ->  " + (upgrade.item.weight - upgrade.weight);
+		weightText.gameObject.SetActive(upgrade.weight != 0);
 	}
 
+	private void SetupDevelopInfo() {
+		if (entryList.Count == 0) {
+			upgradeName.text = "";
+			itemIcon.sprite = null;
+
+			costMoney.text = "Cost:";
+			costScrap.text = "Scrap:";
+			level.text = "Level:";
+			relatedItem.text = "Item:";
+
+			invPwrText.text = "";
+			invRangeText.text = "";
+			invHitText.text = "";
+			invCritText.text = "";
+			weightText.text = "";
+			invReqText.text = "";
+			return;
+		}
+
+		UpgradeEntry upgrade = entryList[currentListIndex].upgrade;
+		upgradeName.text = upgrade.entryName;
+		relatedItem.text = "Item:  " + upgrade.item.entryName;
+		itemIcon.sprite = upgrade.item.icon;
+		itemIcon.color = upgrade.repColor;
+
+		if (entryList[currentListIndex].done) {
+			costMoney.text = "";
+			costScrap.text = "";
+			level.text = "Researched!";
+		}
+		else {
+			costMoney.text = "Cost:  " + upgrade.cost;
+			costScrap.text = "Scrap:  " + upgrade.scrap;
+			level.text = "Level:  " + upgrade.level;
+		}
+
+		invPwrText.text = "Power:  " + upgrade.item.power;
+		invRangeText.text = "Range:  " + upgrade.item.range.ToString();
+		invHitText.text = "Hit Rate:  " + upgrade.item.hitRate;
+		invCritText.text = "Crit Rate:  " + upgrade.item.critRate;
+		weightText.text = "Weight:  " + upgrade.item.weight;
+		invReqText.text = "Req:  " + ItemEntry.GetRankLetter(upgrade.item.skillReq);
+		return;
+	}
 }

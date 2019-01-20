@@ -14,15 +14,16 @@ public class ItemEntry : ScrObjLibraryEntry {
     public ItemCategory itemCategory = ItemCategory.WEAPON;
     public ItemType itemType = ItemType.NONE;
 
-    public int power = 5;
+    public int cost;
     public int maxCharge;
+	public bool researchNeeded;
+	public int skillReq;
+    public int weight;
+
+    public int power = 5;
     public int hitRate;
     public int critRate;
     public WeaponRange range = new WeaponRange(1, 1);
-
-	public int skillReq;
-    public int weight;
-    public int cost;
     
     [Space(10)]
     
@@ -44,6 +45,7 @@ public class ItemEntry : ScrObjLibraryEntry {
 
 		cost = 0;
         maxCharge = 0;
+		researchNeeded = false;
         skillReq = 0;
         weight = 0;
 
@@ -72,6 +74,7 @@ public class ItemEntry : ScrObjLibraryEntry {
 
 		cost = item.cost;
         maxCharge = item.maxCharge;
+		researchNeeded = item.researchNeeded;
         skillReq = item.skillReq;
         weight = item.weight;
 

@@ -65,6 +65,10 @@ public class ShopBuyController : MonoBehaviour {
         for (int i = 0; i < listSize; i++) {
 			ItemEntry item = (buyMode) ? shopList.items[i] : playerData.items[i].item;
 			int charges = (buyMode) ? shopList.items[i].maxCharge : playerData.items[i].charges;
+
+			if (item.researchNeeded && !playerData.upgrader.IsResearched(item.uuid))
+				continue;
+
 			if (currentCategory == 7 && item.itemCategory == ItemCategory.CONSUME) {
 				CreateListEntry(i, item, charges);
 				tempListSize++;

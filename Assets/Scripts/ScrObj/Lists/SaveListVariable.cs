@@ -14,5 +14,16 @@ public class SaveListVariable : ScriptableObject {
 	public List<InventoryItem> items = new List<InventoryItem>();
 
 	// Science
-	public List<UpgradeEntry> upgrades = new List<UpgradeEntry>();
+	public UpgradeCalculator upgrader = new UpgradeCalculator();
+
+
+	public void ResetData() {
+		stats = new List<StatsContainer>();
+		inventory = new List<InventoryContainer>();
+		skills = new List<SkillsContainer>();
+		
+		items = new List<InventoryItem>();
+
+		upgrader = new UpgradeCalculator();
+	}
 } 

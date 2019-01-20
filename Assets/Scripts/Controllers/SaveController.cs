@@ -38,13 +38,15 @@ public class SaveController : MonoBehaviour {
 	public IntVariable currentChapterIndex;
 	public IntVariable currentPlayTime;
 	public IntVariable currentMoney;
+	public IntVariable currentScrap;
 	public IntVariable currentBexp;
 
 	[Header("Libraries")]
-	public ScrObjLibraryVariable itemLibrary;
-	public ScrObjLibraryVariable skillLibrary;
 	public ScrObjLibraryVariable characterLibrary;
 	public ScrObjLibraryVariable classLibrary;
+	public ScrObjLibraryVariable itemLibrary;
+	public ScrObjLibraryVariable skillLibrary;
+	public ScrObjLibraryVariable upgradeLibrary;
 
 	[Header("Options")]
 	public IntVariable musicVolume;
@@ -111,6 +113,7 @@ public class SaveController : MonoBehaviour {
 				chapterIndex = simpleChapterIndex[saveIndex.value].value,
 				playTime = simplePlayTimes[saveIndex.value].value,
 				money = currentMoney.value,
+				scrap = currentScrap.value,
 				bexp = currentBexp.value
 			};
 			for (int i = 0; i < playerData.stats.Count; i++) {
@@ -124,6 +127,11 @@ public class SaveController : MonoBehaviour {
 				ItemSaveData item = new ItemSaveData();
 				item.StoreData(playerData.items[i]);
 				data.items.Add(item);
+			}
+			for (int i = 0; i < playerData.upgrader.listSize; i++) {
+				UpgradeSaveData upgrade = new UpgradeSaveData();
+				upgrade.StoreData(playerData.upgrader.upgrades[i]);
+				data.upgrade.Add(upgrade);
 			}
 			saveFileData.saveFiles[saveIndex.value] = data;
 		}
@@ -199,12 +207,11 @@ public class SaveController : MonoBehaviour {
 		// Read data in save file
 		SaveData loadedData = saveFileData.saveFiles[saveIndex.value];
 		currentMoney.value = loadedData.money;
+		currentScrap.value = loadedData.scrap;
 		currentBexp.value = loadedData.bexp;
 
 		Debug.Log("Characters:  " + loadedData.characters.Count);
-		playerData.stats = new List<StatsContainer>();
-		playerData.inventory = new List<InventoryContainer>();
-		playerData.skills = new List<SkillsContainer>();
+		playerData.ResetData();
 		for (int i = 0; i < loadedData.characters.Count; i++) {
 			CharData cStats = (CharData)characterLibrary.GetEntry(loadedData.characters[i].id);
 			CharClass cClass = (CharClass)classLibrary.GetEntry(loadedData.characters[i].classID);
@@ -217,6 +224,11 @@ public class SaveController : MonoBehaviour {
 			ItemEntry item = (ItemEntry)itemLibrary.GetEntry(loadedData.items[i].id);
 			playerData.items.Add(new InventoryItem { item = item, charges = loadedData.items[i].charges });
 		}
+		for (int i = 0; i < loadedData.upgrade.Count; i++) {
+			UpgradeEntry upgrade = (UpgradeEntry)upgradeLibrary.GetEntry(loadedData.upgrade[i].id);
+			playerData.upgrader.upgrades.Add(new UpgradeItem { upgrade = upgrade, researched = loadedData.upgrade[i].researched });
+		}
+		playerData.upgrader.CalculateResearch();
 		Debug.Log("Successfully loaded the save data!");
 		loadFinishedEvent.Invoke();
 	}
@@ -239,7 +251,9 @@ public class SaveData {
 	public string levelName;
 	public int playTime;
 	public int money;
+	public int scrap;
 	public int bexp;
 	public List<CharacterSaveData> characters = new List<CharacterSaveData>();
 	public List<ItemSaveData> items = new List<ItemSaveData>();
+	public List<UpgradeSaveData> upgrade = new List<UpgradeSaveData>();
 }

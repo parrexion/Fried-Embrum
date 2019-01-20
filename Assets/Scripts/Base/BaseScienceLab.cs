@@ -6,80 +6,131 @@ using UnityEngine.UI;
 
 public class BaseScienceLab : InputReceiver {
 
+	[Header("Button menu")]
 	public MyButton[] buttons;
-    public UpgradeEntry[] upgrades;
+	public Text menuTitle;
 
-    public IntVariable currentMoney;
-    public Text currentMoneyText;
+	[Header("Views")]
+	public GameObject basicView;
+	public GameObject developView;
+
+	[Header("Handlers")]
+	public ScienceController scienceController;
+
+	[Header("Visuals")]
+	public GameObject upgradeInfo;
     public Image previousItem;
     public Image upgradedItem;
 
-    public GameObject upgradeInfo;
-    public GameObject developInfo;
-
-	public IntVariable currentIndex;
+	private int currentIndex;
+	private int menuMode;
     public UnityEvent upgradeChangedEvent;
 
 
 	private void Start () {
-		currentIndex.value = 0;
-		SetupButtons();
+		menuTitle.text = "LAB";
+		currentIndex = 0;
+		menuMode = 0;
+		basicView.SetActive(true);
+		developView.SetActive(false);
 	}
 
     public override void OnMenuModeChanged() {
 		active = (currentMenuMode.value == (int)MenuMode.BASE_LAB);
-		currentIndex.value = 0;
 		UpdateButtons();
 	}
 
-    public override void OnUpArrow() {
-		currentIndex.value--;
-		if (currentIndex.value < 0) {
-			currentIndex.value = upgrades.Length-1;
+	public override void OnUpArrow() {
+		if (!active)
+			return;
+		if (menuMode == 0) {
+			currentIndex = OPMath.FullLoop(0, buttons.Length - 1, currentIndex - 1);
+			UpdateButtons();
 		}
-		UpdateButtons();
-		upgradeChangedEvent.Invoke();
-	}
-
-    public override void OnDownArrow() {
-		currentIndex.value++;
-		if (currentIndex.value >= upgrades.Length) {
-			currentIndex.value = 0;
+		else if (menuMode == 1 || menuMode == 2) {
+			scienceController.MoveSelection(-1);
 		}
-		UpdateButtons();
-		upgradeChangedEvent.Invoke();
 	}
 
-	private void SetupButtons() {
-		for (int i = 0; i < buttons.Length; i++) {
-			if (i < upgrades.Length) {
-				buttons[i].buttonText.text = upgrades[i].entryName;
-				buttons[i].SetSelected(i == currentIndex.value);
-			}
-			else {
-				buttons[i].gameObject.SetActive(false);
-			}
+	public override void OnDownArrow() {
+		if (!active)
+			return;
+		if (menuMode == 0) {
+			currentIndex = OPMath.FullLoop(0, buttons.Length - 1, currentIndex + 1);
+			UpdateButtons();
+		}
+		else if (menuMode == 1 || menuMode == 2) {
+			scienceController.MoveSelection(1);
+		}
+	}
+
+	public override void OnLeftArrow() {
+		if (!active)
+			return;
+
+		if (menuMode == 1 || menuMode == 2) {
+			scienceController.MovePromt(-1);
+		}
+	}
+
+	public override void OnRightArrow() {
+		if (!active)
+			return;
+
+		if (menuMode == 1 || menuMode == 2) {
+			scienceController.MovePromt(1);
 		}
 	}
 
 	private void UpdateButtons() {
-        currentMoneyText.text = "Currency:  " + currentMoney.value;
-        UpgradeEntry upgrade = upgrades[currentIndex.value];
-        upgradeInfo.SetActive(upgrade.type == UpgradeType.UPGRADE);
-        developInfo.SetActive(upgrade.type == UpgradeType.INVENTION);
-        
-		for (int i = 0; i < upgrades.Length; i++) {
-			buttons[i].SetSelected(i == currentIndex.value);
+		for (int i = 0; i < buttons.Length; i++) {
+			buttons[i].SetSelected(i == currentIndex);
 		}
-        previousItem.sprite = upgradedItem.sprite = upgrades[currentIndex.value].item.icon;
 	}
 
-    public override void OnBackButton() { }
+	public override void OnOkButton() {
+		if (!active)
+			return;
+		if (menuMode == 0) {
+			if (currentIndex == 0) {
+				menuMode = 1;
+				menuTitle.text = "UPGRADE";
+				scienceController.GenerateLists(true);
+				developView.SetActive(true);
+				basicView.SetActive(false);
+			}
+			else if (currentIndex == 1) {
+				menuMode = 2;
+				menuTitle.text = "INVENTIONS";
+				scienceController.GenerateLists(false);
+				developView.SetActive(true);
+				basicView.SetActive(false);
+			}
+		}
+		else if (menuMode == 1 || menuMode == 2) {
+			scienceController.SelectItem(false);
+		}
+	}
+
+	public override void OnBackButton() {
+		if (!active)
+			return;
+		if (menuMode == 0) {
+
+		}
+		else if (menuMode == 1 || menuMode == 2) {
+			if (scienceController.DeselectItem()) {
+				menuMode = 0;
+				menuTitle.text = "LAB";
+				basicView.SetActive(true);
+				developView.SetActive(false);
+			}
+		}
+	}
+
+
     public override void OnLButton() { }
-    public override void OnLeftArrow() { }
-    public override void OnOkButton() { }
     public override void OnRButton() { }
-    public override void OnRightArrow() { }
     public override void OnStartButton() { }
     public override void OnXButton() { }
     public override void OnYButton() { }

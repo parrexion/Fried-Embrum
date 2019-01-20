@@ -97,7 +97,7 @@ public class StatsContainer {
 		// }
 		for (int i = 0; i < saveData.supports.Count; i++) {
 			supportValues.Add(saveData.supports[i]);
-			Debug.Log("Added support value " + supportValues[i].uuid + " = " + supportValues[i].value);
+			//Debug.Log("Added support value " + supportValues[i].uuid + " = " + supportValues[i].value);
 		}
 		
 		CalculateStats();

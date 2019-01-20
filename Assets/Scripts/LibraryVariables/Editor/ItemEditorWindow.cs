@@ -155,8 +155,11 @@ public class ItemEditorWindow {
 		GUILayout.Space(10);
 
 		GUILayout.Label("Basic Values", EditorStyles.boldLabel);
+		GUILayout.BeginHorizontal();
 		itemValues.cost = EditorGUILayout.IntField("Money Value", itemValues.cost);
 		itemValues.maxCharge = EditorGUILayout.IntField("Max Charges", itemValues.maxCharge);
+		GUILayout.EndHorizontal();
+		itemValues.researchNeeded = EditorGUILayout.Toggle("Research needed", itemValues.researchNeeded);
 
 		GUILayout.Space(10);
 
