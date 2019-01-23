@@ -42,6 +42,7 @@ public class SaveController : MonoBehaviour {
 	public IntVariable currentBexp;
 
 	[Header("Libraries")]
+	public ScrObjLibraryVariable missionLibrary;
 	public ScrObjLibraryVariable characterLibrary;
 	public ScrObjLibraryVariable classLibrary;
 	public ScrObjLibraryVariable itemLibrary;
@@ -91,7 +92,7 @@ public class SaveController : MonoBehaviour {
 		using (XmlWriter xmlWriter = XmlWriter.Create(_savePath, xmlWriterSettings)) {
 			serializer.Serialize(xmlWriter, saveFileData);
 		}
-		Debug.Log("Successfully saved new save data!\n" + _savePath);
+		Debug.Log("Successfully created a new save file!\n" + _savePath);
 	}
 
 	public void Save(bool onlyOptions) {
@@ -132,6 +133,11 @@ public class SaveController : MonoBehaviour {
 				UpgradeSaveData upgrade = new UpgradeSaveData();
 				upgrade.StoreData(playerData.upgrader.upgrades[i]);
 				data.upgrade.Add(upgrade);
+			}
+			for (int i = 0; i < playerData.missions.Count; i++) {
+				MissionSaveData mission = new MissionSaveData();
+				mission.StoreData(playerData.missions[i]);
+				data.missions.Add(mission);
 			}
 			saveFileData.saveFiles[saveIndex.value] = data;
 		}
@@ -209,8 +215,7 @@ public class SaveController : MonoBehaviour {
 		currentMoney.value = loadedData.money;
 		currentScrap.value = loadedData.scrap;
 		currentBexp.value = loadedData.bexp;
-
-		Debug.Log("Characters:  " + loadedData.characters.Count);
+		
 		playerData.ResetData();
 		for (int i = 0; i < loadedData.characters.Count; i++) {
 			CharData cStats = (CharData)characterLibrary.GetEntry(loadedData.characters[i].id);
@@ -227,6 +232,10 @@ public class SaveController : MonoBehaviour {
 		for (int i = 0; i < loadedData.upgrade.Count; i++) {
 			UpgradeEntry upgrade = (UpgradeEntry)upgradeLibrary.GetEntry(loadedData.upgrade[i].id);
 			playerData.upgrader.upgrades.Add(new UpgradeItem { upgrade = upgrade, researched = loadedData.upgrade[i].researched });
+		}
+		for (int i = 0; i < loadedData.missions.Count; i++) {
+			MapEntry map = (MapEntry)missionLibrary.GetEntry(loadedData.missions[i].id);
+			playerData.missions.Add(new MissionContainer { map = map, cleared = loadedData.missions[i].cleared });
 		}
 		playerData.upgrader.CalculateResearch();
 		Debug.Log("Successfully loaded the save data!");
@@ -256,4 +265,5 @@ public class SaveData {
 	public List<CharacterSaveData> characters = new List<CharacterSaveData>();
 	public List<ItemSaveData> items = new List<ItemSaveData>();
 	public List<UpgradeSaveData> upgrade = new List<UpgradeSaveData>();
+	public List<MissionSaveData> missions = new List<MissionSaveData>();
 }

@@ -3,8 +3,9 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -18,14 +19,18 @@ MonoBehaviour:
   sizeX: 15
   sizeY: 10
   mapSprite: {fileID: 2800000, guid: 27372e41419cadd41976cb5bdcf89c36, type: 3}
+  mapLocation: 4
   winCondition: 1
   loseCondition: 0
+  reward:
+    money: 0
+    scrap: 25
+    items: []
   preDialogue: {fileID: 11400000, guid: 6f84cbd5fbe1eb946a719ea208f697d3, type: 2}
   postDialogue: {fileID: 11400000, guid: 00a5adf2124c59443bac12ecc1b2caa4, type: 2}
   owMusic: {fileID: 11400000, guid: c5d55a00157aa9d45904a928008f24d0, type: 2}
   battleMusic: {fileID: 11400000, guid: a157ae89a4b1e784cbe12bd1e184e2ea, type: 2}
   healMusic: {fileID: 11400000, guid: c9ab7f5c344f22c458bafeb1c2e29d45, type: 2}
-  deathMusic: {fileID: 11400000, guid: ff820a6cfd3df324b9b60bcc7b25c3f1, type: 2}
   spawnPoints:
   - x: 11
     y: 7
@@ -46,7 +51,8 @@ MonoBehaviour:
     inventory: []
     skills: []
   enemies:
-  - x: 7
+  - spawnTurn: 0
+    x: 7
     y: 9
     level: 1
     stats: {fileID: 11400000, guid: 3c62e59d0a22e10499d7722b228fdf6c, type: 2}
@@ -57,7 +63,10 @@ MonoBehaviour:
     aggroType: 1
     hasQuotes: 0
     quotes: []
-  - x: 7
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 0
+    x: 7
     y: 0
     level: 2
     stats: {fileID: 11400000, guid: 3c62e59d0a22e10499d7722b228fdf6c, type: 2}
@@ -68,7 +77,10 @@ MonoBehaviour:
     aggroType: 1
     hasQuotes: 0
     quotes: []
-  - x: 11
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 0
+    x: 11
     y: 0
     level: 2
     stats: {fileID: 11400000, guid: 3c62e59d0a22e10499d7722b228fdf6c, type: 2}
@@ -79,7 +91,10 @@ MonoBehaviour:
     aggroType: 1
     hasQuotes: 0
     quotes: []
-  - x: 13
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 0
+    x: 13
     y: 1
     level: 1
     stats: {fileID: 11400000, guid: 3c62e59d0a22e10499d7722b228fdf6c, type: 2}
@@ -90,7 +105,10 @@ MonoBehaviour:
     aggroType: 0
     hasQuotes: 0
     quotes: []
-  - x: 11
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 0
+    x: 11
     y: 6
     level: 2
     stats: {fileID: 11400000, guid: 3c62e59d0a22e10499d7722b228fdf6c, type: 2}
@@ -101,7 +119,10 @@ MonoBehaviour:
     aggroType: 0
     hasQuotes: 0
     quotes: []
-  - x: 1
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 0
+    x: 1
     y: 8
     level: 4
     stats: {fileID: 11400000, guid: 8c328efc038d7c54db0da4721724c8b5, type: 2}
@@ -117,6 +138,9 @@ MonoBehaviour:
     - triggerer: {fileID: 0}
       quote: {fileID: 11400000, guid: 00d834485ff097e419184cc797ba8cc7, type: 2}
       activated: 0
+    huntX: 0
+    huntY: 0
+  reinforcements: []
   interactions:
   - x: 8
     y: 6
@@ -124,27 +148,63 @@ MonoBehaviour:
     health: 20
     dialogue: {fileID: 0}
     gift: {fileID: 0}
+    ally:
+      x: 0
+      y: 0
+      level: 0
+      stats: {fileID: 0}
+      inventory: []
+      skills: []
   - x: 0
     y: 0
     interactType: 3
     health: 0
     dialogue: {fileID: 11400000, guid: 4ca399a4972b5c14fbb5c99c0306417e, type: 2}
     gift: {fileID: 0}
+    ally:
+      x: 0
+      y: 0
+      level: 0
+      stats: {fileID: 0}
+      inventory: []
+      skills: []
   - x: 0
     y: 2
     interactType: 3
     health: 0
     dialogue: {fileID: 11400000, guid: 518bc3f193a675a439e6f4c696cf45a7, type: 2}
     gift: {fileID: 0}
+    ally:
+      x: 0
+      y: 0
+      level: 0
+      stats: {fileID: 0}
+      inventory: []
+      skills: []
   - x: 1
     y: 2
     interactType: 3
     health: 0
     dialogue: {fileID: 11400000, guid: e81888ec135add149b578621985bcfe3, type: 2}
     gift: {fileID: 0}
+    ally:
+      x: 0
+      y: 0
+      level: 0
+      stats: {fileID: 0}
+      inventory: []
+      skills: []
   - x: 11
     y: 8
     interactType: 4
     health: 0
     dialogue: {fileID: 0}
     gift: {fileID: 0}
+    ally:
+      x: 0
+      y: 0
+      level: 0
+      stats: {fileID: 0}
+      inventory: []
+      skills: []
+  turnEvents: []

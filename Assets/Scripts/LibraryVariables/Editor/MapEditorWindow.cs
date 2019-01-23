@@ -147,6 +147,7 @@ public class MapEditorWindow {
 
 		EditorGUILayout.SelectableLabel("Selected Map:   " + mapValues.uuid, EditorStyles.boldLabel);
 		mapValues.entryName = EditorGUILayout.TextField("Map Name", mapValues.entryName);
+		mapValues.mapLocation = (MapLocation)EditorGUILayout.EnumPopup("Location",mapValues.mapLocation);
 
 		GUILayout.Space(10);
 		GUILayout.Label("Map objectives", EditorStyles.boldLabel);
@@ -156,6 +157,27 @@ public class MapEditorWindow {
 		GUILayout.Space(20);
 		mapValues.loseCondition = (LoseCondition)EditorGUILayout.EnumPopup("Lose",mapValues.loseCondition);
 		GUILayout.EndHorizontal();
+
+		GUILayout.Label("Rewards", EditorStyles.boldLabel);
+		GUILayout.BeginHorizontal();
+		mapValues.reward.money = EditorGUILayout.IntField("Money", mapValues.reward.money);
+		mapValues.reward.scrap = EditorGUILayout.IntField("Scrap", mapValues.reward.scrap);
+		GUILayout.EndHorizontal();
+		GUILayout.Space(5);
+		for (int i = 0; i < mapValues.reward.items.Count; i++) {
+			GUILayout.BeginHorizontal();
+			mapValues.reward.items[i] = (ItemEntry)EditorGUILayout.ObjectField("Item", mapValues.reward.items[i], typeof(ItemEntry), false);
+			if (GUILayout.Button("X", GUILayout.Width(50))) {
+				GUI.FocusControl(null);
+				mapValues.reward.items.RemoveAt(i);
+				i--;
+				continue;
+			}
+			GUILayout.EndHorizontal();
+		}
+		if (GUILayout.Button("+")) {
+			mapValues.reward.items.Add(null);
+		}
 
 		GUILayout.Space(10);
 

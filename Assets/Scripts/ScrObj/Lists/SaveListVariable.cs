@@ -16,6 +16,9 @@ public class SaveListVariable : ScriptableObject {
 	// Science
 	public UpgradeCalculator upgrader = new UpgradeCalculator();
 
+	// Missions
+	public List<MissionContainer> missions = new List<MissionContainer>();
+
 
 	public void ResetData() {
 		stats = new List<StatsContainer>();
@@ -25,5 +28,7 @@ public class SaveListVariable : ScriptableObject {
 		items = new List<InventoryItem>();
 
 		upgrader = new UpgradeCalculator();
+
+		missions = new List<MissionContainer>();
 	}
 } 

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public enum WinCondition { ROUT, SEIZE, BOSS, ESCAPE, DEFEND }
 public enum LoseCondition { NORMAL, SEIZE, PROTECT }
+public enum MapLocation { UNKNOWN, RYERDE, KHATHELET, THRIA, BADON, TASCANA }
 
 [CreateAssetMenu(menuName = "LibraryEntries/MapEntry")]
 public class MapEntry : ScrObjLibraryEntry {
@@ -12,8 +13,12 @@ public class MapEntry : ScrObjLibraryEntry {
 	public int sizeX;
 	public int sizeY;
 	public Texture2D mapSprite;
+	public MapLocation mapLocation;
+
+	[Header("Objectives")]
 	public WinCondition winCondition;
 	public LoseCondition loseCondition;
+	public Reward reward = new Reward();
 
 	[Header("Dialogues")]
 	public DialogueEntry preDialogue;
@@ -42,8 +47,11 @@ public class MapEntry : ScrObjLibraryEntry {
 		sizeX = 0;
 		sizeY = 0;
 		mapSprite = null;
+		mapLocation = MapLocation.UNKNOWN;
+
 		winCondition = WinCondition.ROUT;
 		loseCondition = LoseCondition.NORMAL;
+		reward = new Reward();
 
 		base.ResetValues();
 		preDialogue = null;
@@ -67,8 +75,11 @@ public class MapEntry : ScrObjLibraryEntry {
 		sizeX = map.sizeX;
 		sizeY = map.sizeY;
 		mapSprite = map.mapSprite;
+		mapLocation = map.mapLocation;
+
 		winCondition = map.winCondition;
 		loseCondition = map.loseCondition;
+		reward = map.reward;
 
 		preDialogue = map.preDialogue;
 		postDialogue = map.postDialogue;
@@ -99,7 +110,6 @@ public class MapEntry : ScrObjLibraryEntry {
 		}
 	}
 }
-
 
 [System.Serializable]
 public class PlayerPosition {
@@ -162,4 +172,11 @@ public class FightQuote {
 	public CharData triggerer;
 	public DialogueEntry quote;
 	public bool activated;
+}
+
+[System.Serializable]
+public class Reward {
+	public int money;
+	public int scrap;
+	public List<ItemEntry> items = new List<ItemEntry>();
 }

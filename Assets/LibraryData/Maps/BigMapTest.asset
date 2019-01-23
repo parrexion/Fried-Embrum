@@ -1,0 +1,87 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4424ecce59954d349b8dc1a5714d0991, type: 3}
+  m_Name: BigMapTest
+  m_EditorClassIdentifier: 
+  uuid: BigMapTest
+  entryName: BigMapTest
+  repColor: {r: 0.3025098, g: 0.6226415, b: 0.51930654, a: 1}
+  tag: 
+  sizeX: 25
+  sizeY: 25
+  mapSprite: {fileID: 2800000, guid: a3c6a08169d5a7a48a24b6c00ef2e54c, type: 3}
+  mapLocation: 2
+  winCondition: 0
+  loseCondition: 0
+  reward:
+    money: 500
+    scrap: 20
+    items:
+    - {fileID: 11400000, guid: 21e0cdf65dcd3c64f99de572c0526714, type: 2}
+  preDialogue: {fileID: 11400000, guid: 60b2b588570390f4fa5614660432dbbb, type: 2}
+  postDialogue: {fileID: 11400000, guid: 3437291ceec4cd64c8b13b3d61dde437, type: 2}
+  owMusic: {fileID: 11400000, guid: c5d55a00157aa9d45904a928008f24d0, type: 2}
+  battleMusic: {fileID: 11400000, guid: a157ae89a4b1e784cbe12bd1e184e2ea, type: 2}
+  healMusic: {fileID: 11400000, guid: c9ab7f5c344f22c458bafeb1c2e29d45, type: 2}
+  spawnPoints:
+  - x: 2
+    y: 4
+    level: 0
+    stats: {fileID: 0}
+    inventory: []
+    skills: []
+  - x: 3
+    y: 1
+    level: 0
+    stats: {fileID: 0}
+    inventory: []
+    skills: []
+  enemies:
+  - spawnTurn: 0
+    x: 8
+    y: 8
+    level: 2
+    stats: {fileID: 11400000, guid: 3c62e59d0a22e10499d7722b228fdf6c, type: 2}
+    inventory: []
+    skills: []
+    aggroType: 0
+    hasQuotes: 0
+    quotes: []
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 0
+    x: 12
+    y: 7
+    level: 1
+    stats: {fileID: 11400000, guid: 3c62e59d0a22e10499d7722b228fdf6c, type: 2}
+    inventory: []
+    skills: []
+    aggroType: 0
+    hasQuotes: 0
+    quotes: []
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 0
+    x: 7
+    y: 20
+    level: 4
+    stats: {fileID: 11400000, guid: d97777127cd0d214aa49cb5f8201f6f9, type: 2}
+    inventory: []
+    skills: []
+    aggroType: 3
+    hasQuotes: 0
+    quotes: []
+    huntX: 0
+    huntY: 0
+  reinforcements: []
+  interactions: []
+  turnEvents: []

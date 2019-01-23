@@ -3,8 +3,9 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -15,15 +16,23 @@ MonoBehaviour:
   entryName: Chapter 1
   repColor: {r: 0, g: 0, b: 0, a: 0}
   tag: 
+  sizeX: 15
+  sizeY: 10
+  mapSprite: {fileID: 2800000, guid: a75e698ec45c3c24eb526e74823c0324, type: 3}
+  mapLocation: 3
+  winCondition: 0
+  loseCondition: 0
+  reward:
+    money: 0
+    scrap: 0
+    items:
+    - {fileID: 11400000, guid: 5d5e0c27d71f7334582f303ff4483c8a, type: 2}
+    - {fileID: 11400000, guid: 0f3a39b4943c3394d894979e1c3bea9d, type: 2}
   preDialogue: {fileID: 11400000, guid: 6035377f5a1c88543abe60b340e7b8fe, type: 2}
   postDialogue: {fileID: 11400000, guid: b0d7cdd69b548af4fa2330de5d2d01e0, type: 2}
   owMusic: {fileID: 11400000, guid: c5d55a00157aa9d45904a928008f24d0, type: 2}
   battleMusic: {fileID: 11400000, guid: a157ae89a4b1e784cbe12bd1e184e2ea, type: 2}
   healMusic: {fileID: 11400000, guid: c9ab7f5c344f22c458bafeb1c2e29d45, type: 2}
-  deathMusic: {fileID: 11400000, guid: ff820a6cfd3df324b9b60bcc7b25c3f1, type: 2}
-  sizeX: 15
-  sizeY: 10
-  mapSprite: {fileID: 2800000, guid: a75e698ec45c3c24eb526e74823c0324, type: 3}
   spawnPoints:
   - x: 2
     y: 1
@@ -32,9 +41,9 @@ MonoBehaviour:
     inventory:
     - item: {fileID: 11400000, guid: 21e0cdf65dcd3c64f99de572c0526714, type: 2}
       droppable: 0
-    - item: {fileID: 11400000, guid: 4f62fac29e57cf149a77b69982270829, type: 2}
+    - item: {fileID: 0}
       droppable: 0
-    - item: {fileID: 11400000, guid: 4f62fac29e57cf149a77b69982270829, type: 2}
+    - item: {fileID: 0}
       droppable: 0
     skills: []
   - x: 0
@@ -44,9 +53,9 @@ MonoBehaviour:
     inventory:
     - item: {fileID: 11400000, guid: 21e0cdf65dcd3c64f99de572c0526714, type: 2}
       droppable: 0
-    - item: {fileID: 11400000, guid: 70a69ddf23ff8c4479dae28fb5396f18, type: 2}
+    - item: {fileID: 0}
       droppable: 0
-    - item: {fileID: 11400000, guid: 4f62fac29e57cf149a77b69982270829, type: 2}
+    - item: {fileID: 0}
       droppable: 0
     skills: []
   - x: 0
@@ -54,18 +63,19 @@ MonoBehaviour:
     level: 1
     stats: {fileID: 11400000, guid: 0bf81bfd9c0d55f49a76297d05c3a788, type: 2}
     inventory:
-    - item: {fileID: 11400000, guid: 70a69ddf23ff8c4479dae28fb5396f18, type: 2}
+    - item: {fileID: 0}
       droppable: 0
     - item: {fileID: 11400000, guid: 21e0cdf65dcd3c64f99de572c0526714, type: 2}
       droppable: 0
     skills: []
   enemies:
-  - x: 13
+  - spawnTurn: 0
+    x: 13
     y: 8
     level: 4
     stats: {fileID: 11400000, guid: d97777127cd0d214aa49cb5f8201f6f9, type: 2}
     inventory:
-    - item: {fileID: 11400000, guid: 44de95ac3ea804a4d805c36c1ac7039e, type: 2}
+    - item: {fileID: 0}
       droppable: 0
     skills: []
     aggroType: 3
@@ -74,48 +84,64 @@ MonoBehaviour:
     - triggerer: {fileID: 0}
       quote: {fileID: 11400000, guid: 0d079fc5442fd004ba690c6a64087362, type: 2}
       activated: 0
-  - x: 4
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 0
+    x: 4
     y: 3
     level: 1
     stats: {fileID: 11400000, guid: 3c62e59d0a22e10499d7722b228fdf6c, type: 2}
     inventory:
-    - item: {fileID: 11400000, guid: 44de95ac3ea804a4d805c36c1ac7039e, type: 2}
+    - item: {fileID: 0}
       droppable: 0
     skills: []
     aggroType: 1
     hasQuotes: 0
     quotes: []
-  - x: 9
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 0
+    x: 9
     y: 0
     level: 1
     stats: {fileID: 11400000, guid: 3c62e59d0a22e10499d7722b228fdf6c, type: 2}
     inventory:
-    - item: {fileID: 11400000, guid: 44de95ac3ea804a4d805c36c1ac7039e, type: 2}
+    - item: {fileID: 0}
       droppable: 0
     skills: []
     aggroType: 1
     hasQuotes: 0
     quotes: []
-  - x: 12
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 0
+    x: 12
     y: 8
     level: 2
     stats: {fileID: 11400000, guid: 3c62e59d0a22e10499d7722b228fdf6c, type: 2}
     inventory:
-    - item: {fileID: 11400000, guid: 44de95ac3ea804a4d805c36c1ac7039e, type: 2}
+    - item: {fileID: 0}
       droppable: 0
     skills: []
     aggroType: 1
     hasQuotes: 0
     quotes: []
-  - x: 13
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 0
+    x: 13
     y: 4
     level: 2
     stats: {fileID: 11400000, guid: 3c62e59d0a22e10499d7722b228fdf6c, type: 2}
     inventory:
-    - item: {fileID: 11400000, guid: 44de95ac3ea804a4d805c36c1ac7039e, type: 2}
+    - item: {fileID: 0}
       droppable: 0
     skills: []
     aggroType: 0
     hasQuotes: 0
     quotes: []
+    huntX: 0
+    huntY: 0
+  reinforcements: []
   interactions: []
+  turnEvents: []
