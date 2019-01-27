@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BaseController : InputReceiver {
 
@@ -22,6 +23,9 @@ public class BaseController : InputReceiver {
 			areas[i].gameObject.SetActive(true);
 		}
 		SetAreaPositions(0);
+		currentMenuMode.value = (int)screens[1];
+		menuModeChangedEvent.Invoke();
+		lockControls.value = false;
 	}
 
     public override void OnLButton() {
@@ -62,6 +66,11 @@ public class BaseController : InputReceiver {
 		for (int i = 0; i < areas.Count; i++) {
 			areas[i].transform.position = new Vector3(width * 0.5f + (width + widthOffset) * (i-1) - offset, height * 0.5f, 0);
 		}
+	}
+
+	public void StartMission() {
+		lockControls.value = false;
+		SceneManager.LoadScene("LoadingScreen");
 	}
 
 

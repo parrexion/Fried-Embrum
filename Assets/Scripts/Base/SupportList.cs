@@ -27,7 +27,7 @@ public class SupportList : MonoBehaviour {
 		currentListIndex = 0;
 
 		for (int i = transform.childCount-1; i > 0; i--) {
-			GameObject.Destroy(transform.GetChild(i).gameObject);
+			Destroy(transform.GetChild(i).gameObject);
 		}
 
 		for (int i = 0; i < listSize; i++) {

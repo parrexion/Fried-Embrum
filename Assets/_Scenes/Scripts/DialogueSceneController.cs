@@ -15,6 +15,7 @@ public class DialogueSceneController : MonoBehaviour {
 	[Header("Events")]
 	public UnityEvent resumeBattleEvent;
 	public UnityEvent resumeTurnEvent;
+	public UnityEvent startBattleprepEvent;
 	public UnityEvent playSubMusicEvent;
 
 
@@ -43,7 +44,7 @@ public class DialogueSceneController : MonoBehaviour {
 		switch (currentDialogueMode.value)
 		{
 			case (int)DialogueMode.PRE:
-				resumeTurnEvent.Invoke();
+				startBattleprepEvent.Invoke();
 				ActivateStuff(false);
 				break;
 			case (int)DialogueMode.POST:

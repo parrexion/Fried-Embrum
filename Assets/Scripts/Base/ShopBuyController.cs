@@ -55,7 +55,7 @@ public class ShopBuyController : MonoBehaviour {
     private void GenerateList() {
 		TotalMoneyText.text = "Money:  " + totalMoney.value;
         for (int i = listParent.childCount - 1; i > 2; i--) {
-            GameObject.Destroy(listParent.GetChild(i).gameObject);
+            Destroy(listParent.GetChild(i).gameObject);
         }
 
         entryList = new List<ItemListEntry>();

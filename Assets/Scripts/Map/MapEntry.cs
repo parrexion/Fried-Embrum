@@ -21,6 +21,7 @@ public class MapEntry : ScrObjLibraryEntry {
 	public Reward reward = new Reward();
 
 	[Header("Dialogues")]
+	public bool skipBattlePrep;
 	public DialogueEntry preDialogue;
 	public DialogueEntry postDialogue;
 

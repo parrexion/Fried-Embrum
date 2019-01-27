@@ -24,9 +24,21 @@ public class BaseMission : InputReceiver {
 	public Text missionRewardItem;
 	public Text missionRewardItem2;
 
+	[Header("Mission Prompt")]
+	public GameObject promptView;
+	public MyButton promptYesButton;
+	public MyButton promptNoButton;
+	public UnityEvent startMissionEvent;
+	private bool promptMode;
+	private int promptPosition;
+
+	[Header("Selected Mission")]
+	public ScrObjEntryReference currentMap;
+
 
 	private void Start () {
 		currentIndex = 0;
+		promptView.SetActive(false);
 		SetupButtons();
 	}
 
@@ -38,7 +50,7 @@ public class BaseMission : InputReceiver {
 	}
 
     public override void OnUpArrow() {
-		if (!active)
+		if (!active || promptMode)
 			return;
 
 		currentIndex = OPMath.FullLoop(0, availableMaps.Count - 1, currentIndex - 1);
@@ -48,7 +60,7 @@ public class BaseMission : InputReceiver {
 	}
 
     public override void OnDownArrow() {
-		if (!active)
+		if (!active || promptMode)
 			return;
 
 		currentIndex = OPMath.FullLoop(0, availableMaps.Count - 1, currentIndex + 1);
@@ -58,11 +70,41 @@ public class BaseMission : InputReceiver {
 	}
 
     public override void OnOkButton() {
-
+		if (!active)
+			return;
+		if (!promptMode) {
+			promptMode = true;
+			promptPosition = 0;
+			ChangePrompt(0);
+			promptView.SetActive(true);
+		}
+		else if (promptPosition == 0) {
+			StartMission();
+		}
+		else {
+			OnBackButton();
+		}
 	}
 
     public override void OnBackButton() {
+		if (!active)
+			return;
+		if (!promptMode)
+			return;
+		promptMode = false;
+		promptView.SetActive(false);
+	}
 
+    public override void OnLeftArrow() {
+		if (!active || !promptMode)
+			return;
+		ChangePrompt(-1);
+	}
+
+    public override void OnRightArrow() {
+		if (!active || !promptMode)
+			return;
+		ChangePrompt(1);
 	}
 
 	private void SetupButtons() {
@@ -87,6 +129,9 @@ public class BaseMission : InputReceiver {
 	}
 
 	private void ShowMissionInfo() {
+		if (availableMaps.Count <= currentIndex)
+			return;
+
 		MapEntry map = availableMaps[currentIndex].map;
 		missionName.text = map.entryName;
 		missionLocation.text = "Location:  " + map.mapLocation;
@@ -103,11 +148,24 @@ public class BaseMission : InputReceiver {
 		missionRewardItem2.gameObject.SetActive(map.reward.items.Count > 1);
 	}
 
+    public void ChangePrompt(int dir) {
+        if (!promptMode)
+            return;
+
+		promptPosition = (promptPosition + dir) % 2;
+		promptYesButton.SetSelected(promptPosition == 0);
+		promptNoButton.SetSelected(promptPosition == 1);
+    }
+
+	private void StartMission() {
+		currentMap.value = availableMaps[currentIndex].map;
+		Debug.Log("Start mission:  " + currentMap.value.entryName);
+		startMissionEvent.Invoke();
+	}
+
 
     public override void OnLButton() { }
-    public override void OnLeftArrow() { }
     public override void OnRButton() { }
-    public override void OnRightArrow() { }
     public override void OnStartButton() { }
     public override void OnXButton() { }
     public override void OnYButton() { }

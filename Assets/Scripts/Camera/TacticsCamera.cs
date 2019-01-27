@@ -85,7 +85,7 @@ public class TacticsCamera : MonoBehaviour {
 		float horizExtent = vertExtent * 0.5f * (float)Screen.width / (float)Screen.height + 1.5f;
 
 		//Debug.Log(string.Format("Clamp {0}  Min: {1} , Max: {2}", horizExtent, boxCollider.min.x + horizExtent, boxCollider.max.x - horizExtent));
-		Debug.Log(string.Format("Clamp {0}  Min: {1} , Max: {2}", vertExtent, boxCollider.min.y + vertExtent, boxCollider.max.y - vertExtent));
+		//Debug.Log(string.Format("Clamp {0}  Min: {1} , Max: {2}", vertExtent, boxCollider.min.y + vertExtent, boxCollider.max.y - vertExtent));
 
 		return new Vector3(
 			Mathf.Clamp(input.x, boxCollider.min.x + horizExtent +3.2f, boxCollider.max.x - horizExtent +1),
