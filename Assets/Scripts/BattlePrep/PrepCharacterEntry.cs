@@ -12,26 +12,28 @@ public class PrepCharacterEntry : MonoBehaviour {
 	public TMPro.TextMeshProUGUI level;
 	public TMPro.TextMeshProUGUI exp;
 	public TMPro.TextMeshProUGUI hp;
-	public bool selected;
-	public bool available;
 
 	
 	/// <summary>
 	/// Fills the entry with the data of the character.
 	/// </summary>
 	/// <param name="stats"></param>
-	public void FillData(StatsContainer stats, bool selected, bool available) {
+	public void FillData(StatsContainer stats, PrepCharacter prep) {
 		portrait.sprite = stats.charData.portrait;
 		entryName.text = stats.charData.entryName;
 		className.text = stats.charData.entryName;
 		level.text = stats.currentLevel.ToString();
 		exp.text = stats.currentExp.ToString();
 		hp.text = stats.hp.ToString();
-		this.selected = selected;
-		this.available = available;
-		SetDark(!selected || !available);
+
+		entryName.color = (prep.forced) ? Color.green : Color.black;
+		SetDark(!prep.selected || prep.locked);
 	}
 
+	/// <summary>
+	/// Darkens the portrait to show that the entry is not active
+	/// </summary>
+	/// <param name="state"></param>
 	public void SetDark(bool state) {
 		portrait.color = (!state) ? Color.white : Color.grey;
 	}

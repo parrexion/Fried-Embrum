@@ -26,6 +26,7 @@ public class MapEditorWindow {
 	Color repColor = new Color(0, 0, 0, 1f);
 
 	private bool showPlayerStuff = false;
+	private bool showPlayerSpecialStuff = false;
 	private bool showEnemyStuff = false;
 	private bool showInteractStuff = false;
 	private bool showTurnEventStuff = false;
@@ -98,6 +99,8 @@ public class MapEditorWindow {
 	}
 
 	void DrawBackgrounds() {
+		if (selectTex == null || dispTex == null)
+			InitializeWindow();
 		GUI.DrawTexture(selectRect, selectTex);
 		GUI.DrawTexture(dispRect, dispTex);
 	}
@@ -216,6 +219,18 @@ public class MapEditorWindow {
 
 		GUILayout.Space(10);
 
+		// Player selection stuff
+		GUILayout.BeginHorizontal();
+		GUILayout.Label("Character limitations", EditorStyles.boldLabel);
+		if (GUILayout.Button((showPlayerSpecialStuff) ? "Hide" : "Show", GUILayout.Width(150))) {
+			showPlayerSpecialStuff = !showPlayerSpecialStuff;
+		}
+		GUILayout.EndHorizontal();
+		if (showPlayerSpecialStuff)
+			DrawCharacterLimitStuff();
+
+		GUILayout.Space(10);
+
 		// Enemies 
 		GUILayout.BeginHorizontal();
 		GUILayout.Label("Enemy spawn points", EditorStyles.boldLabel);
@@ -316,6 +331,46 @@ public class MapEditorWindow {
 		}
 		if (GUILayout.Button("+")) {
 			mapValues.spawnPoints.Add(new PlayerPosition());
+		}
+	}
+
+	private void DrawCharacterLimitStuff() {
+		GUILayout.Space(5);
+
+		GUILayout.Label("Forced Characters");
+		for (int i = 0; i < mapValues.forcedCharacters.Count; i++) {
+			GUILayout.BeginHorizontal();
+			EditorGUIUtility.labelWidth = 70;
+			mapValues.forcedCharacters[i] = (CharData)EditorGUILayout.ObjectField("Character", mapValues.forcedCharacters[i], typeof(CharData), false);
+			if (GUILayout.Button("X", GUILayout.Width(50))) {
+				GUI.FocusControl(null);
+				mapValues.forcedCharacters.RemoveAt(i);
+				i--;
+			}
+			GUILayout.EndHorizontal();
+			LibraryEditorWindow.HorizontalLine(Color.black);
+		}
+		if (GUILayout.Button("+")) {
+			mapValues.forcedCharacters.Add(null);
+		}
+
+		GUILayout.Space(5);
+
+		GUILayout.Label("Locked Characters");
+		for (int i = 0; i < mapValues.lockedCharacters.Count; i++) {
+			GUILayout.BeginHorizontal();
+			EditorGUIUtility.labelWidth = 70;
+			mapValues.lockedCharacters[i] = (CharData)EditorGUILayout.ObjectField("Character", mapValues.lockedCharacters[i], typeof(CharData), false);
+			if (GUILayout.Button("X", GUILayout.Width(50))) {
+				GUI.FocusControl(null);
+				mapValues.lockedCharacters.RemoveAt(i);
+				i--;
+			}
+			GUILayout.EndHorizontal();
+			LibraryEditorWindow.HorizontalLine(Color.black);
+		}
+		if (GUILayout.Button("+")) {
+			mapValues.lockedCharacters.Add(null);
 		}
 	}
 

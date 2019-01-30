@@ -32,6 +32,8 @@ public class MapEntry : ScrObjLibraryEntry {
 
 	[Header("Players")]
 	public List<PlayerPosition> spawnPoints = new List<PlayerPosition>();
+	public List<CharData> forcedCharacters = new List<CharData>();
+	public List<CharData> lockedCharacters = new List<CharData>();
 	
 	[Header("Enemies")]
 	public List<EnemyPosition> enemies = new List<EnemyPosition>();
@@ -63,6 +65,8 @@ public class MapEntry : ScrObjLibraryEntry {
 		healMusic = null;
 
 		spawnPoints = new List<PlayerPosition>();
+		forcedCharacters = new List<CharData>();
+		lockedCharacters = new List<CharData>();
 		enemies = new List<EnemyPosition>();
 		interactions = new List<InteractPosition>();
 		turnEvents = new List<TurnEvent>();
@@ -93,6 +97,14 @@ public class MapEntry : ScrObjLibraryEntry {
 		for (int i = 0; i < map.spawnPoints.Count; i++) {
 			spawnPoints.Add(map.spawnPoints[i]);
 		}
+		forcedCharacters = new List<CharData>();
+		for (int i = 0; i < map.forcedCharacters.Count; i++) {
+			forcedCharacters.Add(map.forcedCharacters[i]);
+		}
+		lockedCharacters = new List<CharData>();
+		for (int i = 0; i < map.lockedCharacters.Count; i++) {
+			lockedCharacters.Add(map.lockedCharacters[i]);
+		}
 		enemies = new List<EnemyPosition>();
 		for (int i = 0; i < map.enemies.Count; i++) {
 			enemies.Add(map.enemies[i]);
@@ -109,6 +121,32 @@ public class MapEntry : ScrObjLibraryEntry {
 		for (int i = 0; i < map.reinforcements.Count; i++) {
 			reinforcements.Add(map.reinforcements[i]);
 		}
+	}
+
+	/// <summary>
+	/// Checks the forced character list to see if the given character appears.
+	/// </summary>
+	/// <param name="data"></param>
+	/// <returns></returns>
+	public bool IsForced(CharData data) {
+		for (int i = 0; i < forcedCharacters.Count; i++) {
+			if (forcedCharacters[i].entryName == data.entryName)
+				return true;
+		}
+		return false;
+	}
+
+	/// <summary>
+	/// Checks the locked character list to see if the given character appears.
+	/// </summary>
+	/// <param name="data"></param>
+	/// <returns></returns>
+	public bool IsLocked(CharData data) {
+		for (int i = 0; i < lockedCharacters.Count; i++) {
+			if (lockedCharacters[i].entryName == data.entryName)
+				return true;
+		}
+		return false;
 	}
 }
 

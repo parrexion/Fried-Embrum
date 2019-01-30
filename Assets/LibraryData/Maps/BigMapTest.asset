@@ -27,6 +27,7 @@ MonoBehaviour:
     scrap: 20
     items:
     - {fileID: 11400000, guid: 21e0cdf65dcd3c64f99de572c0526714, type: 2}
+  skipBattlePrep: 0
   preDialogue: {fileID: 11400000, guid: 60b2b588570390f4fa5614660432dbbb, type: 2}
   postDialogue: {fileID: 11400000, guid: 3437291ceec4cd64c8b13b3d61dde437, type: 2}
   owMusic: {fileID: 11400000, guid: c5d55a00157aa9d45904a928008f24d0, type: 2}
@@ -45,6 +46,10 @@ MonoBehaviour:
     stats: {fileID: 0}
     inventory: []
     skills: []
+  forcedCharacters:
+  - {fileID: 11400000, guid: ebe64c7e451dc494fbc8211be6f10d6a, type: 2}
+  lockedCharacters:
+  - {fileID: 11400000, guid: cf951a3da37e1794b9cd29749c715911, type: 2}
   enemies:
   - spawnTurn: 0
     x: 8

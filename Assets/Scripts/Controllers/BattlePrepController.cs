@@ -8,6 +8,7 @@ public class BattlePrepController : InputReceiver {
 
 	public ScrObjEntryReference currentMapEntry;
 	public SaveListVariable playerData;
+	public PrepListVariable prepList;
 	
 	public UnityEvent startTurnEvent;
 
@@ -20,20 +21,40 @@ public class BattlePrepController : InputReceiver {
 	public PrepCharacterSelect characterSelect;
 
 	[Header("Views")]
-	public GameObject mainMenu;
+	public GameObject mainMenuView;
 	public GameObject characterSelectView;
 
 
 	private void Start() {
-		mainMenu.SetActive(false);
+		mainMenuView.SetActive(false);
 		currentMenuMode.value = (int)MenuMode.PREP;
 		menuModeChangedEvent.Invoke();
 		ShowBattlePrep();
+		GeneratePrepList();
 	}
 
     public override void OnMenuModeChanged() {
 		active = (currentMenuMode.value == (int)MenuMode.PREP);
 		UpdateButtons();
+	}
+
+	private void GeneratePrepList() {
+		MapEntry map = (MapEntry)currentMapEntry.value;
+		int playerCap = map.spawnPoints.Count;
+		prepList.preps = new List<PrepCharacter>();
+		for (int i = 0; i < playerData.stats.Count; i++) {
+			PrepCharacter pc = new PrepCharacter {
+				index = i,
+				forced = map.IsForced(playerData.stats[i].charData),
+				locked = map.IsLocked(playerData.stats[i].charData)
+			};
+			if (!pc.locked && playerCap > 0) {
+				pc.selected = (playerCap > 0);
+				playerCap--;
+			}
+			prepList.preps.Add(pc);
+		}
+		prepList.SortListPicked();
 	}
 
 	/// <summary>
@@ -46,7 +67,7 @@ public class BattlePrepController : InputReceiver {
 			return;
 		}
 
-		mainMenu.SetActive(true);
+		mainMenuView.SetActive(true);
 		characterSelectView.SetActive(false);
 	}
 
@@ -54,7 +75,7 @@ public class BattlePrepController : InputReceiver {
 	/// Ends battle prep and starts the battle.
 	/// </summary>
 	public void StartMission() {
-		mainMenu.SetActive(false);
+		mainMenuView.SetActive(false);
 		startTurnEvent.Invoke();
 	}
 
@@ -100,9 +121,20 @@ public class BattlePrepController : InputReceiver {
 		if (!active)
 			return;
 		if (menuMode == 0) {
-			menuMode = 1;
-			characterSelect.GenerateList();
-			characterSelectView.SetActive(true);
+			if (mainIndex == 0) {
+				menuMode = 1;
+				characterSelectView.SetActive(true);
+				characterSelect.GenerateList();
+			}
+			else if (mainIndex == 1) {
+				menuMode = 2;
+				currentMenuMode.value = (int)MenuMode.FORMATION;
+				menuModeChangedEvent.Invoke();
+				mainMenuView.SetActive(false);
+			}
+		}
+		else if (menuMode == 1) {
+			characterSelect.SelectCharacter();
 		}
 	}
 
@@ -111,6 +143,7 @@ public class BattlePrepController : InputReceiver {
 			return;
 		if (menuMode == 1) {
 			menuMode = 0;
+			characterSelect.LeaveMenu();
 			characterSelectView.SetActive(false);
 		}
 	}
