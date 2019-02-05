@@ -118,12 +118,12 @@ public abstract class TacticsMove : MonoBehaviour {
 		else if (path.Count > 0) {
 			MapTile tile = path.Pop();
 			_heading = new Vector3(tile.transform.position.x,tile.transform.position.y,0);
-			posx = currentTile.posx;
-			posy = currentTile.posy;
+			//posx = currentTile.posx;
+			//posy = currentTile.posy;
 			cameraFollowEvent.Invoke();
 		}
 		else {
-			currentTile.currentCharacter = null;
+			//currentTile.currentCharacter = null;
 			currentTile = battleMap.GetTile(Mathf.RoundToInt(transform.localPosition.x),Mathf.RoundToInt(transform.localPosition.y));
 			currentTile.currentCharacter = this;
 			posx = currentTile.posx;
@@ -189,6 +189,20 @@ public abstract class TacticsMove : MonoBehaviour {
 	public void StartMove() {
 		Debug.Log("MOVE   " + path.Count);
 		lockControls.value = true;
+		_heading = transform.position;
+		currentTile.currentCharacter = null;
+		isMoving = true;
+	}
+	
+	/// <summary>
+	/// Starts the movement for the character and moves it in a straight
+	/// line towards the target map tile.
+	/// </summary>
+	/// <param name="tile"></param>
+	public void MoveDirectSwap(MapTile tile) {
+		lockControls.value = true;
+		path = new Stack<MapTile>();
+		path.Push(tile);
 		_heading = transform.position;
 		isMoving = true;
 	}

@@ -88,7 +88,7 @@ public class BexpController : MonoBehaviour {
 
 	public void MoveSelection(int dir) {
 		if (!awardMode) {
-			currentListIndex = OPMath.FullLoop(0, listSize-1, currentListIndex + dir);
+			currentListIndex = OPMath.FullLoop(0, listSize, currentListIndex + dir);
 			for (int i = 0; i < listSize; i++) {
 				entryList[i].SetHighlight(currentListIndex == i);
 			}
@@ -155,7 +155,7 @@ public class BexpController : MonoBehaviour {
 			return;
 
 		StatsContainer stats = availableUnits.stats[currentListIndex];
-		awardExp = OPMath.FullLoop(0, 100, awardExp + dir);
+		awardExp = OPMath.FullLoop(0, 101, awardExp + dir);
 		awardExp = Mathf.Min(awardExp, totalBonusExp.value);
 
 		SetupBexpAwarding();

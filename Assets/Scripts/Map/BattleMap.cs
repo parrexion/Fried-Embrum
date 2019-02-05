@@ -29,6 +29,12 @@ public class BattleMap : MonoBehaviour {
 		}
 	}
 
+	public void ClearDeployment() {
+		for (int i = 0; i < tiles.Length; i++) {
+			tiles[i].deployable = false;
+		}
+	}
+
 	public void ClearTargets() {
 		for (int i = 0; i < tiles.Length; i++) {
 			tiles[i].target = false;

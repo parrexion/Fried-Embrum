@@ -120,7 +120,7 @@ public class BaseHousing : InputReceiver {
 			return;
 
 		if (menuMode == 0) {
-			currentIndex = OPMath.FullLoop(0, saveList.stats.Count-1, currentIndex-1);
+			currentIndex = OPMath.FullLoop(0, saveList.stats.Count, currentIndex-1);
 			UpdateButtons();
 			housingChangedEvent.Invoke();
 		}
@@ -138,7 +138,7 @@ public class BaseHousing : InputReceiver {
 			return;
 
 		if (menuMode == 0) {
-			currentIndex = OPMath.FullLoop(0, saveList.stats.Count-1, currentIndex+1);
+			currentIndex = OPMath.FullLoop(0, saveList.stats.Count, currentIndex+1);
 			UpdateButtons();
 			housingChangedEvent.Invoke();
 		}

@@ -53,7 +53,7 @@ public class BaseMission : InputReceiver {
 		if (!active || promptMode)
 			return;
 
-		currentIndex = OPMath.FullLoop(0, availableMaps.Count - 1, currentIndex - 1);
+		currentIndex = OPMath.FullLoop(0, availableMaps.Count, currentIndex - 1);
 		UpdateButtons();
 		ShowMissionInfo();
 		missionChangedEvent.Invoke();
@@ -63,7 +63,7 @@ public class BaseMission : InputReceiver {
 		if (!active || promptMode)
 			return;
 
-		currentIndex = OPMath.FullLoop(0, availableMaps.Count - 1, currentIndex + 1);
+		currentIndex = OPMath.FullLoop(0, availableMaps.Count, currentIndex + 1);
 		UpdateButtons();
 		ShowMissionInfo();
 		missionChangedEvent.Invoke();

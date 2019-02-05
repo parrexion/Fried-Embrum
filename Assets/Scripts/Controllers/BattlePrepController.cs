@@ -21,12 +21,25 @@ public class BattlePrepController : InputReceiver {
 	public PrepCharacterSelect characterSelect;
 
 	[Header("Views")]
+	public GameObject menuCollectionView;
 	public GameObject mainMenuView;
 	public GameObject characterSelectView;
+	public GameObject inventoryView;
+	public GameObject objectiveView;
+
+	[Header("Popup")]
+	public GameObject popupObject;
+	//public TMPro.TextMeshProUGUI popupMessage;
+	public MyButton[] popupButtons;
+	private int popupPosition;
 
 
 	private void Start() {
 		mainMenuView.SetActive(false);
+		characterSelectView.SetActive(false);
+		inventoryView.SetActive(false);
+		objectiveView.SetActive(false);
+		popupObject.SetActive(false);
 		currentMenuMode.value = (int)MenuMode.PREP;
 		menuModeChangedEvent.Invoke();
 		ShowBattlePrep();
@@ -35,7 +48,13 @@ public class BattlePrepController : InputReceiver {
 
     public override void OnMenuModeChanged() {
 		active = (currentMenuMode.value == (int)MenuMode.PREP);
+		mainMenuView.SetActive(active);
+		menuCollectionView.SetActive(!active);
 		UpdateButtons();
+		if (active) {
+			Debug.Log("CHANGED");
+			menuMode = 0;
+		}
 	}
 
 	private void GeneratePrepList() {
@@ -69,6 +88,20 @@ public class BattlePrepController : InputReceiver {
 
 		mainMenuView.SetActive(true);
 		characterSelectView.SetActive(false);
+		menuCollectionView.SetActive(false);
+	}
+
+	private void DisplayPopup() {
+		popupObject.SetActive(true);
+		popupPosition = 1;
+		UpdatePopupButtons(0);
+	}
+
+	private void UpdatePopupButtons(int dir) {
+		popupPosition = OPMath.FullLoop(0, popupButtons.Length, popupPosition+dir);
+		for (int i = 0; i < popupButtons.Length; i++) {
+			popupButtons[i].SetSelected(i == popupPosition);
+		}
 	}
 
 	/// <summary>
@@ -89,7 +122,7 @@ public class BattlePrepController : InputReceiver {
 		if (!active)
 			return;
 		if (menuMode == 0) {
-			mainIndex = OPMath.FullLoop(0, mainButtons.Length-1, mainIndex-1);
+			mainIndex = OPMath.FullLoop(0, mainButtons.Length, mainIndex-1);
 			UpdateButtons();
         }
         else if (menuMode == 1) {
@@ -101,7 +134,7 @@ public class BattlePrepController : InputReceiver {
 		if (!active)
 			return;
 		if (menuMode == 0) {
-			mainIndex = OPMath.FullLoop(0, mainButtons.Length-1, mainIndex+1);
+			mainIndex = OPMath.FullLoop(0, mainButtons.Length, mainIndex+1);
 			UpdateButtons();
         }
         else if (menuMode == 1) {
@@ -110,11 +143,15 @@ public class BattlePrepController : InputReceiver {
 	}
 
 	public override void OnLeftArrow() {
-		throw new System.NotImplementedException();
+		if (!active)
+			return;
+		UpdatePopupButtons(-1);
 	}
 
 	public override void OnRightArrow() {
-		throw new System.NotImplementedException();
+		if (!active)
+			return;
+		UpdatePopupButtons(1);
 	}
 
 	public override void OnOkButton() {
@@ -131,10 +168,20 @@ public class BattlePrepController : InputReceiver {
 				currentMenuMode.value = (int)MenuMode.FORMATION;
 				menuModeChangedEvent.Invoke();
 				mainMenuView.SetActive(false);
+				menuCollectionView.SetActive(true);
 			}
 		}
 		else if (menuMode == 1) {
 			characterSelect.SelectCharacter();
+		}
+		else if (menuMode == 2) {
+
+		}
+		else if (menuMode == 3) {
+
+		}
+		else if (menuMode == 4) {
+			
 		}
 	}
 

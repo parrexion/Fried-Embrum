@@ -7,6 +7,7 @@ public class PlayerMove : TacticsMove {
 
 	public IntVariable currentMenuMode;
 	public UnityEvent menuModeChangedEvent;
+	public UnityEvent prepMoveEndEvent;
 
 
 	/// <summary>
@@ -24,8 +25,13 @@ public class PlayerMove : TacticsMove {
 		Debug.Log("Finished move");
 		isMoving = false;
 		lockControls.value = false;
-		currentMenuMode.value = (int)MenuMode.UNIT;
-		menuModeChangedEvent.Invoke();
+		if (currentMenuMode.value == (int)MenuMode.FORMATION) {
+			prepMoveEndEvent.Invoke();
+		}
+		else {
+			currentMenuMode.value = (int)MenuMode.UNIT;
+			menuModeChangedEvent.Invoke();
+		}
 	}
 	
 	/// <summary>

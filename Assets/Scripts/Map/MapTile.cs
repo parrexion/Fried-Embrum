@@ -18,6 +18,7 @@ public class MapTile : MonoBehaviour {
 	public bool attackable;
 	public bool supportable;
 	public bool dangerous;
+	public bool deployable;
 
 	[Header("Map values")]
 	public int posx;
@@ -68,7 +69,7 @@ public class MapTile : MonoBehaviour {
 			tileColor = Color.cyan;
 			tileColor.a = 0.35f;
 		}
-		else if (pathable) {
+		else if (pathable || deployable) {
 			tileColor = Color.yellow;
 			tileColor.a = 0.35f;
 		}

@@ -44,7 +44,7 @@ public class BaseScienceLab : InputReceiver {
 		if (!active)
 			return;
 		if (menuMode == 0) {
-			currentIndex = OPMath.FullLoop(0, buttons.Length - 1, currentIndex - 1);
+			currentIndex = OPMath.FullLoop(0, buttons.Length, currentIndex - 1);
 			UpdateButtons();
 		}
 		else if (menuMode == 1 || menuMode == 2) {
@@ -56,7 +56,7 @@ public class BaseScienceLab : InputReceiver {
 		if (!active)
 			return;
 		if (menuMode == 0) {
-			currentIndex = OPMath.FullLoop(0, buttons.Length - 1, currentIndex + 1);
+			currentIndex = OPMath.FullLoop(0, buttons.Length, currentIndex + 1);
 			UpdateButtons();
 		}
 		else if (menuMode == 1 || menuMode == 2) {

@@ -37,7 +37,7 @@ public class InventoryInputController : InputReceiver {
 			background.SetActive(true);
 			UpdateUI();
 		}
-		
+
 		if (currentMenuMode.value == (int)MenuMode.MAP) {
 			if (currentMode.value == ActionMode.MOVE) {
 				ui.ShowTerrainInfo(moveTile.value.terrain, true);
@@ -60,10 +60,11 @@ public class InventoryInputController : InputReceiver {
 	public void UpdateUI() {
 		TacticsMove tactics = selectCharacter.value;
 		MapTile tile = selectTile.value;
-		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL || currentMode.value == ActionMode.TRADE) {
+		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL || currentMode.value == ActionMode.TRADE || (currentMenuMode.value == (int)MenuMode.FORMATION && currentMode.value == ActionMode.MOVE)) {
 			tile = targetTile.value;
-			if (targetTile.value != null)
-				tactics = targetTile.value.currentCharacter;
+			if (tile && tile.currentCharacter) {
+				tactics = tile.currentCharacter;
+			}
 		}
 
 		if (selectCharacter.value == null && selectTile.value.interactType != InteractType.NONE) {

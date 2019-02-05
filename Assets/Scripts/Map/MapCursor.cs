@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 public class MapCursor : MonoBehaviour {
 
 	public BattleMap battleMap;
+	public IntVariable currentMenumode;
 	public ActionModeVariable currentActionMode;
 	public FactionVariable currentFaction;
 
@@ -29,6 +30,7 @@ public class MapCursor : MonoBehaviour {
 	public UnityEvent updateCharacterUI;
 	public UnityEvent cursorMovedEvent;
 	public UnityEvent showIngameMenuEvent;
+	public UnityEvent returnToPrepEvent;
 
 	[Header("Settings")]
 	public BoolVariable alwaysShowMovement;
@@ -115,11 +117,11 @@ public class MapCursor : MonoBehaviour {
 	/// Executes a cursor click on the location depending on the current action mode.
 	/// </summary>
 	/// <returns></returns>
-	public bool CursorClick() {
+	public bool CursorClick(bool real) {
 		if (currentActionMode.value == ActionMode.NONE)
-			return SelectCharacter();
+			return SelectCharacter(real);
 		else if (currentActionMode.value == ActionMode.MOVE)
-			return SelectMoveTile();
+			return SelectMoveTile(real);
 		return false;
 	}
 
@@ -180,14 +182,24 @@ public class MapCursor : MonoBehaviour {
 	/// <param name="y"></param>
 	private void MoveHover(int x, int y) {
 		MapTile tile = battleMap.GetTile(x, y);
-		if (tile.selectable) {
+		if (currentMenumode.value == (int)MenuMode.FORMATION) {
+			battleMap.ClearTargets();
 			moveTile.value = tile;
-			selectCharacter.value.ShowMove(tile);
+			target.value = tile;
+			selectCharacter.value.currentTile.target = true;
+			tile.target = true;
 			updateCharacterUI.Invoke();
 		}
 		else {
-			moveTile.value = null;
-			battleMap.ClearMovement();
+			if (tile.selectable) {
+				moveTile.value = tile;
+				selectCharacter.value.ShowMove(tile);
+				updateCharacterUI.Invoke();
+			}
+			else {
+				moveTile.value = null;
+				battleMap.ClearMovement();
+			}
 		}
 
 		// Add features to allow the play to attack and heal target with movement.
@@ -197,10 +209,11 @@ public class MapCursor : MonoBehaviour {
 	/// Selects the currently hovered character if not doing any other actions.
 	/// If no character is hovered, show the in-game menu instead.
 	/// </summary>
-	private bool SelectCharacter() {
+	private bool SelectCharacter(bool real) {
 		if (selectCharacter.value != null && !selectCharacter.value.hasMoved) {
 			if (selectCharacter.value.faction == Faction.PLAYER) {
 				currentActionMode.value = ActionMode.MOVE;
+				//currentActionMode.value = (real) ? ActionMode.MOVE : ActionMode.PREP;
 				moveTile.value = battleMap.GetTile(cursorX.value, cursorY.value);
 				moveTile.value.current = true;
 				selectCharacter.value.path.Clear();
@@ -210,7 +223,8 @@ public class MapCursor : MonoBehaviour {
 				return false;
 		}
 		else {
-			showIngameMenuEvent.Invoke();
+			if (real)
+				showIngameMenuEvent.Invoke();
 		}
 		return true;
 	}
@@ -218,10 +232,26 @@ public class MapCursor : MonoBehaviour {
 	/// <summary>
 	/// Moves the player to the currently selected move tile.
 	/// </summary>
-	private bool SelectMoveTile() {
-		if (moveTile.value != null) {
-			selectCharacter.value.StartMove();
-			return true;
+	private bool SelectMoveTile(bool real) {
+		if (!real) {
+			if (moveTile.value.deployable) {
+				TacticsMove dual = moveTile.value.currentCharacter;
+				MapTile startTile = selectCharacter.value.currentTile;
+				selectCharacter.value.MoveDirectSwap(moveTile.value);
+				if (dual) {
+					dual.MoveDirectSwap(startTile);
+				}
+				else {
+					startTile.currentCharacter = null;
+				}
+				return true;
+			}
+		}
+		else {
+			if (moveTile.value != null) {
+				selectCharacter.value.StartMove();
+				return true;
+			}
 		}
 
 		return false;
@@ -295,6 +325,19 @@ public class MapCursor : MonoBehaviour {
 			}
 		}
 		CursorHover();
+	}
+
+	/// <summary>
+	/// Resets the targets after swapping places during preparations.
+	/// </summary>
+	public void PrepSwapped() {
+		Debug.Log("DONE");
+		//cursorX.value = startTile.posx;
+		//cursorY.value = startTile.posy;
+		currentActionMode.value = ActionMode.NONE;
+		ResetTargets();
+		NormalHover(cursorX.value, cursorY.value);
+		cursorMovedEvent.Invoke();
 	}
 
 }

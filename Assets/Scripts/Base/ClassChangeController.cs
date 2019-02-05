@@ -97,13 +97,13 @@ public class ClassChangeController : MonoBehaviour {
 
 	public void MoveSelection(int dir) {
 		if (!changeMode) {
-			currentListIndex = OPMath.FullLoop(0, listSize-1, currentListIndex + dir);
+			currentListIndex = OPMath.FullLoop(0, listSize, currentListIndex + dir);
 			for (int i = 0; i < listSize; i++) {
 				entryList[i].SetHighlight(currentListIndex == i);
 			}
 		}
 		else {
-			nextClassIndex = OPMath.FullLoop(0,selectedClass.nextClass.Count-1, nextClassIndex + dir);
+			nextClassIndex = OPMath.FullLoop(0,selectedClass.nextClass.Count, nextClassIndex + dir);
 			for (int i = 0; i < selectedClass.nextClass.Count; i++) {
 				classList[i].SetHighlight(nextClassIndex == i);
 			}

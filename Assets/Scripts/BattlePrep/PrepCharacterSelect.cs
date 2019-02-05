@@ -53,7 +53,7 @@ public class PrepCharacterSelect : MonoBehaviour {
 	}
 
 	public void MoveSelection(int dir) {
-		currentIndex = OPMath.FullLoop(0, listSize-1, currentIndex + dir);
+		currentIndex = OPMath.FullLoop(0, listSize, currentIndex + dir);
 		for (int i = 0; i < listSize; i++) {
 			entryList[i].SetHighlight(currentIndex == i);
 		}

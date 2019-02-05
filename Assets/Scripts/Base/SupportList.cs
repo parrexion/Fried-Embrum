@@ -50,14 +50,14 @@ public class SupportList : MonoBehaviour {
 
 	public void MoveSelection(int dir) {
 		if (!detailedMode) {
-			currentListIndex = OPMath.FullLoop(0, listSize-1, currentListIndex + dir);
+			currentListIndex = OPMath.FullLoop(0, listSize, currentListIndex + dir);
 			for (int i = 0; i < listSize; i++) {
 				supportList[i].SetHighlight(currentListIndex == i);
 			}
 		}
 		else {
 			do {
-				detailedCharacterIndex = OPMath.FullLoop(0, listSize-1, detailedCharacterIndex + dir);
+				detailedCharacterIndex = OPMath.FullLoop(0, listSize, detailedCharacterIndex + dir);
 			} while (!supportList[detailedCharacterIndex].gameObject.activeSelf);
 			for (int i = 0; i < listSize; i++) {
 				supportList[i].SetHighlight(detailedCharacterIndex == i);

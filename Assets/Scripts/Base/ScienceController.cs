@@ -94,7 +94,7 @@ public class ScienceController : MonoBehaviour {
 		if (promptMode || entryList.Count == 0)
 			return;
 
-		currentListIndex = OPMath.FullLoop(0, listSize-1, currentListIndex + dir);
+		currentListIndex = OPMath.FullLoop(0, listSize, currentListIndex + dir);
 		for (int i = 0; i < listButtons.Length; i++) {
 			if (entryList.Count <= i) {
 				listButtons[i].buttonText.text = "DONE";
@@ -116,7 +116,7 @@ public class ScienceController : MonoBehaviour {
 		if (!promptMode)
 			return;
 
-		promptPosition = OPMath.FullLoop(0, 1, promptPosition + dir);
+		promptPosition = OPMath.FullLoop(0, 2, promptPosition + dir);
 		promptYesButton.SetSelected(promptPosition == 0);
 		promptNoButton.SetSelected(promptPosition == 1);
 	}

@@ -100,7 +100,7 @@ public class ShopBuyController : MonoBehaviour {
 	public void MoveSelection(int dir) {
 		if (!promptMode) {
 			if (entryList.Count > 0) {
-				currentListIndex = OPMath.FullLoop(0, listSize-1, currentListIndex + dir);
+				currentListIndex = OPMath.FullLoop(0, listSize, currentListIndex + dir);
 				for (int i = 0; i < listSize; i++) {
 					entryList[i].SetHighlight(currentListIndex == i);
 				}
@@ -112,7 +112,7 @@ public class ShopBuyController : MonoBehaviour {
     public void ChangeCategory(int dir) {
         if (!promptMode) {
             do {
-                currentCategory = OPMath.FullLoop(0, 7, currentCategory + dir);
+                currentCategory = OPMath.FullLoop(0, 8, currentCategory + dir);
             } while (!categories[currentCategory].gameObject.activeSelf);
 			currentListIndex = 0;
             GenerateList();

@@ -5,6 +5,7 @@ using UnityEngine.Events;
 
 public class FormationController : InputReceiver {
 
+	public BattleMap battleMap;
 	public MapCursor clicker;
 	public ScrObjEntryReference currentMap;
 	public ActionModeVariable currentMode;
@@ -30,12 +31,19 @@ public class FormationController : InputReceiver {
 	}
 
     public override void OnMenuModeChanged() {
-		MenuMode mode = (MenuMode)currentMenuMode.value;
-		active = (mode == MenuMode.FORMATION);
+		active = ((MenuMode)currentMenuMode.value == MenuMode.FORMATION);
 		clicker.cursorSprite.enabled = active;
 		if (!active)
 			return;
 		
+		battleMap.ResetMap();
+		battleMap.ClearDeployment();
+		for (int i = 0; i < map.spawnPoints.Count; i++) {
+			if (map.spawnPoints[i].stats != null)
+				continue;
+
+			battleMap.GetTile(map.spawnPoints[i].x, map.spawnPoints[i].y).deployable = true;
+		}
 		cursorMovedEvent.Invoke();
     }
 
@@ -93,7 +101,7 @@ public class FormationController : InputReceiver {
 		
 		targetIndex.value = 0;
 		actionMenuPosition.value = -1;
-		bool res = clicker.CursorClick();
+		bool res = clicker.CursorClick(false);
 		if (!res)
 			return;
 
@@ -104,6 +112,13 @@ public class FormationController : InputReceiver {
 		if (!active)
 			return;
 
+		if (currentMode.value == ActionMode.MOVE) {
+			clicker.CursorBack();
+		}
+		else {
+			currentMenuMode.value = (int)MenuMode.PREP;
+			menuModeChangedEvent.Invoke();
+		}
 	}
 
     public override void OnXButton() {
