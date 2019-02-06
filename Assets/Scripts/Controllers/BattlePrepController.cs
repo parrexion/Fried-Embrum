@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class BattlePrepController : InputReceiver {
+public class BattlePrepController : InputReceiverDelegate {
 
 	public ScrObjEntryReference currentMapEntry;
 	public SaveListVariable playerData;
@@ -15,7 +15,7 @@ public class BattlePrepController : InputReceiver {
 	[Header("Main menu")]
 	public MyButton[] mainButtons;
 	private int mainIndex;
-	private int menuMode;
+	public int menuMode;
 
 	[Header("Handlers")]
 	public PrepCharacterSelect characterSelect;
@@ -40,20 +40,19 @@ public class BattlePrepController : InputReceiver {
 		inventoryView.SetActive(false);
 		objectiveView.SetActive(false);
 		popupObject.SetActive(false);
-		currentMenuMode.value = (int)MenuMode.PREP;
-		menuModeChangedEvent.Invoke();
+		InputDelegateController.instance.TriggerMenuChange(MenuMode.PREP);
 		ShowBattlePrep();
 		GeneratePrepList();
 	}
 
     public override void OnMenuModeChanged() {
+		bool prevActive = active;
 		active = (currentMenuMode.value == (int)MenuMode.PREP);
 		mainMenuView.SetActive(active);
 		menuCollectionView.SetActive(!active);
 		UpdateButtons();
-		if (active) {
-			Debug.Log("CHANGED");
-			menuMode = 0;
+		if (prevActive != active) {
+			ActivateDelegates(active);
 		}
 	}
 
@@ -119,6 +118,7 @@ public class BattlePrepController : InputReceiver {
 	}
 
 	public override void OnUpArrow() {
+		Debug.Log("UP   " + active);
 		if (!active)
 			return;
 		if (menuMode == 0) {
@@ -145,13 +145,15 @@ public class BattlePrepController : InputReceiver {
 	public override void OnLeftArrow() {
 		if (!active)
 			return;
-		UpdatePopupButtons(-1);
+		if (menuMode == 4)
+			UpdatePopupButtons(-1);
 	}
 
 	public override void OnRightArrow() {
 		if (!active)
 			return;
-		UpdatePopupButtons(1);
+		if(menuMode == 4)
+			UpdatePopupButtons(1);
 	}
 
 	public override void OnOkButton() {
@@ -165,8 +167,7 @@ public class BattlePrepController : InputReceiver {
 			}
 			else if (mainIndex == 1) {
 				menuMode = 2;
-				currentMenuMode.value = (int)MenuMode.FORMATION;
-				menuModeChangedEvent.Invoke();
+				InputDelegateController.instance.TriggerMenuChange(MenuMode.FORMATION);
 				mainMenuView.SetActive(false);
 				menuCollectionView.SetActive(true);
 			}
@@ -181,7 +182,7 @@ public class BattlePrepController : InputReceiver {
 
 		}
 		else if (menuMode == 4) {
-			
+			DisplayPopup();
 		}
 	}
 

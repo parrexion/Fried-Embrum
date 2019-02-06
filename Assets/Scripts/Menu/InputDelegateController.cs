@@ -3,13 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public enum MenuMode { NONE, MAP, UNIT, INV, ATTACK, HEAL, STATS, INGAME, HELP, TRADE, DIALOGUE, TOOL, 
-						BASE_LAB, BASE_MISSION, BASE_HOUSE, BASE_TRAIN, BASE_SHOP, PREP, FORMATION }
-
-public class InputEventController : MonoBehaviour {
+public class InputDelegateController : MonoBehaviour {
 
 #region Singleton
-	private static InputEventController instance = null;
+	public static InputDelegateController instance = null;
 	private void Awake() {
 		if (instance != null) {
 			Destroy(gameObject);
@@ -25,32 +22,16 @@ public class InputEventController : MonoBehaviour {
 	public IntVariable menuMode;
 	public MenuMode startMode;
 	public ActionModeVariable currentAction;
-	public UnityEvent menuModeChanged;
 	public int holdDelay = 25;
 	public int scrollSpeed = 5;
 
 	[Header("Control locks")]
 	public BoolVariable lockAllControls;
-	// public BoolVariable lockMoveControls;
 
 	[Header("Play Time Clock")]
 	public IntVariable currentPlayTime;
 
-	[Header("Move events")]
-	public UnityEvent upArrowEvent;
-	public UnityEvent downArrowEvent;
-	public UnityEvent leftArrowEvent;
-	public UnityEvent rightArrowEvent;
-	
-	[Header("Button Events")]
-	public UnityEvent okButtonEvent;
-	public UnityEvent backButtonEvent;
-	public UnityEvent lButtonEvent;
-	public UnityEvent rButtonEvent;
-	public UnityEvent xButtonEvent;
-	public UnityEvent yButtonEvent;
-	public UnityEvent startButtonEvent;
-
+	[Header("Move values")]
 	private int holdUp;
 	private int holdDown;
 	private int holdLeft;
@@ -60,18 +41,43 @@ public class InputEventController : MonoBehaviour {
 	private bool axisDown;
 	private bool axisLeft;
 	private bool axisRight;
-	
+
+	//Delegates
+	public delegate void ButtonDelegate();
+	public ButtonDelegate menuModeChanged;
+
+	public ButtonDelegate upArrowDelegate;
+	public ButtonDelegate downArrowDelegate;
+	public ButtonDelegate leftArrowDelegate;
+	public ButtonDelegate rightArrowDelegate;
+
+	public ButtonDelegate okButtonDelegate;
+	public ButtonDelegate backButtonDelegate;
+	public ButtonDelegate lButtonDelegate;
+	public ButtonDelegate rButtonDelegate;
+	public ButtonDelegate xButtonDelegate;
+	public ButtonDelegate yButtonDelegate;
+	public ButtonDelegate startButtonDelegate;
+
 
 	private void Setup() {
-		currentAction.value = ActionMode.NONE;
-		menuMode.value = (int)startMode;
-		StartCoroutine(TransitionDelay());
-		StartCoroutine(CountPlayTime());
+		//currentAction.value = ActionMode.NONE;
+		//StartCoroutine(TransitionDelay(startMode));
+		//StartCoroutine(CountPlayTime());
 	}
 
-	private IEnumerator TransitionDelay() {
+	private IEnumerator TransitionDelay(MenuMode newMode) {
 		yield return null;
-		menuModeChanged.Invoke();
+		menuMode.value = (int)newMode;
+		if(menuModeChanged != null)
+			menuModeChanged.Invoke();
+		lockAllControls.value = false;
+	}
+
+	public void TriggerMenuChange(MenuMode newMode) {
+		lockAllControls.value = true;
+		//Debug.Log("set MENU to:  " + newMode);
+		StartCoroutine(TransitionDelay(newMode));
 	}
 
 	private void Update() {
@@ -112,49 +118,58 @@ public class InputEventController : MonoBehaviour {
 
 		// Arrow presses
 		if (Input.GetKeyDown(KeyCode.UpArrow) || holdUp > holdDelay || (!axisUp && (Input.GetAxis("DpadVertical") == 1 || Input.GetAxis("LstickVertical") == 1))) {
-			upArrowEvent.Invoke();
+			if(upArrowDelegate != null)
+				upArrowDelegate.Invoke();
 			holdUp -= scrollSpeed;
 			axisUp = true;
 		}
 		if (Input.GetKeyDown(KeyCode.DownArrow) || holdDown > holdDelay || (!axisDown && (Input.GetAxis("DpadVertical") == -1 || Input.GetAxis("LstickVertical") == -1))) {
-			downArrowEvent.Invoke();
+			if(downArrowDelegate != null)
+				downArrowDelegate.Invoke();
 			holdDown -= scrollSpeed;
 			axisDown = true;
 		}
 		if (Input.GetKeyDown(KeyCode.LeftArrow) || holdLeft > holdDelay || (!axisLeft && (Input.GetAxis("DpadHorizontal") == -1 || Input.GetAxis("LstickHorizontal") == -1))) {
-			leftArrowEvent.Invoke();
+			if(leftArrowDelegate != null)
+				leftArrowDelegate.Invoke();
 			holdLeft -= scrollSpeed;
 			axisLeft = true;
 		}
 		if (Input.GetKeyDown(KeyCode.RightArrow) || holdRight > holdDelay || (!axisRight && (Input.GetAxis("DpadHorizontal") == 1 || Input.GetAxis("LstickHorizontal") == 1))) {
-			rightArrowEvent.Invoke();
+			if(rightArrowDelegate != null)
+				rightArrowDelegate.Invoke();
 			holdRight -= scrollSpeed;
 			axisRight = true;
 		}
 
 		if (Input.GetKeyDown(KeyCode.Z) || Input.GetKeyDown(KeyCode.JoystickButton0)) {
-			okButtonEvent.Invoke();
+			if (okButtonDelegate != null)
+				okButtonDelegate();
 		}
 		if (Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.JoystickButton1)) {
-			backButtonEvent.Invoke();
+			if(backButtonDelegate != null)
+				backButtonDelegate();
 		}
 		if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.JoystickButton4)) {
-			lButtonEvent.Invoke();
+			if(lButtonDelegate != null)
+				lButtonDelegate();
 		}
 		if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton5)) {
-			rButtonEvent.Invoke();
+			if(rButtonDelegate != null)
+				rButtonDelegate();
 		}
 		if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.JoystickButton3)) {
-			xButtonEvent.Invoke();
+			if(xButtonDelegate != null)
+				xButtonDelegate();
 		}
 		if (Input.GetKeyDown(KeyCode.C) || Input.GetKeyDown(KeyCode.JoystickButton2)) {
-			yButtonEvent.Invoke();
+			if(yButtonDelegate != null)
+				yButtonDelegate();
 		}
-		if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.JoystickButton6)) {
-			startButtonEvent.Invoke();
-		}
-		if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.JoystickButton7)) {
-			startButtonEvent.Invoke();
+		if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.JoystickButton6) ||
+			Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.JoystickButton7)) {
+			if(startButtonDelegate != null)
+				startButtonDelegate();
 		}
 	}
 

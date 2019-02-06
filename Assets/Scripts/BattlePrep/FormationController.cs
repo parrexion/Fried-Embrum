@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class FormationController : InputReceiver {
+public class FormationController : InputReceiverDelegate {
 
+	public BattlePrepController prepController;
 	public BattleMap battleMap;
 	public MapCursor clicker;
 	public ScrObjEntryReference currentMap;
@@ -31,7 +32,12 @@ public class FormationController : InputReceiver {
 	}
 
     public override void OnMenuModeChanged() {
+		bool prevActive = active;
 		active = ((MenuMode)currentMenuMode.value == MenuMode.FORMATION);
+		if(prevActive != active) {
+			ActivateDelegates(active);
+			Debug.Log("ACTIVE  " + active);
+		}
 		clicker.cursorSprite.enabled = active;
 		if (!active)
 			return;
@@ -72,9 +78,9 @@ public class FormationController : InputReceiver {
 	}
 
 	public override void OnLeftArrow() {
+		Debug.Log("GO");
 		if (!active)
 			return;
-
 		int prev = cursorX.value;
 		cursorX.value = Mathf.Max(cursorX.value -1, 0);
 		if (prev != cursorX.value)
@@ -116,8 +122,8 @@ public class FormationController : InputReceiver {
 			clicker.CursorBack();
 		}
 		else {
-			currentMenuMode.value = (int)MenuMode.PREP;
-			menuModeChangedEvent.Invoke();
+			prepController.menuMode = 0;
+			InputDelegateController.instance.TriggerMenuChange(MenuMode.PREP);
 		}
 	}
 
@@ -149,9 +155,8 @@ public class FormationController : InputReceiver {
     public override void OnLButton() {
 		if (!active || clicker.selectCharacter.value == null)
 			return;
-
-		currentMenuMode.value = (int)MenuMode.TOOL;
-		StartCoroutine(MenuChangeDelay());
+		
+		StartCoroutine(MenuChangeDelay(MenuMode.TOOL));
 	}
 
 
@@ -159,8 +164,7 @@ public class FormationController : InputReceiver {
 	/// Shows the in-game menu with end turn and options.
 	/// </summary>
 	public void ShowIngameMenu() {
-		currentMenuMode.value = (int)MenuMode.PREP;
-		StartCoroutine(MenuChangeDelay());
+		StartCoroutine(MenuChangeDelay(MenuMode.PREP));
 	}
 
     public override void OnYButton() { }
