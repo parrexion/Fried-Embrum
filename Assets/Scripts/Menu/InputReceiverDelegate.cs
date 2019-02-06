@@ -41,14 +41,11 @@ public abstract class InputReceiverDelegate : MonoBehaviour {
 	}
 
 	protected void OnEnable() {
-		//InputDelegateController.instance.menuModeChanged -= OnMenuModeChanged;
 		InputDelegateController.instance.menuModeChanged += OnMenuModeChanged;
-		Debug.Log("REG");
 	}
 
 	protected void OnDisable() {
 		InputDelegateController.instance.menuModeChanged -= OnMenuModeChanged;
-		Debug.Log("REG GONE");
 	}
 
 	protected void ActivateDelegates(bool active) {

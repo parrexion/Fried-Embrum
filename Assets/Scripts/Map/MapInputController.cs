@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class MapInputController : InputReceiver {
+public class MapInputController : InputReceiverDelegate {
 
 	public MapCursor clicker;
 	public ScrObjEntryReference currentMap;
@@ -31,8 +31,12 @@ public class MapInputController : InputReceiver {
 
     public override void OnMenuModeChanged() {
 		MenuMode mode = (MenuMode)currentMenuMode.value;
+		bool prevActive = active;
 		active = (mode == MenuMode.MAP);
 		clicker.cursorSprite.enabled = (active || mode != MenuMode.UNIT);
+		if (prevActive != active) {
+			ActivateDelegates(active);
+		}
 		if (!active)
 			return;
 		
@@ -132,16 +136,13 @@ public class MapInputController : InputReceiver {
 			return;
 		
 		if (currentMode.value == ActionMode.ATTACK) {
-			currentMenuMode.value = (int)MenuMode.ATTACK;
-			StartCoroutine(MenuChangeDelay());
+			InputDelegateController.instance.TriggerMenuChange(MenuMode.ATTACK);
 		}
 		else if (currentMode.value == ActionMode.HEAL) {
-			currentMenuMode.value = (int)MenuMode.HEAL;
-			StartCoroutine(MenuChangeDelay());
+			InputDelegateController.instance.TriggerMenuChange(MenuMode.HEAL);
 		}
 		else if (currentMode.value == ActionMode.TRADE) {
-			currentMenuMode.value = (int)MenuMode.TRADE;
-			StartCoroutine(MenuChangeDelay());
+			InputDelegateController.instance.TriggerMenuChange(MenuMode.TRADE);
 		}
 		else {
 			targetIndex.value = 0;
@@ -158,12 +159,10 @@ public class MapInputController : InputReceiver {
 			return;
 
 		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL || currentMode.value == ActionMode.TRADE) {
-			currentMenuMode.value = (int)MenuMode.UNIT;
-			Debug.Log("Now with UNiT!");
 			currentMode.value = ActionMode.MOVE;
 			menuBackEvent.Invoke();
 			target.value = null;
-			StartCoroutine(MenuChangeDelay());
+			InputDelegateController.instance.TriggerMenuChange(MenuMode.UNIT);
 		}
 		else if (currentMode.value == ActionMode.MOVE) {
 			clicker.CursorBack();
@@ -207,27 +206,24 @@ public class MapInputController : InputReceiver {
     public override void OnLButton() {
 		if (!active || clicker.selectCharacter.value == null)
 			return;
-
-		currentMenuMode.value = (int)MenuMode.TOOL;
-		StartCoroutine(MenuChangeDelay());
+		
+		InputDelegateController.instance.TriggerMenuChange(MenuMode.TOOL);
 	}
 
 	/// <summary>
 	/// Triggered when battles end and updates the current menu mode.
 	/// </summary>
 	public void BattleEnd() {
-		currentMenuMode.value = (int)MenuMode.MAP;
 		currentMode.value = ActionMode.NONE;
 		clicker.ResetTargets();
-		menuModeChangedEvent.Invoke();
+		InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
 	}
 
 	/// <summary>
 	/// Shows the in-game menu with end turn and options.
 	/// </summary>
 	public void ShowIngameMenu() {
-		currentMenuMode.value = (int)MenuMode.INGAME;
-		StartCoroutine(MenuChangeDelay());
+		InputDelegateController.instance.TriggerMenuChange(MenuMode.INGAME);
 	}
 
     public override void OnYButton() { }

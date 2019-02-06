@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public enum ActionInputType { SEIZE, ATTACK, HEAL, VISIT, TRADE, ITEM, WAIT }
 
-public class ActionInputController : InputReceiver {
+public class ActionInputController : InputReceiverDelegate {
 
 	[Header("References")]
 	public TacticsMoveVariable selectedCharacter;
@@ -34,10 +34,13 @@ public class ActionInputController : InputReceiver {
 
     public override void OnMenuModeChanged() {
 		MenuMode mode = (MenuMode)currentMenuMode.value;
+		bool prevActive = active;
 		active = (mode == MenuMode.UNIT);
 		actionMenu.SetActive(mode == MenuMode.UNIT);
-		// Debug.Log("Active:  " + active + " , " + mode);
 		ButtonSetup();
+		if (prevActive != active) {
+			ActivateDelegates(active);
+		}
     }
 
     public override void OnDownArrow() {
@@ -71,9 +74,8 @@ public class ActionInputController : InputReceiver {
 			return;
 		
 		if (selectedCharacter.value.canUndoMove) {
-			currentMenuMode.value = (int)MenuMode.MAP;
 			currentActionMode.value = ActionMode.MOVE;
-			StartCoroutine(MenuChangeDelay());
+			InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
 			menuBackEvent.Invoke();
 		}
     }
@@ -87,52 +89,41 @@ public class ActionInputController : InputReceiver {
 		{
 			case ActionInputType.SEIZE:
 				triggeredWin.value = true;
-				currentMenuMode.value = (int)MenuMode.MAP;
 				currentActionMode.value = ActionMode.NONE;
-				StartCoroutine(MenuChangeDelay());
+				InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
 				selectedCharacter.value.End();
 				break;
 			case ActionInputType.ATTACK:
-				// Debug.Log("Attack!");
 				targetList.values = selectedCharacter.value.GetAttackablesInRange();
-				currentMenuMode.value = (int)MenuMode.MAP;
 				currentActionMode.value = ActionMode.ATTACK;
-				StartCoroutine(MenuChangeDelay());
+				InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
 				break;
 			case ActionInputType.HEAL: // HEAL
-				// Debug.Log("Heal!");
 				targetList.values = selectedCharacter.value.FindSupportablesInRange();
-				currentMenuMode.value = (int)MenuMode.MAP;
 				currentActionMode.value = ActionMode.HEAL;
-				StartCoroutine(MenuChangeDelay());
+				InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
 				break;
 			case ActionInputType.VISIT: // VISIT
 				selectedCharacter.value.currentTile.interacted = true;
 				active = false;
-				StartCoroutine(MenuChangeDelay());
+				InputDelegateController.instance.TriggerMenuChange((MenuMode)currentMenuMode.value);
 				currentActionMode.value = ActionMode.NONE;
 				dialogueMode.value = (int)DialogueMode.VISIT;
 				dialogueEntry.value = selectedCharacter.value.currentTile.dialogue;
 				startDialogue.Invoke();
 				break;
 			case ActionInputType.TRADE: // TRADE
-				// Debug.Log("Trade!");
 				targetList.values = selectedCharacter.value.FindAdjacentCharacters(Faction.PLAYER);
-				currentMenuMode.value = (int)MenuMode.MAP;
 				currentActionMode.value = ActionMode.TRADE;
-				StartCoroutine(MenuChangeDelay());
+				InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
 				break;
 			case ActionInputType.ITEM: // ITEM
-				// Debug.Log("Item!");
-				currentMenuMode.value = (int)MenuMode.STATS;
 				inventoryIndex.value = 0;
-				StartCoroutine(MenuChangeDelay());
+				InputDelegateController.instance.TriggerMenuChange(MenuMode.STATS);
 				break;
 			case ActionInputType.WAIT: // WAIT
-				// Debug.Log("Wait!");
-				currentMenuMode.value = (int)MenuMode.MAP;
 				currentActionMode.value = ActionMode.NONE;
-				StartCoroutine(MenuChangeDelay());
+				InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
 				selectedCharacter.value.End();
 				break;
 		}
@@ -141,9 +132,8 @@ public class ActionInputController : InputReceiver {
 	
 	public void ResumeBattle() {
 		if (dialogueMode.value == (int)DialogueMode.VISIT) {
-			currentMenuMode.value = (int)MenuMode.MAP;
 			currentActionMode.value = ActionMode.NONE;
-			StartCoroutine(MenuChangeDelay());
+			InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
 			if (selectedCharacter.value.currentTile.gift != null) {
 				StartCoroutine(WaitForItemGain());
 			}

@@ -78,7 +78,6 @@ public class FormationController : InputReceiverDelegate {
 	}
 
 	public override void OnLeftArrow() {
-		Debug.Log("GO");
 		if (!active)
 			return;
 		int prev = cursorX.value;

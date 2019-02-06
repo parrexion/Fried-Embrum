@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class InventoryMenuController : InputReceiver {
+public class InventoryMenuController : InputReceiverDelegate {
 
 	public TacticsMoveVariable selectedCharacter;
 	public ActionModeVariable currentMode;
@@ -30,10 +30,13 @@ public class InventoryMenuController : InputReceiver {
 	}
 
     public override void OnMenuModeChanged() {
-		MenuMode mode = (MenuMode)currentMenuMode.value;
-		active = (mode == MenuMode.INV);
+		bool prevActive = active;
+		active = ((MenuMode)currentMenuMode.value == MenuMode.INV);
 		inventoryMenu.SetActive(active);
 		ButtonSetup();
+		if (prevActive != active) {
+			ActivateDelegates(active);
+		}
     }
 
 	private void ButtonSetup() {
@@ -109,10 +112,9 @@ public class InventoryMenuController : InputReceiver {
     public override void OnBackButton() {
 		if (!active)
 			return;
-
-        currentMenuMode.value = (int)MenuMode.STATS;
+		
 		menuBackEvent.Invoke();
-		StartCoroutine(MenuChangeDelay());
+		InputDelegateController.instance.TriggerMenuChange(MenuMode.STATS);
 		inventoryIndex.value = -1;
 		ButtonHighlighting();
     }
@@ -124,8 +126,7 @@ public class InventoryMenuController : InputReceiver {
 		selectedCharacter.value.inventory.EquipItem(inventoryIndex.value);
 		inventoryIndex.value = 0;
 		inventoryChangedEvent.Invoke();
-		currentMenuMode.value = (int)MenuMode.STATS;
-		StartCoroutine(MenuChangeDelay());
+		InputDelegateController.instance.TriggerMenuChange(MenuMode.STATS);
 	}
 
 	/// <summary>
@@ -140,11 +141,10 @@ public class InventoryMenuController : InputReceiver {
 		selectedCharacter.value.inventory.UseItem(inventoryIndex.value, selectedCharacter.value);
 		inventoryIndex.value = -1;
 		ButtonHighlighting();
-		currentMenuMode.value = (int)MenuMode.MAP;
 		currentMode.value = ActionMode.NONE;
 		inventoryChangedEvent.Invoke();
 		selectedCharacter.value.End();
-		StartCoroutine(MenuChangeDelay());
+		InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
 	}
 
 	/// <summary>
@@ -153,8 +153,7 @@ public class InventoryMenuController : InputReceiver {
 	public void DropItem() {
 		selectedCharacter.value.inventory.DropItem(inventoryIndex.value, selectedCharacter.value.stats);
 		inventoryChangedEvent.Invoke();
-		currentMenuMode.value = (int)MenuMode.STATS;
-		StartCoroutine(MenuChangeDelay());
+		InputDelegateController.instance.TriggerMenuChange(MenuMode.STATS);
 	}
 
 

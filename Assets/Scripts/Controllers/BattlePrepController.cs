@@ -92,8 +92,14 @@ public class BattlePrepController : InputReceiverDelegate {
 
 	private void DisplayPopup() {
 		popupObject.SetActive(true);
+		menuMode = 4;
 		popupPosition = 1;
 		UpdatePopupButtons(0);
+	}
+
+	private void HidePopup() {
+		menuMode = 0;
+		popupObject.SetActive(false);
 	}
 
 	private void UpdatePopupButtons(int dir) {
@@ -108,6 +114,7 @@ public class BattlePrepController : InputReceiverDelegate {
 	/// </summary>
 	public void StartMission() {
 		mainMenuView.SetActive(false);
+		menuCollectionView.SetActive(true);
 		startTurnEvent.Invoke();
 	}
 
@@ -118,7 +125,6 @@ public class BattlePrepController : InputReceiverDelegate {
 	}
 
 	public override void OnUpArrow() {
-		Debug.Log("UP   " + active);
 		if (!active)
 			return;
 		if (menuMode == 0) {
@@ -171,6 +177,9 @@ public class BattlePrepController : InputReceiverDelegate {
 				mainMenuView.SetActive(false);
 				menuCollectionView.SetActive(true);
 			}
+			else if (mainIndex == 4) {
+				DisplayPopup();
+			}
 		}
 		else if (menuMode == 1) {
 			characterSelect.SelectCharacter();
@@ -182,7 +191,12 @@ public class BattlePrepController : InputReceiverDelegate {
 
 		}
 		else if (menuMode == 4) {
-			DisplayPopup();
+			if (popupPosition == 0) {
+				StartMission();
+			}
+			else {
+				HidePopup();
+			}
 		}
 	}
 
@@ -193,6 +207,9 @@ public class BattlePrepController : InputReceiverDelegate {
 			menuMode = 0;
 			characterSelect.LeaveMenu();
 			characterSelectView.SetActive(false);
+		}
+		else if (menuMode == 4) {
+			HidePopup();
 		}
 	}
 
