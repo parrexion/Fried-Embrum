@@ -21,7 +21,6 @@ public class PrepListVariable : ScriptableObject {
 	private const int XIsBetter = -1;
 	private const int YIsBetter = 1;
 	public void SortListPicked() {
-		Debug.Log("SORT picked");
 		preps.Sort((x, y) => {
 			if (x.forced != y.forced) {
 				return (x.forced) ? XIsBetter : YIsBetter;

@@ -5,7 +5,7 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class MainMenuController : InputReceiver {
+public class MainMenuController : InputReceiverDelegate {
 
 	public GameObject startMenuObject;
 	public HowToPlayController howTo;
@@ -49,6 +49,14 @@ public class MainMenuController : InputReceiver {
 		mainMusic.value = mainTheme.clip;
 		subMusic.value = null;
 		playBkgMusicEvent.Invoke();
+		InputDelegateController.instance.TriggerMenuChange(MenuMode.NONE);
+	}
+
+	public override void OnMenuModeChanged() {
+		bool prevActive = active;
+		active = (currentMenuMode.value == (int)MenuMode.NONE);
+		if(prevActive != active)
+			ActivateDelegates(active);
 	}
 
 	public void ControlsClicked() {
@@ -229,7 +237,6 @@ public class MainMenuController : InputReceiver {
 	}
 
 
-    public override void OnMenuModeChanged() { }
     public override void OnLButton() { }
     public override void OnRButton() { }
     public override void OnXButton() { }
