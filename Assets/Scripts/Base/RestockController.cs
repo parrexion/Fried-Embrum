@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class ShopBuyController : MonoBehaviour {
+public class RestockController : MonoBehaviour {
     
     public MyButton[] categories;
 
@@ -19,19 +19,9 @@ public class ShopBuyController : MonoBehaviour {
     private int currentCategory;
 	private int currentListIndex;
 	private int listSize;
-	private List<ItemListEntry> entryList = new List<ItemListEntry>();
-
-	[Header("Information box")]
+	private List<TrainingListEntry> entryList = new List<TrainingListEntry>();
+	
 	public Text TotalMoneyText;
-	public Text itemName;
-	public Image itemIcon;
-
-	public Text pwrText;
-	public Text rangeText;
-	public Text hitText;
-	public Text critText;
-	public Text reqText;
-	public Text weightText;
 
 	[Header("Restock view")]
 	public GameObject restockView;
@@ -64,7 +54,7 @@ public class ShopBuyController : MonoBehaviour {
             Destroy(listParent.GetChild(i).gameObject);
         }
 
-        entryList = new List<ItemListEntry>();
+        entryList = new List<TrainingListEntry>();
         listSize = (buyMode) ? shopList.items.Count : playerData.items.Count;
         int tempListSize = 0;
         ItemType currentType = (ItemType)(1+currentCategory);
@@ -95,8 +85,8 @@ public class ShopBuyController : MonoBehaviour {
 	private void CreateListEntry(int index, ItemEntry item, int charges) {
 		Transform t = Instantiate(entryPrefab, listParent);
 
-		ItemListEntry entry = t.GetComponent<ItemListEntry>();
-		entry.FillData(index, item, charges, totalMoney.value, buyMode, sellRatio.value);
+		TrainingListEntry entry = t.GetComponent<TrainingListEntry>();
+		//entry.FillData(index, item, charges, totalMoney.value, buyMode, sellRatio.value);
 		entry.SetHighlight(false);
 		entryList.Add(entry);
 
@@ -111,7 +101,7 @@ public class ShopBuyController : MonoBehaviour {
 					entryList[i].SetHighlight(currentListIndex == i);
 				}
 			}
-            SetupItemInfo();
+            SetupCharInfo();
         }
 	}
 
@@ -135,7 +125,7 @@ public class ShopBuyController : MonoBehaviour {
     }
 
 	public void SelectItem(bool isBuy) {
-		if (entryList.Count == 0 || !entryList[currentListIndex].affordable) {
+		if (entryList.Count == 0) {
 			return;
 		}
 		else if (!promptMode) {
@@ -146,17 +136,17 @@ public class ShopBuyController : MonoBehaviour {
 		else {
 			if (promptPosition == 0) {
 				Debug.Log((isBuy) ? "Buy item" : "Sell item");
-				if (isBuy) { // Buy item
-					ItemEntry item = ScriptableObject.CreateInstance<ItemEntry>();
-					item.CopyValues(entryList[currentListIndex].item);
-					totalMoney.value -= item.cost;
-					playerData.items.Add(new InventoryItem { item = item, charges = item.maxCharge });
-				}
-				else { // Sell item
-					ItemEntry item = entryList[currentListIndex].item;
-					totalMoney.value += (int)(item.cost * sellRatio.value);
-					playerData.items.RemoveAt(entryList[currentListIndex].index);
-				}
+				//if (isBuy) { // Buy item
+				//	CharData item = ScriptableObject.CreateInstance<CharData>();
+				//	item.CopyValues(entryList[currentListIndex].);
+				//	totalMoney.value -= item.cost;
+				//	playerData.items.Add(new InventoryItem { item = item, charges = item.maxCharge });
+				//}
+				//else { // Sell item
+				//	ItemEntry item = entryList[currentListIndex].item;
+				//	totalMoney.value += (int)(item.cost * sellRatio.value);
+				//	playerData.items.RemoveAt(entryList[currentListIndex].index);
+				//}
 			}
 			GenerateList();
 			DeselectItem();
@@ -180,30 +170,32 @@ public class ShopBuyController : MonoBehaviour {
 		ChangeCategory(0);
 	}
 
-	private void SetupItemInfo() {
+	private void SetupCharInfo() {
 		if (entryList.Count == 0) {
-			itemName.text = "";
-			itemIcon.sprite = null;
-
-			pwrText.text = "Pwr:  ";
-			rangeText.text = "Range:  ";
-			hitText.text = "Hit:  ";
-			critText.text = "Crit:  ";
-			reqText.text = "Req:  ";
-			weightText.text = "Weight:  ";
+			charName.text = "";
+			portrait.sprite = null;
+			for (int i = 0; i < inventory.Length; i++) {
+				inventory[i].text = "";
+			}
 			return;
 		}
 
-		ItemEntry item = entryList[currentListIndex].item;
-		itemName.text = item.entryName;
-		itemIcon.sprite = entryList[currentListIndex].icon.sprite;
+		charName.text = "";
+		portrait.sprite = null;
+		for (int i = 0; i < inventory.Length; i++) {
+			inventory[i].text = "";
+		}
 
-		pwrText.text  = "Pwr:  " + item.power.ToString();
-		rangeText.text = "Range:  " + item.range.ToString();
-		hitText.text = "Hit:  " + item.hitRate.ToString();
-		critText.text = "Crit:  " + item.critRate.ToString();
-		reqText.text = "Req:  " + item.skillReq.ToString();
-		weightText.text = "Weight:  " + item.weight.ToString();
+		//CharData character = entryList[currentListIndex].;
+		//itemName.text = item.entryName;
+		//itemIcon.sprite = entryList[currentListIndex].icon.sprite;
+
+		//pwrText.text  = "Pwr:  " + item.power.ToString();
+		//rangeText.text = "Range:  " + item.range.ToString();
+		//hitText.text = "Hit:  " + item.hitRate.ToString();
+		//critText.text = "Crit:  " + item.critRate.ToString();
+		//reqText.text = "Req:  " + item.skillReq.ToString();
+		//weightText.text = "Weight:  " + item.weight.ToString();
 	}
 
 }

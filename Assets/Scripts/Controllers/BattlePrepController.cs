@@ -137,8 +137,7 @@ public class BattlePrepController : InputReceiverDelegate {
 	}
 
 	public override void OnDownArrow() {
-		if (!active)
-			return;
+		Debug.Log("DOWN");
 		if (menuMode == 0) {
 			mainIndex = OPMath.FullLoop(0, mainButtons.Length, mainIndex+1);
 			UpdateButtons();
@@ -177,6 +176,10 @@ public class BattlePrepController : InputReceiverDelegate {
 				mainMenuView.SetActive(false);
 				menuCollectionView.SetActive(true);
 			}
+			else if (mainIndex == 3) {
+				objectiveView.SetActive(true);
+				menuMode = 3;
+			}
 			else if (mainIndex == 4) {
 				DisplayPopup();
 			}
@@ -188,7 +191,8 @@ public class BattlePrepController : InputReceiverDelegate {
 
 		}
 		else if (menuMode == 3) {
-
+			objectiveView.SetActive(false);
+			menuMode = 0;
 		}
 		else if (menuMode == 4) {
 			if (popupPosition == 0) {
@@ -207,6 +211,10 @@ public class BattlePrepController : InputReceiverDelegate {
 			menuMode = 0;
 			characterSelect.LeaveMenu();
 			characterSelectView.SetActive(false);
+		}
+		else if (menuMode == 3) {
+			objectiveView.SetActive(false);
+			menuMode = 0;
 		}
 		else if (menuMode == 4) {
 			HidePopup();
