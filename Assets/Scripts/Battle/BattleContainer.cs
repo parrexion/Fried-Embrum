@@ -474,7 +474,7 @@ public class BattleContainer : MonoBehaviour {
 
 	private IEnumerator DropItems(TacticsMove dropper, TacticsMove receiver) {
 		for (int i = 0; i < InventoryContainer.INVENTORY_SIZE; i++) {
-			InventoryTuple itemTup = dropper.inventory.GetItem(i);
+			InventoryTuple itemTup = dropper.inventory.GetTuple(i);
 			if (itemTup == null || !itemTup.droppable)
 				continue;
 			

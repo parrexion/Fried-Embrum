@@ -1,10 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class BaseShop : InputReceiver {
+public class BaseShop : InputReceiverDelegate {
 
 	[Header("Button menu")]
 	public MyButton[] buttons;
@@ -16,6 +15,7 @@ public class BaseShop : InputReceiver {
 
     [Header("Handlers")]
     public ShopBuyController shopController;
+    public RestockController restockController;
 
 	[Header("Data")]
 	public ItemListVariable shopList;
@@ -35,8 +35,11 @@ public class BaseShop : InputReceiver {
 	}
 
     public override void OnMenuModeChanged() {
+		bool prevActive = active;
 		active = (currentMenuMode.value == (int)MenuMode.BASE_SHOP);
 		UpdateButtons();
+		if (prevActive != active)
+			ActivateDelegates(active);
 	}
 
     public override void OnUpArrow() {
@@ -46,15 +49,12 @@ public class BaseShop : InputReceiver {
 			currentIndex = OPMath.FullLoop(0, buttons.Length, currentIndex-1);
 			UpdateButtons();
         }
-        else if (menuMode == 1) {
+        else if (menuMode == 1 || menuMode == 2) {
             shopController.MoveSelection(-1);
         }
-        else if (menuMode == 2) {
-            shopController.MoveSelection(-1);
+        else if (menuMode == 3) {
+            restockController.MoveSelection(-1);
         }
-        //else if (menuMode == 3) {
-        //	changeController.MoveSelection(-1);
-        //}
     }
 
     public override void OnDownArrow() {
@@ -64,15 +64,12 @@ public class BaseShop : InputReceiver {
 			currentIndex = OPMath.FullLoop(0, buttons.Length, currentIndex+1);
 			UpdateButtons();
         }
-        else if (menuMode == 1) {
+        else if (menuMode == 1 || menuMode == 2) {
             shopController.MoveSelection(1);
         }
-        else if (menuMode == 2) {
-            shopController.MoveSelection(1);
+        else if (menuMode == 3) {
+            restockController.MoveSelection(1);
         }
-        //else if (menuMode == 3) {
-        //	changeController.MoveSelection(1);
-        //}
     }
 
     public override void OnOkButton() {
@@ -93,18 +90,22 @@ public class BaseShop : InputReceiver {
                 shopView.SetActive(true);
 				basicView.SetActive(false);
             }
-			//else if (currentIndex == 2) {
-			//    menuMode = 3;
-			//    menuTitle.text = "RESTOCK";
-			//    shopView.SetActive(true);
-			//    basicView.SetActive(false);
-			//}
+			else if (currentIndex == 2) {
+				menuMode = 3;
+				menuTitle.text = "RESTOCK";
+				restockController.GenerateLists();
+				shopView.SetActive(false);
+				basicView.SetActive(false);
+			}
 		}
 		else if (menuMode == 1) {
 			shopController.SelectItem(true);
 		}
 		else if (menuMode == 2) {
 			shopController.SelectItem(false);
+		}
+		else if (menuMode == 3) {
+			restockController.SelectItem();
 		}
 	}
 
@@ -122,6 +123,9 @@ public class BaseShop : InputReceiver {
                 shopView.SetActive(false);
             }
         }
+		else if (menuMode == 3) {
+			restockController.DeselectItem();
+		}
     }
 
     public override void OnLeftArrow() {
@@ -130,6 +134,9 @@ public class BaseShop : InputReceiver {
 		if (menuMode == 1 || menuMode == 2) {
             shopController.ChangeCategory(-1);
         }
+		else if (menuMode == 3) {
+			restockController.MoveSide(-1);
+		}
     }
 
     public override void OnRightArrow() {
@@ -138,6 +145,9 @@ public class BaseShop : InputReceiver {
 		if (menuMode == 1 || menuMode == 2) {
             shopController.ChangeCategory(1);
         }
+		else if (menuMode == 3) {
+			restockController.MoveSide(1);
+		}
     }
 
 	private void UpdateButtons() {

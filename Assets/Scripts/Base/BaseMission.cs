@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class BaseMission : InputReceiver {
+public class BaseMission : InputReceiverDelegate {
 
 	public SaveListVariable playerData;
 	public MyButton[] buttons;
@@ -38,15 +38,19 @@ public class BaseMission : InputReceiver {
 
 	private void Start () {
 		currentIndex = 0;
+		promptMode = false;
 		promptView.SetActive(false);
 		SetupButtons();
 	}
 
     public override void OnMenuModeChanged() {
+		bool prevActive = active;
 		active = (currentMenuMode.value == (int)MenuMode.BASE_MISSION);
 		currentIndex = 0;
 		UpdateButtons();
 		ShowMissionInfo();
+		if (prevActive != active)
+			ActivateDelegates(active);
 	}
 
     public override void OnUpArrow() {

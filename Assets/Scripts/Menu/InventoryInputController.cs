@@ -89,7 +89,7 @@ public class InventoryInputController : InputReceiver {
 				inventoryIndex.value++;
 				if (inventoryIndex.value >= InventoryContainer.INVENTORY_SIZE)
 					inventoryIndex.value = 0;
-			} while (inventoryIndex.value != 0 && selectCharacter.value.inventory.GetItem(inventoryIndex.value).item == null);
+			} while (inventoryIndex.value != 0 && selectCharacter.value.inventory.GetTuple(inventoryIndex.value).item == null);
 			menuMoveEvent.Invoke();
 			ui.UpdateSelection(selectCharacter.value);
 		}
@@ -105,7 +105,7 @@ public class InventoryInputController : InputReceiver {
 				inventoryIndex.value--;
 				if (inventoryIndex.value < 0)
 					inventoryIndex.value = InventoryContainer.INVENTORY_SIZE -1;
-			} while (inventoryIndex.value != 0 && selectCharacter.value.inventory.GetItem(inventoryIndex.value).item == null);
+			} while (inventoryIndex.value != 0 && selectCharacter.value.inventory.GetTuple(inventoryIndex.value).item == null);
 			menuMoveEvent.Invoke();
 			ui.UpdateSelection(selectCharacter.value);
 		}
@@ -115,7 +115,7 @@ public class InventoryInputController : InputReceiver {
 		if (!active)
 			return;
 
-		if (currentMenuMode.value == (int)MenuMode.STATS && selectCharacter.value.inventory.GetItem(inventoryIndex.value).item != null) {
+		if (currentMenuMode.value == (int)MenuMode.STATS && selectCharacter.value.inventory.GetTuple(inventoryIndex.value).item != null) {
 			currentMenuMode.value = (int)MenuMode.INV;
 			inventoryMenuPosition.value = -1;
 			StartCoroutine(MenuChangeDelay());

@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class BaseController : InputReceiver {
+public class BaseController : InputReceiverDelegate {
 
 	public List<Transform> areas;
 	public BoolVariable lockControls;
 	public float speed = 1;
 	public int widthOffset;
 	public List<MenuMode> screens = new List<MenuMode>();
-
-	private int currentArea;
+	
 	private int width;
 	private int height;
 
@@ -23,8 +22,8 @@ public class BaseController : InputReceiver {
 			areas[i].gameObject.SetActive(true);
 		}
 		SetAreaPositions(0);
-		currentMenuMode.value = (int)screens[1];
-		menuModeChangedEvent.Invoke();
+		ActivateDelegates(true);
+		InputDelegateController.instance.TriggerMenuChange(screens[1]);
 		lockControls.value = false;
 	}
 
@@ -57,8 +56,7 @@ public class BaseController : InputReceiver {
 			SetAreaPositions(offset);
 			yield return null;
 		}
-		currentMenuMode.value = (int)screens[1];
-		StartCoroutine(MenuChangeDelay());
+		InputDelegateController.instance.TriggerMenuChange(screens[1]);
 		lockControls.value = false;
 	}
 
@@ -70,6 +68,7 @@ public class BaseController : InputReceiver {
 
 	public void StartMission() {
 		lockControls.value = false;
+		ActivateDelegates(false);
 		SceneManager.LoadScene("LoadingScreen");
 	}
 

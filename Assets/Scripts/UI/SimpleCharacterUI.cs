@@ -200,13 +200,13 @@ public class SimpleCharacterUI : MonoBehaviour {
 
 		// Set up inventory list
 		for (int i = 0; i < 5; i++) {
-			if (i >= InventoryContainer.INVENTORY_SIZE || inventory.GetItem(i).item == null) {
+			if (i >= InventoryContainer.INVENTORY_SIZE || inventory.GetTuple(i).item == null) {
 				inventoryFields[i].color = Color.black;
 				inventoryFields[i].text = "---";
 				inventoryValues[i].text = " ";
 			}
 			else {
-				InventoryTuple tuple = inventory.GetItem(i);
+				InventoryTuple tuple = inventory.GetTuple(i);
 				int skill = stats.GetWpnSkill(tuple.item);
 				inventoryFields[i].color = (tuple.droppable) ? Color.green : 
 							(tuple.item.CanUse(skill)) ? Color.black : Color.grey;
@@ -280,7 +280,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 		bool visible = (currentMenuMode.value == (int)MenuMode.STATS || currentMenuMode.value == (int)MenuMode.TOOL);
 		tooltipObject.SetActive(visible);
 		if (inventoryIndex.value != -1) {
-			InventoryTuple item = tactics.inventory.GetItem(inventoryIndex.value);
+			InventoryTuple item = tactics.inventory.GetTuple(inventoryIndex.value);
 			tooltipText.text = (item.item != null) ? item.item.GetDescription() : "";
 		}
 	}

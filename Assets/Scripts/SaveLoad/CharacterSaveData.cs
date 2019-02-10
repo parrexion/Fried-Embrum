@@ -51,10 +51,10 @@ public class CharacterSaveData {
 		inventory = new List<string>();
 		invCharges = new List<int>();
 		for (int i = 0; i < InventoryContainer.INVENTORY_SIZE; i++) {
-			if (invCont.GetItem(i).item == null)
+			if (invCont.GetTuple(i).item == null)
 				continue;
-			inventory.Add(invCont.GetItem(i).item.uuid);
-			invCharges.Add(invCont.GetItem(i).charge);
+			inventory.Add(invCont.GetTuple(i).item.uuid);
+			invCharges.Add(invCont.GetTuple(i).charge);
 		}
 
 		skills = new List<string>();

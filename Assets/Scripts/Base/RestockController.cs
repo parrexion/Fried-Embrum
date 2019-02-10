@@ -1,201 +1,227 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class RestockController : MonoBehaviour {
-    
-    public MyButton[] categories;
-
-	[Header("Entry List")]
+    enum MenuState { CHARACTER, MENU, INV, PROMPT }
+	private MenuState currentMode;
 	public SaveListVariable playerData;
 	public IntVariable totalMoney;
-	public FloatVariable sellRatio;
-    public Transform listParent;
-	public Transform entryPrefab;
-	private bool buyMode;
-	private ItemListVariable shopList;
-    private int currentCategory;
-	private int currentListIndex;
-	private int listSize;
-	private List<TrainingListEntry> entryList = new List<TrainingListEntry>();
-	
-	public Text TotalMoneyText;
 
-	[Header("Restock view")]
-	public GameObject restockView;
-	public Image portrait;
+	[Header("Character List")]
+    public Transform listParentCharacter;
+	public Transform characterPrefab;
+	private int currentListIndex;
+	private List<RestockListEntry> entryList = new List<RestockListEntry>();
+
+	[Header("Restock List")]
+	public GameObject mainButtonView;
+	public GameObject restockButtonView;
+    public MyButton[] restockMenuButtons;
+    public Transform listParentRestock;
+	public Transform restockPrefab;
+	private int currentMenuIndex;
+	private int currentItemIndex;
+	private List<ItemListEntry> restockList = new List<ItemListEntry>();
+
+	[Header("Inventory box")]
+	public GameObject inventoryArea;
 	public TMPro.TextMeshProUGUI charName;
+	public Image portrait;
 	public TMPro.TextMeshProUGUI[] inventory;
 
-	[Header("Buy/Sell items")]
+	[Header("Information box")]
+	public GameObject informationArea;
+	public Text TotalMoneyText;
+	public Text itemName;
+	public Image itemIcon;
+
+	public Text pwrText;
+	public Text rangeText;
+	public Text hitText;
+	public Text critText;
+	public Text reqText;
+	public Text weightText;
+
+	[Header("Restock promt")]
 	public GameObject promptView;
 	public Text promptText;
 	public MyButton promptYesButton;
 	public MyButton promptNoButton;
-	private bool promptMode;
 	private int promptPosition;
 
 
-	public void GenerateLists(ItemListVariable currentShopList, bool buying) {
+	private void Start() {
+		restockButtonView.SetActive(false);
+		inventoryArea.SetActive(false);
+		informationArea.SetActive(false);
 		promptView.SetActive(false);
-		buyMode = buying;
-		shopList = currentShopList;
-        ChangeCategory(0);
-		GenerateList();
+	}
+
+	public void GenerateLists() {
+		inventoryArea.SetActive(true);
+		GenerateCharacterList();
 		currentListIndex = 0;
+		currentItemIndex = 0;
+		currentMenuIndex = 0;
 		MoveSelection(0);
 	}
 
-    private void GenerateList() {
+    private void GenerateCharacterList() {
 		TotalMoneyText.text = "Money:  " + totalMoney.value;
-        for (int i = listParent.childCount - 1; i > 2; i--) {
-            Destroy(listParent.GetChild(i).gameObject);
+        for (int i = listParentCharacter.childCount - 1; i > 2; i--) {
+            Destroy(listParentCharacter.GetChild(i).gameObject);
         }
 
-        entryList = new List<TrainingListEntry>();
-        listSize = (buyMode) ? shopList.items.Count : playerData.items.Count;
-        int tempListSize = 0;
-        ItemType currentType = (ItemType)(1+currentCategory);
-        for (int i = 0; i < listSize; i++) {
-			ItemEntry item = (buyMode) ? shopList.items[i] : playerData.items[i].item;
-			int charges = (buyMode) ? shopList.items[i].maxCharge : playerData.items[i].charges;
+        entryList = new List<RestockListEntry>();
 
-			if (item.researchNeeded && !playerData.upgrader.IsResearched(item.uuid))
-				continue;
+        for (int i = 0; i < playerData.stats.Count; i++) {
+			Transform t = Instantiate(characterPrefab, listParentCharacter);
 
-			if (currentCategory == 7 && item.itemCategory == ItemCategory.CONSUME) {
-				CreateListEntry(i, item, charges);
-				tempListSize++;
-			}
-			else if (currentCategory == 6 && item.itemCategory == ItemCategory.STAFF) {
-				CreateListEntry(i, item, charges);
-				tempListSize++;
-			}
-			else if (item.itemType == currentType) {
-                CreateListEntry(i, item, charges);
-                tempListSize++;
-            }
+			RestockListEntry entry = t.GetComponent<RestockListEntry>();
+			entry.FillData(playerData.stats[i], playerData.inventory[i]);
+			entryList.Add(entry);
+
+			t.gameObject.SetActive(true);
         }
-        listSize = tempListSize;
-        entryPrefab.gameObject.SetActive(false);
+        characterPrefab.gameObject.SetActive(false);
     }
 
-	private void CreateListEntry(int index, ItemEntry item, int charges) {
-		Transform t = Instantiate(entryPrefab, listParent);
+    private void GenerateInventoryList() {
+		TotalMoneyText.text = "Money:  " + totalMoney.value;
+        for (int i = listParentRestock.childCount - 1; i > 2; i--) {
+            Destroy(listParentRestock.GetChild(i).gameObject);
+        }
 
-		TrainingListEntry entry = t.GetComponent<TrainingListEntry>();
-		//entry.FillData(index, item, charges, totalMoney.value, buyMode, sellRatio.value);
-		entry.SetHighlight(false);
-		entryList.Add(entry);
+        restockList = new List<ItemListEntry>();
 
-		t.gameObject.SetActive(true);
-	}
+        for (int i = 0; i < InventoryContainer.INVENTORY_SIZE; i++) {
+			InventoryTuple tuple = entryList[i].invCon.GetTuple(i);
+			if (!tuple.item)
+				break;
+			Transform t = Instantiate(restockPrefab, listParentRestock);
+
+			ItemListEntry entry = t.GetComponent<ItemListEntry>();
+			entry.FillData(i, tuple.item, tuple.charge, 9999, false, 1);
+			restockList.Add(entry);
+
+			t.gameObject.SetActive(true);
+        }
+        characterPrefab.gameObject.SetActive(false);
+    }
 
 	public void MoveSelection(int dir) {
-		if (!promptMode) {
-			if (entryList.Count > 0) {
-				currentListIndex = OPMath.FullLoop(0, listSize, currentListIndex + dir);
-				for (int i = 0; i < listSize; i++) {
-					entryList[i].SetHighlight(currentListIndex == i);
-				}
+		if (currentMode == MenuState.CHARACTER) {
+			currentListIndex = OPMath.FullLoop(0, playerData.stats.Count, currentListIndex + dir);
+			for (int i = 0; i < playerData.stats.Count; i++) {
+				entryList[i].SetHighlight(currentListIndex == i);
 			}
             SetupCharInfo();
         }
+		else if (currentMode == MenuState.MENU) {
+			currentMenuIndex = OPMath.FullLoop(0, restockMenuButtons.Length, currentMenuIndex + dir);
+			for (int i = 0; i < restockMenuButtons.Length; i++) {
+				restockMenuButtons[i].SetSelected(currentMenuIndex == i);
+			}
+			SetupItemInfo();
+		}
+		else if (currentMode == MenuState.INV) {
+			currentMenuIndex = OPMath.FullLoop(0, restockList.Count, currentMenuIndex + dir);
+			for (int i = 0; i < restockList.Count; i++) {
+				restockList[i].SetHighlight(currentMenuIndex == i);
+			}
+			SetupItemInfo();
+		}
+		else if (currentMode == MenuState.PROMPT) {
+			promptPosition = OPMath.FullLoop(0, 2, promptPosition + dir);
+		}
 	}
 
-    public void ChangeCategory(int dir) {
-        if (!promptMode) {
-            do {
-                currentCategory = OPMath.FullLoop(0, 8, currentCategory + dir);
-            } while (!categories[currentCategory].gameObject.activeSelf);
-			currentListIndex = 0;
-            GenerateList();
-			MoveSelection(0);
-        }
-		else {
-			promptPosition = (promptPosition + dir) % 2;
-			promptYesButton.SetSelected(promptPosition == 0);
-			promptNoButton.SetSelected(promptPosition == 1);
-		}
-		for (int i = 0; i < categories.Length; i++) {
-			categories[i].SetSelected(i == currentCategory);
-		}
-    }
+	public void MoveSide(int dir) {
 
-	public void SelectItem(bool isBuy) {
-		if (entryList.Count == 0) {
-			return;
+	}
+
+	public void SelectItem() {
+		if (currentMode == MenuState.CHARACTER) {
+			currentMode = MenuState.MENU;
+			restockButtonView.SetActive(true);
+			mainButtonView.SetActive(false);
+			currentMenuIndex = 0;
+			GenerateInventoryList();
 		}
-		else if (!promptMode) {
-			promptMode = true;
-			SetupTradePrompt(isBuy);
+		else if (currentMode == MenuState.MENU) {
+			Debug.Log("Restock");
+			currentMode = MenuState.INV;
 			promptView.SetActive(true);
+			promptText.text = "Restock item?";
+			promptPosition = 0;
 		}
-		else {
+		else if (currentMode == MenuState.PROMPT) {
 			if (promptPosition == 0) {
-				Debug.Log((isBuy) ? "Buy item" : "Sell item");
-				//if (isBuy) { // Buy item
-				//	CharData item = ScriptableObject.CreateInstance<CharData>();
-				//	item.CopyValues(entryList[currentListIndex].);
-				//	totalMoney.value -= item.cost;
-				//	playerData.items.Add(new InventoryItem { item = item, charges = item.maxCharge });
-				//}
-				//else { // Sell item
-				//	ItemEntry item = entryList[currentListIndex].item;
-				//	totalMoney.value += (int)(item.cost * sellRatio.value);
-				//	playerData.items.RemoveAt(entryList[currentListIndex].index);
-				//}
+				RestockItem();
 			}
-			GenerateList();
-			DeselectItem();
-			MoveSelection(currentListIndex >= entryList.Count ? entryList.Count - currentListIndex -1 : 0);
+			currentMode = MenuState.INV;
+			promptView.SetActive(false);
 		}
 	}
 
 	public bool DeselectItem() {
-		if (promptMode) {
-			promptMode = false;
+		if (currentMode == MenuState.MENU) {
+			restockButtonView.SetActive(false);
+			mainButtonView.SetActive(true);
+			currentMode =  MenuState.CHARACTER;
+			return false;
+		}
+		else if (currentMode == MenuState.PROMPT) {
+			if (promptPosition == 0) {
+				RestockItem();
+			}
+			currentMode = MenuState.INV;
 			promptView.SetActive(false);
 			return false;
 		}
-
 		return true;
 	}
 
-	private void SetupTradePrompt(bool isBuy) {
-		promptText.text = (isBuy) ? "Buy item?" : "Sell item?";
-		promptPosition = 0;
-		ChangeCategory(0);
+	private void RestockItem() {
+
 	}
 
 	private void SetupCharInfo() {
+		RestockListEntry restock = entryList[currentListIndex];
+		charName.text = restock.entryName.text;
+		portrait.sprite = restock.portrait.sprite;
+		for (int i = 0; i < InventoryContainer.INVENTORY_SIZE; i++) {
+			ItemEntry item = restock.invCon.GetTuple(i).item;
+			inventory[i].text = (item) ? item.entryName : "-NONE-";
+		}
+	}
+
+	private void SetupItemInfo() {
 		if (entryList.Count == 0) {
-			charName.text = "";
-			portrait.sprite = null;
-			for (int i = 0; i < inventory.Length; i++) {
-				inventory[i].text = "";
-			}
+			itemName.text = "";
+			itemIcon.sprite = null;
+
+			pwrText.text = "Pwr:  ";
+			rangeText.text = "Range:  ";
+			hitText.text = "Hit:  ";
+			critText.text = "Crit:  ";
+			reqText.text = "Req:  ";
+			weightText.text = "Weight:  ";
 			return;
 		}
 
-		charName.text = "";
-		portrait.sprite = null;
-		for (int i = 0; i < inventory.Length; i++) {
-			inventory[i].text = "";
-		}
+		ItemEntry item = entryList[currentListIndex].invCon.GetTuple(currentItemIndex).item;
+		itemName.text = item.entryName;
+		itemIcon.sprite = item.icon;
 
-		//CharData character = entryList[currentListIndex].;
-		//itemName.text = item.entryName;
-		//itemIcon.sprite = entryList[currentListIndex].icon.sprite;
-
-		//pwrText.text  = "Pwr:  " + item.power.ToString();
-		//rangeText.text = "Range:  " + item.range.ToString();
-		//hitText.text = "Hit:  " + item.hitRate.ToString();
-		//critText.text = "Crit:  " + item.critRate.ToString();
-		//reqText.text = "Req:  " + item.skillReq.ToString();
-		//weightText.text = "Weight:  " + item.weight.ToString();
+		pwrText.text  = "Pwr:  " + item.power.ToString();
+		rangeText.text = "Range:  " + item.range.ToString();
+		hitText.text = "Hit:  " + item.hitRate.ToString();
+		critText.text = "Crit:  " + item.critRate.ToString();
+		reqText.text = "Req:  " + item.skillReq.ToString();
+		weightText.text = "Weight:  " + item.weight.ToString();
 	}
 
 }

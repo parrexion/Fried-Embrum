@@ -232,7 +232,7 @@ public class InventoryContainer {
 	/// </summary>
 	/// <param name="index"></param>
 	/// <returns></returns>
-	public InventoryTuple GetItem(int index) {
+	public InventoryTuple GetTuple(int index) {
 		return inventory[index];
 	}
 

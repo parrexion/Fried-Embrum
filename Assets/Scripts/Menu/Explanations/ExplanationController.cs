@@ -28,7 +28,7 @@ public class ExplanationController : InputReceiver {
     private void Setup() {
         InventoryContainer inv = selectedCharacter.value.inventory;
         for (int i = 0; i < InventoryContainer.INVENTORY_SIZE; i++) {
-            inventory[i].value = inv.GetItem(i).item;
+            inventory[i].value = inv.GetTuple(i).item;
         }
     }
 

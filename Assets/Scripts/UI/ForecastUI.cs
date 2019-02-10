@@ -91,7 +91,7 @@ public class ForecastUI : MonoBehaviour {
 			BattleAction act1 = new BattleAction(true, attackmode, attacker, defender);
 			_attackerTactics = attacker;
 			_defenderTactics = defender;
-			act1.weaponAtk = attacker.inventory.GetItem(battleWeaponIndex.value);
+			act1.weaponAtk = attacker.inventory.GetTuple(battleWeaponIndex.value);
 
 			if (attackmode) {
 				Debug.Log("ATTACK1!");
@@ -124,14 +124,14 @@ public class ForecastUI : MonoBehaviour {
 			BattleAction act1 = new BattleAction(true, attackmode, attacker, defender);
 			_attackerTactics = attacker;
 			_defenderTactics = defender;
-			act1.weaponAtk = attacker.inventory.GetItem(battleWeaponIndex.value);
+			act1.weaponAtk = attacker.inventory.GetTuple(battleWeaponIndex.value);
 
 			if (attackmode) {
 				if (inBattle)
 					backgroundInBattle.SetActive(true);
 
 				BattleAction act2 = new BattleAction(false, true, defender, attacker);
-				act2.weaponDef = attacker.inventory.GetItem(battleWeaponIndex.value);
+				act2.weaponDef = attacker.inventory.GetTuple(battleWeaponIndex.value);
 				int distance = BattleMap.DistanceTo(defender, walkTile.value);
 				int atk = (act1.weaponAtk.item.InRange(distance)) ? act1.GetDamage() : -1;
 				int ret = (act1.DefenderInRange(distance)) ? act2.GetDamage() : -1;

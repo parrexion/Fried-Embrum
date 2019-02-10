@@ -43,7 +43,7 @@ public class InventoryMenuController : InputReceiverDelegate {
 		if (!active)
 			return;
 			
-		InventoryTuple tuple = selectedCharacter.value.inventory.GetItem(inventoryIndex.value);
+		InventoryTuple tuple = selectedCharacter.value.inventory.GetTuple(inventoryIndex.value);
 		int skill = selectedCharacter.value.stats.GetWpnSkill(tuple.item);
 		inventoryButtons[0].gameObject.SetActive(tuple.item.itemCategory == ItemCategory.WEAPON && tuple.item.CanUse(skill));
 		inventoryButtons[1].gameObject.SetActive(tuple.item.itemCategory == ItemCategory.CONSUME);
@@ -133,7 +133,7 @@ public class InventoryMenuController : InputReceiverDelegate {
 	/// Uses the selected item.
 	/// </summary>
 	public void UseItem() {
-		InventoryTuple tup = selectedCharacter.value.inventory.GetItem(inventoryIndex.value);
+		InventoryTuple tup = selectedCharacter.value.inventory.GetTuple(inventoryIndex.value);
 		SfxEntry sfx = (tup.item.itemType == ItemType.CHEAL) ? healItemSfx : boostItemSfx;
 		sfxQueue.Enqueue(sfx);
 		playSfxEvent.Invoke();

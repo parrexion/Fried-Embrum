@@ -587,7 +587,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// <returns></returns>
 	public InventoryTuple GetEquippedWeapon(ItemCategory category) {
 		if (category == ItemCategory.WEAPON) {
-			return inventory.GetItem(0);
+			return inventory.GetTuple(0);
 		}
 		return inventory.GetFirstUsableItemTuple(category, stats);
 	}
