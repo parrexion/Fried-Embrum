@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class BaseHousing : InputReceiver {
+public class BaseHousing : InputReceiverDelegate {
 
 	[Header("Button menu")]
 	public MyButton[] buttons;
@@ -54,8 +54,11 @@ public class BaseHousing : InputReceiver {
 	}
 
     public override void OnMenuModeChanged() {
+		bool prevActive = active;
 		active = (currentMenuMode.value == (int)MenuMode.BASE_HOUSE);
 		UpdateButtons();
+		if(prevActive != active)
+			ActivateDelegates(active);
 	}
 
 	public override void OnOkButton() {
@@ -116,9 +119,6 @@ public class BaseHousing : InputReceiver {
 	}
 
     public override void OnUpArrow() {
-		if (!active)
-			return;
-
 		if (menuMode == 0) {
 			currentIndex = OPMath.FullLoop(0, saveList.stats.Count, currentIndex-1);
 			UpdateButtons();
@@ -134,9 +134,6 @@ public class BaseHousing : InputReceiver {
 	}
 
     public override void OnDownArrow() {
-		if (!active)
-			return;
-
 		if (menuMode == 0) {
 			currentIndex = OPMath.FullLoop(0, saveList.stats.Count, currentIndex+1);
 			UpdateButtons();

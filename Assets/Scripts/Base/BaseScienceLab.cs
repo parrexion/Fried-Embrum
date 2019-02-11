@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class BaseScienceLab : InputReceiver {
+public class BaseScienceLab : InputReceiverDelegate {
 
 	[Header("Button menu")]
 	public MyButton[] buttons;
@@ -36,13 +36,14 @@ public class BaseScienceLab : InputReceiver {
 	}
 
     public override void OnMenuModeChanged() {
+		bool prevActive = active;
 		active = (currentMenuMode.value == (int)MenuMode.BASE_LAB);
 		UpdateButtons();
+		if(prevActive != active)
+			ActivateDelegates(active);
 	}
 
 	public override void OnUpArrow() {
-		if (!active)
-			return;
 		if (menuMode == 0) {
 			currentIndex = OPMath.FullLoop(0, buttons.Length, currentIndex - 1);
 			UpdateButtons();
@@ -53,8 +54,6 @@ public class BaseScienceLab : InputReceiver {
 	}
 
 	public override void OnDownArrow() {
-		if (!active)
-			return;
 		if (menuMode == 0) {
 			currentIndex = OPMath.FullLoop(0, buttons.Length, currentIndex + 1);
 			UpdateButtons();
@@ -65,18 +64,12 @@ public class BaseScienceLab : InputReceiver {
 	}
 
 	public override void OnLeftArrow() {
-		if (!active)
-			return;
-
 		if (menuMode == 1 || menuMode == 2) {
 			scienceController.MovePromt(-1);
 		}
 	}
 
 	public override void OnRightArrow() {
-		if (!active)
-			return;
-
 		if (menuMode == 1 || menuMode == 2) {
 			scienceController.MovePromt(1);
 		}
@@ -89,8 +82,6 @@ public class BaseScienceLab : InputReceiver {
 	}
 
 	public override void OnOkButton() {
-		if (!active)
-			return;
 		if (menuMode == 0) {
 			if (currentIndex == 0) {
 				menuMode = 1;
@@ -113,8 +104,6 @@ public class BaseScienceLab : InputReceiver {
 	}
 
 	public override void OnBackButton() {
-		if (!active)
-			return;
 		if (menuMode == 0) {
 
 		}

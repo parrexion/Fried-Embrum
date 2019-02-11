@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class BaseShop : InputReceiverDelegate {
 
 	[Header("Button menu")]
-	public MyButton[] buttons;
+	public MyButtonList buttons;
 	public Text menuTitle;
 
 	[Header("Views")]
@@ -22,32 +22,31 @@ public class BaseShop : InputReceiverDelegate {
 	public SaveListVariable playerData;
 
 	private int menuMode;
-	private int currentIndex;
 	private int itemIndex;
 
 
 	private void Start () {
 		menuTitle.text = "SHOP";
 		menuMode = 0;
-		currentIndex = 0;
 		basicView.SetActive(true);
 		shopView.SetActive(false);
+		buttons.ResetButtons();
+		buttons.AddButton("BUY");
+		buttons.AddButton("SELL");
+		buttons.AddButton("RESTOCK");
 	}
 
     public override void OnMenuModeChanged() {
 		bool prevActive = active;
 		active = (currentMenuMode.value == (int)MenuMode.BASE_SHOP);
-		UpdateButtons();
+		buttons.ForcePosition(0);
 		if (prevActive != active)
 			ActivateDelegates(active);
 	}
 
     public override void OnUpArrow() {
-		if (!active)
-			return;
 		if (menuMode == 0) {
-			currentIndex = OPMath.FullLoop(0, buttons.Length, currentIndex-1);
-			UpdateButtons();
+			buttons.Move(-1);
         }
         else if (menuMode == 1 || menuMode == 2) {
             shopController.MoveSelection(-1);
@@ -58,11 +57,8 @@ public class BaseShop : InputReceiverDelegate {
     }
 
     public override void OnDownArrow() {
-		if (!active)
-			return;
 		if (menuMode == 0) {
-			currentIndex = OPMath.FullLoop(0, buttons.Length, currentIndex+1);
-			UpdateButtons();
+			buttons.Move(1);
         }
         else if (menuMode == 1 || menuMode == 2) {
             shopController.MoveSelection(1);
@@ -73,9 +69,8 @@ public class BaseShop : InputReceiverDelegate {
     }
 
     public override void OnOkButton() {
-		if (!active)
-			return;
 		if (menuMode == 0) {
+			int currentIndex = buttons.GetPosition();
             if (currentIndex == 0) {
                 menuMode = 1;
                 menuTitle.text = "BUY";
@@ -110,8 +105,6 @@ public class BaseShop : InputReceiverDelegate {
 	}
 
     public override void OnBackButton() {
-		if (!active)
-			return;
 		if (menuMode == 0) {
 
         }
@@ -129,8 +122,6 @@ public class BaseShop : InputReceiverDelegate {
     }
 
     public override void OnLeftArrow() {
-		if (!active)
-			return;
 		if (menuMode == 1 || menuMode == 2) {
             shopController.ChangeCategory(-1);
         }
@@ -140,8 +131,6 @@ public class BaseShop : InputReceiverDelegate {
     }
 
     public override void OnRightArrow() {
-		if (!active)
-			return;
 		if (menuMode == 1 || menuMode == 2) {
             shopController.ChangeCategory(1);
         }
@@ -149,12 +138,6 @@ public class BaseShop : InputReceiverDelegate {
 			restockController.MoveSide(1);
 		}
     }
-
-	private void UpdateButtons() {
-		for (int i = 0; i < buttons.Length; i++) {
-			buttons[i].SetSelected(i == currentIndex);
-		}
-	}
 
 
     public override void OnLButton() { }

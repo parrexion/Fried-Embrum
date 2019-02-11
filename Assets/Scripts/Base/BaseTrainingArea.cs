@@ -1,10 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class BaseTrainingArea : InputReceiver {
+public class BaseTrainingArea : InputReceiverDelegate {
 
 	[Header("Button menu")]
 	public MyButton[] buttons;
@@ -34,13 +33,14 @@ public class BaseTrainingArea : InputReceiver {
 	}
 
     public override void OnMenuModeChanged() {
+		bool prevActive = active;
 		active = (currentMenuMode.value == (int)MenuMode.BASE_TRAIN);
 		UpdateButtons();
+		if(prevActive != active)
+			ActivateDelegates(active);
 	}
 
     public override void OnUpArrow() {
-		if (!active)
-			return;
 		if (menuMode == 0) {
 			currentIndex = OPMath.FullLoop(0, buttons.Length, currentIndex-1);
 			UpdateButtons();
@@ -54,8 +54,6 @@ public class BaseTrainingArea : InputReceiver {
 	}
 
     public override void OnDownArrow() {
-		if (!active)
-			return;
 		if (menuMode == 0) {
 			currentIndex = OPMath.FullLoop(0, buttons.Length, currentIndex+1);
 			UpdateButtons();
@@ -69,8 +67,6 @@ public class BaseTrainingArea : InputReceiver {
 	}
 
     public override void OnOkButton() {
-		if (!active)
-			return;
 		if (menuMode == 0) {
 			if (currentIndex == 0) {
 				menuMode = 1;
@@ -95,8 +91,6 @@ public class BaseTrainingArea : InputReceiver {
 	}
 
     public override void OnBackButton() {
-		if (!active)
-			return;
 		if (menuMode == 0) {
 
 		}
@@ -119,15 +113,11 @@ public class BaseTrainingArea : InputReceiver {
 	}
 
     public override void OnLeftArrow() {
-		if (!active)
-			return;
 		if (menuMode == 1) {
 			bexpController.UpdateAwardExp(-1);
 		}
 	}
     public override void OnRightArrow() {
-		if (!active)
-			return;
 		if (menuMode == 1) {
 			bexpController.UpdateAwardExp(1);
 		}

@@ -7,12 +7,11 @@ using UnityEngine.UI;
 public class BaseMission : InputReceiverDelegate {
 
 	public SaveListVariable playerData;
-	public MyButton[] buttons;
+	public MyButtonList buttons;
 	public IntVariable missionIndex;
 	public UnityEvent missionChangedEvent;
 
 	private List<MissionContainer> availableMaps = new List<MissionContainer>();
-	private int currentIndex;
 
 	[Header("Mission Info")]
 	public Text missionName;
@@ -37,7 +36,6 @@ public class BaseMission : InputReceiverDelegate {
 
 
 	private void Start () {
-		currentIndex = 0;
 		promptMode = false;
 		promptView.SetActive(false);
 		SetupButtons();
@@ -46,8 +44,7 @@ public class BaseMission : InputReceiverDelegate {
     public override void OnMenuModeChanged() {
 		bool prevActive = active;
 		active = (currentMenuMode.value == (int)MenuMode.BASE_MISSION);
-		currentIndex = 0;
-		UpdateButtons();
+		buttons.ForcePosition(0);
 		ShowMissionInfo();
 		if (prevActive != active)
 			ActivateDelegates(active);
@@ -57,8 +54,7 @@ public class BaseMission : InputReceiverDelegate {
 		if (!active || promptMode)
 			return;
 
-		currentIndex = OPMath.FullLoop(0, availableMaps.Count, currentIndex - 1);
-		UpdateButtons();
+		buttons.Move(-1);
 		ShowMissionInfo();
 		missionChangedEvent.Invoke();
 	}
@@ -67,8 +63,7 @@ public class BaseMission : InputReceiverDelegate {
 		if (!active || promptMode)
 			return;
 
-		currentIndex = OPMath.FullLoop(0, availableMaps.Count, currentIndex + 1);
-		UpdateButtons();
+		buttons.Move(1);
 		ShowMissionInfo();
 		missionChangedEvent.Invoke();
 	}
@@ -112,29 +107,16 @@ public class BaseMission : InputReceiverDelegate {
 	}
 
 	private void SetupButtons() {
+		buttons.ResetButtons();
 		availableMaps = playerData.missions.FindAll(m => !m.cleared);
-		for (int i = 0; i < buttons.Length; i++) {
-			if (i < availableMaps.Count) {
-				buttons[i].buttonText.text = availableMaps[i].map.entryName;
-				buttons[i].SetSelected(i == currentIndex);
-			}
-			else {
-				buttons[i].gameObject.SetActive(false);
-			}
-		}
-	}
-
-	private void UpdateButtons() {
+		Debug.Log("Missions:  " + availableMaps.Count);
 		for (int i = 0; i < availableMaps.Count; i++) {
-			buttons[i].SetSelected(i == currentIndex);
+			buttons.AddButton(availableMaps[i].map.entryName);
 		}
-		missionIndex.value = currentIndex;
-
 	}
 
 	private void ShowMissionInfo() {
-		if (availableMaps.Count <= currentIndex)
-			return;
+		int currentIndex = buttons.GetPosition();
 
 		MapEntry map = availableMaps[currentIndex].map;
 		missionName.text = map.entryName;
@@ -162,7 +144,7 @@ public class BaseMission : InputReceiverDelegate {
     }
 
 	private void StartMission() {
-		currentMap.value = availableMaps[currentIndex].map;
+		currentMap.value = availableMaps[buttons.GetPosition()].map;
 		Debug.Log("Start mission:  " + currentMap.value.entryName);
 		startMissionEvent.Invoke();
 	}

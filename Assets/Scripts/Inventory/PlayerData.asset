@@ -17,7 +17,7 @@ MonoBehaviour:
     classData: {fileID: 11400000, guid: 46169fca396b47d43add3446fcc356fe, type: 2}
     level: 2
     currentLevel: 3
-    currentExp: 20
+    currentExp: 0
     wpnSkills: 0000000001000000000000000000000000000000000000000000000000000000
     hp: 17
     atk: 4
@@ -41,14 +41,12 @@ MonoBehaviour:
     bDef: 0
     bRes: 0
     boosts: []
-    supportValues:
-    - uuid: Kent
-      value: 450
+    supportValues: []
   - charData: {fileID: 11400000, guid: cf951a3da37e1794b9cd29749c715911, type: 2}
     classData: {fileID: 11400000, guid: 2f7a88298f4c1c34db14c3ccd176d8a4, type: 2}
     level: 1
     currentLevel: 1
-    currentExp: 40
+    currentExp: 0
     wpnSkills: 0000000001000000010000000000000000000000000000000000000000000000
     hp: 20
     atk: 6
@@ -72,16 +70,12 @@ MonoBehaviour:
     bDef: 0
     bRes: 0
     boosts: []
-    supportValues:
-    - uuid: Lyn
-      value: 760
-    - uuid: Sain
-      value: 230
+    supportValues: []
   - charData: {fileID: 11400000, guid: 0bf81bfd9c0d55f49a76297d05c3a788, type: 2}
     classData: {fileID: 11400000, guid: 2f7a88298f4c1c34db14c3ccd176d8a4, type: 2}
     level: 1
     currentLevel: 1
-    currentExp: 50
+    currentExp: 0
     wpnSkills: 0000000001000000010000000000000000000000000000000000000000000000
     hp: 19
     atk: 8
@@ -105,9 +99,7 @@ MonoBehaviour:
     bDef: 0
     bRes: 0
     boosts: []
-    supportValues:
-    - uuid: Kent
-      value: 340
+    supportValues: []
   inventory:
   - inventory:
     - index: 0
@@ -115,12 +107,12 @@ MonoBehaviour:
       charge: 46
       droppable: 0
     - index: 1
-      item: {fileID: 11400000, guid: 4f62fac29e57cf149a77b69982270829, type: 2}
-      charge: 3
+      item: {fileID: 0}
+      charge: 0
       droppable: 0
     - index: 2
-      item: {fileID: 11400000, guid: 4f62fac29e57cf149a77b69982270829, type: 2}
-      charge: 3
+      item: {fileID: 0}
+      charge: 0
       droppable: 0
     - index: 3
       item: {fileID: 0}
@@ -136,12 +128,12 @@ MonoBehaviour:
       charge: 46
       droppable: 0
     - index: 1
-      item: {fileID: 11400000, guid: 70a69ddf23ff8c4479dae28fb5396f18, type: 2}
-      charge: 45
+      item: {fileID: 0}
+      charge: 0
       droppable: 0
     - index: 2
-      item: {fileID: 11400000, guid: 4f62fac29e57cf149a77b69982270829, type: 2}
-      charge: 3
+      item: {fileID: 0}
+      charge: 0
       droppable: 0
     - index: 3
       item: {fileID: 0}
@@ -153,12 +145,12 @@ MonoBehaviour:
       droppable: 0
   - inventory:
     - index: 0
-      item: {fileID: 11400000, guid: 70a69ddf23ff8c4479dae28fb5396f18, type: 2}
-      charge: 45
-      droppable: 0
-    - index: 1
       item: {fileID: 11400000, guid: 21e0cdf65dcd3c64f99de572c0526714, type: 2}
       charge: 46
+      droppable: 0
+    - index: 1
+      item: {fileID: 0}
+      charge: 0
       droppable: 0
     - index: 2
       item: {fileID: 0}
@@ -191,18 +183,16 @@ MonoBehaviour:
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
-  items:
-  - item: {fileID: 11400000, guid: 21e0cdf65dcd3c64f99de572c0526714, type: 2}
-    charges: 46
-  - item: {fileID: 11400000, guid: 127117ee097ca8c41bb381cff26da503, type: 2}
-    charges: 30
-  - item: {fileID: 11400000, guid: ff9ea282dd22b8f408577dc57bbdbfac, type: 2}
-    charges: 20
-  - item: {fileID: 11400000, guid: 4f62fac29e57cf149a77b69982270829, type: 2}
-    charges: 3
-  - item: {fileID: 11400000, guid: 4f62fac29e57cf149a77b69982270829, type: 2}
-    charges: 3
+  items: []
   missions:
+  - map: {fileID: 11400000, guid: 0a7809c902aa4d844a70ed2c691ea4a2, type: 2}
+    cleared: 0
+  - map: {fileID: 11400000, guid: a433301cc1f14f043ab12fbd97fedd44, type: 2}
+    cleared: 0
+  - map: {fileID: 11400000, guid: c68da9216d8057b4e829f9f87b9ae6c5, type: 2}
+    cleared: 0
+  - map: {fileID: 11400000, guid: 00776eff4b74d074c8be7b2dbe865331, type: 2}
+    cleared: 0
   - map: {fileID: 11400000, guid: 0a7809c902aa4d844a70ed2c691ea4a2, type: 2}
     cleared: 0
   - map: {fileID: 11400000, guid: a433301cc1f14f043ab12fbd97fedd44, type: 2}

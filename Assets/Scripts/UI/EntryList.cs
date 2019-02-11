@@ -1,0 +1,72 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class EntryList<T> where T : ListEntry {
+	
+	private List<T> entries = new List<T>();
+	private int size;
+	private int position;
+	private int top;
+	private int bot;
+
+
+	public void ResetList() {
+		for(int i = 0; i < entries.Count; i++) {
+			GameObject.Destroy(entries[i].gameObject);
+		}
+		entries.Clear();
+		size = 0;
+		bot = 0;
+		top = 0;
+		position = 0;
+		UpdateEntries();
+	}
+
+	public T CreateEntry(Transform t) {
+		t.gameObject.SetActive(true);
+
+		T item = t.GetComponent<T>();
+		item.SetHighlight(false);
+		entries.Add(item);
+
+		top = Mathf.Min(bot + size, entries.Count);
+		UpdateEntries();
+
+		return item;
+	}
+
+	public void ForcePosition(int pos) {
+		position = pos;
+		UpdateEntries();
+	}
+
+	public void Move(int dir) {
+		position = OPMath.FullLoop(0, entries.Count, position + dir);
+		if(position <= bot)
+			bot = Mathf.Max(0, position - 1);
+		else if(top - 1 <= position)
+			bot = Mathf.Max(0, Mathf.Min(entries.Count - size, position - size + 2));
+		top = Mathf.Min(bot + size, entries.Count);
+
+		UpdateEntries();
+	}
+
+	private void UpdateEntries() {
+		for(int i = 0; i < size; i++) {
+			entries[i].SetHighlight(bot + i == (position));
+		}
+	}
+
+	public int GetPosition() {
+		return position;
+	}
+
+	public T GetEntry() {
+		return entries[position];
+	}
+
+	public T GetEntry(int index) {
+		return entries[index];
+	}
+}

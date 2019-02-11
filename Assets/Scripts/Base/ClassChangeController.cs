@@ -75,7 +75,7 @@ public class ClassChangeController : MonoBehaviour {
 
 	private void CreateListEntries() {
 		for (int i = listParent.childCount-1; i > 1; i--) {
-			GameObject.Destroy(listParent.GetChild(i).gameObject);
+			Destroy(listParent.GetChild(i).gameObject);
 		}
 
 		entryList = new List<TrainingListEntry>();

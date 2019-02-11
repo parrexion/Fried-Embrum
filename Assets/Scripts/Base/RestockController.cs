@@ -9,6 +9,12 @@ public class RestockController : MonoBehaviour {
 	public SaveListVariable playerData;
 	public IntVariable totalMoney;
 
+	[Header("Views")]
+	public GameObject charListView;
+	public GameObject charMenuView;
+	public GameObject restockView;
+	public GameObject promptView;
+
 	[Header("Character List")]
     public Transform listParentCharacter;
 	public Transform characterPrefab;
@@ -16,8 +22,6 @@ public class RestockController : MonoBehaviour {
 	private List<RestockListEntry> entryList = new List<RestockListEntry>();
 
 	[Header("Restock List")]
-	public GameObject mainButtonView;
-	public GameObject restockButtonView;
     public MyButton[] restockMenuButtons;
     public Transform listParentRestock;
 	public Transform restockPrefab;
@@ -26,13 +30,11 @@ public class RestockController : MonoBehaviour {
 	private List<ItemListEntry> restockList = new List<ItemListEntry>();
 
 	[Header("Inventory box")]
-	public GameObject inventoryArea;
 	public TMPro.TextMeshProUGUI charName;
 	public Image portrait;
 	public TMPro.TextMeshProUGUI[] inventory;
 
 	[Header("Information box")]
-	public GameObject informationArea;
 	public Text TotalMoneyText;
 	public Text itemName;
 	public Image itemIcon;
@@ -45,7 +47,6 @@ public class RestockController : MonoBehaviour {
 	public Text weightText;
 
 	[Header("Restock promt")]
-	public GameObject promptView;
 	public Text promptText;
 	public MyButton promptYesButton;
 	public MyButton promptNoButton;
@@ -53,14 +54,14 @@ public class RestockController : MonoBehaviour {
 
 
 	private void Start() {
-		restockButtonView.SetActive(false);
-		inventoryArea.SetActive(false);
-		informationArea.SetActive(false);
+		restockView.SetActive(false);
+		charListView.SetActive(false);
+		charMenuView.SetActive(false);
 		promptView.SetActive(false);
 	}
 
 	public void GenerateLists() {
-		inventoryArea.SetActive(true);
+		charListView.SetActive(true);
 		GenerateCharacterList();
 		currentListIndex = 0;
 		currentItemIndex = 0;
@@ -145,8 +146,7 @@ public class RestockController : MonoBehaviour {
 	public void SelectItem() {
 		if (currentMode == MenuState.CHARACTER) {
 			currentMode = MenuState.MENU;
-			restockButtonView.SetActive(true);
-			mainButtonView.SetActive(false);
+			charMenuView.SetActive(true);
 			currentMenuIndex = 0;
 			GenerateInventoryList();
 		}
@@ -168,8 +168,7 @@ public class RestockController : MonoBehaviour {
 
 	public bool DeselectItem() {
 		if (currentMode == MenuState.MENU) {
-			restockButtonView.SetActive(false);
-			mainButtonView.SetActive(true);
+			charMenuView.SetActive(false);
 			currentMode =  MenuState.CHARACTER;
 			return false;
 		}

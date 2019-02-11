@@ -3,11 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SupportListEntry : MonoBehaviour {
-
-	public Image highlight;
-	public Image icon;
-	public Text entryName;
+public class SupportListEntry : ListEntry {
 
 	[Header("Supports")]
 	public Text supportC;
@@ -30,18 +26,6 @@ public class SupportListEntry : MonoBehaviour {
 		supportB.enabled = false;
 		supportA.enabled = false;
 		supportS.enabled = false;
-	}
-
-	public void SetDark(bool state) {
-		icon.color = (!state) ? Color.white : Color.grey;
-	}
-
-	/// <summary>
-	/// Updates the cursor highlight for the entry.
-	/// </summary>
-	/// <param name="state"></param>
-	public void SetHighlight(bool state) {
-		highlight.enabled = state;
 	}
 
 	/// <summary>
