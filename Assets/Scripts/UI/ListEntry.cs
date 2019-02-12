@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[System.Serializable]
 public class ListEntry : MonoBehaviour {
 
 	public Image highlight;
 	public Image icon;
 	public Text entryName;
+	public bool show = true;
+
 
 	/// <summary>
 	/// Updates the cursor highlight for the entry.

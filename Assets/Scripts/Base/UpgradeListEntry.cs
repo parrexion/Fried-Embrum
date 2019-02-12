@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UpgradeListEntry {
+public class UpgradeListEntry : ListEntry {
 
 	public int index;
 	public UpgradeEntry upgrade;

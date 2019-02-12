@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class BaseScienceLab : InputReceiverDelegate {
 
 	[Header("Button menu")]
-	public MyButton[] buttons;
+	public MyButtonList buttons;
 	public Text menuTitle;
 
 	[Header("Views")]
@@ -21,32 +21,32 @@ public class BaseScienceLab : InputReceiverDelegate {
 	public GameObject upgradeInfo;
     public Image previousItem;
     public Image upgradedItem;
-
-	private int currentIndex;
+	
 	private int menuMode;
     public UnityEvent upgradeChangedEvent;
 
 
 	private void Start () {
 		menuTitle.text = "LAB";
-		currentIndex = 0;
 		menuMode = 0;
 		basicView.SetActive(true);
 		developView.SetActive(false);
+		buttons.AddButton("UPGRADE ITEM");
+		buttons.AddButton("INVENT ITEM");
+		buttons.AddButton("ITEM LIST");
 	}
 
     public override void OnMenuModeChanged() {
 		bool prevActive = active;
 		active = (currentMenuMode.value == (int)MenuMode.BASE_LAB);
-		UpdateButtons();
+		buttons.ForcePosition(0);
 		if(prevActive != active)
 			ActivateDelegates(active);
 	}
 
 	public override void OnUpArrow() {
 		if (menuMode == 0) {
-			currentIndex = OPMath.FullLoop(0, buttons.Length, currentIndex - 1);
-			UpdateButtons();
+			buttons.Move(-1);
 		}
 		else if (menuMode == 1 || menuMode == 2) {
 			scienceController.MoveSelection(-1);
@@ -55,8 +55,7 @@ public class BaseScienceLab : InputReceiverDelegate {
 
 	public override void OnDownArrow() {
 		if (menuMode == 0) {
-			currentIndex = OPMath.FullLoop(0, buttons.Length, currentIndex + 1);
-			UpdateButtons();
+			buttons.Move(1);
 		}
 		else if (menuMode == 1 || menuMode == 2) {
 			scienceController.MoveSelection(1);
@@ -75,14 +74,9 @@ public class BaseScienceLab : InputReceiverDelegate {
 		}
 	}
 
-	private void UpdateButtons() {
-		for (int i = 0; i < buttons.Length; i++) {
-			buttons[i].SetSelected(i == currentIndex);
-		}
-	}
-
 	public override void OnOkButton() {
 		if (menuMode == 0) {
+			int currentIndex = buttons.GetPosition();
 			if (currentIndex == 0) {
 				menuMode = 1;
 				menuTitle.text = "UPGRADE";

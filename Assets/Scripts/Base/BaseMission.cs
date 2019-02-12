@@ -109,7 +109,6 @@ public class BaseMission : InputReceiverDelegate {
 	private void SetupButtons() {
 		buttons.ResetButtons();
 		availableMaps = playerData.missions.FindAll(m => !m.cleared);
-		Debug.Log("Missions:  " + availableMaps.Count);
 		for (int i = 0; i < availableMaps.Count; i++) {
 			buttons.AddButton(availableMaps[i].map.entryName);
 		}

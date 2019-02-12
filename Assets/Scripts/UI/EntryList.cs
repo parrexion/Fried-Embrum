@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class EntryList<T> where T : ListEntry {
-	
+
 	private List<T> entries = new List<T>();
 	private int size;
 	private int position;
@@ -11,12 +12,15 @@ public class EntryList<T> where T : ListEntry {
 	private int bot;
 
 
+	public EntryList(int size) {
+		this.size = size;
+	}
+
 	public void ResetList() {
 		for(int i = 0; i < entries.Count; i++) {
 			GameObject.Destroy(entries[i].gameObject);
 		}
 		entries.Clear();
-		size = 0;
 		bot = 0;
 		top = 0;
 		position = 0;
@@ -37,7 +41,7 @@ public class EntryList<T> where T : ListEntry {
 	}
 
 	public void ForcePosition(int pos) {
-		position = pos;
+		position = Mathf.Clamp(pos, 0, entries.Count -1);
 		UpdateEntries();
 	}
 
@@ -53,8 +57,9 @@ public class EntryList<T> where T : ListEntry {
 	}
 
 	private void UpdateEntries() {
-		for(int i = 0; i < size; i++) {
-			entries[i].SetHighlight(bot + i == (position));
+		for(int i = 0; i < entries.Count; i++) {
+			entries[i].SetHighlight(i == position);
+			entries[i].gameObject.SetActive(entries[i].show && bot <= i && i < top);
 		}
 	}
 
@@ -67,6 +72,8 @@ public class EntryList<T> where T : ListEntry {
 	}
 
 	public T GetEntry(int index) {
+		if(entries.Count <= index)
+			return null;
 		return entries[index];
 	}
 }

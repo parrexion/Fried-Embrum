@@ -12,11 +12,10 @@ public class ScienceController : MonoBehaviour {
 	public IntVariable totalMoney;
 
 	[Header("Entry List")]
-    public MyButton[] listButtons;
+    public MyButtonList listButtons;
+	public int visibleSize;
 	private bool upgradeMode;
-	private int currentListIndex;
-	private int listSize;
-	private List<UpgradeListEntry> entryList = new List<UpgradeListEntry>();
+	private EntryList<UpgradeListEntry> entryList;
 
 	[Header("Upgrade Box")]
 	public Text TotalScrapText;
@@ -59,7 +58,6 @@ public class ScienceController : MonoBehaviour {
 		promptView.SetActive(false);
 		upgradeMode = upgrading;
 		GenerateList();
-		currentListIndex = 0;
 		MoveSelection(0);
 	}
 
@@ -67,14 +65,12 @@ public class ScienceController : MonoBehaviour {
 		TotalScrapText.text = "Scraps:  " + totalScrap.value;
 		TotalMoneyText.text = "Money:  " + totalMoney.value;
 
-        entryList = new List<UpgradeListEntry>();
-		listSize = 0;
+        entryList = new EntryList<UpgradeListEntry>(visibleSize);
         int tempListSize = playerData.upgrader.listSize;
 		UpgradeType currentType = (upgradeMode) ? UpgradeType.UPGRADE : UpgradeType.INVENTION;
         for (int i = 0; i < tempListSize; i++) {
 			if (playerData.upgrader.upgrades[i].upgrade.type == currentType) {
                 CreateListEntry(i, playerData.upgrader.upgrades[i].upgrade, playerData.upgrader.upgrades[i].researched);
-                listSize++;
             }
         }
 		upgradeInfoObject.SetActive(upgradeMode);
@@ -91,21 +87,23 @@ public class ScienceController : MonoBehaviour {
 	}
 
 	public void MoveSelection(int dir) {
-		if (promptMode || entryList.Count == 0)
+		if (promptMode)
 			return;
 
-		currentListIndex = OPMath.FullLoop(0, listSize, currentListIndex + dir);
-		for (int i = 0; i < listButtons.Length; i++) {
-			if (entryList.Count <= i) {
-				listButtons[i].buttonText.text = "DONE";
-				break;
-			}
-			listButtons[i].buttonText.text = entryList[i].upgrade.entryName;
-			listButtons[i].buttonText.fontStyle = (entryList[i].done) ? FontStyle.Italic : FontStyle.Normal;
-			listButtons[i].highlight.color = (entryList[i].done) ? new Color(0.2f, 0.5f, 0.75f) : 
-											 (entryList[i].affordable) ? new Color(0.3f, 0.75f, 0.55f) : Color.grey;
-			listButtons[i].SetSelected(i == currentListIndex);
-		}
+		//currentListIndex = OPMath.FullLoop(0, listSize, currentListIndex + dir);
+		//for (int i = 0; i < listButtons.Length; i++) {
+		//	if (entryList.Count <= i) {
+		//		listButtons[i].buttonText.text = "DONE";
+		//		break;
+		//	}
+		//	listButtons[i].buttonText.text = entryList[i].upgrade.entryName;
+		//	listButtons[i].buttonText.fontStyle = (entryList[i].done) ? FontStyle.Italic : FontStyle.Normal;
+		//	listButtons[i].highlight.color = (entryList[i].done) ? new Color(0.2f, 0.5f, 0.75f) : 
+		//									 (entryList[i].affordable) ? new Color(0.3f, 0.75f, 0.55f) : Color.grey;
+		//	listButtons[i].SetSelected(i == currentListIndex);
+		//}
+		entryList.Move(dir);
+
 		if (upgradeMode)
 			SetupUpgradeInfo();
 		else
@@ -122,25 +120,26 @@ public class ScienceController : MonoBehaviour {
 	}
 
 	public void SelectItem(bool isUpgrade) {
-		if (entryList.Count == 0 || !entryList[currentListIndex].affordable) {
+		UpgradeListEntry upgrade = entryList.GetEntry();
+		if (!upgrade || !upgrade.affordable) {
 			return;
 		}
 		else if (!promptMode) {
-			if (entryList[currentListIndex].affordable) {
+			if (upgrade.affordable) {
 				SetupTradePrompt(isUpgrade);
 			}
 		}
 		else {
 			if (promptPosition == 0) {
 				Debug.Log((isUpgrade) ? "Upgrade" : "Invent");
-				totalMoney.value -= entryList[currentListIndex].upgrade.cost;
-				totalScrap.value -= entryList[currentListIndex].upgrade.scrap;
-				playerData.upgrader.upgrades[entryList[currentListIndex].index].researched = true;
+				totalMoney.value -= upgrade.upgrade.cost;
+				totalScrap.value -= upgrade.upgrade.scrap;
+				playerData.upgrader.upgrades[upgrade.index].researched = true;
 				playerData.upgrader.CalculateResearch();
 			}
 			GenerateList();
 			DeselectItem();
-			MoveSelection(currentListIndex >= entryList.Count ? entryList.Count - currentListIndex -1 : 0);
+			MoveSelection(0);
 		}
 	}
 
@@ -163,7 +162,7 @@ public class ScienceController : MonoBehaviour {
 	}
 
 	private void SetupUpgradeInfo() {
-		if (entryList.Count == 0) {
+		if (entryList.GetEntry(0) == null) {
 			upgradeName.text = "";
 			itemIcon.sprite = null;
 
@@ -179,13 +178,13 @@ public class ScienceController : MonoBehaviour {
 			return;
 		}
 
-		UpgradeEntry upgrade = entryList[currentListIndex].upgrade;
+		UpgradeEntry upgrade = entryList.GetEntry().upgrade;
 		upgradeName.text = upgrade.entryName;
 		relatedItem.text = "Item:  " + upgrade.item.entryName;
 		itemIcon.sprite = upgrade.item.icon;
 		itemIcon.color = upgrade.repColor;
 
-		if (entryList[currentListIndex].done) {
+		if (entryList.GetEntry().done) {
 			costMoney.text = "";
 			costScrap.text = "";
 			level.text = "Researched!";
@@ -207,7 +206,7 @@ public class ScienceController : MonoBehaviour {
 	}
 
 	private void SetupDevelopInfo() {
-		if (entryList.Count == 0) {
+		if (entryList.GetEntry() == null) {
 			upgradeName.text = "";
 			itemIcon.sprite = null;
 
@@ -225,13 +224,13 @@ public class ScienceController : MonoBehaviour {
 			return;
 		}
 
-		UpgradeEntry upgrade = entryList[currentListIndex].upgrade;
+		UpgradeEntry upgrade = entryList.GetEntry().upgrade;
 		upgradeName.text = upgrade.entryName;
 		relatedItem.text = "Item:  " + upgrade.item.entryName;
 		itemIcon.sprite = upgrade.item.icon;
 		itemIcon.color = upgrade.repColor;
 
-		if (entryList[currentListIndex].done) {
+		if (entryList.GetEntry().done) {
 			costMoney.text = "";
 			costScrap.text = "";
 			level.text = "Researched!";

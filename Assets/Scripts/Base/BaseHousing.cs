@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class BaseHousing : InputReceiverDelegate {
 
 	[Header("Button menu")]
-	public MyButton[] buttons;
+	public MyButtonList buttons;
     public SaveListVariable saveList;
     public UnityEvent housingChangedEvent;
 
@@ -32,37 +32,43 @@ public class BaseHousing : InputReceiverDelegate {
 
 	[Header("Supports")]
 	public SupportList supportList;
-
-	private int currentIndex;
+	
 	private int menuMode;
 	private Room targetRoom;
 
 
 	private void Start() {
-		currentIndex = 0;
 		menuMode = 0;
         houses = roomGrid.GetComponentsInChildren<House>();
         for (int i = 0; i < houses.Length; i++) {
             houses[i].SetupRooms(i+1,null,null,null);
         }
-		houses[0].SetupRooms(1, saveList.stats[0], null, null);
-		houses[1].SetupRooms(2, null, saveList.stats[1], null);
-		houses[2].SetupRooms(3, null, null, saveList.stats[2]);
 		basicCanvas.SetActive(true);
 		houseCanvas.SetActive(false);
 		supportCanvas.SetActive(false);
+
+		buttons.ResetButtons();
+		buttons.AddButton("EDIT ROOMS");
+		buttons.AddButton("CHECK SUPPORTS");
+		buttons.AddButton("SUPPORT LIST");
+
+		//DEBUG
+		houses[0].SetupRooms(1, saveList.stats[0], null, null);
+		houses[1].SetupRooms(2, null, saveList.stats[1], null);
+		houses[2].SetupRooms(3, null, null, saveList.stats[2]);
 	}
 
     public override void OnMenuModeChanged() {
 		bool prevActive = active;
 		active = (currentMenuMode.value == (int)MenuMode.BASE_HOUSE);
-		UpdateButtons();
+		buttons.ForcePosition(0);
 		if(prevActive != active)
 			ActivateDelegates(active);
 	}
 
 	public override void OnOkButton() {
 		if (menuMode == 0) {
+			int currentIndex = buttons.GetPosition();
 			if (currentIndex == 0) {
 				basicCanvas.SetActive(false);
 				houseCanvas.SetActive(true);
@@ -75,6 +81,7 @@ public class BaseHousing : InputReceiverDelegate {
 				basicCanvas.SetActive(false);
 				supportCanvas.SetActive(true);
 				menuMode = 2;
+				supportList.CreateList();
 				menuAcceptEvent.Invoke();
 			}
 		}
@@ -120,8 +127,7 @@ public class BaseHousing : InputReceiverDelegate {
 
     public override void OnUpArrow() {
 		if (menuMode == 0) {
-			currentIndex = OPMath.FullLoop(0, saveList.stats.Count, currentIndex-1);
-			UpdateButtons();
+			buttons.Move(-1);
 			housingChangedEvent.Invoke();
 		}
 		else if (menuMode == 1) {
@@ -135,8 +141,7 @@ public class BaseHousing : InputReceiverDelegate {
 
     public override void OnDownArrow() {
 		if (menuMode == 0) {
-			currentIndex = OPMath.FullLoop(0, saveList.stats.Count, currentIndex+1);
-			UpdateButtons();
+			buttons.Move(1);
 			housingChangedEvent.Invoke();
 		}
 		else if (menuMode == 1) {
@@ -145,12 +150,6 @@ public class BaseHousing : InputReceiverDelegate {
 		}
 		else if (menuMode == 2) {
 			supportList.MoveSelection(1);
-		}
-	}
-
-	private void UpdateButtons() {
-		for (int i = 0; i < saveList.stats.Count; i++) {
-			buttons[i].SetSelected(i == currentIndex);
 		}
 	}
 

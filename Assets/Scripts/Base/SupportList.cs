@@ -12,27 +12,26 @@ public class SupportList : MonoBehaviour {
 	public Text selectName;
 	public Image selectIcon;
 
-	private int listSize;
 	public EntryList<SupportListEntry> supportList;
+	public int maxEntries;
 
+	private int oldIndex;
 	private bool detailedMode;
 	private string selectedCharacter;
 
 
-	private void OnEnable() {
-		listSize = availableUnits.stats.Count;
-		supportList = new EntryList<SupportListEntry>();
+	private void Start() {
+		supportList = new EntryList<SupportListEntry>(maxEntries);
+	}
 
-		for (int i = transform.childCount-1; i > 0; i--) {
-			Destroy(transform.GetChild(i).gameObject);
-		}
+	public void CreateList() {
+		supportList.ResetList();
 
-		for (int i = 0; i < listSize; i++) {
+		for (int i = 0; i < availableUnits.stats.Count; i++) {
 			Transform t = Instantiate(entryPrefab, transform);
 			SupportListEntry support = supportList.CreateEntry(t);
 			support.FillData(availableUnits.stats[i]);
 		}
-		MoveSelection(0);
 		entryPrefab.gameObject.SetActive(false);
 	}
 
@@ -64,14 +63,15 @@ public class SupportList : MonoBehaviour {
 	public bool DeselectCharacter() {
 		if (detailedMode) {
 			detailedMode = false;
-			for (int i = 0; i < listSize; i++) {
+			for (int i = 0; i < availableUnits.stats.Count; i++) {
+				supportList.GetEntry(i).show = true;
 				supportList.GetEntry(i).SetDark(false);
 				supportList.GetEntry(i).SetSupportValue(null, 0);
 				supportList.GetEntry(i).gameObject.SetActive(true);
 			}
 			selectName.text = "";
 			selectIcon.sprite = null;
-			MoveSelection(0);
+			supportList.ForcePosition(oldIndex);
 			return false;
 		}
 
@@ -79,9 +79,10 @@ public class SupportList : MonoBehaviour {
 	}
 
 	private void CreateSupportEntry() {
-		for (int i = 0; i < listSize; i++) {
+		oldIndex = supportList.GetPosition();
+		for (int i = 0; i < availableUnits.stats.Count; i++) {
 			if (supportList.GetEntry(i).uuid == selectedCharacter) {
-				supportList.GetEntry(i).gameObject.SetActive(false);
+				supportList.GetEntry(i).show = false;
 			}
 			else {
 				SupportTuple tuple = availableUnits.stats[i].charData.GetSupport(selectedCharacter);
