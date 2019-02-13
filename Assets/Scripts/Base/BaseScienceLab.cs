@@ -31,6 +31,7 @@ public class BaseScienceLab : InputReceiverDelegate {
 		menuMode = 0;
 		basicView.SetActive(true);
 		developView.SetActive(false);
+		buttons.ResetButtons();
 		buttons.AddButton("UPGRADE ITEM");
 		buttons.AddButton("INVENT ITEM");
 		buttons.AddButton("ITEM LIST");

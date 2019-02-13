@@ -20,7 +20,7 @@ public class ItemEntry : ScrObjLibraryEntry {
 	public int skillReq;
     public int weight;
 
-    public int power = 5;
+    public int power;
     public int hitRate;
     public int critRate;
     public WeaponRange range = new WeaponRange(1, 1);

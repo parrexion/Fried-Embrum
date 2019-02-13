@@ -45,6 +45,7 @@ public class MyButtonList : MonoBehaviour {
 	}
 
 	private void UpdateButtons() {
+			//Debug.Log("#   " + size);
 		for(int i = 0; i < size; i++) {
 			buttons[i].SetSelected(bot + i == (position));
 			buttons[i].gameObject.SetActive(bot + i < top);

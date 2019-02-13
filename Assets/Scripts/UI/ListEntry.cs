@@ -7,9 +7,10 @@ using UnityEngine.UI;
 public class ListEntry : MonoBehaviour {
 
 	public Image highlight;
+	public bool show = true;
+
 	public Image icon;
 	public Text entryName;
-	public bool show = true;
 
 
 	/// <summary>

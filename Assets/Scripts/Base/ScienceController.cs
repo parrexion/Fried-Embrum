@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class ScienceController : MonoBehaviour {
@@ -12,10 +11,11 @@ public class ScienceController : MonoBehaviour {
 	public IntVariable totalMoney;
 
 	[Header("Entry List")]
-    public MyButtonList listButtons;
+	public Transform listParent;
+	public Transform entryPrefab;
+	public EntryList<UpgradeListEntry> entryList;
 	public int visibleSize;
 	private bool upgradeMode;
-	private EntryList<UpgradeListEntry> entryList;
 
 	[Header("Upgrade Box")]
 	public Text TotalScrapText;
@@ -54,6 +54,10 @@ public class ScienceController : MonoBehaviour {
 	private int promptPosition;
 
 
+	private void Start() {
+        entryList = new EntryList<UpgradeListEntry>(visibleSize);
+	}
+
 	public void GenerateLists(bool upgrading) {
 		promptView.SetActive(false);
 		upgradeMode = upgrading;
@@ -65,43 +69,26 @@ public class ScienceController : MonoBehaviour {
 		TotalScrapText.text = "Scraps:  " + totalScrap.value;
 		TotalMoneyText.text = "Money:  " + totalMoney.value;
 
-        entryList = new EntryList<UpgradeListEntry>(visibleSize);
+        entryList.ResetList();
         int tempListSize = playerData.upgrader.listSize;
 		UpgradeType currentType = (upgradeMode) ? UpgradeType.UPGRADE : UpgradeType.INVENTION;
         for (int i = 0; i < tempListSize; i++) {
 			if (playerData.upgrader.upgrades[i].upgrade.type == currentType) {
-                CreateListEntry(i, playerData.upgrader.upgrades[i].upgrade, playerData.upgrader.upgrades[i].researched);
+				Transform t = Instantiate(entryPrefab, listParent);
+				UpgradeListEntry ue = entryList.CreateEntry(t);
+				ue.FillData(i, playerData.upgrader.upgrades[i].upgrade, playerData.upgrader.upgrades[i].researched, totalScrap.value, totalMoney.value);
             }
         }
+		entryPrefab.gameObject.SetActive(false);
 		upgradeInfoObject.SetActive(upgradeMode);
 		inventionInfoObject.SetActive(!upgradeMode);
-	}
-
-	private void CreateListEntry(int index, UpgradeEntry upgrade, bool done) {
-		UpgradeListEntry entry = new UpgradeListEntry();
-		entry.FillData(index, upgrade, done, totalScrap.value, totalMoney.value);
-		if (done)
-			entryList.Add(entry);
-		else
-			entryList.Insert(0, entry);
+		UpdateListDarkness();
 	}
 
 	public void MoveSelection(int dir) {
 		if (promptMode)
 			return;
 
-		//currentListIndex = OPMath.FullLoop(0, listSize, currentListIndex + dir);
-		//for (int i = 0; i < listButtons.Length; i++) {
-		//	if (entryList.Count <= i) {
-		//		listButtons[i].buttonText.text = "DONE";
-		//		break;
-		//	}
-		//	listButtons[i].buttonText.text = entryList[i].upgrade.entryName;
-		//	listButtons[i].buttonText.fontStyle = (entryList[i].done) ? FontStyle.Italic : FontStyle.Normal;
-		//	listButtons[i].highlight.color = (entryList[i].done) ? new Color(0.2f, 0.5f, 0.75f) : 
-		//									 (entryList[i].affordable) ? new Color(0.3f, 0.75f, 0.55f) : Color.grey;
-		//	listButtons[i].SetSelected(i == currentListIndex);
-		//}
 		entryList.Move(dir);
 
 		if (upgradeMode)
@@ -136,6 +123,7 @@ public class ScienceController : MonoBehaviour {
 				totalScrap.value -= upgrade.upgrade.scrap;
 				playerData.upgrader.upgrades[upgrade.index].researched = true;
 				playerData.upgrader.CalculateResearch();
+				UpdateListDarkness();
 			}
 			GenerateList();
 			DeselectItem();
@@ -151,6 +139,10 @@ public class ScienceController : MonoBehaviour {
 		}
 
 		return true;
+	}
+
+	private void UpdateListDarkness() {
+		entryList.FilterDark((e) => { return (e.upgrade.scrap > totalScrap.value || e.upgrade.cost > totalMoney.value); });
 	}
 
 	private void SetupTradePrompt(bool isUpgrade) {

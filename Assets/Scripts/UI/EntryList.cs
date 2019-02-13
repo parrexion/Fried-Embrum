@@ -56,6 +56,13 @@ public class EntryList<T> where T : ListEntry {
 		UpdateEntries();
 	}
 
+	public delegate bool EntryListFilter(T e);
+	public void FilterDark(EntryListFilter filter) {
+		for (int i = 0; i < entries.Count; i++) {
+			entries[i].SetDark(filter(entries[i]));
+		}
+	}
+
 	private void UpdateEntries() {
 		for(int i = 0; i < entries.Count; i++) {
 			entries[i].SetHighlight(i == position);
