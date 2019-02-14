@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class BaseTrainingArea : InputReceiverDelegate {
 
 	[Header("Button menu")]
-	public MyButton[] buttons;
+	public MyButtonList buttons;
 	public Text menuTitle;
 
 	[Header("Views")]
@@ -19,31 +19,30 @@ public class BaseTrainingArea : InputReceiverDelegate {
 	public ClassChangeController changeController;
 
 	private int menuMode;
-	private int currentIndex;
-	private int characterIndex;
 
 
 	private void Start () {
 		menuTitle.text = "TRAINING";
 		menuMode = 0;
-		currentIndex = 0;
 		basicView.SetActive(true);
 		bexpView.SetActive(false);
 		classView.SetActive(false);
+		buttons.ResetButtons();
+		buttons.AddButton("BATTLE EXP");
+		buttons.AddButton("CLASS CHANGE");
 	}
 
     public override void OnMenuModeChanged() {
 		bool prevActive = active;
 		active = (currentMenuMode.value == (int)MenuMode.BASE_TRAIN);
-		UpdateButtons();
+		buttons.ForcePosition(0);
 		if(prevActive != active)
 			ActivateDelegates(active);
 	}
 
     public override void OnUpArrow() {
 		if (menuMode == 0) {
-			currentIndex = OPMath.FullLoop(0, buttons.Length, currentIndex-1);
-			UpdateButtons();
+			buttons.Move(-1);
 		}
 		else if (menuMode == 1) {
 			bexpController.MoveSelection(-1);
@@ -55,8 +54,7 @@ public class BaseTrainingArea : InputReceiverDelegate {
 
     public override void OnDownArrow() {
 		if (menuMode == 0) {
-			currentIndex = OPMath.FullLoop(0, buttons.Length, currentIndex+1);
-			UpdateButtons();
+			buttons.Move(1);
 		}
 		else if (menuMode == 1) {
 			bexpController.MoveSelection(1);
@@ -68,9 +66,11 @@ public class BaseTrainingArea : InputReceiverDelegate {
 
     public override void OnOkButton() {
 		if (menuMode == 0) {
+			int currentIndex = buttons.GetPosition();
 			if (currentIndex == 0) {
 				menuMode = 1;
 				menuTitle.text = "BEXP";
+				bexpController.GenerateList();
 				bexpView.SetActive(true);
 				basicView.SetActive(false);
 				// bexpList.
@@ -120,13 +120,6 @@ public class BaseTrainingArea : InputReceiverDelegate {
     public override void OnRightArrow() {
 		if (menuMode == 1) {
 			bexpController.UpdateAwardExp(1);
-		}
-	}
-
-
-	private void UpdateButtons() {
-		for (int i = 0; i < buttons.Length; i++) {
-			buttons[i].SetSelected(i == currentIndex);
 		}
 	}
 

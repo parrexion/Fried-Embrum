@@ -6,24 +6,23 @@ using UnityEngine.UI;
 
 public class ClassChangeController : MonoBehaviour {
 
+    public SaveListVariable playerData;
 	public GameObject listView;
 	public GameObject changeView;
 	private bool changeMode;
 
 	[Header("Entry List")]
-    public SaveListVariable availableUnits;
 	public Transform listParent;
 	public Transform entryPrefab;
-	private int currentListIndex;
-	private int listSize;
-	private List<TrainingListEntry> entryList = new List<TrainingListEntry>();
+	public int visibleSize;
+	private EntryList<TrainingListEntry> entryList;
 
 	[Header("Class List")]
 	public Transform classParent;
 	public Transform classPrefab;
-	private List<ClassListEntry> classList = new List<ClassListEntry>();
+	public int visibleClassSize;
+	private EntryList<ClassListEntry> classList;
 	private CharClass selectedClass;
-	private int nextClassIndex;
 
 	[Header("Class Change Animation")]
 	public LevelupScript levelupScript;
@@ -65,11 +64,12 @@ public class ClassChangeController : MonoBehaviour {
 	public Text movDiffText;
 
 
-	private void OnEnable() {
+	private void Start() {
 		listView.SetActive(true);
 		changeView.SetActive(false);
+		entryList = new EntryList<TrainingListEntry>(visibleSize);
+		classList = new EntryList<ClassListEntry>(visibleClassSize);
 		CreateListEntries();
-		currentListIndex = 0;
 		MoveSelection(0);
 	}
 
@@ -78,17 +78,12 @@ public class ClassChangeController : MonoBehaviour {
 			Destroy(listParent.GetChild(i).gameObject);
 		}
 
-		entryList = new List<TrainingListEntry>();
-		listSize = availableUnits.stats.Count;
-		for (int i = 0; i < listSize; i++) {
-			StatsContainer stats = availableUnits.stats[i];
+		entryList.ResetList();
+		for (int i = 0; i < playerData.stats.Count; i++) {
 			Transform t = Instantiate(entryPrefab, listParent);
-
-			TrainingListEntry entry = t.GetComponent<TrainingListEntry>();
-			entry.FillData(stats);
-			entry.SetHighlight(false);
-			entry.SetDark(stats.classData.nextClass.Count == 0);
-			entryList.Add(entry);
+			TrainingListEntry entry = entryList.CreateEntry(t);
+			entry.FillData(playerData.stats[i]);
+			entry.SetDark(playerData.stats[i].classData.nextClass.Count == 0);
 
 			t.gameObject.SetActive(true);
 		}
@@ -97,26 +92,20 @@ public class ClassChangeController : MonoBehaviour {
 
 	public void MoveSelection(int dir) {
 		if (!changeMode) {
-			currentListIndex = OPMath.FullLoop(0, listSize, currentListIndex + dir);
-			for (int i = 0; i < listSize; i++) {
-				entryList[i].SetHighlight(currentListIndex == i);
-			}
+			entryList.Move(dir);
 		}
 		else {
-			nextClassIndex = OPMath.FullLoop(0,selectedClass.nextClass.Count, nextClassIndex + dir);
-			for (int i = 0; i < selectedClass.nextClass.Count; i++) {
-				classList[i].SetHighlight(nextClassIndex == i);
-			}
+			classList.Move(dir);
 			SetupClassDiff();
 		}
 	}
 
 	public void SelectCharacter() {
 		if (!changeMode) {
-			if (entryList[currentListIndex].isDark)
+			if (entryList.GetEntry().dark)
 				return;
 			changeMode = true;
-			selectedClass = availableUnits.stats[currentListIndex].classData;
+			selectedClass = playerData.stats[entryList.GetPosition()].classData;
 			CreateClassList();
 			SetupCharacterInfo();
 			SetupClassDiff();
@@ -141,26 +130,17 @@ public class ClassChangeController : MonoBehaviour {
 	}
 
 	private void CreateClassList() {
-		for (int i = classParent.childCount-1; i > 0; i--) {
-			GameObject.Destroy(classParent.GetChild(i).gameObject);
-		}
-
-		classList = new List<ClassListEntry>();
+		classList.ResetList();
 		for (int i = 0; i < selectedClass.nextClass.Count; i++) {
 			Transform t = Instantiate(classPrefab, classParent);
-
-			ClassListEntry entry = t.GetComponent<ClassListEntry>();
+			ClassListEntry entry = classList.CreateEntry(t);
 			entry.FillData(selectedClass.nextClass[i]);
-			entry.SetHighlight(false);
-			classList.Add(entry);
-
-			t.gameObject.SetActive(true);
 		}
 		MoveSelection(0);
 	}
 
 	private void SetupCharacterInfo() {
-		StatsContainer stats = availableUnits.stats[currentListIndex];
+		StatsContainer stats = playerData.stats[entryList.GetPosition()];
 
 		characterName.text = stats.charData.entryName;
 		portrait.sprite = stats.charData.portrait;
@@ -180,7 +160,7 @@ public class ClassChangeController : MonoBehaviour {
 	}
 
 	private void SetupClassDiff() {
-		CharClass next = selectedClass.nextClass[nextClassIndex];
+		CharClass next = selectedClass.nextClass[classList.GetPosition()];
 		hpDiffText.text  = (next.hp - selectedClass.hp).ToString();
 		atkDiffText.text = (next.atk - selectedClass.atk).ToString();
 		sklDiffText.text = (next.skl - selectedClass.skl).ToString();
@@ -197,10 +177,10 @@ public class ClassChangeController : MonoBehaviour {
 
 		yield return new WaitForSeconds(1f * slowGameSpeed.value / currentGameSpeed.value);
 
-		StatsContainer stats = availableUnits.stats[currentListIndex]; 
+		StatsContainer stats = playerData.stats[entryList.GetPosition()]; 
 		levelupScript.SetupStats(stats, false);
 		Debug.Log("CLASS CHANGE!");
-		stats.ChangeClass(selectedClass.nextClass[nextClassIndex]);
+		stats.ChangeClass(selectedClass.nextClass[classList.GetPosition()]);
 		sfxQueue.Enqueue(levelupFanfare);
 		playSfxEvent.Invoke();
 		yield return StartCoroutine(levelupScript.RunLevelup(stats));

@@ -6,17 +6,16 @@ using UnityEngine.UI;
 
 public class BexpController : MonoBehaviour {
 
+    public SaveListVariable playerData;
 	public GameObject listView;
 	public GameObject awardView;
 	private bool awardMode;
 
 	[Header("Entry List")]
-    public SaveListVariable availableUnits;
 	public Transform listParent;
 	public Transform entryPrefab;
-	private int currentListIndex;
-	private int listSize;
-	private List<TrainingListEntry> entryList = new List<TrainingListEntry>();
+	public int visibleSize;
+	private EntryList<TrainingListEntry> entryList;
 
 	[Header("Bonus EXP")]
 	public Text bonusExp;
@@ -56,48 +55,34 @@ public class BexpController : MonoBehaviour {
 	public Text movText;
 
 
-	private void OnEnable() {
+	private void Start() {
+		entryList = new EntryList<TrainingListEntry>(visibleSize);
 		listView.SetActive(true);
 		awardView.SetActive(false);
+	}
 
-		for (int i = listParent.childCount-1; i > 1; i--) {
-			GameObject.Destroy(listParent.GetChild(i).gameObject);
-		}
-
-		entryList = new List<TrainingListEntry>();
-		listSize = availableUnits.stats.Count;
-		for (int i = 0; i < listSize; i++) {
-			CreateListEntry(availableUnits.stats[i]);
+	public void GenerateList() {
+		entryList.ResetList();
+		for (int i = 0; i < playerData.stats.Count; i++) {
+			Transform t = Instantiate(entryPrefab, listParent);
+			TrainingListEntry entry = entryList.CreateEntry(t);
+			entry.FillData(playerData.stats[i]);
 		}
 		entryPrefab.gameObject.SetActive(false);
 
-		currentListIndex = 0;
 		MoveSelection(0);
-	}
-
-	private void CreateListEntry(StatsContainer stats) {
-		Transform t = Instantiate(entryPrefab, listParent);
-
-		TrainingListEntry entry = t.GetComponent<TrainingListEntry>();
-		entry.FillData(stats);
-		entry.SetHighlight(false);
-		entryList.Add(entry);
-
-		t.gameObject.SetActive(true);
 	}
 
 	public void MoveSelection(int dir) {
 		if (!awardMode) {
-			currentListIndex = OPMath.FullLoop(0, listSize, currentListIndex + dir);
-			for (int i = 0; i < listSize; i++) {
-				entryList[i].SetHighlight(currentListIndex == i);
-			}
+			entryList.Move(dir);
 		}
 	}
 
 	public void SelectCharacter() {
 		if (!awardMode) {
 			awardMode = true;
+			awardExp = 0;
 			SetupBexpAwarding();
 			SetupCharacterInfo();
 			awardView.SetActive(true);
@@ -120,7 +105,7 @@ public class BexpController : MonoBehaviour {
 	}
 
 	private void SetupBexpAwarding() {
-		StatsContainer stats = availableUnits.stats[currentListIndex];
+		StatsContainer stats = playerData.stats[entryList.GetPosition()];
 		bonusExp.text = "Available EXP:  " + (totalBonusExp.value - awardExp);
 		bonusExp.color = (awardExp > 0) ? Color.green : Color.black;
 		spendExp.text = awardExp.ToString();
@@ -131,10 +116,10 @@ public class BexpController : MonoBehaviour {
 	}
 
 	private void SetupCharacterInfo() {
-		StatsContainer stats = availableUnits.stats[currentListIndex];
+		StatsContainer stats = playerData.stats[entryList.GetPosition()];
 
 		characterName.text = stats.charData.entryName;
-		portrait.sprite = entryList[currentListIndex].portrait.sprite;
+		portrait.sprite = stats.charData.portrait;
 		className.text = stats.classData.entryName;
 		level.text = "Level: " + stats.currentLevel.ToString();
 		exp.text = "EXP: " + stats.currentExp.ToString();
@@ -154,7 +139,7 @@ public class BexpController : MonoBehaviour {
 		if (!awardMode)
 			return;
 
-		StatsContainer stats = availableUnits.stats[currentListIndex];
+		StatsContainer stats = playerData.stats[entryList.GetPosition()];
 		awardExp = OPMath.FullLoop(0, 101, awardExp + dir);
 		awardExp = Mathf.Min(awardExp, totalBonusExp.value);
 
@@ -164,7 +149,7 @@ public class BexpController : MonoBehaviour {
 	public IEnumerator AwardExp() {
 		lockControls.value = true;
 		totalBonusExp.value -= awardExp;
-		StatsContainer stats = availableUnits.stats[currentListIndex];
+		StatsContainer stats = playerData.stats[entryList.GetPosition()];
 
 		expMeter.gameObject.SetActive(true);
 		expMeter.currentExp = stats.currentExp;
@@ -202,7 +187,7 @@ public class BexpController : MonoBehaviour {
 		expMeter.gameObject.SetActive(false);
 		stats.currentExp = expMeter.currentExp;
 
-		entryList[currentListIndex].FillData(stats);
+		entryList.GetEntry().FillData(stats);
 		SetupBexpAwarding();
 		SetupCharacterInfo();
 		lockControls.value = false;

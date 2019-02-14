@@ -142,7 +142,7 @@ public class ScienceController : MonoBehaviour {
 	}
 
 	private void UpdateListDarkness() {
-		entryList.FilterDark((e) => { return (e.upgrade.scrap > totalScrap.value || e.upgrade.cost > totalMoney.value); });
+		entryList.FilterDark((e) => { return (e.done || e.upgrade.scrap > totalScrap.value || e.upgrade.cost > totalMoney.value); });
 	}
 
 	private void SetupTradePrompt(bool isUpgrade) {

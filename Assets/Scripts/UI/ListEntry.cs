@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class ListEntry : MonoBehaviour {
 
 	public Image highlight;
+	public bool dark;
 	public bool show = true;
 
 	public Image icon;
@@ -22,6 +23,7 @@ public class ListEntry : MonoBehaviour {
 	}
 
 	public void SetDark(bool state) {
-		icon.color = (!state) ? Color.white : Color.grey;
+		dark = state;
+		icon.color = (state) ? Color.grey : Color.white;
 	}
 }
