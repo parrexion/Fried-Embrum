@@ -10,22 +10,24 @@ public class SupportListEntry : ListEntry {
 	public Text supportB;
 	public Text supportA;
 	public Text supportS;
+	public Image newLevel;
 
-	[HideInInspector] public string uuid;
+	[HideInInspector] public int index;
 
 
 	/// <summary>
 	/// Fills the entry with the data of the character.
 	/// </summary>
 	/// <param name="stats"></param>
-	public void FillData(StatsContainer stats) {
-		uuid = stats.charData.uuid;
+	public void FillData(int index, StatsContainer stats) {
+		this.index = index;
 		icon.sprite = stats.charData.portrait;
 		entryName.text = stats.charData.entryName;
 		supportC.enabled = false;
 		supportB.enabled = false;
 		supportA.enabled = false;
 		supportS.enabled = false;
+		newLevel.enabled = false;
 	}
 
 	/// <summary>
@@ -33,17 +35,20 @@ public class SupportListEntry : ListEntry {
 	/// </summary>
 	/// <param name="tuple"></param>
 	/// <param name="value"></param>
-	public void SetSupportValue(SupportTuple tuple, int value) {
+	public void SetSupportValue(SupportTuple tuple, SupportValue value) {
 		SupportLetter max = (tuple != null) ? tuple.maxlevel : SupportLetter.NONE;
 		supportS.enabled = ((int)max >= 4);
 		supportA.enabled = ((int)max >= 3);
 		supportB.enabled = ((int)max >= 2);
 		supportC.enabled = ((int)max >= 1);
 		
-		SupportLetter current = (tuple != null) ? tuple.CalculateLevel(value) : SupportLetter.NONE;
-		supportS.color = ((int)current >= 4) ? Color.green : Color.black;
-		supportA.color = ((int)current >= 3) ? Color.white : Color.black;
-		supportB.color = ((int)current >= 2) ? Color.white : Color.black;
-		supportC.color = ((int)current >= 1) ? Color.white : Color.black;
+		SupportLetter achieved = (tuple != null && value != null) ? (SupportLetter)value.currentLevel : SupportLetter.NONE;
+		supportS.color = ((int)achieved >= 4) ? Color.green : Color.black;
+		supportA.color = ((int)achieved >= 3) ? Color.white : Color.black;
+		supportB.color = ((int)achieved >= 2) ? Color.white : Color.black;
+		supportC.color = ((int)achieved >= 1) ? Color.white : Color.black;
+		
+		SupportLetter current = (tuple != null && value != null) ? tuple.CalculateLevel(value.value) : SupportLetter.NONE;
+		newLevel.enabled = (current > achieved);
 	}
 }

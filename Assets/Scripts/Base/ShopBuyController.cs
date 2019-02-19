@@ -1,25 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class ShopBuyController : MonoBehaviour {
     
-    public MyButton[] categories;
-
-	[Header("Entry List")]
 	public SaveListVariable playerData;
 	public IntVariable totalMoney;
 	public FloatVariable sellRatio;
+
+	[Header("Entry List")]
     public Transform listParent;
 	public Transform entryPrefab;
+    public MyButtonList categories;
+	public int visibleSize;
 	private bool buyMode;
 	private ItemListVariable shopList;
-    private int currentCategory;
-	private int currentListIndex;
-	private int listSize;
-	private List<ItemListEntry> entryList = new List<ItemListEntry>();
+	private EntryList<ItemListEntry> entryList;
 
 	[Header("Information box")]
 	public Text TotalMoneyText;
@@ -33,12 +30,6 @@ public class ShopBuyController : MonoBehaviour {
 	public Text reqText;
 	public Text weightText;
 
-	[Header("Restock view")]
-	public GameObject restockView;
-	public Image portrait;
-	public TMPro.TextMeshProUGUI charName;
-	public TMPro.TextMeshProUGUI[] inventory;
-
 	[Header("Buy/Sell items")]
 	public GameObject promptView;
 	public Text promptText;
@@ -48,97 +39,78 @@ public class ShopBuyController : MonoBehaviour {
 	private int promptPosition;
 
 
+	private void Start() {
+		categories.ResetButtons();
+		categories.AddButton(ItemType.SWORD.ToString());
+		categories.AddButton(ItemType.LANCE.ToString());
+		categories.AddButton(ItemType.AXE.ToString());
+		categories.AddButton(ItemType.MAGIC.ToString());
+		categories.AddButton(ItemType.THROW.ToString());
+		categories.AddButton(ItemType.BOW.ToString());
+		categories.AddButton(ItemType.HEAL.ToString());
+		categories.AddButton(ItemType.CHEAL.ToString());
+	}
+
 	public void GenerateLists(ItemListVariable currentShopList, bool buying) {
 		promptView.SetActive(false);
 		buyMode = buying;
 		shopList = currentShopList;
-        ChangeCategory(0);
 		GenerateList();
-		currentListIndex = 0;
-		MoveSelection(0);
+        categories.ForcePosition(0);
+		entryList.ForcePosition(0);
 	}
 
     private void GenerateList() {
 		TotalMoneyText.text = "Money:  " + totalMoney.value;
-        for (int i = listParent.childCount - 1; i > 2; i--) {
-            Destroy(listParent.GetChild(i).gameObject);
-        }
 
-        entryList = new List<ItemListEntry>();
-        listSize = (buyMode) ? shopList.items.Count : playerData.items.Count;
-        int tempListSize = 0;
-        ItemType currentType = (ItemType)(1+currentCategory);
+        entryList = new EntryList<ItemListEntry>(visibleSize);
+        int listSize = (buyMode) ? shopList.items.Count : playerData.items.Count;
         for (int i = 0; i < listSize; i++) {
 			ItemEntry item = (buyMode) ? shopList.items[i] : playerData.items[i].item;
-			int charges = (buyMode) ? shopList.items[i].maxCharge : playerData.items[i].charges;
 
 			if (item.researchNeeded && !playerData.upgrader.IsResearched(item.uuid))
 				continue;
 
-			if (currentCategory == 7 && item.itemCategory == ItemCategory.CONSUME) {
-				CreateListEntry(i, item, charges);
-				tempListSize++;
-			}
-			else if (currentCategory == 6 && item.itemCategory == ItemCategory.STAFF) {
-				CreateListEntry(i, item, charges);
-				tempListSize++;
-			}
-			else if (item.itemType == currentType) {
-                CreateListEntry(i, item, charges);
-                tempListSize++;
-            }
+			int charges = (buyMode) ? shopList.items[i].maxCharge : playerData.items[i].charges;
+            CreateListEntry(i, item, charges);
         }
-        listSize = tempListSize;
         entryPrefab.gameObject.SetActive(false);
     }
 
 	private void CreateListEntry(int index, ItemEntry item, int charges) {
 		Transform t = Instantiate(entryPrefab, listParent);
-
-		ItemListEntry entry = t.GetComponent<ItemListEntry>();
+		ItemListEntry entry = entryList.CreateEntry(t);
 		entry.FillData(index, item, charges, totalMoney.value, buyMode, sellRatio.value);
-		entry.SetHighlight(false);
-		entryList.Add(entry);
-
-		t.gameObject.SetActive(true);
 	}
 
 	public void MoveSelection(int dir) {
-		if (!promptMode) {
-			if (entryList.Count > 0) {
-				currentListIndex = OPMath.FullLoop(0, listSize, currentListIndex + dir);
-				for (int i = 0; i < listSize; i++) {
-					entryList[i].SetHighlight(currentListIndex == i);
-				}
-			}
-            SetupItemInfo();
-        }
+		if (promptMode)
+			return;
+
+		entryList.Move(dir);
+        SetupItemInfo();
 	}
 
     public void ChangeCategory(int dir) {
         if (!promptMode) {
-            do {
-                currentCategory = OPMath.FullLoop(0, 8, currentCategory + dir);
-            } while (!categories[currentCategory].gameObject.activeSelf);
-			currentListIndex = 0;
-            GenerateList();
-			MoveSelection(0);
+            categories.Move(dir);
+			ItemType currentCategory = (ItemType)(categories.GetPosition()+1);
+			entryList.FilterShow(x => { return x.item.itemType == currentCategory; });
+			entryList.ForcePosition(0);
         }
 		else {
 			promptPosition = (promptPosition + dir) % 2;
 			promptYesButton.SetSelected(promptPosition == 0);
 			promptNoButton.SetSelected(promptPosition == 1);
 		}
-		for (int i = 0; i < categories.Length; i++) {
-			categories[i].SetSelected(i == currentCategory);
-		}
     }
 
 	public void SelectItem(bool isBuy) {
-		if (entryList.Count == 0 || !entryList[currentListIndex].affordable) {
+		ItemListEntry itemEntry = entryList.GetEntry();
+		if (!itemEntry || !itemEntry.affordable)
 			return;
-		}
-		else if (!promptMode) {
+
+		if (!promptMode) {
 			promptMode = true;
 			SetupTradePrompt(isBuy);
 			promptView.SetActive(true);
@@ -148,19 +120,19 @@ public class ShopBuyController : MonoBehaviour {
 				Debug.Log((isBuy) ? "Buy item" : "Sell item");
 				if (isBuy) { // Buy item
 					ItemEntry item = ScriptableObject.CreateInstance<ItemEntry>();
-					item.CopyValues(entryList[currentListIndex].item);
+					item.CopyValues(itemEntry.item);
 					totalMoney.value -= item.cost;
 					playerData.items.Add(new InventoryItem { item = item, charges = item.maxCharge });
 				}
 				else { // Sell item
-					ItemEntry item = entryList[currentListIndex].item;
+					ItemEntry item = itemEntry.item;
 					totalMoney.value += (int)(item.cost * sellRatio.value);
-					playerData.items.RemoveAt(entryList[currentListIndex].index);
+					playerData.items.RemoveAt(itemEntry.index);
+					entryList.RemoveEntry();
 				}
 			}
 			GenerateList();
 			DeselectItem();
-			MoveSelection(currentListIndex >= entryList.Count ? entryList.Count - currentListIndex -1 : 0);
 		}
 	}
 
@@ -181,7 +153,8 @@ public class ShopBuyController : MonoBehaviour {
 	}
 
 	private void SetupItemInfo() {
-		if (entryList.Count == 0) {
+		ItemListEntry itemEntry = entryList.GetEntry();
+		if (!itemEntry) {
 			itemName.text = "";
 			itemIcon.sprite = null;
 
@@ -194,9 +167,9 @@ public class ShopBuyController : MonoBehaviour {
 			return;
 		}
 
-		ItemEntry item = entryList[currentListIndex].item;
+		ItemEntry item = itemEntry.item;
 		itemName.text = item.entryName;
-		itemIcon.sprite = entryList[currentListIndex].icon.sprite;
+		itemIcon.sprite = item.icon;
 
 		pwrText.text  = "Pwr:  " + item.power.ToString();
 		rangeText.text = "Range:  " + item.range.ToString();

@@ -3,16 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ItemListEntry : MonoBehaviour {
+public class ItemListEntry : ListEntry {
 
 	public int index;
 	public ItemEntry item;
-	public bool affordable;
-	public Image highlight;
-	public Image icon;
-	public Text itemName;
 	public Text maxCharge;
 	public Text cost;
+	public bool affordable;
 
 
     /// <summary>
@@ -24,20 +21,9 @@ public class ItemListEntry : MonoBehaviour {
 		this.index = index;
 		this.item = item;
 		icon.color = item.repColor;
-		itemName.color = (affordable) ? Color.white : Color.black;
-		itemName.text = item.entryName;
-		maxCharge.color = (affordable) ? Color.white : Color.black;
+		entryName.text = item.entryName;
 		maxCharge.text = charges.ToString();
-		cost.color = (affordable) ? Color.white : Color.black;
 		cost.text = (buyMode) ? item.cost.ToString() : (Mathf.FloorToInt(item.cost * sellRatio)).ToString();
+		SetDark(!affordable);
     }
-
-	/// <summary>
-	/// Updates the cursor highlight for the entry.
-	/// </summary>
-	/// <param name="state"></param>
-	public void SetHighlight(bool state) {
-		highlight.enabled = state;
-	}
-	
 }

@@ -4,8 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class SupportList : MonoBehaviour {
-
-    public SaveListVariable availableUnits;
+	private enum Mode { LIST, DETAILED, PROMPT }
+    public SaveListVariable playerData;
+	public Transform listParent;
 	public Transform entryPrefab;
 
 	[Header("Selected Character")]
@@ -15,9 +16,12 @@ public class SupportList : MonoBehaviour {
 	public EntryList<SupportListEntry> supportList;
 	public int maxEntries;
 
+	[Header("Prompt")]
+	public MyPrompt levelupPrompt;
+
 	private int oldIndex;
-	private bool detailedMode;
-	private string selectedCharacter;
+	private Mode detailedMode;
+	private int selectedIndex;
 
 
 	private void Start() {
@@ -27,70 +31,82 @@ public class SupportList : MonoBehaviour {
 	public void CreateList() {
 		supportList.ResetList();
 
-		for (int i = 0; i < availableUnits.stats.Count; i++) {
-			Transform t = Instantiate(entryPrefab, transform);
+		for (int i = 0; i < playerData.stats.Count; i++) {
+			Transform t = Instantiate(entryPrefab, listParent);
 			SupportListEntry support = supportList.CreateEntry(t);
-			support.FillData(availableUnits.stats[i]);
+			support.FillData(i, playerData.stats[i]);
 		}
 		entryPrefab.gameObject.SetActive(false);
 	}
 
-	public void MoveSelection(int dir) {
-		if (!detailedMode) {
+	public void MoveVertical(int dir) {
+		if (detailedMode != Mode.PROMPT)
 			supportList.Move(dir);
-		}
-		else {
-			do {
-				supportList.Move(dir);
-			} while (!supportList.GetEntry().gameObject.activeSelf);
-		}
+	}
+
+	public void MoveHorizontal(int dir) {
+		if (detailedMode == Mode.PROMPT)
+			levelupPrompt.Move(dir);
 	}
 
 	public void SelectCharacter() {
-		if(detailedMode)
-			return;
-
-		detailedMode = true;
-		selectedCharacter = supportList.GetEntry().uuid;
-		selectName.text = supportList.GetEntry().entryName.text;
-		selectIcon.sprite = supportList.GetEntry().icon.sprite;
-		CreateSupportEntry();
-		supportList.ForcePosition(0);
-		if(!supportList.GetEntry().gameObject.activeSelf)
-			supportList.Move(1);
+		if(detailedMode == Mode.LIST) {
+			detailedMode = Mode.DETAILED;
+			selectedIndex = supportList.GetEntry().index;
+			selectName.text = supportList.GetEntry().entryName.text;
+			selectIcon.sprite = supportList.GetEntry().icon.sprite;
+			CreateSupportEntry();
+			supportList.ForcePosition(0);
+		}
+		else if (detailedMode == Mode.DETAILED) {
+			if (supportList.GetEntry().newLevel.enabled) {
+				levelupPrompt.ShowWindow("Increase support level?", true);
+				detailedMode = Mode.PROMPT;
+			}
+		}
+		else if (detailedMode == Mode.PROMPT) {
+			bool res = levelupPrompt.Click(true);
+			if (res) {
+				//Fixa uppdaterat supportvärde
+				Debug.Log("Dum dum daaah!");
+			}
+			detailedMode = Mode.DETAILED;
+		}
 	}
 
 	public bool DeselectCharacter() {
-		if (detailedMode) {
-			detailedMode = false;
-			for (int i = 0; i < availableUnits.stats.Count; i++) {
-				supportList.GetEntry(i).show = true;
-				supportList.GetEntry(i).SetDark(false);
-				supportList.GetEntry(i).SetSupportValue(null, 0);
-				supportList.GetEntry(i).gameObject.SetActive(true);
+		if (detailedMode == Mode.DETAILED) {
+			detailedMode = Mode.LIST;
+			supportList.FilterShow((x) => true);
+			supportList.FilterDark((x) => false);
+			for (int i = 0; i < playerData.stats.Count; i++) {
+				supportList.GetEntry(i).SetSupportValue(null, null);
 			}
 			selectName.text = "";
 			selectIcon.sprite = null;
 			supportList.ForcePosition(oldIndex);
 			return false;
 		}
-
-		return true;
+		else if (detailedMode == Mode.PROMPT) {
+			detailedMode = Mode.DETAILED;
+			levelupPrompt.Click(false);
+			return false;
+		}
+		else
+			return true;
 	}
 
 	private void CreateSupportEntry() {
 		oldIndex = supportList.GetPosition();
-		for (int i = 0; i < availableUnits.stats.Count; i++) {
-			if (supportList.GetEntry(i).uuid == selectedCharacter) {
-				supportList.GetEntry(i).show = false;
-			}
-			else {
-				SupportTuple tuple = availableUnits.stats[i].charData.GetSupport(selectedCharacter);
-				int value = availableUnits.stats[i].GetSupportValue(selectedCharacter);
+		supportList.FilterShow((x) => x.index != selectedIndex);
+		StatsContainer thisChar = playerData.stats[selectedIndex];
+		for (int i = 0; i < supportList.Size(); i++) {
+			CharData other = playerData.stats[supportList.GetEntry(i).index].charData;
+			SupportTuple tuple = thisChar.charData.GetSupport(other);
+			SupportValue value = thisChar.GetSupportValue(other);
 
-				supportList.GetEntry(i).SetDark(tuple == null);
-				supportList.GetEntry(i).SetSupportValue(tuple, value);
-			}
+			supportList.GetEntry(i).SetDark(tuple == null);
+			supportList.GetEntry(i).SetSupportValue(tuple, value);
 		}
 	}
 

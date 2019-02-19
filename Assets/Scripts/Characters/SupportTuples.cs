@@ -7,6 +7,7 @@ public class SupportValue {
 
 	public string uuid;
 	public int value;
+	public int currentLevel;
 }
 
 

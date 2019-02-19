@@ -8,7 +8,6 @@ public class ListEntry : MonoBehaviour {
 
 	public Image highlight;
 	public bool dark;
-	public bool show = true;
 
 	public Image icon;
 	public Text entryName;

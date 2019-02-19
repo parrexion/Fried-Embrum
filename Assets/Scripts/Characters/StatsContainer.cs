@@ -246,11 +246,11 @@ public class StatsContainer {
 		CalculateStats();
 	}
 
-	public int GetSupportValue(string id) {
+	public SupportValue GetSupportValue(CharData other) {
 		for (int i = 0; i < supportValues.Count; i++) {
-			if (supportValues[i].uuid == id)
-				return supportValues[i].value;
+			if (supportValues[i].uuid == other.uuid)
+				return supportValues[i];
 		}
-		return 0;
+		return null;
 	}
 }

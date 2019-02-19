@@ -135,7 +135,7 @@ public class BaseHousing : InputReceiverDelegate {
 			UpdateSelectedHouse();
 		}
 		else if (menuMode == 2) {
-			supportList.MoveSelection(-1);
+			supportList.MoveVertical(-1);
 		}
 	}
 
@@ -149,7 +149,7 @@ public class BaseHousing : InputReceiverDelegate {
 			UpdateSelectedHouse();
 		}
 		else if (menuMode == 2) {
-			supportList.MoveSelection(1);
+			supportList.MoveVertical(1);
 		}
 	}
 
@@ -158,12 +158,18 @@ public class BaseHousing : InputReceiverDelegate {
 			selectedHouse = selectedHouse.MoveLeft();
 			UpdateSelectedHouse();
 		}
+		else if (menuMode == 2) {
+			supportList.MoveHorizontal(-1);
+		}
 	}
     
     public override void OnRightArrow() {
 		if (menuMode == 1) {
 			selectedHouse = selectedHouse.MoveRight();
 			UpdateSelectedHouse();
+		}
+		else if (menuMode == 2) {
+			supportList.MoveHorizontal(1);
 		}
 	}
 
@@ -183,7 +189,7 @@ public class BaseHousing : InputReceiverDelegate {
 				nr1 += neighbours[0].resident.charData.entryName;
 				SupportTuple support = neighbours[0].resident.charData.GetSupport(data.charData);
 				if (support != null) {
-					int supportValue = data.GetSupportValue(neighbours[0].resident.charData.uuid);
+					int supportValue = data.GetSupportValue(neighbours[0].resident.charData).value;
 					nr1 += "\nRank " + support.CalculateLevel(supportValue) + "  " + support.GetSpeedString();
 				}
 				else {
@@ -198,7 +204,7 @@ public class BaseHousing : InputReceiverDelegate {
 				nr2 += neighbours[1].resident.charData.entryName;
 				SupportTuple support = neighbours[1].resident.charData.GetSupport(data.charData);
 				if (support != null) {
-					int supportValue = data.GetSupportValue(neighbours[1].resident.charData.uuid);
+					int supportValue = data.GetSupportValue(neighbours[1].resident.charData).value;
 					nr2 += "\nRank " + support.CalculateLevel(supportValue) + "  " + support.GetSpeedString();
 				}
 				else {
