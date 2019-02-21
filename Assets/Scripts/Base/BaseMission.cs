@@ -24,12 +24,9 @@ public class BaseMission : InputReceiverDelegate {
 	public Text missionRewardItem2;
 
 	[Header("Mission Prompt")]
-	public GameObject promptView;
-	public MyButton promptYesButton;
-	public MyButton promptNoButton;
+	public MyPrompt startPrompt;
 	public UnityEvent startMissionEvent;
 	private bool promptMode;
-	private int promptPosition;
 
 	[Header("Selected Mission")]
 	public ScrObjEntryReference currentMap;
@@ -37,7 +34,6 @@ public class BaseMission : InputReceiverDelegate {
 
 	private void Start () {
 		promptMode = false;
-		promptView.SetActive(false);
 		SetupButtons();
 	}
 
@@ -51,7 +47,7 @@ public class BaseMission : InputReceiverDelegate {
 	}
 
     public override void OnUpArrow() {
-		if (!active || promptMode)
+		if (promptMode)
 			return;
 
 		buttons.Move(-1);
@@ -60,7 +56,7 @@ public class BaseMission : InputReceiverDelegate {
 	}
 
     public override void OnDownArrow() {
-		if (!active || promptMode)
+		if (promptMode)
 			return;
 
 		buttons.Move(1);
@@ -69,15 +65,12 @@ public class BaseMission : InputReceiverDelegate {
 	}
 
     public override void OnOkButton() {
-		if (!active)
-			return;
 		if (!promptMode) {
 			promptMode = true;
-			promptPosition = 0;
 			ChangePrompt(0);
-			promptView.SetActive(true);
+			startPrompt.ShowWindow("Start mission?", false);
 		}
-		else if (promptPosition == 0) {
+		else if (startPrompt.Click(true)) {
 			StartMission();
 		}
 		else {
@@ -86,22 +79,20 @@ public class BaseMission : InputReceiverDelegate {
 	}
 
     public override void OnBackButton() {
-		if (!active)
-			return;
 		if (!promptMode)
 			return;
 		promptMode = false;
-		promptView.SetActive(false);
+		startPrompt.Click(false);
 	}
 
     public override void OnLeftArrow() {
-		if (!active || !promptMode)
+		if (!promptMode)
 			return;
 		ChangePrompt(-1);
 	}
 
     public override void OnRightArrow() {
-		if (!active || !promptMode)
+		if (!promptMode)
 			return;
 		ChangePrompt(1);
 	}
@@ -137,9 +128,7 @@ public class BaseMission : InputReceiverDelegate {
         if (!promptMode)
             return;
 
-		promptPosition = (promptPosition + dir) % 2;
-		promptYesButton.SetSelected(promptPosition == 0);
-		promptNoButton.SetSelected(promptPosition == 1);
+		startPrompt.Move(dir);
     }
 
 	private void StartMission() {

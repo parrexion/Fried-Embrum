@@ -13,7 +13,6 @@ public class RestockController : MonoBehaviour {
 	public GameObject charListView;
 	public GameObject charMenuView;
 	public GameObject restockView;
-	public GameObject promptView;
 
 	[Header("Character List")]
     public Transform listParentCharacter;
@@ -47,17 +46,13 @@ public class RestockController : MonoBehaviour {
 	public Text weightText;
 
 	[Header("Restock promt")]
-	public Text promptText;
-	public MyButton promptYesButton;
-	public MyButton promptNoButton;
-	private int promptPosition;
+	public MyPrompt restockPrompt;
 
 
 	private void Start() {
 		restockView.SetActive(false);
 		charListView.SetActive(false);
 		charMenuView.SetActive(false);
-		promptView.SetActive(false);
 	}
 
 	public void GenerateLists() {
@@ -135,7 +130,7 @@ public class RestockController : MonoBehaviour {
 			SetupItemInfo();
 		}
 		else if (currentMode == MenuState.PROMPT) {
-			promptPosition = OPMath.FullLoop(0, 2, promptPosition + dir);
+			restockPrompt.Move(dir);
 		}
 	}
 
@@ -153,16 +148,13 @@ public class RestockController : MonoBehaviour {
 		else if (currentMode == MenuState.MENU) {
 			Debug.Log("Restock");
 			currentMode = MenuState.INV;
-			promptView.SetActive(true);
-			promptText.text = "Restock item?";
-			promptPosition = 0;
+			restockPrompt.ShowWindow("Restock item?", true);
 		}
 		else if (currentMode == MenuState.PROMPT) {
-			if (promptPosition == 0) {
+			if (restockPrompt.Click(true)) {
 				RestockItem();
 			}
 			currentMode = MenuState.INV;
-			promptView.SetActive(false);
 		}
 	}
 
@@ -173,11 +165,8 @@ public class RestockController : MonoBehaviour {
 			return false;
 		}
 		else if (currentMode == MenuState.PROMPT) {
-			if (promptPosition == 0) {
-				RestockItem();
-			}
+			restockPrompt.Click(false);
 			currentMode = MenuState.INV;
-			promptView.SetActive(false);
 			return false;
 		}
 		return true;

@@ -46,12 +46,8 @@ public class ScienceController : MonoBehaviour {
 	public Text invReqText;
 
 	[Header("Buy upgrade promt")]
-	public GameObject promptView;
-	public Text promptText;
-	public MyButton promptYesButton;
-	public MyButton promptNoButton;
+	public MyPrompt buyPrompt;
 	private bool promptMode;
-	private int promptPosition;
 
 
 	private void Start() {
@@ -59,7 +55,6 @@ public class ScienceController : MonoBehaviour {
 	}
 
 	public void GenerateLists(bool upgrading) {
-		promptView.SetActive(false);
 		upgradeMode = upgrading;
 		GenerateList();
 		MoveSelection(0);
@@ -101,9 +96,7 @@ public class ScienceController : MonoBehaviour {
 		if (!promptMode)
 			return;
 
-		promptPosition = OPMath.FullLoop(0, 2, promptPosition + dir);
-		promptYesButton.SetSelected(promptPosition == 0);
-		promptNoButton.SetSelected(promptPosition == 1);
+		buyPrompt.Move(dir);
 	}
 
 	public void SelectItem(bool isUpgrade) {
@@ -113,11 +106,11 @@ public class ScienceController : MonoBehaviour {
 		}
 		else if (!promptMode) {
 			if (upgrade.affordable) {
-				SetupTradePrompt(isUpgrade);
+				buyPrompt.ShowWindow((isUpgrade) ? "Buy upgrade?" : "Develop item?", true);
 			}
 		}
 		else {
-			if (promptPosition == 0) {
+			if (buyPrompt.Click(true)) {
 				Debug.Log((isUpgrade) ? "Upgrade" : "Invent");
 				totalMoney.value -= upgrade.upgrade.cost;
 				totalScrap.value -= upgrade.upgrade.scrap;
@@ -134,7 +127,7 @@ public class ScienceController : MonoBehaviour {
 	public bool DeselectItem() {
 		if (promptMode) {
 			promptMode = false;
-			promptView.SetActive(false);
+			buyPrompt.Click(false);
 			return false;
 		}
 
@@ -143,14 +136,6 @@ public class ScienceController : MonoBehaviour {
 
 	private void UpdateListDarkness() {
 		entryList.FilterDark((e) => { return (e.done || e.upgrade.scrap > totalScrap.value || e.upgrade.cost > totalMoney.value); });
-	}
-
-	private void SetupTradePrompt(bool isUpgrade) {
-		promptMode = true;
-		promptText.text = (isUpgrade) ? "Buy upgrade?" : "Develop item?";
-		promptPosition = 0;
-		MovePromt(0);
-		promptView.SetActive(true);
 	}
 
 	private void SetupUpgradeInfo() {

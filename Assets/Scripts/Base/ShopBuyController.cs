@@ -31,12 +31,8 @@ public class ShopBuyController : MonoBehaviour {
 	public Text weightText;
 
 	[Header("Buy/Sell items")]
-	public GameObject promptView;
-	public Text promptText;
-	public MyButton promptYesButton;
-	public MyButton promptNoButton;
+	public MyPrompt buyPrompt;
 	private bool promptMode;
-	private int promptPosition;
 
 
 	private void Start() {
@@ -52,7 +48,6 @@ public class ShopBuyController : MonoBehaviour {
 	}
 
 	public void GenerateLists(ItemListVariable currentShopList, bool buying) {
-		promptView.SetActive(false);
 		buyMode = buying;
 		shopList = currentShopList;
 		GenerateList();
@@ -99,9 +94,7 @@ public class ShopBuyController : MonoBehaviour {
 			entryList.ForcePosition(0);
         }
 		else {
-			promptPosition = (promptPosition + dir) % 2;
-			promptYesButton.SetSelected(promptPosition == 0);
-			promptNoButton.SetSelected(promptPosition == 1);
+			buyPrompt.Move(dir);
 		}
     }
 
@@ -112,11 +105,10 @@ public class ShopBuyController : MonoBehaviour {
 
 		if (!promptMode) {
 			promptMode = true;
-			SetupTradePrompt(isBuy);
-			promptView.SetActive(true);
+			buyPrompt.ShowWindow((isBuy) ? "Buy item?" : "Sell item?", true);
 		}
 		else {
-			if (promptPosition == 0) {
+			if (buyPrompt.Click(true)) {
 				Debug.Log((isBuy) ? "Buy item" : "Sell item");
 				if (isBuy) { // Buy item
 					ItemEntry item = ScriptableObject.CreateInstance<ItemEntry>();
@@ -139,17 +131,11 @@ public class ShopBuyController : MonoBehaviour {
 	public bool DeselectItem() {
 		if (promptMode) {
 			promptMode = false;
-			promptView.SetActive(false);
+			buyPrompt.Click(false);
 			return false;
 		}
 
 		return true;
-	}
-
-	private void SetupTradePrompt(bool isBuy) {
-		promptText.text = (isBuy) ? "Buy item?" : "Sell item?";
-		promptPosition = 0;
-		ChangeCategory(0);
 	}
 
 	private void SetupItemInfo() {
