@@ -33,20 +33,12 @@ public class ActionInputController : InputReceiverDelegate {
 	}
 
     public override void OnMenuModeChanged() {
-		MenuMode mode = (MenuMode)currentMenuMode.value;
-		bool prevActive = active;
-		active = (mode == MenuMode.UNIT);
-		actionMenu.SetActive(mode == MenuMode.UNIT);
+		bool active = UpdateState(MenuMode.UNIT);
+		actionMenu.SetActive(active);
 		ButtonSetup();
-		if (prevActive != active) {
-			ActivateDelegates(active);
-		}
     }
 
     public override void OnDownArrow() {
-		if (!active)
-			return;
-		
 		do {
 			actionMenuPosition.value++;
 			if (actionMenuPosition.value >= actionButtons.Length)
@@ -57,9 +49,6 @@ public class ActionInputController : InputReceiverDelegate {
     }
 
     public override void OnUpArrow() {
-		if (!active)
-			return;
-
 		do {
 			actionMenuPosition.value--;
 			if (actionMenuPosition.value < 0)
@@ -70,9 +59,6 @@ public class ActionInputController : InputReceiverDelegate {
     }
 
     public override void OnBackButton() {
-		if (!active)
-			return;
-		
 		if (selectedCharacter.value.canUndoMove) {
 			currentActionMode.value = ActionMode.MOVE;
 			InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
@@ -81,10 +67,6 @@ public class ActionInputController : InputReceiverDelegate {
     }
 
     public override void OnOkButton() {
-		if (!active) {
-			return;
-		}
-
 		switch ((ActionInputType)actionMenuPosition.value)
 		{
 			case ActionInputType.SEIZE:
@@ -105,7 +87,7 @@ public class ActionInputController : InputReceiverDelegate {
 				break;
 			case ActionInputType.VISIT: // VISIT
 				selectedCharacter.value.currentTile.interacted = true;
-				active = false;
+				//TODO active = false;
 				InputDelegateController.instance.TriggerMenuChange((MenuMode)currentMenuMode.value);
 				currentActionMode.value = ActionMode.NONE;
 				dialogueMode.value = (int)DialogueMode.VISIT;
@@ -161,9 +143,6 @@ public class ActionInputController : InputReceiverDelegate {
 	}
 
 	private void ButtonSetup() {
-		if (!active)
-			return;
-			
 		actionButtons[(int)ActionInputType.SEIZE].gameObject.SetActive(selectedCharacter.value.CanSeize());
 		actionButtons[(int)ActionInputType.ATTACK].gameObject.SetActive(selectedCharacter.value.CanAttack());
 		actionButtons[(int)ActionInputType.HEAL].gameObject.SetActive(selectedCharacter.value.CanSupport());

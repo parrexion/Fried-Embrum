@@ -38,12 +38,9 @@ public class BaseMission : InputReceiverDelegate {
 	}
 
     public override void OnMenuModeChanged() {
-		bool prevActive = active;
-		active = (currentMenuMode.value == (int)MenuMode.BASE_MISSION);
+		UpdateState(MenuMode.BASE_MISSION);
 		buttons.ForcePosition(0);
 		ShowMissionInfo();
-		if (prevActive != active)
-			ActivateDelegates(active);
 	}
 
     public override void OnUpArrow() {

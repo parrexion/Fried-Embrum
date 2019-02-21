@@ -59,11 +59,8 @@ public class BaseHousing : InputReceiverDelegate {
 	}
 
     public override void OnMenuModeChanged() {
-		bool prevActive = active;
-		active = (currentMenuMode.value == (int)MenuMode.BASE_HOUSE);
+		UpdateState(MenuMode.BASE_HOUSE);
 		buttons.ForcePosition(0);
-		if(prevActive != active)
-			ActivateDelegates(active);
 	}
 
 	public override void OnOkButton() {

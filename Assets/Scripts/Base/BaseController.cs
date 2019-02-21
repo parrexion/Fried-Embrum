@@ -22,7 +22,7 @@ public class BaseController : InputReceiverDelegate {
 			areas[i].gameObject.SetActive(true);
 		}
 		SetAreaPositions(0);
-		ActivateDelegates(true);
+		UpdateState((MenuMode)currentMenuMode.value);
 		InputDelegateController.instance.TriggerMenuChange(screens[1]);
 		lockControls.value = false;
 	}
@@ -68,7 +68,7 @@ public class BaseController : InputReceiverDelegate {
 
 	public void StartMission() {
 		lockControls.value = false;
-		ActivateDelegates(false);
+		UpdateState(0);
 		SceneManager.LoadScene("LoadingScreen");
 	}
 

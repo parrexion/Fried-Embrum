@@ -46,14 +46,10 @@ public class BattlePrepController : InputReceiverDelegate {
 	}
 
     public override void OnMenuModeChanged() {
-		bool prevActive = active;
-		active = (currentMenuMode.value == (int)MenuMode.PREP);
+		bool active = UpdateState(MenuMode.PREP);
 		mainMenuView.SetActive(active);
 		menuCollectionView.SetActive(!active);
 		UpdateButtons();
-		if (prevActive != active) {
-			ActivateDelegates(active);
-		}
 	}
 
 	private void GeneratePrepList() {
@@ -125,8 +121,6 @@ public class BattlePrepController : InputReceiverDelegate {
 	}
 
 	public override void OnUpArrow() {
-		if (!active)
-			return;
 		if (menuMode == 0) {
 			mainIndex = OPMath.FullLoop(0, mainButtons.Length, mainIndex-1);
 			UpdateButtons();
@@ -137,7 +131,6 @@ public class BattlePrepController : InputReceiverDelegate {
 	}
 
 	public override void OnDownArrow() {
-		Debug.Log("DOWN");
 		if (menuMode == 0) {
 			mainIndex = OPMath.FullLoop(0, mainButtons.Length, mainIndex+1);
 			UpdateButtons();
@@ -148,22 +141,16 @@ public class BattlePrepController : InputReceiverDelegate {
 	}
 
 	public override void OnLeftArrow() {
-		if (!active)
-			return;
 		if (menuMode == 4)
 			UpdatePopupButtons(-1);
 	}
 
 	public override void OnRightArrow() {
-		if (!active)
-			return;
 		if(menuMode == 4)
 			UpdatePopupButtons(1);
 	}
 
 	public override void OnOkButton() {
-		if (!active)
-			return;
 		if (menuMode == 0) {
 			if (mainIndex == 0) {
 				menuMode = 1;
@@ -205,8 +192,6 @@ public class BattlePrepController : InputReceiverDelegate {
 	}
 
 	public override void OnBackButton() {
-		if (!active)
-			return;
 		if (menuMode == 1) {
 			menuMode = 0;
 			characterSelect.LeaveMenu();

@@ -30,19 +30,12 @@ public class InventoryMenuController : InputReceiverDelegate {
 	}
 
     public override void OnMenuModeChanged() {
-		bool prevActive = active;
-		active = ((MenuMode)currentMenuMode.value == MenuMode.INV);
+		bool active = UpdateState(MenuMode.INV);
 		inventoryMenu.SetActive(active);
 		ButtonSetup();
-		if (prevActive != active) {
-			ActivateDelegates(active);
-		}
     }
 
 	private void ButtonSetup() {
-		if (!active)
-			return;
-			
 		InventoryTuple tuple = selectedCharacter.value.inventory.GetTuple(inventoryIndex.value);
 		int skill = selectedCharacter.value.stats.GetWpnSkill(tuple.item);
 		inventoryButtons[0].gameObject.SetActive(tuple.item.itemCategory == ItemCategory.WEAPON && tuple.item.CanUse(skill));
@@ -63,9 +56,6 @@ public class InventoryMenuController : InputReceiverDelegate {
 	}
 
     public override void OnUpArrow() {
-		if (!active)
-			return;
-
 		do {
 			inventoryMenuPosition.value--;
 			if (inventoryMenuPosition.value < 0)
@@ -77,9 +67,6 @@ public class InventoryMenuController : InputReceiverDelegate {
     }
 
     public override void OnDownArrow() {
-		if (!active)
-			return;
-
 		do {
 			inventoryMenuPosition.value++;
 			if (inventoryMenuPosition.value >= inventoryButtons.Length)
@@ -91,9 +78,6 @@ public class InventoryMenuController : InputReceiverDelegate {
     }
 
     public override void OnOkButton() {
-		if (!active)
-			return;
-
 		switch (inventoryMenuPosition.value)
 		{
 			case 0:
@@ -110,9 +94,6 @@ public class InventoryMenuController : InputReceiverDelegate {
     }
 
     public override void OnBackButton() {
-		if (!active)
-			return;
-		
 		menuBackEvent.Invoke();
 		InputDelegateController.instance.TriggerMenuChange(MenuMode.STATS);
 		inventoryIndex.value = -1;

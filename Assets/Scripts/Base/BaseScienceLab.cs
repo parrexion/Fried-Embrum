@@ -38,11 +38,8 @@ public class BaseScienceLab : InputReceiverDelegate {
 	}
 
     public override void OnMenuModeChanged() {
-		bool prevActive = active;
-		active = (currentMenuMode.value == (int)MenuMode.BASE_LAB);
+		UpdateState(MenuMode.BASE_LAB);
 		buttons.ForcePosition(0);
-		if(prevActive != active)
-			ActivateDelegates(active);
 	}
 
 	public override void OnUpArrow() {

@@ -53,10 +53,7 @@ public class MainMenuController : InputReceiverDelegate {
 	}
 
 	public override void OnMenuModeChanged() {
-		bool prevActive = active;
-		active = (currentMenuMode.value == (int)MenuMode.NONE);
-		if(prevActive != active)
-			ActivateDelegates(active);
+		UpdateState(MenuMode.NONE);
 	}
 
 	public void ControlsClicked() {

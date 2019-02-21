@@ -12,7 +12,7 @@ public abstract class InputReceiverDelegate : MonoBehaviour {
 	public UnityEvent menuAcceptEvent;
 	public UnityEvent menuBackEvent;
 	public UnityEvent menuMoveEvent;
-	protected bool active = false;
+	private bool active = false;
 
 	/// <summary>
 	/// What should happen when the menu mode is changed.
@@ -48,7 +48,15 @@ public abstract class InputReceiverDelegate : MonoBehaviour {
 		InputDelegateController.instance.menuModeChanged -= OnMenuModeChanged;
 	}
 
-	protected void ActivateDelegates(bool active) {
+	protected bool UpdateState(MenuMode mode) {
+		bool prevActive = active;
+		active = (currentMenuMode.value == (int)mode);
+		if (prevActive != active)
+			ActivateDelegates();
+		return active;
+	}
+
+	protected void ActivateDelegates() {
 		if (active) {
 			InputDelegateController.instance.upArrowDelegate += OnUpArrow;
 			InputDelegateController.instance.downArrowDelegate += OnDownArrow;

@@ -31,12 +31,8 @@ public class MapInputController : InputReceiverDelegate {
 
     public override void OnMenuModeChanged() {
 		MenuMode mode = (MenuMode)currentMenuMode.value;
-		bool prevActive = active;
-		active = (mode == MenuMode.MAP);
+		bool active = UpdateState(MenuMode.MAP);
 		clicker.cursorSprite.enabled = (active || mode != MenuMode.UNIT);
-		if (prevActive != active) {
-			ActivateDelegates(active);
-		}
 		if (!active)
 			return;
 		
@@ -50,9 +46,6 @@ public class MapInputController : InputReceiverDelegate {
     }
 
 	public override void OnUpArrow() {
-		if (!active)
-			return;
-
 		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL || currentMode.value == ActionMode.TRADE) {
 			int prev = targetIndex.value;
 			targetIndex.value = (targetIndex.value + 1) % targetList.values.Count;
@@ -71,9 +64,6 @@ public class MapInputController : InputReceiverDelegate {
 	}
 
 	public override void OnDownArrow() {
-		if (!active)
-			return;
-
 		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL || currentMode.value == ActionMode.TRADE) {
 			int prev = targetIndex.value;
 			targetIndex.value = (targetIndex.value -1 < 0) ? (targetList.values.Count-1) : targetIndex.value -1;
@@ -92,9 +82,6 @@ public class MapInputController : InputReceiverDelegate {
 	}
 
 	public override void OnLeftArrow() {
-		if (!active)
-			return;
-
 		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL || currentMode.value == ActionMode.TRADE) {
 			int prev = targetIndex.value;
 			targetIndex.value = (targetIndex.value -1 < 0) ? (targetList.values.Count-1) : targetIndex.value -1;
@@ -112,9 +99,6 @@ public class MapInputController : InputReceiverDelegate {
 	}
 
 	public override void OnRightArrow() {
-		if (!active)
-			return;
-
 		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL || currentMode.value == ActionMode.TRADE) {
 			int prev = targetIndex.value;
 			targetIndex.value = (targetIndex.value + 1) % targetList.values.Count;
@@ -132,9 +116,6 @@ public class MapInputController : InputReceiverDelegate {
 	}
 
 	public override void OnOkButton() {
-		if (!active)
-			return;
-		
 		if (currentMode.value == ActionMode.ATTACK) {
 			InputDelegateController.instance.TriggerMenuChange(MenuMode.ATTACK);
 		}
@@ -155,9 +136,6 @@ public class MapInputController : InputReceiverDelegate {
 	}
 
 	public override void OnBackButton() {
-		if (!active)
-			return;
-
 		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL || currentMode.value == ActionMode.TRADE) {
 			currentMode.value = ActionMode.MOVE;
 			menuBackEvent.Invoke();
@@ -171,16 +149,10 @@ public class MapInputController : InputReceiverDelegate {
 	}
 
     public override void OnXButton() {
-		if (!active)
-			return;
-
 		clicker.DangerAreaToggle(true);
 	}
 
     public override void OnRButton() {
-		if (!active)
-			return;
-
 		if (currentMode.value == ActionMode.ATTACK || currentMode.value == ActionMode.HEAL || currentMode.value == ActionMode.TRADE) {
 			int prev = targetIndex.value;
 			targetIndex.value = (targetIndex.value + 1) % targetList.values.Count;
@@ -196,15 +168,12 @@ public class MapInputController : InputReceiverDelegate {
 	}
 
     public override void OnStartButton() {
-		if (!active)
-			return;
-
 		if (clicker.ShowIngameMenu())
 			menuAcceptEvent.Invoke();
 	}
 
     public override void OnLButton() {
-		if (!active || clicker.selectCharacter.value == null)
+		if (clicker.selectCharacter.value == null)
 			return;
 		
 		InputDelegateController.instance.TriggerMenuChange(MenuMode.TOOL);

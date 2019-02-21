@@ -32,12 +32,7 @@ public class FormationController : InputReceiverDelegate {
 	}
 
     public override void OnMenuModeChanged() {
-		bool prevActive = active;
-		active = ((MenuMode)currentMenuMode.value == MenuMode.FORMATION);
-		if(prevActive != active) {
-			ActivateDelegates(active);
-			Debug.Log("ACTIVE  " + active);
-		}
+		bool active = UpdateState(MenuMode.FORMATION);
 		clicker.cursorSprite.enabled = active;
 		if (!active)
 			return;
@@ -54,9 +49,6 @@ public class FormationController : InputReceiverDelegate {
     }
 
 	public override void OnUpArrow() {
-		if (!active)
-			return;
-
 		int prev = cursorY.value;
 		cursorY.value = Mathf.Min(cursorY.value + 1, map.sizeY -1);
 		if (prev != cursorY.value)
@@ -66,9 +58,6 @@ public class FormationController : InputReceiverDelegate {
 	}
 
 	public override void OnDownArrow() {
-		if (!active)
-			return;
-
 		int prev = cursorY.value;
 		cursorY.value = Mathf.Max(cursorY.value -1, 0);
 		if (prev != cursorY.value)
@@ -78,8 +67,6 @@ public class FormationController : InputReceiverDelegate {
 	}
 
 	public override void OnLeftArrow() {
-		if (!active)
-			return;
 		int prev = cursorX.value;
 		cursorX.value = Mathf.Max(cursorX.value -1, 0);
 		if (prev != cursorX.value)
@@ -89,9 +76,6 @@ public class FormationController : InputReceiverDelegate {
 	}
 
 	public override void OnRightArrow() {
-		if (!active)
-			return;
-
 		int prev = cursorX.value;
 		cursorX.value = Mathf.Min(cursorX.value + 1, map.sizeX -1);
 		if (prev != cursorX.value)
@@ -101,9 +85,6 @@ public class FormationController : InputReceiverDelegate {
 	}
 
 	public override void OnOkButton() {
-		if (!active)
-			return;
-		
 		targetIndex.value = 0;
 		actionMenuPosition.value = -1;
 		bool res = clicker.CursorClick(false);
@@ -114,9 +95,6 @@ public class FormationController : InputReceiverDelegate {
 	}
 
 	public override void OnBackButton() {
-		if (!active)
-			return;
-
 		if (currentMode.value == ActionMode.MOVE) {
 			clicker.CursorBack();
 		}
@@ -127,16 +105,10 @@ public class FormationController : InputReceiverDelegate {
 	}
 
     public override void OnXButton() {
-		if (!active)
-			return;
-
 		clicker.DangerAreaToggle(true);
 	}
 
     public override void OnRButton() {
-		if (!active)
-			return;
-
 		clicker.JumpCursor();
 		menuMoveEvent.Invoke();
 
@@ -144,15 +116,12 @@ public class FormationController : InputReceiverDelegate {
 	}
 
     public override void OnStartButton() {
-		if (!active)
-			return;
-
 		if (clicker.ShowIngameMenu())
 			menuAcceptEvent.Invoke();
 	}
 
     public override void OnLButton() {
-		if (!active || clicker.selectCharacter.value == null)
+		if (clicker.selectCharacter.value == null)
 			return;
 		
 		StartCoroutine(MenuChangeDelay(MenuMode.TOOL));

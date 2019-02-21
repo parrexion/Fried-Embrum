@@ -37,11 +37,8 @@ public class BaseShop : InputReceiverDelegate {
 	}
 
     public override void OnMenuModeChanged() {
-		bool prevActive = active;
-		active = (currentMenuMode.value == (int)MenuMode.BASE_SHOP);
+		UpdateState(MenuMode.BASE_SHOP);
 		buttons.ForcePosition(0);
-		if (prevActive != active)
-			ActivateDelegates(active);
 	}
 
     public override void OnUpArrow() {
