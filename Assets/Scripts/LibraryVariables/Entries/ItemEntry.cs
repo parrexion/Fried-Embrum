@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum ItemCategory { WEAPON, STAFF, CONSUME }
-public enum ItemType {NONE, SWORD, LANCE, AXE, MAGIC, THROW, BOW, HEAL, BUFF, CHEAL, CSTATS}
+public enum ItemType {NONE, SWORD, LANCE, AXE, MAGIC, THROW, BOW, HEAL, CHEAL, BUFF, CSTATS}
 
 [CreateAssetMenu(menuName = "LibraryEntries/Item")]
 public class ItemEntry : ScrObjLibraryEntry {

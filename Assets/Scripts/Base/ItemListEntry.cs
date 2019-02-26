@@ -20,6 +20,7 @@ public class ItemListEntry : ListEntry {
 		affordable = (!buyMode || totalMoney >= item.cost);
 		this.index = index;
 		this.item = item;
+		icon.sprite = item.icon;
 		icon.color = item.repColor;
 		entryName.text = item.entryName;
 		maxCharge.text = charges.ToString();

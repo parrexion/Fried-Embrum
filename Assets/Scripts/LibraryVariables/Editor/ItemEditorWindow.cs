@@ -146,10 +146,15 @@ public class ItemEditorWindow {
 		EditorGUILayout.SelectableLabel("UUID: " + itemValues.uuid);
 
 		GUILayout.Space(10);
-
+		GUILayout.BeginHorizontal();
+		GUILayout.BeginVertical();
 		itemValues.entryName = EditorGUILayout.TextField("Name", itemValues.entryName);
 		itemValues.itemCategory = (ItemCategory)EditorGUILayout.EnumPopup("Item Category",itemValues.itemCategory);
 		itemValues.itemType = (ItemType)EditorGUILayout.EnumPopup("Item Type",itemValues.itemType);
+		itemValues.repColor = EditorGUILayout.ColorField("Rep Color", itemValues.repColor);
+		GUILayout.EndVertical();
+		itemValues.icon = (Sprite)EditorGUILayout.ObjectField("Icon", itemValues.icon, typeof(Sprite), false);
+		GUILayout.EndHorizontal();
 		itemValues.description = EditorGUILayout.TextField("Description", itemValues.description);
 		
 		GUILayout.Space(10);

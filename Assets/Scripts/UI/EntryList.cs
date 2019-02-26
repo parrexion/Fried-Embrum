@@ -74,6 +74,8 @@ public class EntryList<T> where T : ListEntry {
 	/// </summary>
 	/// <param name="pos"></param>
 	public void ForcePosition(int pos) {
+		if (entries.Count == 0)
+			return;
 		position = Mathf.Max(0, Mathf.Clamp(pos, 0, entries.Count -1));
 		UpdateEntries();
 	}
@@ -84,8 +86,10 @@ public class EntryList<T> where T : ListEntry {
 	/// </summary>
 	/// <param name="dir"></param>
 	public void Move(int dir) {
-		if (bot == top)
+		if (entries.Count == 0) {
+			position = 0;
 			return;
+		}
 
 		position = OPMath.FullLoop(0, entries.Count, position + dir);
 		if(position <= bot)

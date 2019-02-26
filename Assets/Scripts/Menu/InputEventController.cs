@@ -31,7 +31,6 @@ public class InputEventController : MonoBehaviour {
 
 	[Header("Control locks")]
 	public BoolVariable lockAllControls;
-	// public BoolVariable lockMoveControls;
 
 	[Header("Play Time Clock")]
 	public IntVariable currentPlayTime;

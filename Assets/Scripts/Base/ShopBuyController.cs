@@ -45,6 +45,7 @@ public class ShopBuyController : MonoBehaviour {
 		categories.AddButton(ItemType.BOW.ToString());
 		categories.AddButton(ItemType.HEAL.ToString());
 		categories.AddButton(ItemType.CHEAL.ToString());
+		entryList = new EntryList<ItemListEntry>(visibleSize);
 	}
 
 	public void GenerateLists(ItemListVariable currentShopList, bool buying) {
@@ -52,18 +53,19 @@ public class ShopBuyController : MonoBehaviour {
 		shopList = currentShopList;
 		GenerateList();
         categories.ForcePosition(0);
+		ChangeCategory(0);
 		entryList.ForcePosition(0);
 	}
 
     private void GenerateList() {
 		TotalMoneyText.text = "Money:  " + totalMoney.value;
 
-        entryList = new EntryList<ItemListEntry>(visibleSize);
+        entryList.ResetList();
         int listSize = (buyMode) ? shopList.items.Count : playerData.items.Count;
         for (int i = 0; i < listSize; i++) {
 			ItemEntry item = (buyMode) ? shopList.items[i] : playerData.items[i].item;
 
-			if (item.researchNeeded && !playerData.upgrader.IsResearched(item.uuid))
+			if (buyMode && item.researchNeeded && !playerData.upgrader.IsResearched(item.uuid))
 				continue;
 
 			int charges = (buyMode) ? shopList.items[i].maxCharge : playerData.items[i].charges;
@@ -90,8 +92,17 @@ public class ShopBuyController : MonoBehaviour {
         if (!promptMode) {
             categories.Move(dir);
 			ItemType currentCategory = (ItemType)(categories.GetPosition()+1);
-			entryList.FilterShow(x => { return x.item.itemType == currentCategory; });
+			if (currentCategory == ItemType.CHEAL) {
+				entryList.FilterShow(x => { return x.item.itemType == currentCategory || x.item.itemType == ItemType.CSTATS; });
+			}
+			else if (currentCategory == ItemType.HEAL) {
+				entryList.FilterShow(x => { return x.item.itemType == currentCategory || x.item.itemType == ItemType.BUFF; });
+			}
+			else {
+				entryList.FilterShow(x => { return x.item.itemType == currentCategory; });
+			}
 			entryList.ForcePosition(0);
+			MoveSelection(0);
         }
 		else {
 			buyPrompt.Move(dir);
@@ -143,6 +154,7 @@ public class ShopBuyController : MonoBehaviour {
 		if (!itemEntry) {
 			itemName.text = "";
 			itemIcon.sprite = null;
+			itemIcon.color = new Color(0,0,0,0);
 
 			pwrText.text = "Pwr:  ";
 			rangeText.text = "Range:  ";
@@ -156,6 +168,7 @@ public class ShopBuyController : MonoBehaviour {
 		ItemEntry item = itemEntry.item;
 		itemName.text = item.entryName;
 		itemIcon.sprite = item.icon;
+		itemIcon.color = item.repColor;
 
 		pwrText.text  = "Pwr:  " + item.power.ToString();
 		rangeText.text = "Range:  " + item.range.ToString();
