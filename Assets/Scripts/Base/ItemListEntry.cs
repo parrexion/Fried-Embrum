@@ -23,7 +23,7 @@ public class ItemListEntry : ListEntry {
 		icon.sprite = item.icon;
 		icon.color = item.repColor;
 		entryName.text = item.entryName;
-		maxCharge.text = charges.ToString();
+		maxCharge.text = charges + " / " + item.maxCharge;
 		cost.text = (buyMode) ? item.cost.ToString() : (Mathf.FloorToInt(item.cost * sellRatio)).ToString();
 		SetDark(!affordable);
     }

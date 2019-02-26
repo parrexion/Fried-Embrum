@@ -21,6 +21,10 @@ public class ListEntry : MonoBehaviour {
 		highlight.enabled = state;
 	}
 
+	/// <summary>
+	/// Updates the icon of the entry and greys it if it should be darkened.
+	/// </summary>
+	/// <param name="state"></param>
 	public void SetDark(bool state) {
 		dark = state;
 		icon.color = (state) ? Color.grey : Color.white;

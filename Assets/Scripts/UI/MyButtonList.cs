@@ -36,6 +36,9 @@ public class MyButtonList : MonoBehaviour {
 	/// </summary>
 	/// <param name="button"></param>
 	public void AddButton(string button) {
+		if (size == 0)
+			Debug.LogError("MyButtonList is not initialized");
+
 		buttonNames.Add(button);
 		top = Mathf.Min(bot + size, buttonNames.Count);
 		UpdateButtons();

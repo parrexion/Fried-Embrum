@@ -17,16 +17,15 @@ public class RestockController : MonoBehaviour {
 	[Header("Character List")]
     public Transform listParentCharacter;
 	public Transform characterPrefab;
-	private int currentListIndex;
-	private List<RestockListEntry> entryList = new List<RestockListEntry>();
+	public int characterListSize;
+	private EntryList<RestockListEntry> characters;
 
 	[Header("Restock List")]
-    public MyButton[] restockMenuButtons;
+    public MyButtonList restockMenuButtons;
     public Transform listParentRestock;
 	public Transform restockPrefab;
-	private int currentMenuIndex;
-	private int currentItemIndex;
-	private List<ItemListEntry> restockList = new List<ItemListEntry>();
+	public int itemListSize;
+	private EntryList<ItemListEntry> itemList;
 
 	[Header("Inventory box")]
 	public TMPro.TextMeshProUGUI charName;
@@ -53,80 +52,73 @@ public class RestockController : MonoBehaviour {
 		restockView.SetActive(false);
 		charListView.SetActive(false);
 		charMenuView.SetActive(false);
+
+		characters = new EntryList<RestockListEntry>(characterListSize);
+		itemList = new EntryList<ItemListEntry>(itemListSize);
+		restockMenuButtons.ResetButtons();
+		restockMenuButtons.AddButton("RESTOCK");
+		restockMenuButtons.AddButton("TAKE");
+		restockMenuButtons.AddButton("STORE");
 	}
 
 	public void GenerateLists() {
 		charListView.SetActive(true);
 		GenerateCharacterList();
-		currentListIndex = 0;
-		currentItemIndex = 0;
-		currentMenuIndex = 0;
 		MoveSelection(0);
 	}
 
     private void GenerateCharacterList() {
 		TotalMoneyText.text = "Money:  " + totalMoney.value;
-        for (int i = listParentCharacter.childCount - 1; i > 2; i--) {
-            Destroy(listParentCharacter.GetChild(i).gameObject);
-        }
 
-        entryList = new List<RestockListEntry>();
+        characters.ResetList();
 
         for (int i = 0; i < playerData.stats.Count; i++) {
 			Transform t = Instantiate(characterPrefab, listParentCharacter);
-
-			RestockListEntry entry = t.GetComponent<RestockListEntry>();
+			RestockListEntry entry = characters.CreateEntry(t);
 			entry.FillData(playerData.stats[i], playerData.inventory[i]);
-			entryList.Add(entry);
-
-			t.gameObject.SetActive(true);
         }
         characterPrefab.gameObject.SetActive(false);
     }
 
     private void GenerateInventoryList() {
 		TotalMoneyText.text = "Money:  " + totalMoney.value;
-        for (int i = listParentRestock.childCount - 1; i > 2; i--) {
-            Destroy(listParentRestock.GetChild(i).gameObject);
-        }
 
-        restockList = new List<ItemListEntry>();
+        itemList.ResetList();
 
         for (int i = 0; i < InventoryContainer.INVENTORY_SIZE; i++) {
-			InventoryTuple tuple = entryList[i].invCon.GetTuple(i);
+			InventoryTuple tuple = characters.GetEntry().invCon.GetTuple(i);
 			if (!tuple.item)
 				break;
 			Transform t = Instantiate(restockPrefab, listParentRestock);
-
-			ItemListEntry entry = t.GetComponent<ItemListEntry>();
+			ItemListEntry entry = itemList.CreateEntry(t);
 			entry.FillData(i, tuple.item, tuple.charge, 9999, false, 1);
-			restockList.Add(entry);
-
-			t.gameObject.SetActive(true);
         }
-        characterPrefab.gameObject.SetActive(false);
+        restockPrefab.gameObject.SetActive(false);
     }
+
+	private void UpdateInventoryList() {
+		for (int i = 0; i < InventoryContainer.INVENTORY_SIZE; i++) {
+			InventoryTuple tuple = characters.GetEntry().invCon.GetTuple(i);
+			if (!tuple.item)
+				break;
+
+			ItemListEntry entry = itemList.GetEntry(i);
+			entry.FillData(i, tuple.item, tuple.charge, 9999, false, 1);
+        }
+		itemList.Move(0);
+	}
 
 	public void MoveSelection(int dir) {
 		if (currentMode == MenuState.CHARACTER) {
-			currentListIndex = OPMath.FullLoop(0, playerData.stats.Count, currentListIndex + dir);
-			for (int i = 0; i < playerData.stats.Count; i++) {
-				entryList[i].SetHighlight(currentListIndex == i);
-			}
+			characters.Move(dir);
             SetupCharInfo();
         }
 		else if (currentMode == MenuState.MENU) {
-			currentMenuIndex = OPMath.FullLoop(0, restockMenuButtons.Length, currentMenuIndex + dir);
-			for (int i = 0; i < restockMenuButtons.Length; i++) {
-				restockMenuButtons[i].SetSelected(currentMenuIndex == i);
-			}
+			restockMenuButtons.Move(dir);
 			SetupItemInfo();
 		}
 		else if (currentMode == MenuState.INV) {
-			currentMenuIndex = OPMath.FullLoop(0, restockList.Count, currentMenuIndex + dir);
-			for (int i = 0; i < restockList.Count; i++) {
-				restockList[i].SetHighlight(currentMenuIndex == i);
-			}
+			itemList.Move(dir);
 			SetupItemInfo();
 		}
 		else if (currentMode == MenuState.PROMPT) {
@@ -142,12 +134,16 @@ public class RestockController : MonoBehaviour {
 		if (currentMode == MenuState.CHARACTER) {
 			currentMode = MenuState.MENU;
 			charMenuView.SetActive(true);
-			currentMenuIndex = 0;
+			restockMenuButtons.ForcePosition(0);
 			GenerateInventoryList();
 		}
 		else if (currentMode == MenuState.MENU) {
-			Debug.Log("Restock");
+			charListView.SetActive(false);
+			restockView.SetActive(true);
 			currentMode = MenuState.INV;
+		}
+		else if (currentMode == MenuState.INV) {
+			currentMode = MenuState.PROMPT;
 			restockPrompt.ShowWindow("Restock item?", true);
 		}
 		else if (currentMode == MenuState.PROMPT) {
@@ -164,6 +160,13 @@ public class RestockController : MonoBehaviour {
 			currentMode =  MenuState.CHARACTER;
 			return false;
 		}
+		else if (currentMode == MenuState.INV) {
+			GenerateCharacterList();
+			charListView.SetActive(true);
+			restockView.SetActive(false);
+			currentMode = MenuState.MENU;
+			return false;
+		}
 		else if (currentMode == MenuState.PROMPT) {
 			restockPrompt.Click(false);
 			currentMode = MenuState.INV;
@@ -173,13 +176,16 @@ public class RestockController : MonoBehaviour {
 	}
 
 	private void RestockItem() {
-
+		Debug.Log("Restock");
+		InventoryTuple tuple = characters.GetEntry().invCon.GetTuple(itemList.GetPosition());
+		tuple.charge = tuple.item.maxCharge;
+		UpdateInventoryList();
 	}
 
 	private void SetupCharInfo() {
-		RestockListEntry restock = entryList[currentListIndex];
+		RestockListEntry restock = characters.GetEntry();
 		charName.text = restock.entryName.text;
-		portrait.sprite = restock.portrait.sprite;
+		portrait.sprite = restock.icon.sprite;
 		for (int i = 0; i < InventoryContainer.INVENTORY_SIZE; i++) {
 			ItemEntry item = restock.invCon.GetTuple(i).item;
 			inventory[i].text = (item) ? item.entryName : "-NONE-";
@@ -187,7 +193,8 @@ public class RestockController : MonoBehaviour {
 	}
 
 	private void SetupItemInfo() {
-		if (entryList.Count == 0) {
+		RestockListEntry entry = characters.GetEntry();
+		if (!entry) {
 			itemName.text = "";
 			itemIcon.sprite = null;
 
@@ -200,7 +207,7 @@ public class RestockController : MonoBehaviour {
 			return;
 		}
 
-		ItemEntry item = entryList[currentListIndex].invCon.GetTuple(currentItemIndex).item;
+		ItemEntry item = entry.invCon.GetTuple(itemList.GetPosition()).item;
 		itemName.text = item.entryName;
 		itemIcon.sprite = item.icon;
 
