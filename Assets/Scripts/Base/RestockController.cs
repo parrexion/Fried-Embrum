@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class RestockController : MonoBehaviour {
-    enum MenuState { CHARACTER, MENU, INV, PROMPT }
+    enum MenuState { CHARACTER, MENU, INV, TAKE, STORE, PROMPT }
 	private MenuState currentMode;
 	public SaveListVariable playerData;
 	public IntVariable totalMoney;
@@ -138,9 +138,20 @@ public class RestockController : MonoBehaviour {
 			GenerateInventoryList();
 		}
 		else if (currentMode == MenuState.MENU) {
-			charListView.SetActive(false);
-			restockView.SetActive(true);
-			currentMode = MenuState.INV;
+			int buttonPos = restockMenuButtons.GetPosition();
+			if (buttonPos == 0) {
+				charListView.SetActive(false);
+				restockView.SetActive(true);
+				currentMode = MenuState.INV;
+			}
+			else if (buttonPos == 1) {
+				charListView.SetActive(false);
+				currentMode = MenuState.TAKE;
+			}
+			else if (buttonPos == 2) {
+				charListView.SetActive(false);
+				currentMode = MenuState.STORE;
+			}
 		}
 		else if (currentMode == MenuState.INV) {
 			int charges = 0;
@@ -182,6 +193,16 @@ public class RestockController : MonoBehaviour {
 			restockView.SetActive(false);
 			currentMode = MenuState.MENU;
 			return false;
+		}
+		else if (currentMode == MenuState.TAKE) {
+			GenerateCharacterList();
+			charListView.SetActive(true);
+			currentMode = MenuState.MENU;
+		}
+		else if (currentMode == MenuState.STORE) {
+			GenerateCharacterList();
+			charListView.SetActive(true);
+			currentMode = MenuState.MENU;
 		}
 		else if (currentMode == MenuState.PROMPT) {
 			restockPrompt.Click(false);
