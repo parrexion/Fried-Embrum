@@ -143,8 +143,13 @@ public class RestockController : MonoBehaviour {
 			currentMode = MenuState.INV;
 		}
 		else if (currentMode == MenuState.INV) {
-			currentMode = MenuState.PROMPT;
-			restockPrompt.ShowWindow("Restock item?", true);
+			int charges = 0;
+			float cost = 0;
+			CalculateCharge(ref cost, ref charges);
+			if (charges == 0)
+				return;
+
+			restockPrompt.ShowWindow("Restock item?\n" + charges + " / " + Mathf.CeilToInt(cost * charges) + " cost", true);
 		}
 		else if (currentMode == MenuState.PROMPT) {
 			if (restockPrompt.Click(true)) {
@@ -152,6 +157,17 @@ public class RestockController : MonoBehaviour {
 			}
 			currentMode = MenuState.INV;
 		}
+	}
+
+	private void CalculateCharge(ref float cost, ref int charges) {
+		InventoryTuple tuple = characters.GetEntry().invCon.GetTuple(itemList.GetPosition());
+		charges = tuple.item.maxCharge - tuple.charge;
+		if (charges == 0)
+			return;
+		currentMode = MenuState.PROMPT;
+		cost = tuple.item.cost / (float)tuple.item.maxCharge;
+		int affordable = Mathf.FloorToInt(totalMoney.value / cost);
+		charges = Mathf.Min(charges, affordable);
 	}
 
 	public bool DeselectItem() {
@@ -176,9 +192,14 @@ public class RestockController : MonoBehaviour {
 	}
 
 	private void RestockItem() {
-		Debug.Log("Restock");
 		InventoryTuple tuple = characters.GetEntry().invCon.GetTuple(itemList.GetPosition());
-		tuple.charge = tuple.item.maxCharge;
+		int charges = 0;
+		float cost = 0;
+		CalculateCharge(ref cost, ref charges);
+
+		tuple.charge += charges;
+		totalMoney.value -= Mathf.CeilToInt(cost * charges);
+		TotalMoneyText.text = "Money:  " + totalMoney.value;
 		UpdateInventoryList();
 	}
 
