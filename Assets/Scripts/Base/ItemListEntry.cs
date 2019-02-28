@@ -12,18 +12,38 @@ public class ItemListEntry : ListEntry {
 	public bool affordable;
 
 
+	public void FillDataEmpty(int index) {
+		this.index = index;
+		item = null;
+		icon.sprite = null;
+		icon.color = new Color(0,0,0,0);
+		entryName.text = "- - -";
+		maxCharge.text = "";
+		cost.text = "";
+	}
+
+	public void FillDataSimple(int index, ItemEntry item, string charges, string cost) {
+		this.index = index;
+		this.item = item;
+		icon.sprite = item.icon;
+		icon.color = item.repColor;
+		entryName.text = item.entryName;
+		maxCharge.text = charges;
+		this.cost.text = cost;
+	}
+
     /// <summary>
     /// Fills the entry with the data of the character.
     /// </summary>
     /// <param name="statsCon"></param>
-    public void FillData(int index, ItemEntry item, int charges, int totalMoney, bool buyMode, float sellRatio) {
+    public void FillData(int index, ItemEntry item, string charges, int totalMoney, bool buyMode, float sellRatio) {
 		affordable = (!buyMode || totalMoney >= item.cost);
 		this.index = index;
 		this.item = item;
 		icon.sprite = item.icon;
 		icon.color = item.repColor;
 		entryName.text = item.entryName;
-		maxCharge.text = charges + " / " + item.maxCharge;
+		maxCharge.text = charges;
 		cost.text = (buyMode) ? item.cost.ToString() : (Mathf.FloorToInt(item.cost * sellRatio)).ToString();
 		SetDark(!affordable);
     }

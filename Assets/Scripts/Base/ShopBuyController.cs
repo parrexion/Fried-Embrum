@@ -77,7 +77,7 @@ public class ShopBuyController : MonoBehaviour {
 	private void CreateListEntry(int index, ItemEntry item, int charges) {
 		Transform t = Instantiate(entryPrefab, listParent);
 		ItemListEntry entry = entryList.CreateEntry(t);
-		entry.FillData(index, item, charges, totalMoney.value, buyMode, sellRatio.value);
+		entry.FillData(index, item, charges.ToString(), totalMoney.value, buyMode, sellRatio.value);
 	}
 
 	public void MoveSelection(int dir) {

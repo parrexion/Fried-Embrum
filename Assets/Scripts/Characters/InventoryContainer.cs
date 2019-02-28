@@ -205,7 +205,7 @@ public class InventoryContainer {
 			inventory[i].index = i;
 		}
 
-		if (inventory[0].item != null) {
+		if (inventory[0].item != null && stats != null) {
 			int skill = stats.GetWpnSkill(inventory[0].item);
 			if (!inventory[0].item.CanUse(skill) || inventory[0].charge <= 0) {
 				InventoryTuple tup = GetFirstUsableItemTuple(ItemCategory.WEAPON, stats);

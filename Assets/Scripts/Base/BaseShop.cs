@@ -114,7 +114,11 @@ public class BaseShop : InputReceiverDelegate {
             }
         }
 		else if (menuMode == 3) {
-			restockController.DeselectItem();
+			if (restockController.DeselectItem()) {
+				menuMode = 0;
+				menuTitle.text = "SHOP";
+				basicView.SetActive(true);
+			}
 		}
     }
 
