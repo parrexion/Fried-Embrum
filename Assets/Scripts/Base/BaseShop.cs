@@ -46,7 +46,7 @@ public class BaseShop : InputReceiverDelegate {
 			buttons.Move(-1);
         }
         else if (menuMode == 1 || menuMode == 2) {
-            shopController.MoveSelection(-1);
+            shopController.MoveVertical(-1);
         }
         else if (menuMode == 3) {
             restockController.MoveSelection(-1);
@@ -58,7 +58,7 @@ public class BaseShop : InputReceiverDelegate {
 			buttons.Move(1);
         }
         else if (menuMode == 1 || menuMode == 2) {
-            shopController.MoveSelection(1);
+            shopController.MoveVertical(1);
         }
         else if (menuMode == 3) {
             restockController.MoveSelection(1);
@@ -71,30 +71,27 @@ public class BaseShop : InputReceiverDelegate {
             if (currentIndex == 0) {
                 menuMode = 1;
                 menuTitle.text = "BUY";
-				shopController.GenerateLists(shopList, true);
+				shopController.GenerateShopList(shopList);
                 shopView.SetActive(true);
 				basicView.SetActive(false);
             }
             else if (currentIndex == 1) {
                 menuMode = 2;
                 menuTitle.text = "SELL";
-				shopController.GenerateLists(shopList, false);
+				shopController.GenerateSellList();
                 shopView.SetActive(true);
 				basicView.SetActive(false);
             }
 			else if (currentIndex == 2) {
 				menuMode = 3;
 				menuTitle.text = "RESTOCK";
-				restockController.GenerateLists();
+				restockController.ShowRestock();
 				shopView.SetActive(false);
 				basicView.SetActive(false);
 			}
 		}
-		else if (menuMode == 1) {
-			shopController.SelectItem(true);
-		}
-		else if (menuMode == 2) {
-			shopController.SelectItem(false);
+		else if (menuMode == 1 || menuMode == 2) {
+			shopController.SelectItem();
 		}
 		else if (menuMode == 3) {
 			restockController.SelectItem();
@@ -124,7 +121,7 @@ public class BaseShop : InputReceiverDelegate {
 
     public override void OnLeftArrow() {
 		if (menuMode == 1 || menuMode == 2) {
-            shopController.ChangeCategory(-1);
+            shopController.MoveHorizontal(-1);
         }
 		else if (menuMode == 3) {
 			restockController.MoveSide(-1);
@@ -133,7 +130,7 @@ public class BaseShop : InputReceiverDelegate {
 
     public override void OnRightArrow() {
 		if (menuMode == 1 || menuMode == 2) {
-            shopController.ChangeCategory(1);
+            shopController.MoveHorizontal(1);
         }
 		else if (menuMode == 3) {
 			restockController.MoveSide(1);

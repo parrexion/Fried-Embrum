@@ -7,11 +7,19 @@ using UnityEngine;
 /// </summary>
 public class MyPrompt : MonoBehaviour {
 
+	public enum Result { OK1, OK2, CANCEL }
+	const string YES_NAME = "YES";
+	const string NO_NAME = "NO";
+	const string OK_NAME = "OK";
+
 	public GameObject promptView;
 	public TMPro.TextMeshProUGUI textArea;
 	public MyButton yesButton;
+	public MyButton yes2Button;
 	public MyButton noButton;
+	public MyButton okButton;
 	private int position;
+	private int optionSize;
 
 
 	private void Start() {
@@ -24,8 +32,52 @@ public class MyPrompt : MonoBehaviour {
 	/// <param name="message"></param>
 	/// <param name="startOk"></param>
 	public void ShowWindow(string message, bool startOk) {
-		position = startOk ? 0 : 1;
+		optionSize = 2;
+		position = startOk ? 1 : 0;
 		textArea.text = message;
+		yesButton.buttonText.text = YES_NAME;
+		noButton.buttonText.text = NO_NAME;
+		yesButton.gameObject.SetActive(true);
+		yes2Button.gameObject.SetActive(false);
+		noButton.gameObject.SetActive(true);
+		okButton.gameObject.SetActive(false);
+		UpdateButtons();
+		promptView.SetActive(true);
+	}
+
+	/// <summary>
+	/// Shows a simple popup with a message and an OK button to click.
+	/// </summary>
+	/// <param name="message"></param>
+	public void ShowPopup(string message) {
+		optionSize = 1;
+		position = -1;
+		textArea.text = message;
+		okButton.buttonText.text = OK_NAME;
+		yesButton.gameObject.SetActive(false);
+		yes2Button.gameObject.SetActive(false);
+		noButton.gameObject.SetActive(false);
+		okButton.gameObject.SetActive(true);
+		UpdateButtons();
+		promptView.SetActive(true);
+	}
+
+	/// <summary>
+	/// Displays the prompt window with two ok options and a cancel button.
+	/// </summary>
+	/// <param name="message"></param>
+	/// <param name="startOk"></param>
+	public void Show2Options(string message, string option1, string option2, string cancel, bool startOption) {
+		optionSize = 3;
+		position = startOption ? 2 : 0;
+		textArea.text = message;
+		yesButton.buttonText.text = option1;
+		yes2Button.buttonText.text = option2;
+		noButton.buttonText.text = cancel;
+		yesButton.gameObject.SetActive(true);
+		yes2Button.gameObject.SetActive(true);
+		noButton.gameObject.SetActive(true);
+		okButton.gameObject.SetActive(false);
 		UpdateButtons();
 		promptView.SetActive(true);
 	}
@@ -34,25 +86,41 @@ public class MyPrompt : MonoBehaviour {
 	/// Moves the cursor on the prompt in dir direction.
 	/// </summary>
 	public void Move(int dir) {
-		position = OPMath.FullLoop(0,2, position + dir);
+		if (position == -1)
+			return;
+
+		position = OPMath.FullLoop(0,optionSize, position - dir);
 		UpdateButtons();
 	}
 
 	/// <summary>
-	/// Clicks the prompt window. Returns true if the click is an ok, false otherwise.
+	/// Clicks the prompt window. isOk should be true if accept is clicked.
+	/// Returns the results depending on the position.
 	/// </summary>
 	/// <param name="isOk"></param>
 	/// <returns></returns>
-	public bool Click(bool isOk) {
+	public Result Click(bool isOk) {
+		if (!isOk)
+			return Result.CANCEL;
+
 		promptView.SetActive(false);
-		return (isOk && position == 0);
+		switch (position) {
+		case 1:
+			return Result.OK1;
+		case 2:
+			return Result.OK2;
+		default:
+			return Result.CANCEL;
+		}
 	}
 
 	/// <summary>
 	/// Updates the visuals on the buttons.
 	/// </summary>
 	private void UpdateButtons() {
-		yesButton.SetSelected(position == 0);
-		noButton.SetSelected(position == 1);
+		okButton.SetSelected(position == -1);
+		noButton.SetSelected(position == 0);
+		yesButton.SetSelected(position == 1);
+		yes2Button.SetSelected(position == 2);
 	}
 }

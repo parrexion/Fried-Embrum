@@ -54,6 +54,14 @@ public class InventoryContainer {
 		}
 	}
 
+	public bool HasRoom() {
+		for (int i = 0; i < INVENTORY_SIZE; i++) {
+			if (!inventory[i].item)
+				return true;
+		}
+		return false;
+	}
+
 	/// <summary>
 	/// Takes all items of the given category and returns the available ranges for them.
 	/// </summary>
@@ -291,15 +299,29 @@ public class InventoryContainer {
 	}
 
 	/// <summary>
+	/// Adds the InventoryItem to the first available slot in the inventory.
+	/// Returns true if successful, false if there was no room.
+	/// </summary>
+	/// <param name="item"></param>
+	/// <returns></returns>
+	public bool AddItem(InventoryItem item) {
+		return AddItem(new InventoryTuple(){
+			item = item.item,
+			charge = item.charges
+		});
+	}
+
+	/// <summary>
 	/// Adds the selected inventory tuple to the inventory if there's room.
-	/// Returns true if there's room, false if there's not.
+	/// Returns true if successful, false if there was no room.
 	/// </summary>
 	/// <param name="pickup"></param>
 	/// <returns></returns>
-	public bool GainItem(InventoryTuple pickup) {
+	public bool AddItem(InventoryTuple pickup) {
 		for (int i = 0; i < inventory.Count; i++) {
 			if (inventory[i].item == null) {
 				inventory[i] = pickup;
+				pickup.index = i;
 				Debug.Log("Added the item to position " + i);
 				return true;
 			}

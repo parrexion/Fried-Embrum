@@ -10,6 +10,8 @@ using UnityEngine;
 [System.Serializable]
 public class EntryList<T> where T : ListEntry {
 
+	public int Size { get {return entries.Count; } }
+
 	private List<T> entries = new List<T>();
 	private List<T> original = new List<T>();
 	private int visibleSize;
@@ -65,6 +67,9 @@ public class EntryList<T> where T : ListEntry {
 	/// Removes the currently highlighted entry from the list and adjusts the highlight.
 	/// </summary>
 	public void RemoveEntry() {
+		T entry = entries[position];
+		original.Remove(entry);
+		GameObject.Destroy(entries[position].gameObject);
 		entries.RemoveAt(position);
 		Move((position == entries.Count) ? -1 : 0);
 	}
@@ -172,13 +177,5 @@ public class EntryList<T> where T : ListEntry {
 		if(entries.Count <= index)
 			return null;
 		return entries[index];
-	}
-
-	/// <summary>
-	/// The current size of the list not counting the hidden entries.
-	/// </summary>
-	/// <returns></returns>
-	public int Size() {
-		return entries.Count;
 	}
 }

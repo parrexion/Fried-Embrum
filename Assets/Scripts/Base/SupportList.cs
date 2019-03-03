@@ -65,8 +65,7 @@ public class SupportList : MonoBehaviour {
 			}
 		}
 		else if (detailedMode == Mode.PROMPT) {
-			bool res = levelupPrompt.Click(true);
-			if (res) {
+			if (levelupPrompt.Click(true) == MyPrompt.Result.OK1) {
 				//Fixa uppdaterat supportvärde
 				Debug.Log("Dum dum daaah!");
 			}
@@ -100,7 +99,7 @@ public class SupportList : MonoBehaviour {
 		oldIndex = supportList.GetPosition();
 		supportList.FilterShow((x) => x.index != selectedIndex);
 		StatsContainer thisChar = playerData.stats[selectedIndex];
-		for (int i = 0; i < supportList.Size(); i++) {
+		for (int i = 0; i < supportList.Size; i++) {
 			CharData other = playerData.stats[supportList.GetEntry(i).index].charData;
 			SupportTuple tuple = thisChar.charData.GetSupport(other);
 			SupportValue value = thisChar.GetSupportValue(other);

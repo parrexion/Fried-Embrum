@@ -110,7 +110,7 @@ public class ScienceController : MonoBehaviour {
 			}
 		}
 		else {
-			if (buyPrompt.Click(true)) {
+			if (buyPrompt.Click(true) == MyPrompt.Result.OK1) {
 				Debug.Log((isUpgrade) ? "Upgrade" : "Invent");
 				totalMoney.value -= upgrade.upgrade.cost;
 				totalScrap.value -= upgrade.upgrade.scrap;

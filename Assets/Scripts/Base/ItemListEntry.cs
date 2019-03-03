@@ -47,4 +47,9 @@ public class ItemListEntry : ListEntry {
 		cost.text = (buyMode) ? item.cost.ToString() : (Mathf.FloorToInt(item.cost * sellRatio)).ToString();
 		SetDark(!affordable);
     }
+
+	public void SetAffordable(bool affordable) {
+		this.affordable = affordable;
+		SetDark(!affordable);
+	}
 }

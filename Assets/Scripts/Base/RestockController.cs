@@ -4,13 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class RestockController : MonoBehaviour {
-    enum MenuState { CHARACTER, MENU, RECHARGE, TAKE, STORE, PROMPT }
+    enum MenuState { CHARACTER, MENU, RECHARGE, TAKE, STORE }
 	private MenuState currentMode;
 	public SaveListVariable playerData;
 	public IntVariable totalMoney;
 
 	[Header("Views")]
 	public GameObject charListView;
+	public GameObject convoyView;
 	public GameObject restockView;
 	public GameObject normalButtonMenu;
 	public GameObject secondButtonMenu;
@@ -20,6 +21,9 @@ public class RestockController : MonoBehaviour {
 	public Transform characterPrefab;
 	public int characterListSize;
 	private EntryList<RestockListEntry> characters;
+
+	[Header("Stock List")]
+    public StorageList convoy;
 
 	[Header("Restock List")]
     public MyButtonList restockMenuButtons;
@@ -47,11 +51,13 @@ public class RestockController : MonoBehaviour {
 
 	[Header("Restock promt")]
 	public MyPrompt restockPrompt;
+	private bool promptMode;
 
 
 	private void Start() {
 		restockView.SetActive(false);
 		charListView.SetActive(false);
+		convoyView.SetActive(false);
 		normalButtonMenu.SetActive(true);
 		secondButtonMenu.SetActive(false);
 
@@ -61,9 +67,10 @@ public class RestockController : MonoBehaviour {
 		restockMenuButtons.AddButton("RESTOCK");
 		restockMenuButtons.AddButton("TAKE");
 		restockMenuButtons.AddButton("STORE");
+		convoy.Setup();
 	}
 
-	public void GenerateLists() {
+	public void ShowRestock() {
 		charListView.SetActive(true);
 		normalButtonMenu.SetActive(false);
 		GenerateCharacterList();
@@ -108,7 +115,7 @@ public class RestockController : MonoBehaviour {
 			ItemListEntry entry = itemList.CreateEntry(t);
 			int charges = 0;
 			float cost = 0;
-			CalculateCharge(tuple, ref cost, ref charges);
+			CalculateCharge(tuple, ref cost, ref charges, false);
 			string chargeStr = tuple.charge.ToString();
 			if (currentMode == MenuState.RECHARGE)
 				chargeStr += " / " + tuple.item.maxCharge;
@@ -116,6 +123,7 @@ public class RestockController : MonoBehaviour {
 			entry.FillDataSimple(i, tuple.item, chargeStr, costStr);
         }
         restockPrefab.gameObject.SetActive(false);
+		SetupItemInfo();
     }
 
 	private void UpdateInventoryList() {
@@ -133,7 +141,7 @@ public class RestockController : MonoBehaviour {
 			ItemListEntry entry = itemList.GetEntry(i);
 			int charges = 0;
 			float cost = 0;
-			CalculateCharge(tuple, ref cost, ref charges);
+			CalculateCharge(tuple, ref cost, ref charges, false);
 			string chargeStr = tuple.charge + " / " + tuple.item.maxCharge;
 			string costStr = (currentMode == MenuState.RECHARGE) ? Mathf.CeilToInt(cost * charges).ToString() : "";
 			entry.FillDataSimple(i, tuple.item, chargeStr, costStr);
@@ -154,7 +162,8 @@ public class RestockController : MonoBehaviour {
 			SetupItemInfo();
 		}
 		else if (currentMode == MenuState.TAKE) {
-
+			convoy.Move(dir);
+			SetupCharInfo();
 		}
 		else if (currentMode == MenuState.STORE) {
 			itemList.Move(dir);
@@ -163,13 +172,24 @@ public class RestockController : MonoBehaviour {
 	}
 
 	public void MoveSide(int dir) {
-		if (currentMode == MenuState.PROMPT) {
+		if (promptMode) {
 			restockPrompt.Move(dir);
+		}
+		else if (currentMode == MenuState.TAKE) {
+			convoy.ChangeCategory(dir);
 		}
 	}
 
 	public void SelectItem() {
-		if (currentMode == MenuState.CHARACTER) {
+		if (promptMode) {
+			if (restockPrompt.Click(true) == MyPrompt.Result.OK1) {
+				if (currentMode == MenuState.RECHARGE) {
+					RestockItem();
+				}
+			}
+			promptMode = false;
+		}
+		else if (currentMode == MenuState.CHARACTER) {
 			currentMode = MenuState.MENU;
 			secondButtonMenu.SetActive(true);
 			restockMenuButtons.ForcePosition(0);
@@ -183,6 +203,8 @@ public class RestockController : MonoBehaviour {
 			}
 			else if (buttonPos == 1) {
 				currentMode = MenuState.TAKE;
+				convoy.SetupStorage();
+				convoyView.SetActive(true);
 			}
 			else if (buttonPos == 2) {
 				currentMode = MenuState.STORE;
@@ -191,10 +213,10 @@ public class RestockController : MonoBehaviour {
 			}
 		}
 		else if (currentMode == MenuState.RECHARGE) {
-			currentMode = MenuState.PROMPT;
+			promptMode = true;
 			int charges = 0;
 			float cost = 0;
-			CalculateCharge(null, ref cost, ref charges);
+			CalculateCharge(null, ref cost, ref charges, true);
 			if (charges == 0)
 				return;
 
@@ -206,16 +228,15 @@ public class RestockController : MonoBehaviour {
 		else if (currentMode == MenuState.STORE) {
 			StoreItem();
 		}
-		else if (currentMode == MenuState.PROMPT) {
-			currentMode = MenuState.RECHARGE;
-			if (restockPrompt.Click(true)) {
-				RestockItem();
-			}
-		}
 	}
 
 	public bool DeselectItem() {
-		if (currentMode == MenuState.MENU) {
+		if (promptMode) {
+			restockPrompt.Click(false);
+			promptMode = false;
+			return false;
+		}
+		else if (currentMode == MenuState.MENU) {
 			secondButtonMenu.SetActive(false);
 			currentMode =  MenuState.CHARACTER;
 			return false;
@@ -228,6 +249,7 @@ public class RestockController : MonoBehaviour {
 		}
 		else if (currentMode == MenuState.TAKE) {
 			currentMode = MenuState.MENU;
+			convoyView.SetActive(false);
 			UpdateCharacterList();
 			return false;
 		}
@@ -237,31 +259,28 @@ public class RestockController : MonoBehaviour {
 			restockView.SetActive(false);
 			return false;
 		}
-		else if (currentMode == MenuState.PROMPT) {
-			restockPrompt.Click(false);
-			currentMode = MenuState.RECHARGE;
-			return false;
-		}
 		normalButtonMenu.SetActive(true);
 		charListView.SetActive(false);
 		return true;
 	}
 
-	private void CalculateCharge(InventoryTuple t, ref float cost, ref int charges) {
-		InventoryTuple tuple = (t != null) ? t : characters.GetEntry().invCon.GetTuple(itemList.GetPosition());
-		charges = tuple.item.maxCharge - tuple.charge;
+	private void CalculateCharge(InventoryTuple t, ref float cost, ref int charges, bool affordable) {
+		InventoryTuple tuple = t ?? characters.GetEntry().invCon.GetTuple(itemList.GetPosition());
+		charges = tuple.GetMissingCharges();
 		if (charges == 0)
 			return;
-		cost = tuple.item.cost / (float)tuple.item.maxCharge;
-		int affordable = Mathf.FloorToInt(totalMoney.value / cost);
-		charges = Mathf.Min(charges, affordable);
+		cost = tuple.ChargeCost();
+		if (affordable) {
+			int available = Mathf.FloorToInt(totalMoney.value / cost);
+			charges = Mathf.Min(charges, available);
+		}
 	}
 
 	private void RestockItem() {
 		InventoryTuple tuple = characters.GetEntry().invCon.GetTuple(itemList.GetPosition());
 		int charges = 0;
 		float cost = 0;
-		CalculateCharge(tuple, ref cost, ref charges);
+		CalculateCharge(tuple, ref cost, ref charges, true);
 
 		tuple.charge += charges;
 		totalMoney.value -= Mathf.CeilToInt(cost * charges);
@@ -271,6 +290,21 @@ public class RestockController : MonoBehaviour {
 
 	private void TakeItem() {
 		Debug.Log("Take item");
+		ItemListEntry item = convoy.GetEntry();
+		if (!item)
+			return;
+
+		InventoryContainer invCon = characters.GetEntry().invCon;
+		if (!invCon.HasRoom()) {
+			restockPrompt.ShowPopup("Inventory is full!");
+			promptMode = true;
+			return;
+		}
+		invCon.AddItem(playerData.items[item.index]);
+		convoy.RemoveEntry();
+		playerData.items.RemoveAt(item.index);
+
+		SetupCharInfo();
 	}
 
 	private void StoreItem() {

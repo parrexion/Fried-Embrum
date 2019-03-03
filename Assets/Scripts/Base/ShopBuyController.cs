@@ -9,15 +9,6 @@ public class ShopBuyController : MonoBehaviour {
 	public IntVariable totalMoney;
 	public FloatVariable sellRatio;
 
-	[Header("Entry List")]
-    public Transform listParent;
-	public Transform entryPrefab;
-    public MyButtonList categories;
-	public int visibleSize;
-	private bool buyMode;
-	private ItemListVariable shopList;
-	private EntryList<ItemListEntry> entryList;
-
 	[Header("Information box")]
 	public Text TotalMoneyText;
 	public Text itemName;
@@ -31,97 +22,53 @@ public class ShopBuyController : MonoBehaviour {
 	public Text weightText;
 
 	[Header("Buy/Sell items")]
+	public StorageList shopList;
 	public MyPrompt buyPrompt;
 	private bool promptMode;
 
 
 	private void Start() {
-		categories.ResetButtons();
-		categories.AddButton(ItemType.SWORD.ToString());
-		categories.AddButton(ItemType.LANCE.ToString());
-		categories.AddButton(ItemType.AXE.ToString());
-		categories.AddButton(ItemType.MAGIC.ToString());
-		categories.AddButton(ItemType.THROW.ToString());
-		categories.AddButton(ItemType.BOW.ToString());
-		categories.AddButton(ItemType.HEAL.ToString());
-		categories.AddButton(ItemType.CHEAL.ToString());
-		entryList = new EntryList<ItemListEntry>(visibleSize);
+		shopList.Setup();
 	}
 
-	public void GenerateLists(ItemListVariable currentShopList, bool buying) {
-		buyMode = buying;
-		shopList = currentShopList;
-		GenerateList();
-        categories.ForcePosition(0);
-		ChangeCategory(0);
-		entryList.ForcePosition(0);
+	public void GenerateShopList(ItemListVariable currentShopList) {
+		shopList.SetupBuy(currentShopList);
 	}
 
-    private void GenerateList() {
-		TotalMoneyText.text = "Money:  " + totalMoney.value;
-
-        entryList.ResetList();
-        int listSize = (buyMode) ? shopList.items.Count : playerData.items.Count;
-        for (int i = 0; i < listSize; i++) {
-			ItemEntry item = (buyMode) ? shopList.items[i] : playerData.items[i].item;
-
-			if (buyMode && item.researchNeeded && !playerData.upgrader.IsResearched(item.uuid))
-				continue;
-
-			int charges = (buyMode) ? shopList.items[i].maxCharge : playerData.items[i].charges;
-            CreateListEntry(i, item, charges);
-        }
-        entryPrefab.gameObject.SetActive(false);
-    }
-
-	private void CreateListEntry(int index, ItemEntry item, int charges) {
-		Transform t = Instantiate(entryPrefab, listParent);
-		ItemListEntry entry = entryList.CreateEntry(t);
-		entry.FillData(index, item, charges.ToString(), totalMoney.value, buyMode, sellRatio.value);
+	public void GenerateSellList() {
+		shopList.SetupSell();
 	}
 
-	public void MoveSelection(int dir) {
+	public void MoveVertical(int dir) {
 		if (promptMode)
 			return;
 
-		entryList.Move(dir);
+		shopList.Move(dir);
         SetupItemInfo();
 	}
 
-    public void ChangeCategory(int dir) {
+    public void MoveHorizontal(int dir) {
         if (!promptMode) {
-            categories.Move(dir);
-			ItemType currentCategory = (ItemType)(categories.GetPosition()+1);
-			if (currentCategory == ItemType.CHEAL) {
-				entryList.FilterShow(x => { return x.item.itemType == currentCategory || x.item.itemType == ItemType.CSTATS; });
-			}
-			else if (currentCategory == ItemType.HEAL) {
-				entryList.FilterShow(x => { return x.item.itemType == currentCategory || x.item.itemType == ItemType.BUFF; });
-			}
-			else {
-				entryList.FilterShow(x => { return x.item.itemType == currentCategory; });
-			}
-			entryList.ForcePosition(0);
-			MoveSelection(0);
+            shopList.ChangeCategory(dir);
+			SetupItemInfo();
         }
 		else {
 			buyPrompt.Move(dir);
 		}
     }
 
-	public void SelectItem(bool isBuy) {
-		ItemListEntry itemEntry = entryList.GetEntry();
+	public void SelectItem() {
+		ItemListEntry itemEntry = shopList.GetEntry();
 		if (!itemEntry || !itemEntry.affordable)
 			return;
 
 		if (!promptMode) {
 			promptMode = true;
-			buyPrompt.ShowWindow((isBuy) ? "Buy item?" : "Sell item?", true);
+			buyPrompt.ShowWindow((shopList.buyMode) ? "Buy item?" : "Sell item?", true);
 		}
 		else {
-			if (buyPrompt.Click(true)) {
-				Debug.Log((isBuy) ? "Buy item" : "Sell item");
-				if (isBuy) { // Buy item
+			if (buyPrompt.Click(true) == MyPrompt.Result.OK1) {
+				if (shopList.buyMode) { // Buy item
 					ItemEntry item = ScriptableObject.CreateInstance<ItemEntry>();
 					item.CopyValues(itemEntry.item);
 					totalMoney.value -= item.cost;
@@ -131,10 +78,11 @@ public class ShopBuyController : MonoBehaviour {
 					ItemEntry item = itemEntry.item;
 					totalMoney.value += (int)(item.cost * sellRatio.value);
 					playerData.items.RemoveAt(itemEntry.index);
-					entryList.RemoveEntry();
+					shopList.RemoveEntry();
 				}
 			}
-			GenerateList();
+			shopList.UpdateCost();
+			SetupItemInfo();
 			DeselectItem();
 		}
 	}
@@ -150,8 +98,10 @@ public class ShopBuyController : MonoBehaviour {
 	}
 
 	private void SetupItemInfo() {
-		ItemListEntry itemEntry = entryList.GetEntry();
-		if (!itemEntry) {
+		TotalMoneyText.text = "Money:  " + totalMoney.value;
+
+		ItemListEntry itemEntry = shopList.GetEntry();
+		if (!itemEntry || !itemEntry.item) {
 			itemName.text = "";
 			itemIcon.sprite = null;
 			itemIcon.color = new Color(0,0,0,0);

@@ -480,7 +480,7 @@ public class BattleContainer : MonoBehaviour {
 			
 			Debug.Log("Dropped item:  " + itemTup.item.entryName);
 			itemTup.droppable = false;
-			receiver.inventory.GainItem(itemTup);
+			receiver.inventory.AddItem(itemTup);
 
 			yield return StartCoroutine(popup.ShowPopup(itemTup.item.icon, "Gained " + itemTup.item.entryName, popup.droppedItemFanfare));
 		}

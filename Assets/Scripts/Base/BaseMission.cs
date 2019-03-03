@@ -67,7 +67,7 @@ public class BaseMission : InputReceiverDelegate {
 			ChangePrompt(0);
 			startPrompt.ShowWindow("Start mission?", false);
 		}
-		else if (startPrompt.Click(true)) {
+		else if (startPrompt.Click(true) == MyPrompt.Result.OK1) {
 			StartMission();
 		}
 		else {
