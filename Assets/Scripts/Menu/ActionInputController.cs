@@ -35,7 +35,8 @@ public class ActionInputController : InputReceiverDelegate {
     public override void OnMenuModeChanged() {
 		bool active = UpdateState(MenuMode.UNIT);
 		actionMenu.SetActive(active);
-		ButtonSetup();
+		if (active)
+			ButtonSetup();
     }
 
     public override void OnDownArrow() {

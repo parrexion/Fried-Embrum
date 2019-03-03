@@ -99,7 +99,6 @@ public class FormationController : InputReceiverDelegate {
 			clicker.CursorBack();
 		}
 		else {
-			prepController.menuMode = 0;
 			InputDelegateController.instance.TriggerMenuChange(MenuMode.PREP);
 		}
 	}
@@ -121,7 +120,7 @@ public class FormationController : InputReceiverDelegate {
 	}
 
     public override void OnLButton() {
-		if (clicker.selectCharacter.value == null)
+		if (!clicker.selectCharacter.value)
 			return;
 		
 		StartCoroutine(MenuChangeDelay(MenuMode.TOOL));

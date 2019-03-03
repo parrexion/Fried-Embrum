@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
 
 public class BattlePrepController : InputReceiverDelegate {
+
+	private enum State { MAIN, CHAR, FORMATION, INVENTORY, OBJECTIVE, PROMPT }
 
 	public ScrObjEntryReference currentMapEntry;
 	public SaveListVariable playerData;
@@ -13,12 +14,12 @@ public class BattlePrepController : InputReceiverDelegate {
 	public UnityEvent startTurnEvent;
 
 	[Header("Main menu")]
-	public MyButton[] mainButtons;
-	private int mainIndex;
-	public int menuMode;
+	public MyButtonList mainButtons;
+	private State currentState;
 
 	[Header("Handlers")]
 	public PrepCharacterSelect characterSelect;
+	public PrepInventorySelect inventorySelect;
 
 	[Header("Views")]
 	public GameObject menuCollectionView;
@@ -28,10 +29,7 @@ public class BattlePrepController : InputReceiverDelegate {
 	public GameObject objectiveView;
 
 	[Header("Popup")]
-	public GameObject popupObject;
-	//public TMPro.TextMeshProUGUI popupMessage;
-	public MyButton[] popupButtons;
-	private int popupPosition;
+	public MyPrompt startPrompt;
 
 
 	private void Start() {
@@ -39,7 +37,14 @@ public class BattlePrepController : InputReceiverDelegate {
 		characterSelectView.SetActive(false);
 		inventoryView.SetActive(false);
 		objectiveView.SetActive(false);
-		popupObject.SetActive(false);
+
+		mainButtons.ResetButtons();
+		mainButtons.AddButton("Select characters");
+		mainButtons.AddButton("Change formation");
+		mainButtons.AddButton("Change equipment");
+		mainButtons.AddButton("Map objective");
+		mainButtons.AddButton("Start game");
+
 		InputDelegateController.instance.TriggerMenuChange(MenuMode.PREP);
 		ShowBattlePrep();
 		GeneratePrepList();
@@ -49,7 +54,10 @@ public class BattlePrepController : InputReceiverDelegate {
 		bool active = UpdateState(MenuMode.PREP);
 		mainMenuView.SetActive(active);
 		menuCollectionView.SetActive(!active);
-		UpdateButtons();
+		if (active) {
+			currentState = State.MAIN;
+			mainButtons.ForcePosition(0);
+		}
 	}
 
 	private void GeneratePrepList() {
@@ -86,25 +94,6 @@ public class BattlePrepController : InputReceiverDelegate {
 		menuCollectionView.SetActive(false);
 	}
 
-	private void DisplayPopup() {
-		popupObject.SetActive(true);
-		menuMode = 4;
-		popupPosition = 1;
-		UpdatePopupButtons(0);
-	}
-
-	private void HidePopup() {
-		menuMode = 0;
-		popupObject.SetActive(false);
-	}
-
-	private void UpdatePopupButtons(int dir) {
-		popupPosition = OPMath.FullLoop(0, popupButtons.Length, popupPosition+dir);
-		for (int i = 0; i < popupButtons.Length; i++) {
-			popupButtons[i].SetSelected(i == popupPosition);
-		}
-	}
-
 	/// <summary>
 	/// Ends battle prep and starts the battle.
 	/// </summary>
@@ -114,100 +103,126 @@ public class BattlePrepController : InputReceiverDelegate {
 		startTurnEvent.Invoke();
 	}
 
-	public void UpdateButtons() {
-		for (int i = 0; i < mainButtons.Length; i++) {
-			mainButtons[i].SetSelected(i == mainIndex);
-		}
-	}
-
 	public override void OnUpArrow() {
-		if (menuMode == 0) {
-			mainIndex = OPMath.FullLoop(0, mainButtons.Length, mainIndex-1);
-			UpdateButtons();
+		if (currentState == State.MAIN) {
+			mainButtons.Move(-1);
         }
-        else if (menuMode == 1) {
+        else if (currentState == State.CHAR) {
 			characterSelect.MoveSelection(-1);
+		}
+        else if (currentState == State.INVENTORY) {
+			inventorySelect.MoveSelection(-1);
 		}
 	}
 
 	public override void OnDownArrow() {
-		if (menuMode == 0) {
-			mainIndex = OPMath.FullLoop(0, mainButtons.Length, mainIndex+1);
-			UpdateButtons();
+		if (currentState == State.MAIN) {
+			mainButtons.Move(1);
         }
-        else if (menuMode == 1) {
+        else if (currentState == State.CHAR) {
             characterSelect.MoveSelection(1);
         }
+        else if (currentState == State.INVENTORY) {
+			inventorySelect.MoveSelection(1);
+		}
 	}
 
 	public override void OnLeftArrow() {
-		if (menuMode == 4)
-			UpdatePopupButtons(-1);
+		if (currentState == State.INVENTORY) {
+			inventorySelect.MoveHorizontal(-1);
+		}
+		else if (currentState == State.PROMPT) {
+			startPrompt.Move(-1);
+		}
 	}
 
 	public override void OnRightArrow() {
-		if(menuMode == 4)
-			UpdatePopupButtons(1);
+		if (currentState == State.INVENTORY) {
+			inventorySelect.MoveHorizontal(1);
+		}
+		else if(currentState == State.PROMPT) {
+			startPrompt.Move(1);
+		}
 	}
 
 	public override void OnOkButton() {
-		if (menuMode == 0) {
+		if (currentState == State.MAIN) {
+			int mainIndex = mainButtons.GetPosition();
 			if (mainIndex == 0) {
-				menuMode = 1;
+				currentState = State.CHAR;
 				characterSelectView.SetActive(true);
 				characterSelect.GenerateList();
 			}
 			else if (mainIndex == 1) {
-				menuMode = 2;
+				currentState = State.FORMATION;
 				InputDelegateController.instance.TriggerMenuChange(MenuMode.FORMATION);
 				mainMenuView.SetActive(false);
 				menuCollectionView.SetActive(true);
 			}
+			else if (mainIndex == 2) {
+				currentState = State.INVENTORY;
+				inventoryView.SetActive(true);
+				inventorySelect.GenerateList();
+			}
 			else if (mainIndex == 3) {
+				currentState = State.OBJECTIVE;
 				objectiveView.SetActive(true);
-				menuMode = 3;
 			}
 			else if (mainIndex == 4) {
-				DisplayPopup();
+				currentState = State.PROMPT;
+				startPrompt.ShowWindow("Start mission?", false);
 			}
 		}
-		else if (menuMode == 1) {
+		else if (currentState == State.CHAR) {
 			characterSelect.SelectCharacter();
 		}
-		else if (menuMode == 2) {
+		//else if (currentState == State.FORMATION) {
 
+		//}
+		else if (currentState == State.INVENTORY) {
+			inventorySelect.SelectItem();
 		}
-		else if (menuMode == 3) {
+		else if (currentState == State.OBJECTIVE) {
 			objectiveView.SetActive(false);
-			menuMode = 0;
+			currentState = State.MAIN;
 		}
-		else if (menuMode == 4) {
-			if (popupPosition == 0) {
+		else if (currentState == State.PROMPT) {
+			if (startPrompt.Click(true) == MyPrompt.Result.OK1) {
 				StartMission();
 			}
-			else {
-				HidePopup();
-			}
+			currentState = State.MAIN;
 		}
 	}
 
 	public override void OnBackButton() {
-		if (menuMode == 1) {
-			menuMode = 0;
+		if (currentState == State.CHAR) {
+			currentState = State.MAIN;
 			characterSelect.LeaveMenu();
 			characterSelectView.SetActive(false);
 		}
-		else if (menuMode == 3) {
-			objectiveView.SetActive(false);
-			menuMode = 0;
+		else if (currentState == State.INVENTORY) {
+			if (inventorySelect.DeselectItem()) {
+				inventoryView.SetActive(false);
+				currentState = State.MAIN;
+			}
 		}
-		else if (menuMode == 4) {
-			HidePopup();
+		else if (currentState == State.OBJECTIVE) {
+			objectiveView.SetActive(false);
+			currentState = State.MAIN;
+		}
+		else if (currentState == State.PROMPT) {
+			startPrompt.Click(false);
+			currentState = State.MAIN;
 		}
 	}
 
 	public override void OnStartButton() {
 		StartMission();
+	}
+
+	public void ReturnToMain() {
+		currentState = State.MAIN;
+
 	}
 	
 

@@ -32,7 +32,8 @@ public class InventoryMenuController : InputReceiverDelegate {
     public override void OnMenuModeChanged() {
 		bool active = UpdateState(MenuMode.INV);
 		inventoryMenu.SetActive(active);
-		ButtonSetup();
+		if (active)
+			ButtonSetup();
     }
 
 	private void ButtonSetup() {

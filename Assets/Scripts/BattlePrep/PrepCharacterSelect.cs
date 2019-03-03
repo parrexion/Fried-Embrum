@@ -11,40 +11,30 @@ public class PrepCharacterSelect : MonoBehaviour {
 	[Header("EntryList")]
 	public Transform entryPrefab;
 	public Transform listParent;
-	private List<PrepCharacterEntry> entryList = new List<PrepCharacterEntry>();
-	private int listSize;
+	public int visibleSize;
+	private EntryList<PrepCharacterEntry> entryList;
 	private int playerCap;
-	private int currentIndex;
 
 	[Header("SelectCharacterInfo")]
 	public TMPro.TextMeshProUGUI playerCapText;
 
 
 	public void GenerateList() {
-		listSize = prepList.preps.Count;
-		entryList = new List<PrepCharacterEntry>();
-		currentIndex = 0;
+		if (entryList == null)
+			entryList = new EntryList<PrepCharacterEntry>(visibleSize);
+		entryList.ResetList();
+
 		MapEntry map = (MapEntry)currentMap.value;
 		playerCap = map.spawnPoints.Count;
 
-		for (int i = listParent.transform.childCount-1; i > 0; i--) {
-			Destroy(listParent.transform.GetChild(i).gameObject);
-		}
-		
-		for (int i = 0; i < listSize; i++) {
-			CreateListEntry(playerData.stats[prepList.preps[i].index], prepList.preps[i]);
+		for (int i = 0; i < prepList.preps.Count; i++) {
+			Transform entry = Instantiate(entryPrefab, listParent.transform);
+			PrepCharacterEntry pce = entryList.CreateEntry(entry);
+			pce.FillData(playerData.stats[prepList.preps[i].index], null, prepList.preps[i]);
 		}
 		MoveSelection(0);
 		ShowInfo();
 		entryPrefab.gameObject.SetActive(false);
-	}
-
-	private void CreateListEntry(StatsContainer stats, PrepCharacter character) {
-		Transform entry = Instantiate(entryPrefab, listParent.transform);
-		PrepCharacterEntry pce = entry.GetComponent<PrepCharacterEntry>();
-		pce.FillData(stats, character);
-		entryList.Add(pce);
-		entry.gameObject.SetActive(true);
 	}
 
 	public void ShowInfo() {
@@ -53,14 +43,11 @@ public class PrepCharacterSelect : MonoBehaviour {
 	}
 
 	public void MoveSelection(int dir) {
-		currentIndex = OPMath.FullLoop(0, listSize, currentIndex + dir);
-		for (int i = 0; i < listSize; i++) {
-			entryList[i].SetHighlight(currentIndex == i);
-		}
+		entryList.Move(dir);
 	}
 
 	public void SelectCharacter() {
-		PrepCharacter pc = prepList.preps[currentIndex];
+		PrepCharacter pc = prepList.preps[entryList.GetPosition()];
 		int sum = CountSelected();
 		if (pc.selected) {
 			if (sum > 1 && !pc.forced)
@@ -69,7 +56,7 @@ public class PrepCharacterSelect : MonoBehaviour {
 		else if (sum < playerCap && !pc.locked) {
 			pc.selected = true;
 		}
-		entryList[currentIndex].SetDark(!pc.selected || pc.locked);
+		entryList.GetEntry().SetDark(!pc.selected || pc.locked);
 		ShowInfo();
 	}
 
@@ -79,7 +66,7 @@ public class PrepCharacterSelect : MonoBehaviour {
 
 	private int CountSelected() {
 		int selected = 0;
-		for (int i = 0; i < entryList.Count; i++) {
+		for (int i = 0; i < entryList.Size; i++) {
 			if (prepList.preps[i].selected) {
 				selected++;
 			}

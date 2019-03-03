@@ -123,7 +123,7 @@ public class RestockController : MonoBehaviour {
 			entry.FillDataSimple(i, tuple.item, chargeStr, costStr);
         }
         restockPrefab.gameObject.SetActive(false);
-		SetupItemInfo();
+		ShowItemInfo();
     }
 
 	private void UpdateInventoryList() {
@@ -152,22 +152,22 @@ public class RestockController : MonoBehaviour {
 	public void MoveSelection(int dir) {
 		if (currentMode == MenuState.CHARACTER) {
 			characters.Move(dir);
-            SetupCharInfo();
+            ShowCharInfo();
         }
 		else if (currentMode == MenuState.MENU) {
 			restockMenuButtons.Move(dir);
 		}
 		else if (currentMode == MenuState.RECHARGE) {
 			itemList.Move(dir);
-			SetupItemInfo();
+			ShowItemInfo();
 		}
 		else if (currentMode == MenuState.TAKE) {
 			convoy.Move(dir);
-			SetupCharInfo();
+			ShowCharInfo();
 		}
 		else if (currentMode == MenuState.STORE) {
 			itemList.Move(dir);
-			SetupItemInfo();
+			ShowItemInfo();
 		}
 	}
 
@@ -304,7 +304,7 @@ public class RestockController : MonoBehaviour {
 		convoy.RemoveEntry();
 		playerData.items.RemoveAt(item.index);
 
-		SetupCharInfo();
+		ShowCharInfo();
 	}
 
 	private void StoreItem() {
@@ -326,7 +326,7 @@ public class RestockController : MonoBehaviour {
 		itemList.ForcePosition(pos);
 	}
 
-	private void SetupCharInfo() {
+	private void ShowCharInfo() {
 		RestockListEntry restock = characters.GetEntry();
 		charName.text = restock.entryName.text;
 		portrait.sprite = restock.icon.sprite;
@@ -336,7 +336,7 @@ public class RestockController : MonoBehaviour {
 		}
 	}
 
-	private void SetupItemInfo() {
+	private void ShowItemInfo() {
 		RestockListEntry entry = characters.GetEntry();
 		ItemEntry item = itemList.GetEntry().item;
 		if (!entry || !item) {

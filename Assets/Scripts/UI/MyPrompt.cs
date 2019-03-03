@@ -88,6 +88,8 @@ public class MyPrompt : MonoBehaviour {
 	public void Move(int dir) {
 		if (position == -1)
 			return;
+		if (optionSize > 2)
+			dir *= -1;
 
 		position = OPMath.FullLoop(0,optionSize, position - dir);
 		UpdateButtons();
