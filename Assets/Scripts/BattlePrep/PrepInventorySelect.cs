@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PrepInventorySelect : MonoBehaviour {
 
-	private enum State { CHAR, MENU, TAKE, STORE }
+	private enum State { CHAR, MENU, TAKE, STORE, PROMPT }
 
 	public SaveListVariable playerData;
 	public PrepListVariable prepList;
@@ -24,11 +24,14 @@ public class PrepInventorySelect : MonoBehaviour {
 	public int visibleSize;
 	private EntryList<PrepCharacterEntry> charList;
 
-	[Header("Restock List")]
+	[Header("Inventory List")]
     public Transform listParentRestock;
 	public Transform restockPrefab;
 	public int itemListSize;
 	private EntryList<ItemListEntry> itemList;
+
+	[Header("Stock List")]
+    public StorageList convoy;
 
 	[Header("Inventory box")]
 	public TMPro.TextMeshProUGUI charName;
@@ -64,6 +67,7 @@ public class PrepInventorySelect : MonoBehaviour {
 		}
 		ShowCharInfo();
 		charEntryPrefab.gameObject.SetActive(false);
+		convoy.Setup();
 	}
 
     private void GenerateInventoryList() {
@@ -102,6 +106,10 @@ public class PrepInventorySelect : MonoBehaviour {
 			charList.Move(dir);
 			ShowCharInfo();
 		}
+		else if (currentMode == State.TAKE) {
+			convoy.Move(dir);
+			ShowItemInfo();
+		}
 		else if (currentMode == State.STORE) {
 			itemList.Move(dir);
 			ShowItemInfo();
@@ -111,6 +119,10 @@ public class PrepInventorySelect : MonoBehaviour {
 	public void MoveHorizontal(int dir) {
 		if (currentMode == State.MENU) {
 			prompt.Move(dir);
+		}
+		else if (currentMode == State.TAKE) {
+			convoy.ChangeCategory(dir);
+			ShowItemInfo();
 		}
 	}
 
@@ -123,6 +135,9 @@ public class PrepInventorySelect : MonoBehaviour {
 			MyPrompt.Result res = prompt.Click(true);
 			if (res == MyPrompt.Result.OK1) {
 				currentMode = State.TAKE;
+				convoy.SetupStorage();
+				convoyView.SetActive(true);
+				charListView.SetActive(false);
 			}
 			else if (res == MyPrompt.Result.OK2) {
 				currentMode = State.STORE;
@@ -132,15 +147,25 @@ public class PrepInventorySelect : MonoBehaviour {
 				currentMode = State.CHAR;
 			}
 		}
+		else if (currentMode == State.TAKE) {
+			TakeItem();
+		}
+		else if (currentMode == State.STORE) {
+			StoreItem();
+		}
 	}
 
 	public bool DeselectItem() {
-		if (currentMode == State.TAKE) {
+		if (currentMode == State.TAKE || currentMode == State.STORE) {
 			currentMode = State.CHAR;
+			charListView.SetActive(true);
+			storeView.SetActive(false);
+			convoyView.SetActive(false);
+			ShowCharInfo();
 			return false;
 		}
-		else if (currentMode == State.STORE) {
-			GenerateList();
+		else if (currentMode == State.PROMPT) {
+			prompt.Click(false);
 			return false;
 		}
 
@@ -160,7 +185,12 @@ public class PrepInventorySelect : MonoBehaviour {
 
 	private void ShowItemInfo() {
 		PrepCharacterEntry entry = charList.GetEntry();
-		ItemEntry item = itemList.GetEntry().item;
+		ItemEntry item = null;
+		if (currentMode == State.STORE)
+			item = itemList.GetEntry().item;
+		else if (convoy.GetEntry())
+			item = convoy.GetEntry().item;
+		
 		if (!entry || !item) {
 			itemName.text = "";
 			itemIcon.sprite = null;
@@ -185,6 +215,45 @@ public class PrepInventorySelect : MonoBehaviour {
 		weightText.text = "Weight:  " + item.weight.ToString();
 	}
 
+	private void TakeItem() {
+		Debug.Log("Take item");
+		ItemListEntry item = convoy.GetEntry();
+		if (!item)
+			return;
+
+		InventoryContainer invCon = charList.GetEntry().invCon;
+		if (!invCon.HasRoom()) {
+			prompt.ShowPopup("Inventory is full!");
+			currentMode = State.PROMPT;
+			return;
+		}
+		invCon.AddItem(playerData.items[item.index]);
+		convoy.RemoveEntry();
+		playerData.items.RemoveAt(item.index);
+
+		ShowCharInfo();
+	}
+	
+	private void StoreItem() {
+		Debug.Log("Store item");
+		if (!itemList.GetEntry().item)
+			return;
+
+		InventoryTuple tuple = charList.GetEntry().invCon.GetTuple(itemList.GetPosition());
+		InventoryItem item = new InventoryItem() {
+			charges = tuple.charge,
+			item = tuple.item
+		};
+		playerData.items.Add(item);
+		tuple.item = null;
+		charList.GetEntry().invCon.CleanupInventory(null);
+
+		itemList.RemoveEntry();
+		Transform t2 = Instantiate(restockPrefab, listParentRestock);
+		ItemListEntry entry2 = itemList.CreateEntry(t2);
+		entry2.FillDataEmpty(0);
+		ShowItemInfo();
+	}
 	
 
 	private void CalculateCharge(InventoryTuple t, ref float cost, ref int charges, bool affordable) {

@@ -321,9 +321,11 @@ public class RestockController : MonoBehaviour {
 		tuple.item = null;
 		characters.GetEntry().invCon.CleanupInventory(null);
 
-		int pos = itemList.GetPosition();
-		GenerateInventoryList();
-		itemList.ForcePosition(pos);
+		itemList.RemoveEntry();
+		Transform t2 = Instantiate(restockPrefab, listParentRestock);
+		ItemListEntry entry2 = itemList.CreateEntry(t2);
+		entry2.FillDataEmpty(0);
+		ShowItemInfo();
 	}
 
 	private void ShowCharInfo() {

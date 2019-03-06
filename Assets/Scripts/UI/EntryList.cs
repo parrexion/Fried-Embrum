@@ -81,8 +81,8 @@ public class EntryList<T> where T : ListEntry {
 	public void ForcePosition(int pos) {
 		if (entries.Count == 0)
 			return;
-		position = Mathf.Max(0, Mathf.Clamp(pos, 0, entries.Count -1));
-		UpdateEntries();
+		position = Mathf.Clamp(pos, 0, entries.Count -1);
+		Move(0);
 	}
 
 	/// <summary>
