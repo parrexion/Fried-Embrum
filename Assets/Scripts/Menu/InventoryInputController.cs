@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public enum InventoryStatsType { BASIC, STATS, INVENTORY }
 
-public class InventoryInputController : InputReceiver {
+public class InventoryInputController : InputReceiverDelegate {
 
 	public SimpleCharacterUI ui;
 	public GameObject background;
@@ -27,16 +27,12 @@ public class InventoryInputController : InputReceiver {
 	}
 
     public override void OnMenuModeChanged() {
-        if (currentMenuMode.value == (int)MenuMode.ATTACK || currentMenuMode.value == (int)MenuMode.HEAL || currentMenuMode.value == (int)MenuMode.DIALOGUE
-					|| (selectCharacter.value == null && selectTile.value.interactType == InteractType.NONE)) {
-			active = false;
-			background.SetActive(false);
-		}
-		else {
-			active = (currentMenuMode.value == (int)MenuMode.STATS);
-			background.SetActive(true);
-			UpdateUI();
-		}
+        bool active = UpdateState(MenuMode.STATS);
+		background.SetActive(active);
+		if (!active)
+			return;
+
+		UpdateUI();
 
 		if (currentMenuMode.value == (int)MenuMode.MAP) {
 			if (currentMode.value == ActionMode.MOVE) {
@@ -81,9 +77,6 @@ public class InventoryInputController : InputReceiver {
 	}
 
     public override void OnDownArrow() {
-		if (!active)
-			return;
-
 		if (currentMenuMode.value == (int)MenuMode.STATS) {
 			do {
 				inventoryIndex.value++;
@@ -97,9 +90,6 @@ public class InventoryInputController : InputReceiver {
     }
 
     public override void OnUpArrow() {
-		if (!active)
-			return;
-
 		if (currentMenuMode.value == (int)MenuMode.STATS) {
 			do {
 				inventoryIndex.value--;
@@ -112,29 +102,19 @@ public class InventoryInputController : InputReceiver {
     }
 
     public override void OnOkButton() {
-		if (!active)
-			return;
-
-		if (currentMenuMode.value == (int)MenuMode.STATS && selectCharacter.value.inventory.GetTuple(inventoryIndex.value).item != null) {
-			currentMenuMode.value = (int)MenuMode.INV;
+		if (selectCharacter.value.inventory.GetTuple(inventoryIndex.value).item != null) {
 			inventoryMenuPosition.value = -1;
-			StartCoroutine(MenuChangeDelay());
+			MenuChangeDelay(MenuMode.INV);
 			menuAcceptEvent.Invoke();
 			ui.UpdateSelection(selectCharacter.value);
 		}
     }
 	
     public override void OnBackButton() {
-		if (!active)
-			return;
-
-		if (currentMenuMode.value == (int)MenuMode.STATS){
-			Debug.Log("Now with UNiT!");
-			currentMenuMode.value = (int)MenuMode.UNIT;
-			inventoryIndex.value = -1;
-			menuBackEvent.Invoke();
-			StartCoroutine(MenuChangeDelay());
-		}
+		Debug.Log("Now with UNiT!");
+		inventoryIndex.value = -1;
+		menuBackEvent.Invoke();
+		MenuChangeDelay(MenuMode.UNIT);
     }
 
     public override void OnYButton() {
@@ -152,9 +132,6 @@ public class InventoryInputController : InputReceiver {
 	/// <param name="dir"></param>
 	private void ChangeStatsScreen(int dir) {
 		int nextPage = (int) currentPage.value + dir + 3;
-		// if (nextPage < 0)
-		// 	nextPage = nextPage + 3;
-		
 		currentPage.value = nextPage % 3;
 		UpdateUI();
 	}

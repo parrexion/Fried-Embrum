@@ -48,9 +48,15 @@ public abstract class InputReceiverDelegate : MonoBehaviour {
 		InputDelegateController.instance.menuModeChanged -= OnMenuModeChanged;
 	}
 
-	protected bool UpdateState(MenuMode mode) {
+	protected bool UpdateState(params MenuMode[] mode) {
 		bool prevActive = active;
-		active = (currentMenuMode.value == (int)mode);
+		active = false;
+		for (int i = 0; i < mode.Length; i++) {
+			if (currentMenuMode.value == (int)mode[i]) {
+				active = true;
+				break;
+			}
+		}
 		if (prevActive != active)
 			ActivateDelegates();
 		return active;

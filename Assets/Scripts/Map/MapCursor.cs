@@ -42,6 +42,7 @@ public class MapCursor : MonoBehaviour {
 	/// Initialization
 	/// </summary>	
 	private void Start() {
+		currentActionMode.value = ActionMode.NONE;
 		ResetTargets();
 		DangerAreaToggle(false);
 	}

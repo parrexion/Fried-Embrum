@@ -5,7 +5,9 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class SaveScreenController : InputReceiver {
+public class SaveScreenController : InputReceiverDelegate {
+
+	private enum State { MAIN, POPUP, SAVE, TRANSITION }
 
 	public ScrObjEntryReference currentMap;
 	public ScrObjEntryReference currentDialogue;
@@ -24,7 +26,7 @@ public class SaveScreenController : InputReceiver {
 
 	public UnityEvent stopMusicEvent;
 
-	private int state;
+	private State state;
 	/*
 	state 0 = Main menu
 	state 1 = Save popup
@@ -34,9 +36,13 @@ public class SaveScreenController : InputReceiver {
 
 
 	private void Start() {
-		state = 0;
+		state = State.MAIN;
 		savingPopup.SetActive(false);
 		stopMusicEvent.Invoke();
+	}
+
+    public override void OnMenuModeChanged() {
+		UpdateState(MenuMode.NONE);
 	}
 
 	public void NextLevel() {
@@ -53,10 +59,10 @@ public class SaveScreenController : InputReceiver {
 	}
 
     public override void OnUpArrow() {
-		if (state == 0 || state == 1) {
+		if (state == State.MAIN || state == State.POPUP) {
 			saveFileController.UpClicked();
 		}
-		else if (state == 2) {
+		else if (state == State.SAVE) {
 			noSavePosition--;
 			if (noSavePosition < 0)
 				noSavePosition = noSaveButtons.Length -1;
@@ -66,10 +72,10 @@ public class SaveScreenController : InputReceiver {
     }
 
     public override void OnDownArrow() {
-		if (state == 0 || state == 1) {
+		if (state == State.MAIN || state == State.POPUP) {
 			saveFileController.DownClicked();
 		}
-		else if (state == 2) {
+		else if (state == State.SAVE) {
 			noSavePosition++;
 			if (noSavePosition >= noSaveButtons.Length)
 				noSavePosition = 0;
@@ -80,33 +86,33 @@ public class SaveScreenController : InputReceiver {
 
 
     public override void OnOkButton() {
-		if (state == 0) {
+		if (state == State.MAIN) {
 			bool res = saveFileController.OkClicked();
 			if (res) {
-				state = 1;
+				state = State.POPUP;
 				menuAcceptEvent.Invoke();
 			}
 		}
-		else if (state == 1) {
+		else if (state == State.POPUP) {
 			bool res = saveFileController.OkClicked();
 			if (res) {
-				state = 3;
+				state = State.TRANSITION;
 				StartCoroutine(Transition());
 				menuAcceptEvent.Invoke();
 			}
 			else {
-				state = 0;
+				state = State.MAIN;
 				menuBackEvent.Invoke();
 			}
 		}
-		else if (state == 2) {
+		else if (state == State.SAVE) {
 			if (noSavePosition == 0) {
-				state = 3;
+				state = State.TRANSITION;
 				NextLevel();
 				menuAcceptEvent.Invoke();
 			}
 			else if (noSavePosition == 1) {
-				state = 0;
+				state = State.MAIN;
 				noSavePopup.SetActive(false);
 				menuBackEvent.Invoke();
 			}
@@ -114,19 +120,19 @@ public class SaveScreenController : InputReceiver {
     }
 
     public override void OnBackButton() {
-		if (state == 0) {
-			state = 2;
+		if (state == State.MAIN) {
+			state = State.SAVE;
 			noSavePopup.SetActive(true);
 			UpdateNoSavePopup();
 			menuBackEvent.Invoke();
 		}
-		else if (state == 1) {
-			state = 0;
+		else if (state == State.POPUP) {
+			state = State.MAIN;
 			saveFileController.BackClicked();
 			menuBackEvent.Invoke();
 		}
-		else if (state == 2) {
-			state = 0;
+		else if (state == State.SAVE) {
+			state = State.MAIN;
 			noSavePopup.SetActive(false);
 			menuBackEvent.Invoke();
 		}
@@ -151,7 +157,6 @@ public class SaveScreenController : InputReceiver {
 	}
 
 
-    public override void OnMenuModeChanged() { }
     public override void OnLeftArrow() { }
     public override void OnRightArrow() { }
     public override void OnLButton() { }

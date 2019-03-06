@@ -33,7 +33,7 @@ public class FormationController : InputReceiverDelegate {
 
     public override void OnMenuModeChanged() {
 		bool active = UpdateState(MenuMode.FORMATION);
-		clicker.cursorSprite.enabled = active;
+		//clicker.cursorSprite.enabled = active;
 		if (!active)
 			return;
 		

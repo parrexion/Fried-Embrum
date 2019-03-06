@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TradeController : InputReceiver {
+public class TradeController : InputReceiverDelegate {
 
 	[Header("References")]
 	public ActionModeVariable currentMode;
@@ -35,10 +35,11 @@ public class TradeController : InputReceiver {
 
 
     public override void OnMenuModeChanged() {
-        MenuMode mode = (MenuMode)currentMenuMode.value;
-		active = (mode == MenuMode.TRADE);
+		bool active = UpdateState(MenuMode.TRADE);
 		tradeWindowLeft.SetActive(active);
 		tradeWindowRight.SetActive(active);
+		if (!active)
+			return;
 
 		menuPosition = 0;
 		selectedIndex = -1;
@@ -48,9 +49,6 @@ public class TradeController : InputReceiver {
     }
 
     public override void OnDownArrow() {
-		if (!active)
-			return;
-
         if (menuPosition < InventoryContainer.INVENTORY_SIZE) {
 			menuPosition++;
 			if (menuPosition >= InventoryContainer.INVENTORY_SIZE)
@@ -66,9 +64,6 @@ public class TradeController : InputReceiver {
     }
 
     public override void OnUpArrow() {
-		if (!active)
-			return;
-
         if (menuPosition < InventoryContainer.INVENTORY_SIZE) {
 			menuPosition--;
 			if (menuPosition < 0)
@@ -84,9 +79,6 @@ public class TradeController : InputReceiver {
     }
 
     public override void OnLeftArrow() {
-		if (!active)
-			return;
-
         if (menuPosition >= InventoryContainer.INVENTORY_SIZE) {
 			menuPosition -= InventoryContainer.INVENTORY_SIZE;
 			menuMoveEvent.Invoke();
@@ -95,9 +87,6 @@ public class TradeController : InputReceiver {
     }
 
     public override void OnRightArrow() {
-		if (!active)
-			return;
-
         if (menuPosition < InventoryContainer.INVENTORY_SIZE) {
 			menuPosition += InventoryContainer.INVENTORY_SIZE;
 			menuMoveEvent.Invoke();
@@ -106,9 +95,6 @@ public class TradeController : InputReceiver {
     }
 
     public override void OnOkButton() {
-		if (!active)
-			return;
-
 		if (selectedIndex != -1) {
 			SwapItems();
 			menuAcceptEvent.Invoke();
@@ -121,18 +107,13 @@ public class TradeController : InputReceiver {
     }
 
     public override void OnBackButton() {
-		if (!active)
-			return;
-
         if (selectedIndex != -1) {
 			selectedIndex = -1;
 			UpdateSelection();
 		}
 		else {
-			active = false;
-			currentMenuMode.value = (int)MenuMode.UNIT;
 			currentMode.value = ActionMode.MOVE;
-			StartCoroutine(MenuChangeDelay());
+			MenuChangeDelay(MenuMode.UNIT);
 			selectedIndex = -1;
 			UpdateSelection();
 		}
@@ -143,9 +124,6 @@ public class TradeController : InputReceiver {
 	/// Updates the UI to show the current state of the inventories.
 	/// </summary>
 	private void UpdateInventories() {
-		if (!active)
-			return;
-
 		TacticsMove targetCharacter = targetTile.value.currentCharacter;
 		portraitLeft.sprite = selectedCharacter.value.stats.charData.bigPortrait;
 		portraitRight.sprite = targetCharacter.stats.charData.bigPortrait;
@@ -165,9 +143,6 @@ public class TradeController : InputReceiver {
 	/// Updates the current trade menu selection.
 	/// </summary>
 	private void UpdateSelection() {
-		if (!active)
-			return;
-
 		for (int i = 0; i < slots.Count; i++) {
 			slots[i].enabled = (i == menuPosition || i == selectedIndex);
 			slots[i].color = (i == selectedIndex) ? selectedColor : cursorColor;

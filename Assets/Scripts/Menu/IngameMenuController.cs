@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class IngameMenuController : InputReceiver {
+public class IngameMenuController : InputReceiverDelegate {
 
 	[Header("Ingame Menu")]
 	public GameObject ingameMenu;
@@ -34,21 +34,18 @@ public class IngameMenuController : InputReceiver {
 	}
 
     public override void OnMenuModeChanged() {
-		MenuMode mode = (MenuMode)currentMenuMode.value;
-		active = (mode == MenuMode.INGAME);
+		bool active = UpdateState(MenuMode.INGAME);
 		ingameMenu.SetActive(active);
 		objectiveObject.SetActive(active);
 		overlay.enabled = active;
-		if (active)
+		if (active) {
 			ingameMenuPosition.value = 0;
-		ShowObjective();
-		ButtonHighlighting();
+			ShowObjective();
+			ButtonHighlighting();
+		}
     }
 
     public override void OnUpArrow() {
-		if (!active)
-			return;
-
 		if (state == 0) {
 			ingameMenuPosition.value--;
 			if (ingameMenuPosition.value < 0)
@@ -69,9 +66,6 @@ public class IngameMenuController : InputReceiver {
     }
 
     public override void OnDownArrow() {
-		if (!active)
-			return;
-
 		if (state == 0) {
 			ingameMenuPosition.value++;
 			if (ingameMenuPosition.value >= ingameButtons.Length)
@@ -92,9 +86,6 @@ public class IngameMenuController : InputReceiver {
     }
 
     public override void OnOkButton() {
-		if (!active)
-			return;
-
 		if (state == 0) {
 			switch (ingameMenuPosition.value)
 			{
@@ -127,12 +118,8 @@ public class IngameMenuController : InputReceiver {
     }
 
     public override void OnBackButton() {
-		if (!active)
-			return;
-
 		if (state == 0) {
-			currentMenuMode.value = (int)MenuMode.MAP;
-			StartCoroutine(MenuChangeDelay());
+			MenuChangeDelay(MenuMode.MAP);
 		}
 		else if (state == 1) {
 			state = 0;
@@ -151,9 +138,6 @@ public class IngameMenuController : InputReceiver {
     }
 
 	private void ShowObjective() {
-		if (!active)
-			return;
-
 		int enemies = 0;
 		for (int i = 0; i < enemyList.values.Count; i++) {
 			if (enemyList.values[i].IsAlive())
@@ -166,9 +150,6 @@ public class IngameMenuController : InputReceiver {
 	/// Colors the selected button to show the current selection.
 	/// </summary>
 	private void ButtonHighlighting() {
-		if (!active)
-			return;
-
 		for (int i = 0; i < ingameButtons.Length; i++) {
 			ingameButtons[i].color = (ingameMenuPosition.value == i) ? Color.cyan : Color.white;
 		}
@@ -197,9 +178,6 @@ public class IngameMenuController : InputReceiver {
 	}
 
     public override void OnLeftArrow() {
-		if (!active)
-			return;
-		
 		if (state == 2) {
 			bool res = options.MoveLeft();
 			if (res)
@@ -207,9 +185,6 @@ public class IngameMenuController : InputReceiver {
 		}
 	}
     public override void OnRightArrow() {
-		if (!active)
-			return;
-		
 		if (state == 2) {
 			bool res = options.MoveRight();
 			if (res)

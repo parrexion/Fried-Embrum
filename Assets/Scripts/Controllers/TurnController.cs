@@ -50,7 +50,6 @@ public class TurnController : MonoBehaviour {
 	public Text gameFinishText;
 
 	[Header("Events")]
-	public UnityEvent menuModeChangedEvent;
 	public UnityEvent resetSelections;
 	public UnityEvent startDialogueEvent;
 	public UnityEvent gameLoseEvent;
@@ -110,9 +109,6 @@ public class TurnController : MonoBehaviour {
 	/// Starts the game and enables the music and shows the turn change.
 	/// </summary>
 	private void StartGame() {
-		currentMenuMode.value = (int)MenuMode.MAP;
-		menuModeChangedEvent.Invoke();
-
 		MapEntry map = (MapEntry)currentMap.value;
 		musicFocus.value = true;
 		mainMusic.value = map.owMusic.clip;
@@ -120,6 +116,9 @@ public class TurnController : MonoBehaviour {
 		playBkgMusicEvent.Invoke();
 		
 		StartCoroutine(DisplayTurnChange(1.5f));
+
+		currentMenuMode.value = (int)MenuMode.MAP;
+		InputDelegateController.instance.menuModeChanged.Invoke();
 	}
 
 	/// <summary>
@@ -284,7 +283,7 @@ public class TurnController : MonoBehaviour {
 
 		turnChangeDisplay.SetActive(true);
 		resetSelections.Invoke();
-		menuModeChangedEvent.Invoke();
+		InputDelegateController.instance.menuModeChanged.Invoke();
 		sfxQueue.Enqueue(turnChangeFanfare);
 		playSfxEvent.Invoke();
 
@@ -323,7 +322,7 @@ public class TurnController : MonoBehaviour {
 		else {
 			Debug.LogError("Wrong state!");
 		}
-		menuModeChangedEvent.Invoke();
+		InputDelegateController.instance.menuModeChanged.Invoke();
 	}
 
 	public void MoveToMainMenu() {

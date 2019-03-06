@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ForcastInputController : InputReceiver {
+public class ForcastInputController : InputReceiverDelegate {
 
 	public ForecastUI forecast;
 
@@ -19,7 +19,7 @@ public class ForcastInputController : InputReceiver {
 	}
 
 	public override void OnMenuModeChanged() {
-		active = (currentMenuMode.value == (int)MenuMode.ATTACK || currentMenuMode.value == (int)MenuMode.HEAL);
+		bool active = UpdateState(MenuMode.ATTACK, MenuMode.HEAL);
 		forecast.UpdateUI(active);
 
 		if (!active)
@@ -34,23 +34,14 @@ public class ForcastInputController : InputReceiver {
 	}
 
 	public override void OnLeftArrow() {
-		if (!active)
-			return;
-
 		ChangeWeapon(-1);
 	}
 
 	public override void OnRightArrow() {
-		if (!active)
-			return;
-
 		ChangeWeapon(1);
 	}
 
 	public override void OnOkButton() {
-		if (!active)
-			return;
-
 		if (currentMenuMode.value == (int)MenuMode.ATTACK) {
 			selectedCharacter.value.Attack(defendCharacter.value);
 			menuAcceptEvent.Invoke();
@@ -62,13 +53,9 @@ public class ForcastInputController : InputReceiver {
 	}
 
 	public override void OnBackButton() {
-		if (!active)
-			return;
-
 		battleWeaponIndex.value = attackerWeapons[0].index;
-		currentMenuMode.value = (int)MenuMode.MAP;
 		menuBackEvent.Invoke();
-		StartCoroutine(MenuChangeDelay());
+		MenuChangeDelay(MenuMode.MAP);
 	}
 
 	/// <summary>
@@ -82,7 +69,7 @@ public class ForcastInputController : InputReceiver {
 		battleWeaponIndex.value = attackerWeapons[listIndex].index;
 		if (startIndex != listIndex)
 			menuMoveEvent.Invoke();
-		forecast.UpdateUI(active);
+		forecast.UpdateUI(true);
 	}
 
 

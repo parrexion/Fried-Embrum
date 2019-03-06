@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ExplanationController : InputReceiver {
+public class ExplanationController : InputReceiverDelegate {
 
 	public IntVariable currentPage;
 	public ExplanationGroup baseStats;
@@ -15,8 +15,7 @@ public class ExplanationController : InputReceiver {
 
 
     public override void OnMenuModeChanged() {
-		MenuMode mode = (MenuMode)currentMenuMode.value;
-		active = (mode == MenuMode.TOOL);
+		bool active = UpdateState(MenuMode.TOOL);
 		baseStats.UpdateSelection(active && currentPage.value == (int)InventoryStatsType.BASIC);
 		statsStats.UpdateSelection(active && currentPage.value == (int)InventoryStatsType.STATS);
 		inventoryStats.UpdateSelection(active && currentPage.value == (int)InventoryStatsType.INVENTORY);
@@ -33,9 +32,6 @@ public class ExplanationController : InputReceiver {
     }
 
     public override void OnDownArrow() {
-        if (!active)
-            return;
-
         if (currentPage.value == (int)InventoryStatsType.BASIC) {
             baseStats.MoveDown();
         }
@@ -48,9 +44,6 @@ public class ExplanationController : InputReceiver {
     }
 
     public override void OnUpArrow() {
-        if (!active)
-            return;
-
         if (currentPage.value == (int)InventoryStatsType.BASIC) {
             baseStats.MoveUp();
         }
@@ -71,28 +64,22 @@ public class ExplanationController : InputReceiver {
     }
 
     public override void OnBackButton() {
-        if (!active)
-            return;
-        
-        currentMenuMode.value = (int)MenuMode.MAP;
 		menuBackEvent.Invoke();
-		StartCoroutine(MenuChangeDelay());
+		MenuChangeDelay(MenuMode.MAP);
 		baseStats.UpdateSelection(false);
 		statsStats.UpdateSelection(false);
 		inventoryStats.UpdateSelection(false);
     }
 
     public override void OnYButton() {
-        if (!active)
-            return;
         StartCoroutine(WaitForPageUpdate());
     }
 
     private IEnumerator WaitForPageUpdate() {
         yield return null;
-		baseStats.UpdateSelection(active && currentPage.value == (int)InventoryStatsType.BASIC);
-		statsStats.UpdateSelection(active && currentPage.value == (int)InventoryStatsType.STATS);
-		inventoryStats.UpdateSelection(active && currentPage.value == (int)InventoryStatsType.INVENTORY);
+		baseStats.UpdateSelection(currentPage.value == (int)InventoryStatsType.BASIC);
+		statsStats.UpdateSelection(currentPage.value == (int)InventoryStatsType.STATS);
+		inventoryStats.UpdateSelection(currentPage.value == (int)InventoryStatsType.INVENTORY);
     }
 
 
