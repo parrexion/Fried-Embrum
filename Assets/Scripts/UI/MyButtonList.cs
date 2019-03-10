@@ -88,4 +88,20 @@ public class MyButtonList : MonoBehaviour {
 	public int GetPosition() {
 		return position;
 	}
+	
+	/// <summary>
+	/// Returns true if there are more entries above the ones that are visible.
+	/// </summary>
+	/// <returns></returns>
+	public bool CanScrollUp() {
+		return bot > 0;
+	}
+	
+	/// <summary>
+	/// Returns true if there are more entries below the ones that are visible.
+	/// </summary>
+	/// <returns></returns>
+	public bool CanScrollDown() {
+		return top < buttons.Length;
+	}
 }

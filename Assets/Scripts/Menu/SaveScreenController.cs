@@ -60,7 +60,7 @@ public class SaveScreenController : InputReceiverDelegate {
 
     public override void OnUpArrow() {
 		if (state == State.MAIN || state == State.POPUP) {
-			saveFileController.UpClicked();
+			saveFileController.Move(-1);
 		}
 		else if (state == State.SAVE) {
 			noSavePosition--;
@@ -73,7 +73,7 @@ public class SaveScreenController : InputReceiverDelegate {
 
     public override void OnDownArrow() {
 		if (state == State.MAIN || state == State.POPUP) {
-			saveFileController.DownClicked();
+			saveFileController.Move(1);
 		}
 		else if (state == State.SAVE) {
 			noSavePosition++;

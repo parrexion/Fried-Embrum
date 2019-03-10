@@ -70,9 +70,7 @@ public class MapCursor : MonoBehaviour {
 					break;
 			}
 			do {
-				pos++;
-				if (pos >= playerCharacters.values.Count)
-					pos = 0;
+				pos = OPMath.FullLoop(0, playerCharacters.values.Count, pos+1);
 			} while (playerCharacters.values[pos].hasMoved);
 
 			cursorX.value = playerCharacters.values[pos].posx;
@@ -88,9 +86,7 @@ public class MapCursor : MonoBehaviour {
 					break;
 			}
 			do {
-				pos++;
-				if (pos >= enemyCharacters.values.Count)
-					pos = 0;
+				pos = OPMath.FullLoop(0, enemyCharacters.values.Count, pos+1);
 			} while (enemyCharacters.values[pos].hasMoved);
 
 			cursorX.value = enemyCharacters.values[pos].posx;

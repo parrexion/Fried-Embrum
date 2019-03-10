@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [System.Serializable]
-public class ListEntry : MonoBehaviour {
+public abstract class ListEntry : MonoBehaviour {
 
 	public Image highlight;
 	public bool dark;

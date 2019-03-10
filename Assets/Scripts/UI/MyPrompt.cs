@@ -31,12 +31,12 @@ public class MyPrompt : MonoBehaviour {
 	/// </summary>
 	/// <param name="message"></param>
 	/// <param name="startOk"></param>
-	public void ShowWindow(string message, bool startOk) {
+	public void ShowWindow(string message, bool startOk, string yesName = "", string noName = "") {
 		optionSize = 2;
 		position = startOk ? 1 : 0;
 		textArea.text = message;
-		yesButton.buttonText.text = YES_NAME;
-		noButton.buttonText.text = NO_NAME;
+		yesButton.buttonText.text = (string.IsNullOrEmpty(yesName)) ? YES_NAME : yesName;
+		noButton.buttonText.text = (string.IsNullOrEmpty(noName)) ? NO_NAME : noName;
 		yesButton.gameObject.SetActive(true);
 		yes2Button.gameObject.SetActive(false);
 		noButton.gameObject.SetActive(true);
@@ -102,10 +102,11 @@ public class MyPrompt : MonoBehaviour {
 	/// <param name="isOk"></param>
 	/// <returns></returns>
 	public Result Click(bool isOk) {
+		promptView.SetActive(false);
+
 		if (!isOk)
 			return Result.CANCEL;
 
-		promptView.SetActive(false);
 		switch (position) {
 		case 1:
 			return Result.OK1;

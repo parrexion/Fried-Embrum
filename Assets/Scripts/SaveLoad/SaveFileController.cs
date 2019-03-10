@@ -7,94 +7,45 @@ using UnityEngine.UI;
 public class SaveFileController : MonoBehaviour {
 
 	public MapInfoListVariable chapterList;
-	public GameObject fileMenu;
-	public Image[] saveFiles;
 
 	[Header("Popup")]
-	public GameObject filePopup;
-	public Image[] popupButtons;
-	public Text popupText;
 	public bool usedForLoad;
-	public GameObject loadButton;
-	public GameObject saveButton;
+	public MyPrompt filePrompt;
+	private bool isPopup;
 
-	[Header("Save File Texts")]
-	public Text[] emptyFileText;
-	public Text[] chapterIndexTexts;
-	public Text[] levelNameTexts;
-	public Text[] playTimeTexts;
+	[Header("Save Files")]
+	public int visibleSize = 3;
+	public Transform listParent;
+	public Transform entryPrefab;
+	private EntryList<SaveFileEntry> saveFiles;
 
 	[Header("Save Data")]
-	public IntVariable saveIndex;
 	public IntVariable[] chapterIndex;
 	public IntVariable[] playTimes;
 
 	public UnityEvent saveGameEvent;
 	public UnityEvent loadGameEvent;
-
-	private bool isPopup;
-	private int popupPosition;
-
+	
 
 	private void Start() {
 		SetupSaveFiles();
 	}
 
-	public void HideMenu() {
-		fileMenu.SetActive(false);
-		filePopup.SetActive(false);
-	}
-
-	public void ActivateMenu() {
-		saveIndex.value = 0;
-		popupPosition = -1;
-		isPopup = false;
-		SetupSaveFiles();
-		fileMenu.SetActive(true);
-	}
-
 	/// <summary>
 	/// Update index when up is clicked.
 	/// </summary>
-	public void UpClicked() {
-		if (!isPopup) {
-			saveIndex.value--;
-			if (saveIndex.value < 0)
-				saveIndex.value = saveFiles.Length -1;
-			SetupSaveFileSelection();
-		}
-		else {
-			popupPosition--;
-			if (popupPosition < 0)
-				popupPosition = popupButtons.Length -1;
-			if (popupPosition == 0 && !usedForLoad)
-				popupPosition = popupButtons.Length -1;
-			if (popupPosition == 1 && usedForLoad)
-				popupPosition = 0;
-			SetupPopupButtons();
-		}
+	public void Move(int dir) {
+		if (isPopup)
+			return;
+
+		saveFiles.Move(dir);
 	}
 
-	/// <summary>
-	/// Update index when down is clicked.
-	/// </summary>
-	public void DownClicked() {
-		if (!isPopup) {
-			saveIndex.value++;
-			if (saveIndex.value >= saveFiles.Length)
-				saveIndex.value = 0;
-			SetupSaveFileSelection();
-		}
-		else {
-			popupPosition++;
-			if (popupPosition >= popupButtons.Length)
-				popupPosition = 0;
-			if (popupPosition == 0 && !usedForLoad)
-				popupPosition = 1;
-			if (popupPosition == 1 && usedForLoad)
-				popupPosition = 2;
-			SetupPopupButtons();
-		}
+	public void MoveHorizontal(int dir) {
+		if (!isPopup)
+			return;
+
+		filePrompt.Move(dir);
 	}
 
 	/// <summary>
@@ -104,92 +55,65 @@ public class SaveFileController : MonoBehaviour {
 	/// <returns></returns>
 	public bool OkClicked() {
 		if (!isPopup) {
-			if (usedForLoad && (playTimes[saveIndex.value].value == 0 || chapterIndex[saveIndex.value].value >= chapterList.values.Count)) {
+			if (usedForLoad && (playTimes[saveFiles.GetPosition()].value == 0 || chapterIndex[saveFiles.GetPosition()].value >= chapterList.values.Count))
 				return false;
+
+			isPopup = true;
+			if (usedForLoad) {
+				filePrompt.ShowWindow("Load selected file?", false);
 			}
 			else {
-				isPopup = true;
-				popupPosition = -1;
-				SetupPopupButtons();
-				loadButton.SetActive(usedForLoad);
-				saveButton.SetActive(!usedForLoad);
-				filePopup.SetActive(true);
-				DownClicked();
-				return true;
+				filePrompt.ShowWindow("Save to selected file?", false);
 			}
+			return true;
 		}
 		else {
-			if (popupPosition == 0) {
-				filePopup.SetActive(false);
-				loadGameEvent.Invoke();
-				return true;
-			}
-			else if (popupPosition == 1) {
-				filePopup.SetActive(false);
-				saveGameEvent.Invoke();
+			if (filePrompt.Click(true) == MyPrompt.Result.OK1) {
+				if (usedForLoad) {
+					loadGameEvent.Invoke();
+				}
+				else {
+					saveGameEvent.Invoke();
+				}
 				return true;
 			}
 
-			BackClicked();
-			return false;
+			isPopup = false;
+			return true;
 		}
 	}
 
 	/// <summary>
 	/// Move back when the back button is clicked.
 	/// </summary>
-	public void BackClicked() {
+	public bool BackClicked() {
 		if (isPopup) {
+			filePrompt.Click(false);
 			isPopup = false;
-			filePopup.SetActive(false);
+			Debug.Log("FALSE");
+			return false;
 		}
-		else {
-			fileMenu.SetActive(false);
-		}
+
+		return true;
 	}
 
 	/// <summary>
 	/// Sets up the save file information for the save files.
 	/// </summary>
 	private void SetupSaveFiles() {
-		for (int i = 0; i < saveFiles.Length; i++) {
-			if (playTimes[i].value == 0) {
-				emptyFileText[i].gameObject.SetActive(true);
-				chapterIndexTexts[i].text = "";
-				levelNameTexts[i].text = "";
-				playTimeTexts[i].text = "";
-			}
-			else if (chapterIndex[i].value >= chapterList.values.Count) {
-				emptyFileText[i].gameObject.SetActive(false);
-				chapterIndexTexts[i].text = "Ch " + chapterIndex[i].value;
-				levelNameTexts[i].text = "All maps cleared!";
-				playTimeTexts[i].text = Utility.PlayTimeFromInt(playTimes[i].value,false);
+		saveFiles = new EntryList<SaveFileEntry>(visibleSize);
+
+		for (int i = 0; i < SaveController.SAVE_FILES_COUNT; i++) {
+			Transform t = Instantiate(entryPrefab, listParent);
+			SaveFileEntry entry = saveFiles.CreateEntry(t);
+			if (chapterIndex[i].value >= chapterList.values.Count) {
+				entry.FillData("All maps cleared!", chapterIndex[i].value, playTimes[i].value);
 			}
 			else {
-				emptyFileText[i].gameObject.SetActive(false);
-				chapterIndexTexts[i].text = "Ch " + chapterIndex[i].value;
-				levelNameTexts[i].text = chapterList.values[chapterIndex[i].value].entryName;
-				playTimeTexts[i].text = Utility.PlayTimeFromInt(playTimes[i].value,false);
+				entry.FillData(chapterList.values[chapterIndex[i].value].entryName, chapterIndex[i].value, playTimes[i].value);
 			}
 		}
-		SetupSaveFileSelection();
+		entryPrefab.gameObject.SetActive(false);
 	}
 
-	/// <summary>
-	/// Shows the current selection for the save files.
-	/// </summary>
-	private void SetupSaveFileSelection() {
-		for (int i = 0; i < saveFiles.Length; i++) {
-			saveFiles[i].enabled = (i == saveIndex.value);
-		}
-	}
-
-	/// <summary>
-	/// Shows the current selection for the popup.
-	/// </summary>
-	private void SetupPopupButtons() {
-		for (int i = 0; i < popupButtons.Length; i++) {
-			popupButtons[i].enabled = (i == popupPosition);
-		}
-	}
 }

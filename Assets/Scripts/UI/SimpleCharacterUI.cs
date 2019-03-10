@@ -73,6 +73,8 @@ public class SimpleCharacterUI : MonoBehaviour {
 
 	
 	public void ShowBasicStats(TacticsMove tactics) {
+		if (tactics == null)
+			return;
 		StatsContainer stats = tactics.stats;
 		SkillsContainer skills = tactics.skills;
 //		colorBackground.color = (tactics.faction == Faction.PLAYER) ? 
@@ -118,6 +120,8 @@ public class SimpleCharacterUI : MonoBehaviour {
 	}
 
 	public void ShowStatsStats(TacticsMove tactics) {
+		if (tactics == null)
+			return;
 		StatsContainer stats = tactics.stats;
 		statsObject.SetActive(true);
 		basicObject.SetActive(false);
@@ -168,6 +172,8 @@ public class SimpleCharacterUI : MonoBehaviour {
 	/// </summary>
 	/// <param name="tactics"></param>
 	public void ShowInventoryStats(TacticsMove tactics) {
+		if (tactics == null)
+			return;
 		StatsContainer stats = tactics.stats;
 		InventoryContainer inventory = tactics.inventory;
 		statsObject.SetActive(false);

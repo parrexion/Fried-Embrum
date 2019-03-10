@@ -27,21 +27,8 @@ public class OptionEntryChoice : OptionEntry {
         return false;
     }
 
-    public override bool OnLeft() {
-		index--;
-		if (index < 0)
-			index = selections.Length - 1;
-
-		value.value = selections[index].value;
-		valueText.text = selectionNames[index];
-		updateEvent.Invoke();
-		return true;
-    }
-
-    public override bool OnRight() {
-		index++;
-		if (index >= selections.Length)
-			index = 0;
+    public override bool MoveValue(int dir) {
+		index = OPMath.FullLoop(0, selections.Length, index + dir);
 
 		value.value = selections[index].value;
 		valueText.text = selectionNames[index];

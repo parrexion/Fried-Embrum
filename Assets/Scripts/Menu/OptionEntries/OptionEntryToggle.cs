@@ -21,11 +21,7 @@ public class OptionEntryToggle : OptionEntry {
 		return true;
     }
 
-    public override bool OnLeft() {
-        return false;
-    }
-
-    public override bool OnRight() {
+    public override bool MoveValue(int dir) {
         return false;
     }
 

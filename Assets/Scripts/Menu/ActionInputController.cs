@@ -18,7 +18,7 @@ public class ActionInputController : InputReceiverDelegate {
 	[Header("Unit Action Menu")]
 	public GameObject actionMenu;
 	public IntVariable actionMenuPosition;
-	private Image[] actionButtons= new Image[0];
+	private Image[] actionButtons = new Image[0];
 
 	[Header("Dialogues")]
 	public IntVariable dialogueMode;

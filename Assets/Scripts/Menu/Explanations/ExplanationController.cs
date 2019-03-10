@@ -33,31 +33,27 @@ public class ExplanationController : InputReceiverDelegate {
 
     public override void OnDownArrow() {
         if (currentPage.value == (int)InventoryStatsType.BASIC) {
-            baseStats.MoveDown();
+            baseStats.Move(1);
         }
         else if (currentPage.value == (int)InventoryStatsType.STATS) {
-            statsStats.MoveDown();
+            statsStats.Move(1);
         }
         else if (currentPage.value == (int)InventoryStatsType.INVENTORY) {
-            inventoryStats.MoveDown();
+            inventoryStats.Move(1);
         }
     }
 
     public override void OnUpArrow() {
         if (currentPage.value == (int)InventoryStatsType.BASIC) {
-            baseStats.MoveUp();
+            baseStats.Move(-1);
         }
         else if (currentPage.value == (int)InventoryStatsType.STATS) {
-            statsStats.MoveUp();
+            statsStats.Move(-1);
         }
         else if (currentPage.value == (int)InventoryStatsType.INVENTORY) {
-            inventoryStats.MoveUp();
+            inventoryStats.Move(-1);
         }
     }
-
-    public override void OnLeftArrow() { }
-
-    public override void OnRightArrow() { }
 
     public override void OnLButton() {
         OnBackButton();
@@ -82,7 +78,9 @@ public class ExplanationController : InputReceiverDelegate {
 		inventoryStats.UpdateSelection(currentPage.value == (int)InventoryStatsType.INVENTORY);
     }
 
-
+	
+    public override void OnLeftArrow() { }
+    public override void OnRightArrow() { }
     public override void OnOkButton() { }
     public override void OnRButton() { }
     public override void OnStartButton() { }

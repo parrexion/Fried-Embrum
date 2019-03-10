@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// UI Group which contains explanation objects and shows 
+/// them to the provided tooltip.
+/// </summary>
 public class ExplanationGroup : MonoBehaviour {
 
 	public Text tooltip;
@@ -15,22 +19,9 @@ public class ExplanationGroup : MonoBehaviour {
 		UpdateSelection(false);
 	}
 
-	public void MoveUp() {
+	public void Move(int dir) {
 		do {
-			currentIndex--;
-			if (currentIndex < 0) {
-				currentIndex = explanations.Length -1;
-			}
-		} while (!explanations[currentIndex].IsActive());
-		UpdateSelection(true);
-	}
-
-	public void MoveDown() {
-		do {
-			currentIndex++;
-			if (currentIndex >= explanations.Length) {
-				currentIndex = 0;
-			}
+			currentIndex = OPMath.FullLoop(0, explanations.Length, currentIndex + dir);
 		} while (!explanations[currentIndex].IsActive());
 		UpdateSelection(true);
 	}

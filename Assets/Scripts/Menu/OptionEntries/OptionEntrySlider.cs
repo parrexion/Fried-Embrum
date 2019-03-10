@@ -21,17 +21,9 @@ public class OptionEntrySlider : OptionEntry {
         return false;
     }
 
-    public override bool OnLeft() {
+    public override bool MoveValue(int dir) {
 		int before = value.value;
-		value.value = Mathf.Max(minValue, value.value - stepSize);
-		valueText.text = value.value.ToString();
-		updateEvent.Invoke();
-		return (before != value.value);
-    }
-
-    public override bool OnRight() {
-		int before = value.value;
-		value.value = Mathf.Min(maxValue, value.value + stepSize);
+		value.value = Mathf.Clamp(value.value + dir * stepSize, minValue, maxValue);
 		valueText.text = value.value.ToString();
 		updateEvent.Invoke();
 		return (before != value.value);

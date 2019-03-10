@@ -55,12 +55,12 @@ public class IngameMenuController : InputReceiverDelegate {
 			menuMoveEvent.Invoke();
 		}
 		else if (state == 1) {
-			bool res = howTo.MoveUp();
+			bool res = howTo.Move(-1);
 			if (res)
 				menuMoveEvent.Invoke();
 		}
 		else if (state == 2) {
-			options.MoveUp();
+			options.MoveVertical(-1);
 			menuMoveEvent.Invoke();
 		}
     }
@@ -75,12 +75,12 @@ public class IngameMenuController : InputReceiverDelegate {
 			menuMoveEvent.Invoke();
 		}
 		else if (state == 1) {
-			bool res = howTo.MoveDown();
+			bool res = howTo.Move(1);
 			if (res)
 				menuMoveEvent.Invoke();
 		}
 		else if (state == 2) {
-			options.MoveDown();
+			options.MoveVertical(1);
 			menuMoveEvent.Invoke();
 		}
     }
@@ -179,15 +179,13 @@ public class IngameMenuController : InputReceiverDelegate {
 
     public override void OnLeftArrow() {
 		if (state == 2) {
-			bool res = options.MoveLeft();
-			if (res)
+			if (options.MoveHorizontal(-1))
 				menuMoveEvent.Invoke();
 		}
 	}
     public override void OnRightArrow() {
 		if (state == 2) {
-			bool res = options.MoveRight();
-			if (res)
+			if (options.MoveHorizontal(1))
 				menuMoveEvent.Invoke();
 		}
 	}

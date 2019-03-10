@@ -1,12 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class TopicEntry : MonoBehaviour {
+public class TopicEntry : ListEntry {
 
-	public Image highlight;
-	public Text topicName;
-	public Image newTopic;
+	public int index;
 
+	
+	public void FillData(int index, string topicName, bool newTopic) {
+		this.index = index;
+		entryName.text = topicName;
+		icon.enabled = newTopic;
+	}
 }

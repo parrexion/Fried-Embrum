@@ -29,8 +29,6 @@ public class InventoryInputController : InputReceiverDelegate {
     public override void OnMenuModeChanged() {
         bool active = UpdateState(MenuMode.STATS);
 		background.SetActive(active);
-		if (!active)
-			return;
 
 		UpdateUI();
 
@@ -77,37 +75,29 @@ public class InventoryInputController : InputReceiverDelegate {
 	}
 
     public override void OnDownArrow() {
-		if (currentMenuMode.value == (int)MenuMode.STATS) {
-			do {
-				inventoryIndex.value++;
-				if (inventoryIndex.value >= InventoryContainer.INVENTORY_SIZE)
-					inventoryIndex.value = 0;
-			} while (inventoryIndex.value != 0 && selectCharacter.value.inventory.GetTuple(inventoryIndex.value).item == null);
-			menuMoveEvent.Invoke();
-			ui.UpdateSelection(selectCharacter.value);
-		}
-		
+		Move(1);
     }
 
     public override void OnUpArrow() {
-		if (currentMenuMode.value == (int)MenuMode.STATS) {
-			do {
-				inventoryIndex.value--;
-				if (inventoryIndex.value < 0)
-					inventoryIndex.value = InventoryContainer.INVENTORY_SIZE -1;
-			} while (inventoryIndex.value != 0 && selectCharacter.value.inventory.GetTuple(inventoryIndex.value).item == null);
-			menuMoveEvent.Invoke();
-			ui.UpdateSelection(selectCharacter.value);
-		}
+		Move(-1);
     }
 
+	private void Move(int dir) {
+		do {
+			inventoryIndex.value = OPMath.FullLoop(0, InventoryContainer.INVENTORY_SIZE, inventoryIndex.value + dir);
+		} while (inventoryIndex.value != 0 && selectCharacter.value.inventory.GetTuple(inventoryIndex.value).item == null);
+		menuMoveEvent.Invoke();
+		ui.UpdateSelection(selectCharacter.value);
+	}
+
     public override void OnOkButton() {
-		if (selectCharacter.value.inventory.GetTuple(inventoryIndex.value).item != null) {
-			inventoryMenuPosition.value = -1;
-			MenuChangeDelay(MenuMode.INV);
-			menuAcceptEvent.Invoke();
-			ui.UpdateSelection(selectCharacter.value);
-		}
+		if (selectCharacter.value.inventory.GetTuple(inventoryIndex.value).item == null)
+			return;
+
+		inventoryMenuPosition.value = -1;
+		MenuChangeDelay(MenuMode.INV);
+		menuAcceptEvent.Invoke();
+		ui.UpdateSelection(selectCharacter.value);
     }
 	
     public override void OnBackButton() {
@@ -131,7 +121,7 @@ public class InventoryInputController : InputReceiverDelegate {
 	/// </summary>
 	/// <param name="dir"></param>
 	private void ChangeStatsScreen(int dir) {
-		int nextPage = (int) currentPage.value + dir + 3;
+		int nextPage = currentPage.value + dir + 3;
 		currentPage.value = nextPage % 3;
 		UpdateUI();
 	}

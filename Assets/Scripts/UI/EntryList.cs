@@ -141,11 +141,28 @@ public class EntryList<T> where T : ListEntry {
 		UpdateEntries();
 	}
 
+	///// <summary>
+	///// Delegate for creating sorting functions for the entry list.
+	///// </summary>
+	///// <param name="a"></param>
+	///// <param name="b"></param>
+	///// <returns></returns>
+	//public delegate int SortingFunction(T a, T b);
+
+	///// <summary>
+	///// Sort function which takes the sorting function to use and sorts the entry list.
+	///// </summary>
+	///// <param name="sort"></param>
+	//public void Sort(SortingFunction sort) {
+	//	entries.Sort((x,y) => sort(x,y));
+	//}
+
 	/// <summary>
 	/// Updates all the entries' highlights and hide the entries out of focus.
 	/// </summary>
 	private void UpdateEntries() {
 		for(int i = 0; i < entries.Count; i++) {
+			entries[i].gameObject.SetActive(bot <= i && i < top);
 			entries[i].SetHighlight(i == position);
 		}
 	}
@@ -156,6 +173,22 @@ public class EntryList<T> where T : ListEntry {
 	/// <returns></returns>
 	public int GetPosition() {
 		return (entries.Count == 0) ? -1 : position;
+	}
+	
+	/// <summary>
+	/// Returns true if there are more entries above the ones that are visible.
+	/// </summary>
+	/// <returns></returns>
+	public bool CanScrollUp() {
+		return bot > 0;
+	}
+	
+	/// <summary>
+	/// Returns true if there are more entries below the ones that are visible.
+	/// </summary>
+	/// <returns></returns>
+	public bool CanScrollDown() {
+		return top < entries.Count;
 	}
 
 	/// <summary>

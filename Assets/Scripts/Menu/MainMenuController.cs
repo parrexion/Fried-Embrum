@@ -6,13 +6,17 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainMenuController : InputReceiverDelegate {
+	private enum State { MAIN, CONTROLS, LOAD, OPTIONS }
 
-	public GameObject startMenuObject;
+	public GameObject startMenuView;
 	public HowToPlayController howTo;
 	public SaveFileController saveFileController;
-	public OptionsController OptionsController;
+	public OptionsController optionsController;
 	public MapInfoListVariable chapterList;
 	public BoolVariable lockControls;
+
+	[Header("Views")]
+	public GameObject saveView;
 	
 	[Header("Current Data")]
 	public IntVariable currentChapterIndex;
@@ -21,7 +25,7 @@ public class MainMenuController : InputReceiverDelegate {
 	public ScrObjEntryReference currentDialogue;
 
 	[Header("Menu")]
-	public Image[] menuButtons;
+	public MyButtonList mainButtons;
 
 	[Header("Music")]
 	public MusicEntry mainTheme;
@@ -32,18 +36,20 @@ public class MainMenuController : InputReceiverDelegate {
 
 	public UnityEvent saveGameEvent;
 
-	private int state;
-	private int menuPosition;
-	private int buttonPosition;
+	private State currentState;
 
 
 	private void Awake() {
-		state = 0;
+		currentState = State.MAIN;
 		currentChapterIndex.value = 1;
 		lockControls.value = false;
-		startMenuObject.SetActive(true);
-		saveFileController.HideMenu();
-		SetupMenuButtons();
+		startMenuView.SetActive(true);
+		saveView.SetActive(false);
+		
+		mainButtons.ResetButtons();
+		mainButtons.AddButton("NEW GAME");
+		mainButtons.AddButton("LOAD GAME");
+		mainButtons.AddButton("OPTIONS");
 
 		musicFocus.value = true;
 		mainMusic.value = mainTheme.clip;
@@ -57,21 +63,21 @@ public class MainMenuController : InputReceiverDelegate {
 	}
 
 	public void ControlsClicked() {
-		state = 1;
-		startMenuObject.SetActive(false);
+		currentState = State.CONTROLS;
+		startMenuView.SetActive(false);
 		howTo.UpdateState(true);
 	}
 
 	public void LoadClicked() {
-		state = 2;
-		startMenuObject.SetActive(false);
-		saveFileController.ActivateMenu();
+		currentState = State.LOAD;
+		startMenuView.SetActive(false);
+		saveView.SetActive(true);
 	}
 
 	public void OptionsClicked() {
-		state = 4;
-		startMenuObject.SetActive(false);
-		OptionsController.UpdateState(true);
+		currentState = State.OPTIONS;
+		startMenuView.SetActive(false);
+		optionsController.UpdateState(true);
 	}
 
 	/// <summary>
@@ -98,66 +104,68 @@ public class MainMenuController : InputReceiverDelegate {
 	}
 
     public override void OnUpArrow() {
-		if (state == 0) {
-			buttonPosition--;
-			if (buttonPosition < 0)
-				buttonPosition += menuButtons.Length;
-			SetupMenuButtons();	
+		if (currentState == State.MAIN) {
+			mainButtons.Move(-1);
 			menuMoveEvent.Invoke();
 		}
-		else if (state == 1) {
-			if (howTo.MoveUp())
+		else if (currentState == State.CONTROLS) {
+			if (howTo.Move(-1))
 				menuMoveEvent.Invoke();
 		}
-		else if (state == 2 || state == 3) {
-			saveFileController.UpClicked();
+		else if (currentState == State.LOAD) {
+			saveFileController.Move(-1);
 			menuMoveEvent.Invoke();
 		}
-		else if (state == 4) {
-			OptionsController.MoveUp();
+		else if (currentState == State.OPTIONS) {
+			optionsController.MoveVertical(-1);
 			menuMoveEvent.Invoke();
 		}
     }
 
     public override void OnDownArrow() {
-		if (state == 0) {
-			buttonPosition++;
-			if (buttonPosition >= menuButtons.Length)
-				buttonPosition = 0;
-			SetupMenuButtons();
+		if (currentState == State.MAIN) {
+			mainButtons.Move(1);
 			menuMoveEvent.Invoke();
 		}
-		else if (state == 1) {
-			if (howTo.MoveDown())
+		else if (currentState == State.CONTROLS) {
+			if (howTo.Move(1))
 				menuMoveEvent.Invoke();
 		}
-		else if (state == 2 || state == 3) {
-			saveFileController.DownClicked();
+		else if (currentState == State.LOAD) {
+			saveFileController.Move(1);
 			menuMoveEvent.Invoke();
 		}
-		else if (state == 4) {
-			OptionsController.MoveDown();
+		else if (currentState == State.OPTIONS) {
+			optionsController.MoveVertical(1);
 			menuMoveEvent.Invoke();
 		}
     }
 
     public override void OnLeftArrow() {
-		if (state == 4) {
-			if (OptionsController.MoveLeft())
+		if (currentState == State.LOAD) {
+			saveFileController.MoveHorizontal(-1);
+			menuMoveEvent.Invoke();
+		}
+		else if (currentState == State.OPTIONS) {
+			if (optionsController.MoveHorizontal(-1))
 				menuMoveEvent.Invoke();
 		}
     }
 
     public override void OnRightArrow() {
-		if (state == 4) {
-			if (OptionsController.MoveRight())
+		if (currentState == State.LOAD) {
+			saveFileController.MoveHorizontal(1);
+			menuMoveEvent.Invoke();
+		}
+		else if (currentState == State.OPTIONS) {
+			if (optionsController.MoveHorizontal(1))
 				menuMoveEvent.Invoke();
 		}
     }
 
     public override void OnOkButton() {
-		if (state == 0) {
-			switch (buttonPosition)
+		if (currentState == State.MAIN) {
+			switch (mainButtons.GetPosition())
 			{
 				case 0:
 					ControlsClicked();
@@ -171,65 +179,41 @@ public class MainMenuController : InputReceiverDelegate {
 			}
 			menuAcceptEvent.Invoke();
 		}
-		else if (state == 2) {
-			bool res = saveFileController.OkClicked();
-			if (res) {
-				menuAcceptEvent.Invoke();
-				state = 3;
-			}
-		}
-		else if (state == 3) {
+		else if (currentState == State.LOAD) {
 			if (saveFileController.OkClicked()) {
 				menuAcceptEvent.Invoke();
-				state = -1;
-			}
-			else {
-				menuBackEvent.Invoke();
-				state = 2;
 			}
 		}
     }
 
     public override void OnBackButton() {
-		if (state == 1) {
-			state = 0;
+		if (currentState == State.CONTROLS) {
+			currentState = State.MAIN;
 			howTo.BackClicked();
 			menuBackEvent.Invoke();
-			startMenuObject.SetActive(true);
+			startMenuView.SetActive(true);
 		}
-		else if (state == 2) {
-			state = 0;
-			saveFileController.BackClicked();
-			menuBackEvent.Invoke();
-			startMenuObject.SetActive(true);
-		}
-		else if (state == 3) {
-			state = 2;
-			saveFileController.BackClicked();
+		else if (currentState == State.LOAD) {
+			if (saveFileController.BackClicked()) {
+				currentState = State.MAIN;
+				startMenuView.SetActive(true);
+				saveView.SetActive(false);
+			}
 			menuBackEvent.Invoke();
 		}
-		else if (state == 4) {
-			state = 0;
-			OptionsController.BackClicked();
+		else if (currentState == State.OPTIONS) {
+			currentState = State.MAIN;
+			optionsController.BackClicked();
 			menuBackEvent.Invoke();
-			startMenuObject.SetActive(true);
+			startMenuView.SetActive(true);
 			saveGameEvent.Invoke();
 		}
 	}
 
     public override void OnStartButton() {
-		if (state == 1) {
+		if (currentState == State.CONTROLS) {
 			NewGameClicked();
 			menuAcceptEvent.Invoke();
-		}
-	}
-
-	/// <summary>
-	/// Shows which button is currently selected.
-	/// </summary>
-	private void SetupMenuButtons() {
-		for (int i = 0; i < menuButtons.Length; i++) {
-			menuButtons[i].enabled = (i == buttonPosition);
 		}
 	}
 
