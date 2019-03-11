@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class MyPrompt : MonoBehaviour {
 
-	public enum Result { OK1, OK2, CANCEL }
+	public enum Result { OK1, OK2, CANCEL, LOCKED }
 	const string YES_NAME = "YES";
 	const string NO_NAME = "NO";
 	const string OK_NAME = "OK";
@@ -37,6 +37,7 @@ public class MyPrompt : MonoBehaviour {
 		yes2Button.gameObject.SetActive(false);
 		noButton.gameObject.SetActive(false);
 		okButton.gameObject.SetActive(false);
+		promptView.SetActive(true);
 	}
 
 	/// <summary>
@@ -80,7 +81,7 @@ public class MyPrompt : MonoBehaviour {
 	/// </summary>
 	/// <param name="message"></param>
 	/// <param name="startOk"></param>
-	public void Show2Options(string message, string option1, string option2, string cancel, bool startOption) {
+	public void Show3Options(string message, string option1, string option2, string cancel, bool startOption) {
 		optionSize = 3;
 		position = startOption ? 2 : 0;
 		textArea.text = message;
@@ -116,7 +117,7 @@ public class MyPrompt : MonoBehaviour {
 	/// <returns></returns>
 	public Result Click(bool isOk) {
 		if(optionSize == 0)
-			return Result.CANCEL;
+			return Result.LOCKED;
 
 		promptView.SetActive(false);
 
@@ -131,6 +132,12 @@ public class MyPrompt : MonoBehaviour {
 		default:
 			return Result.CANCEL;
 		}
+	}
+
+	public void StopSpinner() {
+		if (optionSize != 0)
+			return;
+		promptView.SetActive(false);
 	}
 
 	/// <summary>

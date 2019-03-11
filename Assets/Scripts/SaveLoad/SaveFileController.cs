@@ -32,7 +32,7 @@ public class SaveFileController : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Update index when up is clicked.
+	/// Update index when up or down is clicked.
 	/// </summary>
 	public void Move(int dir) {
 		if (isPopup)
@@ -41,6 +41,9 @@ public class SaveFileController : MonoBehaviour {
 		saveFiles.Move(dir);
 	}
 
+	/// <summary>
+	/// Update index when left or right is clicked.
+	/// </summary>
 	public void MoveHorizontal(int dir) {
 		if (!isPopup)
 			return;
@@ -65,7 +68,7 @@ public class SaveFileController : MonoBehaviour {
 			else {
 				filePrompt.ShowWindow("Save to selected file?", false);
 			}
-			return true;
+			return false;
 		}
 		else {
 			if (filePrompt.Click(true) == MyPrompt.Result.OK1) {

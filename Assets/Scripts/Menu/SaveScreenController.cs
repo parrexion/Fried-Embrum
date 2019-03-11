@@ -3,17 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class SaveScreenController : InputReceiverDelegate {
-
-	private enum State { MAIN, SAVE, TRANSITION }
 
 	public ScrObjEntryReference currentMap;
 	public ScrObjEntryReference currentDialogue;
 	public SaveFileController saveFileController;
 	public MapInfoListVariable chapterList;
 	public IntVariable chapterIndex;
+	public BoolVariable lockControls;
 
 	[Header("Save Popup")]
 	public MyPrompt savePrompt;
@@ -21,21 +19,17 @@ public class SaveScreenController : InputReceiverDelegate {
 
 	public UnityEvent stopMusicEvent;
 
-	private State state;
-
 
 	private void Start() {
 		StartCoroutine(MenuChangeDelay(MenuMode.SAVE));
-		state = State.MAIN;
 		stopMusicEvent.Invoke();
 	}
 
     public override void OnMenuModeChanged() {
-		bool active = UpdateState(MenuMode.SAVE);
+		UpdateState(MenuMode.SAVE);
 	}
 
 	public void NextLevel() {
-		Debug.Log("Current index is:  " + chapterIndex.value);
 		if (chapterIndex.value >= chapterList.values.Count) {
 			SceneManager.LoadScene("MainMenu");
 		}
@@ -48,72 +42,72 @@ public class SaveScreenController : InputReceiverDelegate {
 	}
 
     public override void OnUpArrow() {
-		if (state == State.MAIN) {
+		if (!isPrompt) {
 			saveFileController.Move(-1);
 			menuMoveEvent.Invoke();
 		}
     }
 
     public override void OnDownArrow() {
-		if (state == State.MAIN) {
+		if (!isPrompt) {
 			saveFileController.Move(1);
 			menuMoveEvent.Invoke();
 		}
 	}
 
 	public override void OnLeftArrow() {
-		if(state == State.SAVE) {
+		if (isPrompt) {
+			savePrompt.Move(-1);
+		}
+		else {
 			saveFileController.MoveHorizontal(-1);
 			menuMoveEvent.Invoke();
 		}
 	}
 
 	public override void OnRightArrow() {
-		if(state == State.SAVE) {
+		if (isPrompt) {
+			savePrompt.Move(1);
+		}
+		else {
 			saveFileController.MoveHorizontal(1);
 			menuMoveEvent.Invoke();
 		}
 	}
 
 	public override void OnOkButton() {
-		if (state == State.MAIN) {
-			if (saveFileController.OkClicked()) {
-				state = State.SAVE;
-				menuAcceptEvent.Invoke();
-			}
-		}
-		else if (state == State.SAVE) {
-			if (!saveFileController.OkClicked()) {
-				state = State.TRANSITION;
+		if (isPrompt) {
+			if (savePrompt.Click(true) == MyPrompt.Result.OK1)
 				NextLevel();
-				menuAcceptEvent.Invoke();
-			}
-			else {
-				state = State.MAIN;
-				menuBackEvent.Invoke();
-			}
 		}
+		else if (saveFileController.OkClicked()) {
+			StartCoroutine(Transition());
+		}
+		menuAcceptEvent.Invoke();
     }
 
     public override void OnBackButton() {
-		if (state == State.MAIN) {
-			state = State.SAVE;
+		if (isPrompt){
+			isPrompt = false;
+			savePrompt.Click(false);
 			menuBackEvent.Invoke();
 		}
-		else if (state == State.SAVE) {
-			state = State.MAIN;
-			menuBackEvent.Invoke();
+		else if (saveFileController.BackClicked()) {
+			isPrompt = true;
+			savePrompt.ShowWindow("Continue without saving?", false);
+			menuAcceptEvent.Invoke();
 		}
 	}
 
 	private IEnumerator Transition() {
+		lockControls.value = true;
 		//Show popup
 		savePrompt.ShowSpinner("Saving...");
 		yield return new WaitForSeconds(1f);
 		savePrompt.ShowSpinner("Saved  :)");
 		yield return new WaitForSeconds(1f);
 		savePrompt.Click(true);
-
+		
 		NextLevel();
 	}
 

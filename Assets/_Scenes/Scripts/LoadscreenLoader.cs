@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class LoadscreenLoader : MonoBehaviour {
 
 	public GameObject loadCanvas;
+	public bool fakeLoading;
 
 	[Header("Dialogue")]
 	public IntVariable currentDialogueMode;
@@ -25,10 +26,10 @@ public class LoadscreenLoader : MonoBehaviour {
 			yield return null;
 		}
 
+		if (fakeLoading)
+			yield return new WaitForSeconds(3f);
+
 		loadCanvas.SetActive(false);
-		//yield return null;
-		//currentDialogueMode.value = (int)DialogueMode.PRE;
-		//startDialogueEvent.Invoke();
 		yield break;
 	}
 

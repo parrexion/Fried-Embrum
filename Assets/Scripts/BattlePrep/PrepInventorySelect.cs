@@ -128,7 +128,7 @@ public class PrepInventorySelect : MonoBehaviour {
 
 	public void SelectItem() {
 		if (currentMode == State.CHAR) {
-			prompt.Show2Options("What do you want to do?", "TAKE", "STORE", "CANCEL", true);
+			prompt.Show3Options("What do you want to do?", "TAKE", "STORE", "CANCEL", true);
 			currentMode = State.MENU;
 		}
 		else if (currentMode == State.MENU) {
