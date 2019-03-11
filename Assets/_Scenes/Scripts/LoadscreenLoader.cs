@@ -26,9 +26,9 @@ public class LoadscreenLoader : MonoBehaviour {
 		}
 
 		loadCanvas.SetActive(false);
-		yield return null;
-		currentDialogueMode.value = (int)DialogueMode.PRE;
-		startDialogueEvent.Invoke();
+		//yield return null;
+		//currentDialogueMode.value = (int)DialogueMode.PRE;
+		//startDialogueEvent.Invoke();
 		yield break;
 	}
 

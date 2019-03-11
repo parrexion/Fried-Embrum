@@ -79,7 +79,7 @@ public class SaveFileController : MonoBehaviour {
 			}
 
 			isPopup = false;
-			return true;
+			return false;
 		}
 	}
 
@@ -90,7 +90,6 @@ public class SaveFileController : MonoBehaviour {
 		if (isPopup) {
 			filePrompt.Click(false);
 			isPopup = false;
-			Debug.Log("FALSE");
 			return false;
 		}
 

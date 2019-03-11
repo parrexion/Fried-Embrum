@@ -6,11 +6,11 @@ using UnityEngine.UI;
 
 public class IngameMenuController : InputReceiverDelegate {
 
+	public Image overlay;
+
 	[Header("Ingame Menu")]
 	public GameObject ingameMenu;
-	public Image overlay;
-	public IntVariable ingameMenuPosition;
-	private Image[] ingameButtons = new Image[0];
+	public MyButtonList ingameButtons;
 	private int state;
 
 	[Header("Objective")]
@@ -30,7 +30,10 @@ public class IngameMenuController : InputReceiverDelegate {
 		ingameMenu.SetActive(false);
 		objectiveObject.SetActive(false);
 		overlay.enabled = false;
-		ingameButtons = ingameMenu.GetComponentsInChildren<Image>(true);
+		ingameButtons.ResetButtons();
+		ingameButtons.AddButton("CONTROLS");
+		ingameButtons.AddButton("OPTIONS");
+		ingameButtons.AddButton("END TURN");
 	}
 
     public override void OnMenuModeChanged() {
@@ -39,24 +42,18 @@ public class IngameMenuController : InputReceiverDelegate {
 		objectiveObject.SetActive(active);
 		overlay.enabled = active;
 		if (active) {
-			ingameMenuPosition.value = 0;
+			ingameButtons.ForcePosition(0);
 			ShowObjective();
-			ButtonHighlighting();
 		}
     }
 
     public override void OnUpArrow() {
 		if (state == 0) {
-			ingameMenuPosition.value--;
-			if (ingameMenuPosition.value < 0)
-				ingameMenuPosition.value = ingameButtons.Length-1;
-
-			ButtonHighlighting();
+			ingameButtons.Move(-1);
 			menuMoveEvent.Invoke();
 		}
 		else if (state == 1) {
-			bool res = howTo.Move(-1);
-			if (res)
+			if (howTo.Move(-1))
 				menuMoveEvent.Invoke();
 		}
 		else if (state == 2) {
@@ -67,16 +64,11 @@ public class IngameMenuController : InputReceiverDelegate {
 
     public override void OnDownArrow() {
 		if (state == 0) {
-			ingameMenuPosition.value++;
-			if (ingameMenuPosition.value >= ingameButtons.Length)
-				ingameMenuPosition.value = 0;
-				
-			ButtonHighlighting();
+			ingameButtons.Move(1);
 			menuMoveEvent.Invoke();
 		}
 		else if (state == 1) {
-			bool res = howTo.Move(1);
-			if (res)
+			if (howTo.Move(1))
 				menuMoveEvent.Invoke();
 		}
 		else if (state == 2) {
@@ -87,7 +79,7 @@ public class IngameMenuController : InputReceiverDelegate {
 
     public override void OnOkButton() {
 		if (state == 0) {
-			switch (ingameMenuPosition.value)
+			switch (ingameButtons.GetPosition())
 			{
 				case 0:
 					Controls();
@@ -98,9 +90,6 @@ public class IngameMenuController : InputReceiverDelegate {
 				case 2:
 					EndTurn();
 					break;
-				// case 3:
-				// 	SaveGame();
-				// 	break;
 			}
 			menuAcceptEvent.Invoke();
 		}
@@ -144,15 +133,6 @@ public class IngameMenuController : InputReceiverDelegate {
 				enemies++;
 		}
 		enemyCount.text = enemies.ToString();
-	}
-
-	/// <summary>
-	/// Colors the selected button to show the current selection.
-	/// </summary>
-	private void ButtonHighlighting() {
-		for (int i = 0; i < ingameButtons.Length; i++) {
-			ingameButtons[i].color = (ingameMenuPosition.value == i) ? Color.cyan : Color.white;
-		}
 	}
 
 	/// <summary>

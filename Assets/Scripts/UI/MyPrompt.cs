@@ -27,6 +27,19 @@ public class MyPrompt : MonoBehaviour {
 	}
 
 	/// <summary>
+	/// Show a prompt without any buttons to click the prompt away.
+	/// </summary>
+	/// <param name="message"></param>
+	public void ShowSpinner(string message) {
+		optionSize = 0;
+		textArea.text = message;
+		yesButton.gameObject.SetActive(false);
+		yes2Button.gameObject.SetActive(false);
+		noButton.gameObject.SetActive(false);
+		okButton.gameObject.SetActive(false);
+	}
+
+	/// <summary>
 	/// Displays the prompt window at the given start position and message.
 	/// </summary>
 	/// <param name="message"></param>
@@ -86,7 +99,7 @@ public class MyPrompt : MonoBehaviour {
 	/// Moves the cursor on the prompt in dir direction.
 	/// </summary>
 	public void Move(int dir) {
-		if (position == -1)
+		if (position == -1 || optionSize == 0)
 			return;
 		if (optionSize > 2)
 			dir *= -1;
@@ -102,6 +115,9 @@ public class MyPrompt : MonoBehaviour {
 	/// <param name="isOk"></param>
 	/// <returns></returns>
 	public Result Click(bool isOk) {
+		if(optionSize == 0)
+			return Result.CANCEL;
+
 		promptView.SetActive(false);
 
 		if (!isOk)

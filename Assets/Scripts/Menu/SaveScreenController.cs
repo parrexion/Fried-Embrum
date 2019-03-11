@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class SaveScreenController : InputReceiverDelegate {
 
-	private enum State { MAIN, POPUP, SAVE, TRANSITION }
+	private enum State { MAIN, SAVE, TRANSITION }
 
 	public ScrObjEntryReference currentMap;
 	public ScrObjEntryReference currentDialogue;
@@ -15,34 +15,23 @@ public class SaveScreenController : InputReceiverDelegate {
 	public MapInfoListVariable chapterList;
 	public IntVariable chapterIndex;
 
-	[Header("No Save Popup")]
-	public GameObject noSavePopup;
-	public Image[] noSaveButtons;
-	private int noSavePosition;
-
 	[Header("Save Popup")]
-	public GameObject savingPopup;
-	public Text saveText;
+	public MyPrompt savePrompt;
+	private bool isPrompt;
 
 	public UnityEvent stopMusicEvent;
 
 	private State state;
-	/*
-	state 0 = Main menu
-	state 1 = Save popup
-	state 2 = No save popup
-	state 3 = Transitioning
-	 */
 
 
 	private void Start() {
+		StartCoroutine(MenuChangeDelay(MenuMode.SAVE));
 		state = State.MAIN;
-		savingPopup.SetActive(false);
 		stopMusicEvent.Invoke();
 	}
 
     public override void OnMenuModeChanged() {
-		UpdateState(MenuMode.NONE);
+		bool active = UpdateState(MenuMode.SAVE);
 	}
 
 	public void NextLevel() {
@@ -59,61 +48,48 @@ public class SaveScreenController : InputReceiverDelegate {
 	}
 
     public override void OnUpArrow() {
-		if (state == State.MAIN || state == State.POPUP) {
+		if (state == State.MAIN) {
 			saveFileController.Move(-1);
+			menuMoveEvent.Invoke();
 		}
-		else if (state == State.SAVE) {
-			noSavePosition--;
-			if (noSavePosition < 0)
-				noSavePosition = noSaveButtons.Length -1;
-			UpdateNoSavePopup();
-		}
-		menuMoveEvent.Invoke();
     }
 
     public override void OnDownArrow() {
-		if (state == State.MAIN || state == State.POPUP) {
-			saveFileController.Move(1);
-		}
-		else if (state == State.SAVE) {
-			noSavePosition++;
-			if (noSavePosition >= noSaveButtons.Length)
-				noSavePosition = 0;
-			UpdateNoSavePopup();
-		}
-		menuMoveEvent.Invoke();
-    }
-
-
-    public override void OnOkButton() {
 		if (state == State.MAIN) {
-			bool res = saveFileController.OkClicked();
-			if (res) {
-				state = State.POPUP;
-				menuAcceptEvent.Invoke();
-			}
+			saveFileController.Move(1);
+			menuMoveEvent.Invoke();
 		}
-		else if (state == State.POPUP) {
-			bool res = saveFileController.OkClicked();
-			if (res) {
-				state = State.TRANSITION;
-				StartCoroutine(Transition());
+	}
+
+	public override void OnLeftArrow() {
+		if(state == State.SAVE) {
+			saveFileController.MoveHorizontal(-1);
+			menuMoveEvent.Invoke();
+		}
+	}
+
+	public override void OnRightArrow() {
+		if(state == State.SAVE) {
+			saveFileController.MoveHorizontal(1);
+			menuMoveEvent.Invoke();
+		}
+	}
+
+	public override void OnOkButton() {
+		if (state == State.MAIN) {
+			if (saveFileController.OkClicked()) {
+				state = State.SAVE;
 				menuAcceptEvent.Invoke();
-			}
-			else {
-				state = State.MAIN;
-				menuBackEvent.Invoke();
 			}
 		}
 		else if (state == State.SAVE) {
-			if (noSavePosition == 0) {
+			if (!saveFileController.OkClicked()) {
 				state = State.TRANSITION;
 				NextLevel();
 				menuAcceptEvent.Invoke();
 			}
-			else if (noSavePosition == 1) {
+			else {
 				state = State.MAIN;
-				noSavePopup.SetActive(false);
 				menuBackEvent.Invoke();
 			}
 		}
@@ -122,43 +98,26 @@ public class SaveScreenController : InputReceiverDelegate {
     public override void OnBackButton() {
 		if (state == State.MAIN) {
 			state = State.SAVE;
-			noSavePopup.SetActive(true);
-			UpdateNoSavePopup();
-			menuBackEvent.Invoke();
-		}
-		else if (state == State.POPUP) {
-			state = State.MAIN;
-			saveFileController.BackClicked();
 			menuBackEvent.Invoke();
 		}
 		else if (state == State.SAVE) {
 			state = State.MAIN;
-			noSavePopup.SetActive(false);
 			menuBackEvent.Invoke();
 		}
 	}
 
 	private IEnumerator Transition() {
 		//Show popup
-		saveText.text = "Saving...";
-		savingPopup.SetActive(true);
+		savePrompt.ShowSpinner("Saving...");
 		yield return new WaitForSeconds(1f);
-		saveText.text = "Saved  :)";
+		savePrompt.ShowSpinner("Saved  :)");
 		yield return new WaitForSeconds(1f);
-		savingPopup.SetActive(false);
+		savePrompt.Click(true);
 
 		NextLevel();
 	}
 
-	private void UpdateNoSavePopup() {
-		for (int i = 0; i < noSaveButtons.Length; i++) {
-			noSaveButtons[i].enabled = (i == noSavePosition);
-		}
-	}
 
-
-    public override void OnLeftArrow() { }
-    public override void OnRightArrow() { }
     public override void OnLButton() { }
     public override void OnRButton() { }
     public override void OnXButton() { }
