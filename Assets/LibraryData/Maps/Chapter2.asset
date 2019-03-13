@@ -26,6 +26,7 @@ MonoBehaviour:
     money: 0
     scrap: 25
     items: []
+  skipBattlePrep: 0
   preDialogue: {fileID: 11400000, guid: 6f84cbd5fbe1eb946a719ea208f697d3, type: 2}
   postDialogue: {fileID: 11400000, guid: 00a5adf2124c59443bac12ecc1b2caa4, type: 2}
   owMusic: {fileID: 11400000, guid: c5d55a00157aa9d45904a928008f24d0, type: 2}
@@ -50,6 +51,8 @@ MonoBehaviour:
     stats: {fileID: 0}
     inventory: []
     skills: []
+  forcedCharacters: []
+  lockedCharacters: []
   enemies:
   - spawnTurn: 0
     x: 7
@@ -57,7 +60,7 @@ MonoBehaviour:
     level: 1
     stats: {fileID: 11400000, guid: 3c62e59d0a22e10499d7722b228fdf6c, type: 2}
     inventory:
-    - item: {fileID: 11400000, guid: 44de95ac3ea804a4d805c36c1ac7039e, type: 2}
+    - item: {fileID: 11400000, guid: 5d5e0c27d71f7334582f303ff4483c8a, type: 2}
       droppable: 0
     skills: []
     aggroType: 1
@@ -71,7 +74,7 @@ MonoBehaviour:
     level: 2
     stats: {fileID: 11400000, guid: 3c62e59d0a22e10499d7722b228fdf6c, type: 2}
     inventory:
-    - item: {fileID: 11400000, guid: 44de95ac3ea804a4d805c36c1ac7039e, type: 2}
+    - item: {fileID: 11400000, guid: 5d5e0c27d71f7334582f303ff4483c8a, type: 2}
       droppable: 0
     skills: []
     aggroType: 1
@@ -85,7 +88,7 @@ MonoBehaviour:
     level: 2
     stats: {fileID: 11400000, guid: 3c62e59d0a22e10499d7722b228fdf6c, type: 2}
     inventory:
-    - item: {fileID: 11400000, guid: 44de95ac3ea804a4d805c36c1ac7039e, type: 2}
+    - item: {fileID: 11400000, guid: 5d5e0c27d71f7334582f303ff4483c8a, type: 2}
       droppable: 0
     skills: []
     aggroType: 1
@@ -99,7 +102,7 @@ MonoBehaviour:
     level: 1
     stats: {fileID: 11400000, guid: 3c62e59d0a22e10499d7722b228fdf6c, type: 2}
     inventory:
-    - item: {fileID: 11400000, guid: 44de95ac3ea804a4d805c36c1ac7039e, type: 2}
+    - item: {fileID: 11400000, guid: 5d5e0c27d71f7334582f303ff4483c8a, type: 2}
       droppable: 0
     skills: []
     aggroType: 0
@@ -113,7 +116,7 @@ MonoBehaviour:
     level: 2
     stats: {fileID: 11400000, guid: 3c62e59d0a22e10499d7722b228fdf6c, type: 2}
     inventory:
-    - item: {fileID: 11400000, guid: 44de95ac3ea804a4d805c36c1ac7039e, type: 2}
+    - item: {fileID: 11400000, guid: 5d5e0c27d71f7334582f303ff4483c8a, type: 2}
       droppable: 0
     skills: []
     aggroType: 0
@@ -129,7 +132,7 @@ MonoBehaviour:
     inventory:
     - item: {fileID: 11400000, guid: 21e0cdf65dcd3c64f99de572c0526714, type: 2}
       droppable: 0
-    - item: {fileID: 11400000, guid: 4f62fac29e57cf149a77b69982270829, type: 2}
+    - item: {fileID: 0}
       droppable: 1
     skills: []
     aggroType: 3

@@ -6,12 +6,13 @@ using UnityEngine.SceneManagement;
 
 public class LoadscreenLoader : MonoBehaviour {
 
+	const string DIALOGUE_SCENE = "DialogueScene";
+	const string BATTLE_SCENE = "BattleScene";
+
 	public GameObject loadCanvas;
 	public bool fakeLoading;
-
-	[Header("Dialogue")]
-	public IntVariable currentDialogueMode;
-	public UnityEvent startDialogueEvent;
+	
+	public UnityEvent loadMapEvent;
 	
 
 	private void Start () {
@@ -19,8 +20,8 @@ public class LoadscreenLoader : MonoBehaviour {
 	}
 
 	private IEnumerator LoadScenes() {
-		AsyncOperation dia = SceneManager.LoadSceneAsync("DialogueScene", LoadSceneMode.Additive);
-		AsyncOperation bat = SceneManager.LoadSceneAsync("BattleScene", LoadSceneMode.Additive);
+		AsyncOperation dia = SceneManager.LoadSceneAsync(DIALOGUE_SCENE, LoadSceneMode.Additive);
+		AsyncOperation bat = SceneManager.LoadSceneAsync(BATTLE_SCENE, LoadSceneMode.Additive);
 
 		while(!dia.isDone || !bat.isDone) {
 			yield return null;
@@ -30,6 +31,7 @@ public class LoadscreenLoader : MonoBehaviour {
 			yield return new WaitForSeconds(3f);
 
 		loadCanvas.SetActive(false);
+		loadMapEvent.Invoke();
 		yield break;
 	}
 

@@ -123,7 +123,7 @@ public class FormationController : InputReceiverDelegate {
 		if (!clicker.selectCharacter.value)
 			return;
 		
-		StartCoroutine(MenuChangeDelay(MenuMode.TOOL));
+		StartCoroutine(MenuChangeDelay(MenuMode.TOOLTIP));
 	}
 
 

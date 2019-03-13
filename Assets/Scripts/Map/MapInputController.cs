@@ -176,7 +176,7 @@ public class MapInputController : InputReceiverDelegate {
 		if (clicker.selectCharacter.value == null)
 			return;
 		
-		InputDelegateController.instance.TriggerMenuChange(MenuMode.TOOL);
+		InputDelegateController.instance.TriggerMenuChange(MenuMode.TOOLTIP);
 	}
 
 	/// <summary>

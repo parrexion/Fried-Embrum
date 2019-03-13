@@ -5,7 +5,7 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public enum TurnState { INIT, ACTION, REINFORCE, EVENTS, MAPCHANGE, FINISHED }
+public enum TurnState { INIT, STORY, PREP, INTRO, ACTION, REINFORCE, EVENTS, DIALOGUE, FINISHED }
 
 /// <summary>
 /// Class which handles changing turns and triggers functionality when the turn is changed.
@@ -22,7 +22,7 @@ public class TurnController : MonoBehaviour {
 	public ScrObjEntryReference currentMap;
 	public IntVariable currentTurn;
 	public FactionVariable currentFactionTurn;
-	public ActionModeVariable currentMode;
+	public ActionModeVariable currentAction;
 	public IntVariable currentMenuMode;
 	public BoolVariable triggeredWin;
 	public IntVariable currentDialogueMode;
@@ -79,29 +79,46 @@ public class TurnController : MonoBehaviour {
 	public void TriggerNextStep() {
 		switch (currentState)
 		{
-			case TurnState.INIT:
-				StartGame();
-				currentState = TurnState.ACTION;
-				break;
-			case TurnState.ACTION:
-				EndChangeTurn();
-				break;
-			case TurnState.REINFORCE:
-				currentFactionTurn.value = Faction.PLAYER;
-				currentState = TurnState.EVENTS;
-				checkDialoguesEvent.Invoke();
-				break;
-			case TurnState.EVENTS:
-				currentDialogueMode.value = (int)DialogueMode.NONE;
-				currentState = TurnState.MAPCHANGE;
-				checkMapChangeEvent.Invoke();
-				break;
-			case TurnState.MAPCHANGE:
-				currentState = TurnState.ACTION;
-				StartCoroutine(DisplayTurnChange(1.5f));
-				break;
-			case TurnState.FINISHED:
-				break;
+		case TurnState.INIT:
+			Debug.Log("Show story 1");
+			currentState = TurnState.STORY;
+			TriggerNextStep();
+			break;
+		case TurnState.STORY:
+			Debug.Log("Show prep");
+			currentState = TurnState.PREP;
+			InputDelegateController.instance.TriggerMenuChange(MenuMode.PREP);
+			break;
+		case TurnState.PREP:
+			Debug.Log("Show story 2");
+			currentState = TurnState.INTRO;
+			//InputDelegateController.instance.TriggerMenuChange(MenuMode.DIALOGUE);
+			TriggerNextStep();
+			break;
+		case TurnState.INTRO:
+			Debug.Log("Start game");
+			currentState = TurnState.ACTION;
+			StartGame();
+			break;
+		case TurnState.ACTION:
+			EndChangeTurn();
+			break;
+		case TurnState.EVENTS:
+			currentDialogueMode.value = (int)DialogueMode.NONE;
+			currentState = TurnState.DIALOGUE;
+			checkMapChangeEvent.Invoke();
+			break;
+		case TurnState.REINFORCE:
+			currentFactionTurn.value = Faction.PLAYER;
+			currentState = TurnState.EVENTS;
+			checkDialoguesEvent.Invoke();
+			break;
+		case TurnState.DIALOGUE:
+			currentState = TurnState.ACTION;
+			StartCoroutine(DisplayTurnChange(1.5f));
+			break;
+		case TurnState.FINISHED:
+			break;
 		}
 	}
 
@@ -116,9 +133,6 @@ public class TurnController : MonoBehaviour {
 		playBkgMusicEvent.Invoke();
 		
 		StartCoroutine(DisplayTurnChange(1.5f));
-
-		currentMenuMode.value = (int)MenuMode.MAP;
-		InputDelegateController.instance.menuModeChanged.Invoke();
 	}
 
 	/// <summary>
@@ -275,15 +289,14 @@ public class TurnController : MonoBehaviour {
 	/// <returns></returns>
 	private IEnumerator DisplayTurnChange(float duration) {
 		lockControls.value = true;
-		currentMode.value = ActionMode.NONE;
-		currentMenuMode.value = (int)MenuMode.NONE;
+		currentAction.value = ActionMode.NONE;
+		InputDelegateController.instance.TriggerMenuChange(MenuMode.NONE);
 		turnChangeText.text = currentFactionTurn.value + " TURN";
 
 		yield return null;
 
 		turnChangeDisplay.SetActive(true);
 		resetSelections.Invoke();
-		InputDelegateController.instance.menuModeChanged.Invoke();
 		sfxQueue.Enqueue(turnChangeFanfare);
 		playSfxEvent.Invoke();
 
@@ -301,13 +314,11 @@ public class TurnController : MonoBehaviour {
 		if (gameover)
 			return;
 		
-		currentMode.value = ActionMode.NONE;
 		if (currentFactionTurn.value == Faction.ENEMY) {
 			for (int i = 0; i < enemyList.values.Count; i++) {
 				enemyList.values[i].OnStartTurn();
 			}
 			enemyController.RunEnemies();
-			currentMenuMode.value = (int)MenuMode.NONE;
 		}
 		else if (currentFactionTurn.value == Faction.PLAYER) {
 			for (int i = 0; i < playerList.values.Count; i++) {
@@ -317,12 +328,11 @@ public class TurnController : MonoBehaviour {
 			cursorY.value = playerList.values[0].posy;
 			moveCursorEvent.Invoke();
 			lockControls.value = false;
-			currentMenuMode.value = (int)MenuMode.MAP;
+			InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
 		}
 		else {
 			Debug.LogError("Wrong state!");
 		}
-		InputDelegateController.instance.menuModeChanged.Invoke();
 	}
 
 	public void MoveToMainMenu() {

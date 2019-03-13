@@ -301,12 +301,13 @@ public class MapCreator : MonoBehaviour {
 				}
 			}
 		}
-		Debug.Log("DONE!");
 		nextTurnStateEvent.Invoke();
-		Debug.Log("DONE2!");
 		yield break;
 	}
 
+	/// <summary>
+	/// Checks if there are any dialogues that should be shown.
+	/// </summary>
 	public void CheckDialogues() {
 		MapEntry map = (MapEntry)currentMap.value;
 		for (int i = 0; i < map.turnEvents.Count; i++) {
@@ -323,6 +324,9 @@ public class MapCreator : MonoBehaviour {
 		nextTurnStateEvent.Invoke();
 	}
 
+	/// <summary>
+	/// Checks if there are any events that should be triggered.
+	/// </summary>
 	public void CheckMapChange() {
 		MapEntry map = (MapEntry)currentMap.value;
 		for (int i = 0; i < map.turnEvents.Count; i++) {

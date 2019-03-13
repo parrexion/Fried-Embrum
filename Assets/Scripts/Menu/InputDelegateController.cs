@@ -1,9 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
-public enum MenuMode { NONE, MAP, UNIT, INV, ATTACK, HEAL, STATS, INGAME, HELP, TRADE, DIALOGUE, TOOL, 
+public enum MenuMode { NONE, MAP, UNIT, INV, ATTACK, HEAL, STATS, INGAME, NNN, TRADE, DIALOGUE, TOOLTIP, 
 						BASE_LAB, BASE_MISSION, BASE_HOUSE, BASE_TRAIN, BASE_SHOP, PREP, FORMATION, SAVE }
 
 public class InputDelegateController : MonoBehaviour {
@@ -79,7 +78,7 @@ public class InputDelegateController : MonoBehaviour {
 
 	public void TriggerMenuChange(MenuMode newMode) {
 		lockAllControls.value = true;
-		//Debug.Log("set MENU to:  " + newMode);
+		Debug.Log("set MENU to:  " + newMode);
 		StartCoroutine(TransitionDelay(newMode));
 	}
 

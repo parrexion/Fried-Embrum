@@ -15,7 +15,7 @@ public class ExplanationController : InputReceiverDelegate {
 
 
     public override void OnMenuModeChanged() {
-		bool active = UpdateState(MenuMode.TOOL);
+		bool active = UpdateState(MenuMode.TOOLTIP);
 		baseStats.UpdateSelection(active && currentPage.value == (int)InventoryStatsType.BASIC);
 		statsStats.UpdateSelection(active && currentPage.value == (int)InventoryStatsType.STATS);
 		inventoryStats.UpdateSelection(active && currentPage.value == (int)InventoryStatsType.INVENTORY);

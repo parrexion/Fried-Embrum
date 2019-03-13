@@ -283,7 +283,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 		helpButtons.SetActive(currentMenuMode.value != (int)MenuMode.STATS && currentMenuMode.value != (int)MenuMode.INV);
 
 		//Tooltip
-		bool visible = (currentMenuMode.value == (int)MenuMode.STATS || currentMenuMode.value == (int)MenuMode.TOOL);
+		bool visible = (currentMenuMode.value == (int)MenuMode.STATS || currentMenuMode.value == (int)MenuMode.TOOLTIP);
 		tooltipObject.SetActive(visible);
 		if (inventoryIndex.value != -1) {
 			InventoryTuple item = tactics.inventory.GetTuple(inventoryIndex.value);

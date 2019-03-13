@@ -11,7 +11,7 @@ public class BattlePrepController : InputReceiverDelegate {
 	public SaveListVariable playerData;
 	public PrepListVariable prepList;
 	
-	public UnityEvent startTurnEvent;
+	public UnityEvent nextStateEvent;
 
 	[Header("Main menu")]
 	public MyButtonList mainButtons;
@@ -45,8 +45,6 @@ public class BattlePrepController : InputReceiverDelegate {
 		mainButtons.AddButton("Map objective");
 		mainButtons.AddButton("Start game");
 
-		InputDelegateController.instance.TriggerMenuChange(MenuMode.PREP);
-		ShowBattlePrep();
 		GeneratePrepList();
 	}
 
@@ -57,6 +55,7 @@ public class BattlePrepController : InputReceiverDelegate {
 		if (active) {
 			currentState = State.MAIN;
 			mainButtons.ForcePosition(0);
+			//SkipBattlePrep();
 		}
 	}
 
@@ -82,25 +81,21 @@ public class BattlePrepController : InputReceiverDelegate {
 	/// <summary>
 	/// Called when the StartBattlePrepEvent is called.
 	/// </summary>
-	public void ShowBattlePrep() {
+	public void SkipBattlePrep() {
 		MapEntry map = (MapEntry)currentMapEntry.value;
 		if (map.skipBattlePrep) {
 			StartMission();
 			return;
 		}
-
-		mainMenuView.SetActive(true);
-		characterSelectView.SetActive(false);
-		menuCollectionView.SetActive(false);
 	}
 
 	/// <summary>
-	/// Ends battle prep and starts the battle.
+	/// Ends battle prep and starts the mission.
 	/// </summary>
 	public void StartMission() {
 		mainMenuView.SetActive(false);
 		menuCollectionView.SetActive(true);
-		startTurnEvent.Invoke();
+		nextStateEvent.Invoke();
 	}
 
 	public override void OnUpArrow() {
