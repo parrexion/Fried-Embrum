@@ -195,8 +195,9 @@ public class MapEditorWindow {
 		GUILayout.Space(10);
 
 		GUILayout.Label("Dialogues", EditorStyles.boldLabel);
-		mapValues.preDialogue = (DialogueEntry)EditorGUILayout.ObjectField("Before battle",mapValues.preDialogue, typeof(DialogueEntry),false);
-		mapValues.postDialogue = (DialogueEntry)EditorGUILayout.ObjectField("After battle",mapValues.postDialogue, typeof(DialogueEntry),false);
+		mapValues.preDialogue = (DialogueEntry)EditorGUILayout.ObjectField("Mission dialogue",mapValues.preDialogue, typeof(DialogueEntry),false);
+		mapValues.introDialogue = (DialogueEntry)EditorGUILayout.ObjectField("On mission start",mapValues.introDialogue, typeof(DialogueEntry),false);
+		mapValues.endDialogue = (DialogueEntry)EditorGUILayout.ObjectField("After win",mapValues.endDialogue, typeof(DialogueEntry),false);
 
 		GUILayout.Space(10);
 

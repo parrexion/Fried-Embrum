@@ -23,7 +23,8 @@ public class MapEntry : ScrObjLibraryEntry {
 	[Header("Dialogues")]
 	public bool skipBattlePrep;
 	public DialogueEntry preDialogue;
-	public DialogueEntry postDialogue;
+	public DialogueEntry introDialogue;
+	public DialogueEntry endDialogue;
 
 	[Header("Music")]
 	public MusicEntry owMusic;
@@ -58,7 +59,8 @@ public class MapEntry : ScrObjLibraryEntry {
 
 		base.ResetValues();
 		preDialogue = null;
-		postDialogue = null;
+		introDialogue = null;
+		endDialogue = null;
 
 		owMusic = null;
 		battleMusic = null;
@@ -87,7 +89,8 @@ public class MapEntry : ScrObjLibraryEntry {
 		reward = map.reward;
 
 		preDialogue = map.preDialogue;
-		postDialogue = map.postDialogue;
+		introDialogue = map.introDialogue;
+		endDialogue = map.endDialogue;
 
 		owMusic = map.owMusic;
 		battleMusic = map.battleMusic;

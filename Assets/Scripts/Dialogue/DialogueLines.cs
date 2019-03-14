@@ -35,6 +35,7 @@ public class DialogueLines : MonoBehaviour {
 		if (!overrideActionNumber.value) {
 			dialogueEntry = (DialogueEntry)currentDialogue.value;
 			currentAction.value = 0;
+			Debug.Log("RESET");
 			scene.Reset();
 		}
 		else {

@@ -3,7 +3,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public enum FilterType { DEFAULT, PRE, POST, QUOTE, VILLAGE, DEATH }
+public enum FilterType { DEFAULT, PRELUDE, INTRO, ENDING, QUOTE, VILLAGE, DEATH }
 
 public class DialogueListWindow : EditorWindow {
 
@@ -187,7 +187,7 @@ public class DialogueListWindow : EditorWindow {
 
 		//Dialogue creation
 		EditorGUIUtility.labelWidth = 150;
-		hub.dialogueUuid = EditorGUILayout.TextField("Create Dialogue - UUid", hub.dialogueUuid);
+		hub.dialogueUuid = EditorGUILayout.TextField("Create Dialogue - Uuid", hub.dialogueUuid);
 		GUILayout.BeginHorizontal();
 		if (GUILayout.Button("Create dialogue")) {
 			hub.InstansiateDialogue();

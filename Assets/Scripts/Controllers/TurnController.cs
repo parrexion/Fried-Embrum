@@ -69,8 +69,8 @@ public class TurnController : MonoBehaviour {
 	/// </summary>
 	private void Start() {
 		currentState = TurnState.INIT;
-		currentTurn.value = 1;
-		currentFactionTurn.value = Faction.PLAYER;
+		currentTurn.value = 0;
+		currentFactionTurn.value = Faction.ENEMY;
 		triggeredWin.value = false;
 		playerList.values.Clear();
 		enemyList.values.Clear();
@@ -82,18 +82,22 @@ public class TurnController : MonoBehaviour {
 		case TurnState.INIT:
 			Debug.Log("Show story 1");
 			currentState = TurnState.STORY;
-			TriggerNextStep();
+			currentDialogueMode.value = (int)DialogueMode.PRELUDE;
+			currentDialogue.value = ((MapEntry)currentMap.value).preDialogue;
+			startDialogueEvent.Invoke();
 			break;
 		case TurnState.STORY:
 			Debug.Log("Show prep");
+			//if (!prep) { TurnState.INTRO + nextAction };		
 			currentState = TurnState.PREP;
 			InputDelegateController.instance.TriggerMenuChange(MenuMode.PREP);
 			break;
 		case TurnState.PREP:
 			Debug.Log("Show story 2");
 			currentState = TurnState.INTRO;
-			//InputDelegateController.instance.TriggerMenuChange(MenuMode.DIALOGUE);
-			TriggerNextStep();
+			currentDialogueMode.value = (int)DialogueMode.INTRO;
+			currentDialogue.value = ((MapEntry)currentMap.value).introDialogue;
+			startDialogueEvent.Invoke();
 			break;
 		case TurnState.INTRO:
 			Debug.Log("Start game");
@@ -101,23 +105,27 @@ public class TurnController : MonoBehaviour {
 			StartGame();
 			break;
 		case TurnState.ACTION:
+			Debug.Log("Check reinforcements");
 			EndChangeTurn();
-			break;
-		case TurnState.EVENTS:
-			currentDialogueMode.value = (int)DialogueMode.NONE;
-			currentState = TurnState.DIALOGUE;
-			checkMapChangeEvent.Invoke();
+			currentState = TurnState.REINFORCE;
+			checkReinforcementsEvent.Invoke();
 			break;
 		case TurnState.REINFORCE:
-			currentFactionTurn.value = Faction.PLAYER;
-			currentState = TurnState.EVENTS;
+			Debug.Log("Check dialogue");
+			currentState = TurnState.DIALOGUE;
 			checkDialoguesEvent.Invoke();
 			break;
 		case TurnState.DIALOGUE:
-			currentState = TurnState.ACTION;
+			Debug.Log("Check events");
+			currentState = TurnState.EVENTS;
+			checkMapChangeEvent.Invoke();
+			break;
+		case TurnState.EVENTS:
+			Debug.Log("Next turn");
 			StartCoroutine(DisplayTurnChange(1.5f));
 			break;
 		case TurnState.FINISHED:
+			Debug.Log("Game finished!");
 			break;
 		}
 	}
@@ -157,24 +165,16 @@ public class TurnController : MonoBehaviour {
 		if (gameover)
 			return;
 		lockControls.value = true;
+
 		if (currentFactionTurn.value == Faction.PLAYER) {
-			currentFactionTurn.value = Faction.ENEMY;
 			for (int i = 0; i < playerList.values.Count; i++) {
 				playerList.values[i].OnEndTurn();
 			}
-			currentState = TurnState.EVENTS;
-			checkDialoguesEvent.Invoke();
 		}
 		else if (currentFactionTurn.value == Faction.ENEMY) {
 			for (int i = 0; i < enemyList.values.Count; i++) {
 				enemyList.values[i].OnEndTurn();
 			}
-			currentTurn.value++;
-			currentState = TurnState.REINFORCE;
-			checkReinforcementsEvent.Invoke();
-		}
-		else {
-			Debug.LogError("Wrong state!");
 		}
 	}
 
@@ -249,46 +249,15 @@ public class TurnController : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// When clearing the map, show win text for a while and then move 
-	/// on to post dialogue.
-	/// </summary>
-	/// <returns></returns>
-	private IEnumerator EndGameWin() {
-		gameFinishText.text = "BATTLE WON";
-		gameFinishText.gameObject.SetActive(true);
-		gameFinishObject.SetActive(true);
-		sfxQueue.Enqueue(victoryFanfare);
-		playSfxEvent.Invoke();
-		yield return new WaitForSeconds(4f);
-		gameFinishObject.SetActive(false);
-		gameFinishText.gameObject.SetActive(false);
-		currentDialogueMode.value = (int)DialogueMode.POST;
-		currentDialogue.value = ((MapEntry)currentMap.value).postDialogue;
-		startDialogueEvent.Invoke();
-	}
-
-	/// <summary>
-	/// When losing the map, show lose text and then the game over menu.
-	/// </summary>
-	/// <returns></returns>
-	private IEnumerator EndGameLose() {
-		currentState = TurnState.FINISHED;
-		gameFinishText.text = "GAME OVER";
-		gameFinishText.gameObject.SetActive(true);
-		gameFinishObject.SetActive(true);
-		sfxQueue.Enqueue(gameOverFanfare);
-		playSfxEvent.Invoke();
-		yield return new WaitForSeconds(2f);
-		gameLoseEvent.Invoke();
-	}
-
-	/// <summary>
 	/// Coroutine which locks the controls and shows the turn change display.
 	/// </summary>
 	/// <param name="duration"></param>
 	/// <returns></returns>
 	private IEnumerator DisplayTurnChange(float duration) {
-		lockControls.value = true;
+		currentFactionTurn.value = (currentFactionTurn.value == Faction.PLAYER) ? Faction.ENEMY : Faction.PLAYER;
+		if (currentFactionTurn.value == Faction.PLAYER)
+			currentTurn.value++;
+
 		currentAction.value = ActionMode.NONE;
 		InputDelegateController.instance.TriggerMenuChange(MenuMode.NONE);
 		turnChangeText.text = currentFactionTurn.value + " TURN";
@@ -337,5 +306,39 @@ public class TurnController : MonoBehaviour {
 
 	public void MoveToMainMenu() {
 		SceneManager.LoadScene("MainMenu");
+	}
+
+	/// <summary>
+	/// When clearing the map, show win text for a while and then move 
+	/// on to post dialogue.
+	/// </summary>
+	/// <returns></returns>
+	private IEnumerator EndGameWin() {
+		gameFinishText.text = "BATTLE WON";
+		gameFinishText.gameObject.SetActive(true);
+		gameFinishObject.SetActive(true);
+		sfxQueue.Enqueue(victoryFanfare);
+		playSfxEvent.Invoke();
+		yield return new WaitForSeconds(4f);
+		gameFinishObject.SetActive(false);
+		gameFinishText.gameObject.SetActive(false);
+		currentDialogueMode.value = (int)DialogueMode.ENDING;
+		currentDialogue.value = ((MapEntry)currentMap.value).endDialogue;
+		startDialogueEvent.Invoke();
+	}
+
+	/// <summary>
+	/// When losing the map, show lose text and then the game over menu.
+	/// </summary>
+	/// <returns></returns>
+	private IEnumerator EndGameLose() {
+		currentState = TurnState.FINISHED;
+		gameFinishText.text = "GAME OVER";
+		gameFinishText.gameObject.SetActive(true);
+		gameFinishObject.SetActive(true);
+		sfxQueue.Enqueue(gameOverFanfare);
+		playSfxEvent.Invoke();
+		yield return new WaitForSeconds(2f);
+		gameLoseEvent.Invoke();
 	}
 }

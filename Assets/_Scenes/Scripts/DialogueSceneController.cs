@@ -15,7 +15,7 @@ public class DialogueSceneController : MonoBehaviour {
 	[Header("Events")]
 	public UnityEvent resumeBattleEvent;
 	public UnityEvent resumeTurnEvent;
-	public UnityEvent startBattleprepEvent;
+	public UnityEvent nextTurnEvent;
 	public UnityEvent playSubMusicEvent;
 
 
@@ -24,6 +24,10 @@ public class DialogueSceneController : MonoBehaviour {
 		ActivateStuff(false);
 	}
 
+	/// <summary>
+	/// Sets the state of all the objects in the dialogue scene to active.
+	/// </summary>
+	/// <param name="active"></param>
 	public void ActivateStuff(bool active) {
 		for (int i = 0; i < dialogueObjects.Length; i++) {
 			dialogueObjects[i].SetActive(active);
@@ -43,29 +47,33 @@ public class DialogueSceneController : MonoBehaviour {
 	public void DialogueEnd() {
 		switch (currentDialogueMode.value)
 		{
-			case (int)DialogueMode.PRE:
-				startBattleprepEvent.Invoke();
-				ActivateStuff(false);
+			case (int)DialogueMode.PRELUDE:
+				InputDelegateController.instance.TriggerMenuChange(MenuMode.NONE);
+				nextTurnEvent.Invoke();
 				break;
-			case (int)DialogueMode.POST:
+			case (int)DialogueMode.INTRO:
+				InputDelegateController.instance.TriggerMenuChange(MenuMode.NONE);
+				nextTurnEvent.Invoke();
+				break;
+			case (int)DialogueMode.ENDING:
+				InputDelegateController.instance.TriggerMenuChange(MenuMode.SAVE);
 				SceneManager.LoadScene("SaveScene");
+				break;
+			case (int)DialogueMode.EVENT:
+				InputDelegateController.instance.TriggerMenuChange(MenuMode.NONE);
+				resumeTurnEvent.Invoke();
+				musicFocusSource.value = true;
+				playSubMusicEvent.Invoke();
 				break;
 			case (int)DialogueMode.VISIT:
 				resumeBattleEvent.Invoke();
-				ActivateStuff(false);
 				musicFocusSource.value = true;
 				playSubMusicEvent.Invoke();
 				break;
 			case (int)DialogueMode.QUOTE:
 				resumeBattleEvent.Invoke();
-				ActivateStuff(false);
-				break;
-			case (int)DialogueMode.EVENT:
-				resumeTurnEvent.Invoke();
-				ActivateStuff(false);
-				musicFocusSource.value = true;
-				playSubMusicEvent.Invoke();
 				break;
 		}
+		currentDialogueMode.value = (int)DialogueMode.NONE;
 	}
 }
