@@ -301,6 +301,7 @@ public class MapCreator : MonoBehaviour {
 				}
 			}
 		}
+		Debug.Log("Check reinforcements - DONE");
 		nextTurnStateEvent.Invoke();
 		yield break;
 	}
@@ -312,15 +313,16 @@ public class MapCreator : MonoBehaviour {
 		MapEntry map = (MapEntry)currentMap.value;
 		for (int i = 0; i < map.turnEvents.Count; i++) {
 			TurnEvent pos = map.turnEvents[i];
+			Debug.Log(pos.ToString());
 			if (currentTurn.value == pos.turn && currentFaction.value == pos.factionTurn && pos.type == TurnEventType.DIALOGUE) {
 				Debug.Log("It's time!");
 				currentDialogue.value = pos.dialogue;
 				currentDialogueMode.value = (int)DialogueMode.EVENT;
-				lockControls.value = false;
 				startDialogueEvent.Invoke();
 				return;
 			}
 		}
+		Debug.Log("Check dialogues - DONE");
 		nextTurnStateEvent.Invoke();
 	}
 
@@ -337,6 +339,7 @@ public class MapCreator : MonoBehaviour {
 				tile.SetTerrain(pos.changeTerrain);
 			}
 		}
+		Debug.Log("Check events - DONE");
 		nextTurnStateEvent.Invoke();
 	}
 

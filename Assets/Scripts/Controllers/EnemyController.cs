@@ -22,7 +22,7 @@ public class EnemyController : MonoBehaviour {
 	[Header("Events")]
 	public UnityEvent charClicked;
 	public UnityEvent cursorMovedEvent;
-	public UnityEvent endTurnEvent;
+	public UnityEvent nextStateEvent;
 	
 	private NPCMove enemy;
 	private bool isRunning;
@@ -94,7 +94,7 @@ public class EnemyController : MonoBehaviour {
 		cursorY.value = playerList.values[0].posy;
 		cursorMovedEvent.Invoke();
 		isRunning = false;
-		endTurnEvent.Invoke();
+		nextStateEvent.Invoke();
 	}
 
 	/// <summary>

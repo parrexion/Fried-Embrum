@@ -56,8 +56,7 @@ public class DialogueSceneController : MonoBehaviour {
 				nextTurnEvent.Invoke();
 				break;
 			case (int)DialogueMode.ENDING:
-				InputDelegateController.instance.TriggerMenuChange(MenuMode.SAVE);
-				SceneManager.LoadScene("SaveScene");
+				StartCoroutine(SaveMenuTransition());
 				break;
 			case (int)DialogueMode.EVENT:
 				InputDelegateController.instance.TriggerMenuChange(MenuMode.NONE);
@@ -75,5 +74,13 @@ public class DialogueSceneController : MonoBehaviour {
 				break;
 		}
 		currentDialogueMode.value = (int)DialogueMode.NONE;
+	}
+
+
+	private IEnumerator SaveMenuTransition() {
+		InputDelegateController.instance.TriggerMenuChange(MenuMode.SAVE);
+		yield return null;
+		yield return null;
+		SceneManager.LoadScene("SaveScene");
 	}
 }

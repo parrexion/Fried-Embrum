@@ -23,7 +23,7 @@ public class IngameMenuController : InputReceiverDelegate {
 	public OptionsController options;
 
 	[Header("Events")]
-	public UnityEvent changeTurnEvent;
+	public UnityEvent nextStateEvent;
 
 
 	private void Start() {
@@ -139,7 +139,7 @@ public class IngameMenuController : InputReceiverDelegate {
 	/// Ends the turn for the player.
 	/// </summary>
 	private void EndTurn() {
-		changeTurnEvent.Invoke();
+		nextStateEvent.Invoke();
 	}
 
 	private void Controls() {

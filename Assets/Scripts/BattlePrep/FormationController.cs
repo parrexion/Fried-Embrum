@@ -123,7 +123,7 @@ public class FormationController : InputReceiverDelegate {
 		if (!clicker.selectCharacter.value)
 			return;
 		
-		StartCoroutine(MenuChangeDelay(MenuMode.TOOLTIP));
+		MenuChangeDelay(MenuMode.TOOLTIP);
 	}
 
 
@@ -131,7 +131,7 @@ public class FormationController : InputReceiverDelegate {
 	/// Shows the in-game menu with end turn and options.
 	/// </summary>
 	public void ShowIngameMenu() {
-		StartCoroutine(MenuChangeDelay(MenuMode.PREP));
+		MenuChangeDelay(MenuMode.PREP);
 	}
 
     public override void OnYButton() { }

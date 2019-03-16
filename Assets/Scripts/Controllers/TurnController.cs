@@ -102,13 +102,19 @@ public class TurnController : MonoBehaviour {
 		case TurnState.INTRO:
 			Debug.Log("Start game");
 			currentState = TurnState.ACTION;
-			StartGame();
+			StartGameSetup();
+			StartCoroutine(DisplayTurnChange(1.5f));
 			break;
 		case TurnState.ACTION:
 			Debug.Log("Check reinforcements");
 			EndChangeTurn();
 			currentState = TurnState.REINFORCE;
-			checkReinforcementsEvent.Invoke();
+			if (currentFactionTurn.value == Faction.ENEMY) {
+				checkReinforcementsEvent.Invoke();
+			}
+			else {
+				TriggerNextStep();
+			}
 			break;
 		case TurnState.REINFORCE:
 			Debug.Log("Check dialogue");
@@ -133,14 +139,12 @@ public class TurnController : MonoBehaviour {
 	/// <summary>
 	/// Starts the game and enables the music and shows the turn change.
 	/// </summary>
-	private void StartGame() {
+	private void StartGameSetup() {
 		MapEntry map = (MapEntry)currentMap.value;
 		musicFocus.value = true;
 		mainMusic.value = map.owMusic.clip;
 		subMusic.value = null;
 		playBkgMusicEvent.Invoke();
-		
-		StartCoroutine(DisplayTurnChange(1.5f));
 	}
 
 	/// <summary>
@@ -155,13 +159,13 @@ public class TurnController : MonoBehaviour {
 				return;
 			}
 		}
-		EndChangeTurn();
+		TriggerNextStep();
 	}
 
 	/// <summary>
 	/// Changes the turn to the other faction and displays the turn change text box.
 	/// </summary>
-	public void EndChangeTurn() {
+	private void EndChangeTurn() {
 		if (gameover)
 			return;
 		lockControls.value = true;
@@ -282,6 +286,9 @@ public class TurnController : MonoBehaviour {
 	private void StartTurn() {
 		if (gameover)
 			return;
+
+		Debug.Log("New turn");
+		currentState = TurnState.ACTION;
 		
 		if (currentFactionTurn.value == Faction.ENEMY) {
 			for (int i = 0; i < enemyList.values.Count; i++) {
@@ -304,8 +311,11 @@ public class TurnController : MonoBehaviour {
 		}
 	}
 
-	public void MoveToMainMenu() {
-		SceneManager.LoadScene("MainMenu");
+	public void GameOver() {
+		if (gameover)
+			return;
+		gameover = true;
+		StartCoroutine(EndGameLose());
 	}
 
 	/// <summary>
@@ -314,6 +324,7 @@ public class TurnController : MonoBehaviour {
 	/// </summary>
 	/// <returns></returns>
 	private IEnumerator EndGameWin() {
+		currentState = TurnState.FINISHED;
 		gameFinishText.text = "BATTLE WON";
 		gameFinishText.gameObject.SetActive(true);
 		gameFinishObject.SetActive(true);
@@ -339,6 +350,14 @@ public class TurnController : MonoBehaviour {
 		sfxQueue.Enqueue(gameOverFanfare);
 		playSfxEvent.Invoke();
 		yield return new WaitForSeconds(2f);
-		gameLoseEvent.Invoke();
+		SceneManager.LoadScene("MainMenu");
+	}
+
+	public void InstaWin() {
+		if (gameover)
+			return;
+		Debug.Log("BATTLE WON");
+		gameover = true;
+		StartCoroutine(EndGameWin());
 	}
 }

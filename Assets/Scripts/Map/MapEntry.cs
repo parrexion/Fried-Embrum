@@ -207,6 +207,10 @@ public class TurnEvent {
 	public int x;
 	public int y;
 	public TerrainTile changeTerrain;
+
+	public override string ToString() {
+		return "Type: " + type + ", Turn: " + turn + ", faction: " + factionTurn;
+	}
 }
 
 [System.Serializable]

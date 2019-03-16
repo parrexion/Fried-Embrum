@@ -12318,10 +12318,10 @@ MonoBehaviour:
   enemyCount: {fileID: 315412858}
   howTo: {fileID: 346008164}
   options: {fileID: 1566598091}
-  changeTurnEvent:
+  nextStateEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11400000, guid: 3424818ef57a9ce4483577f242858a22, type: 2}
+      - m_Target: {fileID: 11400000, guid: 69c3f8f0ba50da54f85f11632f92f61e, type: 2}
         m_MethodName: Raise
         m_Mode: 1
         m_Arguments:
@@ -22898,9 +22898,9 @@ GameObject:
   - component: {fileID: 760330657}
   - component: {fileID: 760330656}
   - component: {fileID: 760330654}
-  - component: {fileID: 760330652}
   - component: {fileID: 760330655}
   - component: {fileID: 760330660}
+  - component: {fileID: 760330653}
   m_Layer: 0
   m_Name: TurnController
   m_TagString: Untagged
@@ -22908,7 +22908,7 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &760330652
+--- !u!114 &760330653
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -22920,12 +22920,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14602ab6441821f43883d0b13d4f57c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  evnt: {fileID: 11400000, guid: 3424818ef57a9ce4483577f242858a22, type: 2}
+  evnt: {fileID: 11400000, guid: 019f00a6fe6860d408c8cc1d41f3f878, type: 2}
   response:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 760330656}
-        m_MethodName: EndChangeTurn
+        m_MethodName: InstaWin
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -22994,7 +22994,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 760330656}
-        m_MethodName: MoveToMainMenu
+        m_MethodName: GameOver
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -56834,10 +56834,10 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  endTurnEvent:
+  nextStateEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11400000, guid: 3424818ef57a9ce4483577f242858a22, type: 2}
+      - m_Target: {fileID: 11400000, guid: 69c3f8f0ba50da54f85f11632f92f61e, type: 2}
         m_MethodName: Raise
         m_Mode: 1
         m_Arguments:

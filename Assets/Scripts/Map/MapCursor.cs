@@ -214,7 +214,7 @@ public class MapCursor : MonoBehaviour {
 				moveTile.value = battleMap.GetTile(cursorX.value, cursorY.value);
 				moveTile.value.current = true;
 				selectCharacter.value.path.Clear();
-				Debug.Log("Click!   X:  " + cursorX.value + "  Y:  " + cursorY.value);
+				//Debug.Log("Click!   X:  " + cursorX.value + "  Y:  " + cursorY.value);
 			}
 			else 
 				return false;

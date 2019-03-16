@@ -21,7 +21,7 @@ public class PlayerMove : TacticsMove {
 	/// Additional functions which run when the player ends their turn.
 	/// </summary>
 	public override void EndMovement() {
-		Debug.Log("Finished move");
+		//Debug.Log("Finished move");
 		isMoving = false;
 		lockControls.value = false;
 		if (currentMenuMode.value == (int)MenuMode.FORMATION) {

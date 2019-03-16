@@ -187,7 +187,6 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// Locks the controls until the target is reached.
 	/// </summary>
 	public void StartMove() {
-		Debug.Log("MOVE   " + path.Count);
 		lockControls.value = true;
 		_heading = transform.position;
 		currentTile.currentCharacter = null;

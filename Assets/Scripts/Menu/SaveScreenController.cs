@@ -21,7 +21,7 @@ public class SaveScreenController : InputReceiverDelegate {
 
 
 	private void Start() {
-		StartCoroutine(MenuChangeDelay(MenuMode.SAVE));
+		MenuChangeDelay(MenuMode.SAVE);
 		stopMusicEvent.Invoke();
 	}
 

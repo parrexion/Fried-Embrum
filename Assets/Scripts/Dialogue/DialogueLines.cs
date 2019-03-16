@@ -8,25 +8,25 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(DialogueScene))]
 public class DialogueLines : MonoBehaviour {
 
+	public BoolVariable overrideActionNumber;
+
+	[Header("References")]
 	public ScrObjEntryReference currentDialogue;
 	public IntVariable currentAction;
 	public DialogueEntry wpEntry;
-	public BoolVariable overrideActionNumber;
     public BoolVariable skippableDialogue;
 	public IntVariable currentDialogueMode;
+	public DialogueScene scene;
 
 	[Header("Debug")]
 	public GameObject debugMusicBkg;
 	public GameObject debugMusicText;
 
 	private DialogueEntry dialogueEntry;
-	private DialogueScene scene;
 	private bool isWaiting;
 
 
 	void Start() {
-		scene = GetComponent<DialogueScene>();
-
 		debugMusicBkg.SetActive(false);
 		debugMusicText.SetActive(false);
 	}
@@ -35,7 +35,6 @@ public class DialogueLines : MonoBehaviour {
 		if (!overrideActionNumber.value) {
 			dialogueEntry = (DialogueEntry)currentDialogue.value;
 			currentAction.value = 0;
-			Debug.Log("RESET");
 			scene.Reset();
 		}
 		else {

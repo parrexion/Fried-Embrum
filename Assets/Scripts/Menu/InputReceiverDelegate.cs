@@ -34,9 +34,7 @@ public abstract class InputReceiverDelegate : MonoBehaviour {
 	public abstract void OnStartButton();
 
 
-	protected IEnumerator MenuChangeDelay(MenuMode newMode) {
-		active = false;
-		yield return null;
+	protected void MenuChangeDelay(MenuMode newMode) {
 		InputDelegateController.instance.TriggerMenuChange(newMode);
 	}
 
