@@ -29,7 +29,6 @@ public class MapCursor : MonoBehaviour {
 	[Header("Events")]
 	public UnityEvent updateCharacterUI;
 	public UnityEvent cursorMovedEvent;
-	public UnityEvent showIngameMenuEvent;
 	public UnityEvent returnToPrepEvent;
 
 	[Header("Settings")]
@@ -47,21 +46,33 @@ public class MapCursor : MonoBehaviour {
 		DangerAreaToggle(false);
 	}
 
+	public bool Move(int xDir, int yDir) {
+		int prevX = cursorX.value;
+		int prevY = cursorY.value;
+		cursorX.value = Mathf.Clamp(cursorX.value + xDir, 0, battleMap.SizeX()-1);
+		cursorY.value = Mathf.Clamp(cursorY.value + yDir, 0, battleMap.SizeY()-1);
+		UpdateCursor();
+		CursorHover();
+
+		return (prevX != cursorX.value || prevY != cursorY.value);
+	}
+
 	/// <summary>
 	/// Makes the cursor jump to the next character in line.
 	/// </summary>
 	public void JumpCursor() {
 		if (selectCharacter.value == null) {
+			// No selected character - move to next character to move
 			for (int i = 0; i < playerCharacters.values.Count; i++) {
 				if (!playerCharacters.values[i].hasMoved) {
 					cursorX.value = playerCharacters.values[i].posx;
 					cursorY.value = playerCharacters.values[i].posy;
-					CursorHover();
 					break;
 				}
 			}
 		}
 		else if (selectCharacter.value.faction == Faction.PLAYER) {
+			// Player selected - Jump to next player that hasn't moved
 			int pos = 0;
 			for (int i = 0; i < playerCharacters.values.Count; i++) {
 				pos = i;
@@ -69,15 +80,16 @@ public class MapCursor : MonoBehaviour {
 				if (tactics.posx == cursorX.value && tactics.posy == cursorY.value)
 					break;
 			}
+			int startPos = pos;
 			do {
 				pos = OPMath.FullLoop(0, playerCharacters.values.Count, pos+1);
-			} while (playerCharacters.values[pos].hasMoved);
+			} while (startPos != pos && playerCharacters.values[pos].hasMoved);
 
 			cursorX.value = playerCharacters.values[pos].posx;
 			cursorY.value = playerCharacters.values[pos].posy;
-			CursorHover();
 		}
 		else if (selectCharacter.value.faction == Faction.ENEMY) {
+			// Enemy selected - Jump to next enemy
 			int pos = 0;
 			for (int i = 0; i < enemyCharacters.values.Count; i++) {
 				pos = i;
@@ -85,26 +97,25 @@ public class MapCursor : MonoBehaviour {
 				if (tactics.posx == cursorX.value && tactics.posy == cursorY.value)
 					break;
 			}
-			do {
-				pos = OPMath.FullLoop(0, enemyCharacters.values.Count, pos+1);
-			} while (enemyCharacters.values[pos].hasMoved);
 
+			pos = OPMath.FullLoop(0, enemyCharacters.values.Count, pos+1);
 			cursorX.value = enemyCharacters.values[pos].posx;
 			cursorY.value = enemyCharacters.values[pos].posy;
-			CursorHover();
 		}
+		UpdateCursor();
+		CursorHover();
 	}
 
 	/// <summary>
 	/// Called whenever the cursor position is updated.
 	/// Handles both normal cursor movement and target selection.
 	/// </summary>
-	public void CursorHover() {
-		MoveCursor();
+	private void CursorHover() {
+		UpdateCursor();
 		if (currentActionMode.value == ActionMode.NONE)
-			NormalHover(cursorX.value, cursorY.value);
-		else if (currentActionMode.value == ActionMode.MOVE)
-			MoveHover(cursorX.value, cursorY.value);
+			SelectHover();
+		else if (currentActionMode.value == ActionMode.MOVE || currentActionMode.value == ActionMode.ACTION)
+			MoveHover();
 		else if (currentActionMode.value == ActionMode.ATTACK || currentActionMode.value == ActionMode.HEAL || currentActionMode.value == ActionMode.TRADE) {
 			updateCharacterUI.Invoke();
 		}
@@ -123,18 +134,6 @@ public class MapCursor : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Send an event to display the in-game menu if nothing else is currently going on.
-	/// </summary>
-	/// <returns></returns>
-	public bool ShowIngameMenu() {
-		if (currentActionMode.value == ActionMode.NONE) {
-			showIngameMenuEvent.Invoke();
-			return true;
-		}
-		return false;
-	}
-
-	/// <summary>
 	/// Backs out of the current state depending on the current state.
 	/// </summary>
 	public void CursorBack() {
@@ -145,10 +144,11 @@ public class MapCursor : MonoBehaviour {
 			ResetTargets();
 			cursorMovedEvent.Invoke();
 		}
-		else if (currentActionMode.value == ActionMode.ATTACK || currentActionMode.value == ActionMode.HEAL || currentActionMode.value == ActionMode.TRADE) {
-			currentActionMode.value = ActionMode.MOVE;
-			MoveCursor();
-		}
+		//else if (currentActionMode.value == ActionMode.ATTACK || currentActionMode.value == ActionMode.HEAL || currentActionMode.value == ActionMode.TRADE) {
+		//	currentActionMode.value = ActionMode.MOVE;
+		//	UpdateCursor();
+		//}
+		UpdateCursor();
 	}
 
 	/// <summary>
@@ -157,9 +157,9 @@ public class MapCursor : MonoBehaviour {
 	/// </summary>
 	/// <param name="x"></param>
 	/// <param name="y"></param>
-	private void NormalHover(int x, int y) {
+	private void SelectHover() {
 		// Debug.Log("Normal hover:  "+ currentFaction.value);
-		MapTile tile = battleMap.GetTile(x, y);
+		MapTile tile = battleMap.GetTile(cursorX.value, cursorY.value);
 		startTile = tile;
 		selectTile.value = tile;
 		selectCharacter.value = (tile) ? tile.currentCharacter : null;
@@ -177,8 +177,8 @@ public class MapCursor : MonoBehaviour {
 	/// </summary>
 	/// <param name="x"></param>
 	/// <param name="y"></param>
-	private void MoveHover(int x, int y) {
-		MapTile tile = battleMap.GetTile(x, y);
+	private void MoveHover() {
+		MapTile tile = battleMap.GetTile(cursorX.value, cursorY.value);
 		if (currentMenumode.value == (int)MenuMode.FORMATION) {
 			battleMap.ClearTargets();
 			moveTile.value = tile;
@@ -192,10 +192,12 @@ public class MapCursor : MonoBehaviour {
 				moveTile.value = tile;
 				selectCharacter.value.ShowMove(tile);
 				updateCharacterUI.Invoke();
+				Debug.Log("Select");
 			}
 			else {
 				moveTile.value = null;
 				battleMap.ClearMovement();
+				Debug.Log("Empty");
 			}
 		}
 
@@ -206,31 +208,29 @@ public class MapCursor : MonoBehaviour {
 	/// Selects the currently hovered character if not doing any other actions.
 	/// If no character is hovered, show the in-game menu instead.
 	/// </summary>
-	private bool SelectCharacter(bool real) {
-		if (selectCharacter.value != null && !selectCharacter.value.hasMoved) {
-			if (selectCharacter.value.faction == Faction.PLAYER) {
-				currentActionMode.value = ActionMode.MOVE;
-				//currentActionMode.value = (real) ? ActionMode.MOVE : ActionMode.PREP;
-				moveTile.value = battleMap.GetTile(cursorX.value, cursorY.value);
-				moveTile.value.current = true;
-				selectCharacter.value.path.Clear();
-				//Debug.Log("Click!   X:  " + cursorX.value + "  Y:  " + cursorY.value);
-			}
-			else 
-				return false;
+	private bool SelectCharacter(bool playing) {
+		if (selectCharacter.value == null) {
+			if (playing)
+				InputDelegateController.instance.TriggerMenuChange(MenuMode.INGAME);
+			return playing;
+		}
+		else if (selectCharacter.value.faction == Faction.PLAYER && !selectCharacter.value.hasMoved) {
+			currentActionMode.value = ActionMode.MOVE;
+			moveTile.value = battleMap.GetTile(cursorX.value, cursorY.value);
+			moveTile.value.current = true;
+			selectCharacter.value.path.Clear();
+			return true;
 		}
 		else {
-			if (real)
-				showIngameMenuEvent.Invoke();
+			return false;
 		}
-		return true;
 	}
 
 	/// <summary>
 	/// Moves the player to the currently selected move tile.
 	/// </summary>
-	private bool SelectMoveTile(bool real) {
-		if (!real) {
+	private bool SelectMoveTile(bool playing) {
+		if (!playing) {
 			if (moveTile.value.deployable) {
 				TacticsMove dual = moveTile.value.currentCharacter;
 				MapTile startTile = selectCharacter.value.currentTile;
@@ -259,7 +259,7 @@ public class MapCursor : MonoBehaviour {
 	/// <summary>
 	/// Updates the position of the cursor depending on the menu mode.
 	/// </summary>
-	private void MoveCursor() {
+	private void UpdateCursor() {
 		if (currentActionMode.value == ActionMode.ATTACK || currentActionMode.value == ActionMode.HEAL || currentActionMode.value == ActionMode.TRADE) {
 			transform.position = new Vector3(target.value.posx, target.value.posy, zHeight);
 		}
@@ -274,9 +274,9 @@ public class MapCursor : MonoBehaviour {
 	public void UndoMove() {
 		cursorX.value = startTile.posx;
 		cursorY.value = startTile.posy;
-		selectCharacter.value.UndoMove(startTile);
+		selectCharacter.value.UndoMove();
 		moveTile.value = null;
-		MoveHover(cursorX.value, cursorY.value);
+		MoveHover();
 		cursorMovedEvent.Invoke();
 	}
 
@@ -333,7 +333,7 @@ public class MapCursor : MonoBehaviour {
 		//cursorY.value = startTile.posy;
 		currentActionMode.value = ActionMode.NONE;
 		ResetTargets();
-		NormalHover(cursorX.value, cursorY.value);
+		SelectHover();
 		cursorMovedEvent.Invoke();
 	}
 

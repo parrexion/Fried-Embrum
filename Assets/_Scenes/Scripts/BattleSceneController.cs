@@ -19,9 +19,5 @@ public class BattleSceneController : MonoBehaviour {
 		for (int i = 0; i < battleObjects.Length; i++) {
 			battleObjects[i].SetActive(active);
 		}
-		if (!active) {
-			currentMenuMode.value = (int)MenuMode.DIALOGUE;
-			menuModeChanged.Invoke();
-		}
 	}
 }

@@ -6,10 +6,11 @@ using UnityEngine.UI;
 
 public enum ActionInputType { SEIZE, ATTACK, HEAL, VISIT, TRADE, ITEM, WAIT }
 
-public class ActionInputController : InputReceiverDelegate {
+public class ActionInputController : MonoBehaviour {
 
 	[Header("References")]
 	public TacticsMoveVariable selectedCharacter;
+	public IntVariable currentMenuMode;
 	public ActionModeVariable currentActionMode;
 	public MapTileListVariable targetList;
 	public IntVariable inventoryIndex;
@@ -17,7 +18,7 @@ public class ActionInputController : InputReceiverDelegate {
 
 	[Header("Unit Action Menu")]
 	public GameObject actionMenu;
-	public IntVariable actionMenuPosition;
+	private int menuPosition;
 	private Image[] actionButtons = new Image[0];
 
 	[Header("Dialogues")]
@@ -32,43 +33,30 @@ public class ActionInputController : InputReceiverDelegate {
 		actionButtons = actionMenu.GetComponentsInChildren<Image>(true);
 	}
 
-    public override void OnMenuModeChanged() {
-		bool active = UpdateState(MenuMode.UNIT);
+    public void ShowMenu(bool active) {
 		actionMenu.SetActive(active);
 		if (active)
 			ButtonSetup();
     }
 
-    public override void OnDownArrow() {
+    public bool MoveVertical(int dir) {
+		int startPos = menuPosition;
 		do {
-			actionMenuPosition.value++;
-			if (actionMenuPosition.value >= actionButtons.Length)
-				actionMenuPosition.value = 0;
-		} while (!actionButtons[actionMenuPosition.value].gameObject.activeSelf);
-		menuMoveEvent.Invoke();
-		ButtonHighlighting();
+			menuPosition = OPMath.FullLoop(0,actionButtons.Length, menuPosition + dir);
+		} while (!actionButtons[menuPosition].gameObject.activeSelf);
+		UpdateHighlight();
+		return (startPos != menuPosition);
     }
 
-    public override void OnUpArrow() {
-		do {
-			actionMenuPosition.value--;
-			if (actionMenuPosition.value < 0)
-				actionMenuPosition.value += actionButtons.Length;
-		} while (!actionButtons[actionMenuPosition.value].gameObject.activeSelf);
-		menuMoveEvent.Invoke();
-		ButtonHighlighting();
-    }
-
-    public override void OnBackButton() {
+    public bool BackButton() {
 		if (selectedCharacter.value.canUndoMove) {
-			currentActionMode.value = ActionMode.MOVE;
-			InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
-			menuBackEvent.Invoke();
+			menuPosition = 0;
 		}
+		return (selectedCharacter.value.canUndoMove);
     }
 
-    public override void OnOkButton() {
-		switch ((ActionInputType)actionMenuPosition.value)
+    public void OkButton() {
+		switch ((ActionInputType)menuPosition)
 		{
 			case ActionInputType.SEIZE:
 				triggeredWin.value = true;
@@ -102,7 +90,7 @@ public class ActionInputController : InputReceiverDelegate {
 				break;
 			case ActionInputType.ITEM: // ITEM
 				inventoryIndex.value = 0;
-				InputDelegateController.instance.TriggerMenuChange(MenuMode.STATS);
+				InputDelegateController.instance.TriggerMenuChange(MenuMode.INV);
 				break;
 			case ActionInputType.WAIT: // WAIT
 				currentActionMode.value = ActionMode.NONE;
@@ -110,7 +98,6 @@ public class ActionInputController : InputReceiverDelegate {
 				selectedCharacter.value.End();
 				break;
 		}
-		menuAcceptEvent.Invoke();
     }
 	
 	public void ResumeBattle() {
@@ -149,29 +136,20 @@ public class ActionInputController : InputReceiverDelegate {
 		actionButtons[(int)ActionInputType.HEAL].gameObject.SetActive(selectedCharacter.value.CanSupport());
 		actionButtons[(int)ActionInputType.VISIT].gameObject.SetActive(selectedCharacter.value.CanVisit());
 		actionButtons[(int)ActionInputType.TRADE].gameObject.SetActive(selectedCharacter.value.CanTrade());
-		if (actionMenuPosition.value == -1 || !actionButtons[actionMenuPosition.value].IsActive()) {
-			actionMenuPosition.value = -1;
-			OnDownArrow();
+		if (menuPosition == -1 || !actionButtons[menuPosition].IsActive()) {
+			menuPosition = -1;
+			MoveVertical(1);
 		}
-		ButtonHighlighting();
+		UpdateHighlight();
 	}
 
 	/// <summary>
 	/// Colors the selected button to show the current selection.
 	/// </summary>
-	private void ButtonHighlighting() {
+	private void UpdateHighlight() {
 		for (int i = 0; i < actionButtons.Length; i++) {
-			actionButtons[i].color = (actionMenuPosition.value == i) ? Color.cyan : Color.white;
+			actionButtons[i].color = (menuPosition == i) ? Color.cyan : Color.white;
 		}
 	}
 
-
-
-    public override void OnLeftArrow() {}
-    public override void OnRightArrow() {}
-    public override void OnLButton() {}
-    public override void OnRButton() {}
-    public override void OnXButton() {}
-    public override void OnYButton() {}
-    public override void OnStartButton() {}
 }

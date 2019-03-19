@@ -6,6 +6,7 @@ using UnityEngine.Events;
 public class PlayerMove : TacticsMove {
 
 	public IntVariable currentMenuMode;
+	public UnityEvent playerFinishedMoveEvent;
 	public UnityEvent prepMoveEndEvent;
 
 
@@ -28,8 +29,7 @@ public class PlayerMove : TacticsMove {
 			prepMoveEndEvent.Invoke();
 		}
 		else {
-			currentMenuMode.value = (int)MenuMode.UNIT;
-			InputDelegateController.instance.menuModeChanged.Invoke();
+			playerFinishedMoveEvent.Invoke();
 		}
 	}
 	

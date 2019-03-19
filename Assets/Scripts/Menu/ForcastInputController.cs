@@ -9,6 +9,7 @@ public class ForcastInputController : InputReceiverDelegate {
 	public TacticsMoveVariable selectedCharacter;
 	public MapTileVariable defendCharacter;
 	public IntVariable battleWeaponIndex;
+	public ActionModeVariable currentAction;
 
 	private List<InventoryTuple> attackerWeapons;
 	private int listIndex;
@@ -19,14 +20,14 @@ public class ForcastInputController : InputReceiverDelegate {
 	}
 
 	public override void OnMenuModeChanged() {
-		bool active = UpdateState(MenuMode.ATTACK, MenuMode.HEAL);
+		bool active = UpdateState(MenuMode.BATTLE, MenuMode.WEAPON);
 		forecast.UpdateUI(active);
 
 		if (!active)
 			return;
-
+		Debug.Log("Active!");
 		listIndex = 0;
-		if (currentMenuMode.value == (int)MenuMode.ATTACK)
+		if (currentAction.value == ActionMode.ATTACK)
 			attackerWeapons = selectedCharacter.value.inventory.GetAllUsableItemTuple(ItemCategory.WEAPON, selectedCharacter.value.stats);
 		else
 			attackerWeapons = selectedCharacter.value.inventory.GetAllUsableItemTuple(ItemCategory.STAFF, selectedCharacter.value.stats);
@@ -42,11 +43,11 @@ public class ForcastInputController : InputReceiverDelegate {
 	}
 
 	public override void OnOkButton() {
-		if (currentMenuMode.value == (int)MenuMode.ATTACK) {
+		if (currentAction.value == ActionMode.ATTACK) {
 			selectedCharacter.value.Attack(defendCharacter.value);
 			menuAcceptEvent.Invoke();
 		}
-		else if (currentMenuMode.value == (int)MenuMode.HEAL) {
+		else if (currentAction.value == ActionMode.HEAL) {
 			selectedCharacter.value.Heal(defendCharacter.value);
 			menuAcceptEvent.Invoke();
 		}

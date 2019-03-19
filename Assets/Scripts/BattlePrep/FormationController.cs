@@ -114,10 +114,7 @@ public class FormationController : InputReceiverDelegate {
 		cursorMovedEvent.Invoke();
 	}
 
-    public override void OnStartButton() {
-		if (clicker.ShowIngameMenu())
-			menuAcceptEvent.Invoke();
-	}
+    public override void OnStartButton() {}
 
     public override void OnLButton() {
 		if (!clicker.selectCharacter.value)

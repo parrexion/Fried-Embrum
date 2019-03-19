@@ -67,6 +67,14 @@ public class BattleMap : MonoBehaviour {
 		return x + y * _sizeX;
 	}
 
+	public int SizeX() {
+		return _sizeX;
+	}
+
+	public int SizeY() {
+		return _sizeY;
+	}
+
 	/// <summary>
 	/// Returns the tile for the given coordinates.
 	/// </summary>

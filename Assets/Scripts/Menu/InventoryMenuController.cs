@@ -17,8 +17,10 @@ public class InventoryMenuController : InputReceiverDelegate {
 	[Header("Inventory Menu")]
 	public GameObject inventoryMenu;
 	public IntVariable inventoryIndex;
-	public IntVariable inventoryMenuPosition;
-	private Image[] inventoryButtons = new Image[0];
+	public IntVariable itemMenuPosition;
+
+	public MyButtonList inventoryButtons;
+	private bool selectMode;
 
 	public UnityEvent inventoryChangedEvent;
 	public UnityEvent playSfxEvent;
@@ -26,95 +28,99 @@ public class InventoryMenuController : InputReceiverDelegate {
 	
 	private void Start () {
 		inventoryMenu.SetActive(false);
-		inventoryButtons = inventoryMenu.GetComponentsInChildren<Image>(true);
 	}
 
     public override void OnMenuModeChanged() {
 		bool active = UpdateState(MenuMode.INV);
 		inventoryMenu.SetActive(active);
-		if (active)
-			ButtonSetup();
+		inventoryIndex.value = 0;
     }
 
 	private void ButtonSetup() {
+		inventoryButtons.ResetButtons();
 		InventoryTuple tuple = selectedCharacter.value.inventory.GetTuple(inventoryIndex.value);
 		int skill = selectedCharacter.value.stats.GetWpnSkill(tuple.item);
-		inventoryButtons[0].gameObject.SetActive(tuple.item.itemCategory == ItemCategory.WEAPON && tuple.item.CanUse(skill));
-		inventoryButtons[1].gameObject.SetActive(tuple.item.itemCategory == ItemCategory.CONSUME);
-		
-		if (inventoryMenuPosition.value == -1)
-			OnDownArrow();
-		ButtonHighlighting();
-	}
-
-	/// <summary>
-	/// Colors the selected button to show the current selection.
-	/// </summary>
-	private void ButtonHighlighting() {
-		for (int i = 0; i < inventoryButtons.Length; i++) {
-			inventoryButtons[i].color = (inventoryMenuPosition.value == i) ? Color.cyan : Color.white;
+		if (tuple.item?.itemCategory == ItemCategory.WEAPON && tuple.item.CanUse(skill)) {
+			inventoryButtons.AddButton("EQUIP", 0);
 		}
+		else if (tuple.item?.itemCategory == ItemCategory.CONSUME) {
+			inventoryButtons.AddButton("USE", 1);
+		}
+		inventoryButtons.AddButton("DROP", 2);
+		
+		itemMenuPosition.value = inventoryButtons.GetPosition();
 	}
 
     public override void OnUpArrow() {
-		do {
-			inventoryMenuPosition.value--;
-			if (inventoryMenuPosition.value < 0)
-				inventoryMenuPosition.value = inventoryButtons.Length-1;
-		} while (!inventoryButtons[inventoryMenuPosition.value].gameObject.activeSelf);
-
-		menuMoveEvent.Invoke();
-		ButtonHighlighting();
+		if (!selectMode) {
+			inventoryIndex.value = OPMath.FullLoop(0, InventoryContainer.INVENTORY_SIZE, inventoryIndex.value -1);
+			inventoryChangedEvent.Invoke();
+		}
+		else {
+			itemMenuPosition.value = inventoryButtons.Move(-1);
+			menuMoveEvent.Invoke();
+		}
     }
 
     public override void OnDownArrow() {
-		do {
-			inventoryMenuPosition.value++;
-			if (inventoryMenuPosition.value >= inventoryButtons.Length)
-				inventoryMenuPosition.value = 0;
-		} while (!inventoryButtons[inventoryMenuPosition.value].gameObject.activeSelf);
-			
-		menuMoveEvent.Invoke();
-		ButtonHighlighting();
+		if (!selectMode) {
+			inventoryIndex.value = OPMath.FullLoop(0, InventoryContainer.INVENTORY_SIZE, inventoryIndex.value +1);
+			inventoryChangedEvent.Invoke();
+		}
+		else {
+			itemMenuPosition.value = inventoryButtons.Move(1);
+			menuMoveEvent.Invoke();
+		}
     }
 
     public override void OnOkButton() {
-		switch (inventoryMenuPosition.value)
-		{
-			case 0:
-				EquipItem();
-				break;
-			case 1:
-				UseItem();
-				break;
-			case 2:
-				DropItem();
-				break;
+		if (!selectMode) {
+			selectMode = true;
+			ButtonSetup();
+		}
+		else {
+			switch (inventoryButtons.GetValue())
+			{
+				case 0:
+					EquipItem();
+					break;
+				case 1:
+					UseItem();
+					break;
+				case 2:
+					DropItem();
+					break;
+			}
 		}
 		menuAcceptEvent.Invoke();
     }
 
     public override void OnBackButton() {
-		menuBackEvent.Invoke();
-		InputDelegateController.instance.TriggerMenuChange(MenuMode.STATS);
-		inventoryIndex.value = -1;
-		ButtonHighlighting();
+		if (!selectMode) {
+			menuBackEvent.Invoke();
+			InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
+			inventoryIndex.value = -1;
+		}
+		else {
+			selectMode = false;
+		}
     }
 
 	/// <summary>
 	/// Equips the selected item and moves the cursor to the new position.
 	/// </summary>
-	public void EquipItem() {
+	private void EquipItem() {
+		selectMode = false;
 		selectedCharacter.value.inventory.EquipItem(inventoryIndex.value);
 		inventoryIndex.value = 0;
 		inventoryChangedEvent.Invoke();
-		InputDelegateController.instance.TriggerMenuChange(MenuMode.STATS);
 	}
 
 	/// <summary>
 	/// Uses the selected item.
 	/// </summary>
-	public void UseItem() {
+	private void UseItem() {
+		selectMode = false;
 		InventoryTuple tup = selectedCharacter.value.inventory.GetTuple(inventoryIndex.value);
 		SfxEntry sfx = (tup.item.itemType == ItemType.CHEAL) ? healItemSfx : boostItemSfx;
 		sfxQueue.Enqueue(sfx);
@@ -122,20 +128,18 @@ public class InventoryMenuController : InputReceiverDelegate {
 
 		selectedCharacter.value.inventory.UseItem(inventoryIndex.value, selectedCharacter.value);
 		inventoryIndex.value = -1;
-		ButtonHighlighting();
 		currentMode.value = ActionMode.NONE;
-		inventoryChangedEvent.Invoke();
 		selectedCharacter.value.End();
-		InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
+		inventoryChangedEvent.Invoke();
 	}
 
 	/// <summary>
 	/// Drops the selected item.
 	/// </summary>
-	public void DropItem() {
+	private void DropItem() {
+		selectMode = false;
 		selectedCharacter.value.inventory.DropItem(inventoryIndex.value, selectedCharacter.value.stats);
 		inventoryChangedEvent.Invoke();
-		InputDelegateController.instance.TriggerMenuChange(MenuMode.STATS);
 	}
 
 

@@ -16,9 +16,9 @@ public class ExplanationController : InputReceiverDelegate {
 
     public override void OnMenuModeChanged() {
 		bool active = UpdateState(MenuMode.TOOLTIP);
-		baseStats.UpdateSelection(active && currentPage.value == (int)InventoryStatsType.BASIC);
-		statsStats.UpdateSelection(active && currentPage.value == (int)InventoryStatsType.STATS);
-		inventoryStats.UpdateSelection(active && currentPage.value == (int)InventoryStatsType.INVENTORY);
+		baseStats.UpdateSelection(active && currentPage.value == (int)StatsPage.BASIC);
+		statsStats.UpdateSelection(active && currentPage.value == (int)StatsPage.STATS);
+		inventoryStats.UpdateSelection(active && currentPage.value == (int)StatsPage.INVENTORY);
 
         if (active)
             Setup();
@@ -32,25 +32,25 @@ public class ExplanationController : InputReceiverDelegate {
     }
 
     public override void OnDownArrow() {
-        if (currentPage.value == (int)InventoryStatsType.BASIC) {
+        if (currentPage.value == (int)StatsPage.BASIC) {
             baseStats.Move(1);
         }
-        else if (currentPage.value == (int)InventoryStatsType.STATS) {
+        else if (currentPage.value == (int)StatsPage.STATS) {
             statsStats.Move(1);
         }
-        else if (currentPage.value == (int)InventoryStatsType.INVENTORY) {
+        else if (currentPage.value == (int)StatsPage.INVENTORY) {
             inventoryStats.Move(1);
         }
     }
 
     public override void OnUpArrow() {
-        if (currentPage.value == (int)InventoryStatsType.BASIC) {
+        if (currentPage.value == (int)StatsPage.BASIC) {
             baseStats.Move(-1);
         }
-        else if (currentPage.value == (int)InventoryStatsType.STATS) {
+        else if (currentPage.value == (int)StatsPage.STATS) {
             statsStats.Move(-1);
         }
-        else if (currentPage.value == (int)InventoryStatsType.INVENTORY) {
+        else if (currentPage.value == (int)StatsPage.INVENTORY) {
             inventoryStats.Move(-1);
         }
     }
@@ -73,9 +73,9 @@ public class ExplanationController : InputReceiverDelegate {
 
     private IEnumerator WaitForPageUpdate() {
         yield return null;
-		baseStats.UpdateSelection(currentPage.value == (int)InventoryStatsType.BASIC);
-		statsStats.UpdateSelection(currentPage.value == (int)InventoryStatsType.STATS);
-		inventoryStats.UpdateSelection(currentPage.value == (int)InventoryStatsType.INVENTORY);
+		baseStats.UpdateSelection(currentPage.value == (int)StatsPage.BASIC);
+		statsStats.UpdateSelection(currentPage.value == (int)StatsPage.STATS);
+		inventoryStats.UpdateSelection(currentPage.value == (int)StatsPage.INVENTORY);
     }
 
 	

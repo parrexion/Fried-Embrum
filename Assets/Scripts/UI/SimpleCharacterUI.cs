@@ -1,16 +1,23 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Net.Sockets;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
+public enum StatsPage { BASIC, STATS, INVENTORY }
+
 public class SimpleCharacterUI : MonoBehaviour {
+	
+	[Header("General")]
+	public GameObject menuView;
+	public GameObject flipButton;
 
 	[Header("References")]
-	public IntVariable inventoryIndex;
 	public IntVariable currentMenuMode;
+	public ActionModeVariable actionMode;
+	public TacticsMoveVariable selectedCharacter;
+	public MapTileVariable selectedTile;
+	public MapTileVariable targetTile;
+	public IntVariable inventoryIndex;
 	
 	[Header("Icons")]
 	public Sprite noSkillImage;
@@ -61,7 +68,6 @@ public class SimpleCharacterUI : MonoBehaviour {
 	public Image[] inventoryHighlight;
 	public Text[] inventoryFields;
 	public Text[] inventoryValues;
-	public GameObject helpButtons;
 
 	[Header("Tooltip")]
 	public GameObject tooltipObject;
@@ -71,12 +77,91 @@ public class SimpleCharacterUI : MonoBehaviour {
 	public GameObject terrainObject;
 	public Text terrainText;
 
+	private StatsPage page;
+
+
+	private void Start() {
+		UpdateTooltip("");
+		page = StatsPage.BASIC;
+		HideStats();
+	}
+
+	/// <summary>
+	/// Updates the information in the UI whenever the state or character changes.
+	/// </summary>
+	public void UpdateUI() {
+		TacticsMove tactics = selectedCharacter.value;
+		MapTile tile = selectedTile.value;
+		bool active = true;
+
+		//Set selected character to the targeted tile instead of the selected character
+		if (actionMode.value == ActionMode.ATTACK || actionMode.value == ActionMode.HEAL || actionMode.value == ActionMode.TRADE) {
+			tile = targetTile.value;
+			if (tile && tile.currentCharacter) {
+				tactics = tile.currentCharacter;
+			}
+		}
+
+		if (currentMenuMode.value != (int)MenuMode.MAP && currentMenuMode.value != (int)MenuMode.PREP &&
+			currentMenuMode.value != (int)MenuMode.INV) {
+			HideStats();
+			active = false;
+		}
+		else if (selectedCharacter.value == null && selectedTile.value.interactType != InteractType.NONE) {
+			ShowObjectStats(tile);
+		}
+		else if (selectedCharacter.value == null) {
+			HideStats();
+		}
+		else if (page == StatsPage.INVENTORY || currentMenuMode.value == (int)MenuMode.INV) {
+			ShowInventoryStats(tactics);
+		}
+		else if (page == StatsPage.STATS) {
+			ShowStatsStats(tactics);
+		}
+		else if (page == StatsPage.BASIC)
+			ShowBasicStats(tactics);
+
+		ShowTerrainInfo(active);
+	}
 	
-	public void ShowBasicStats(TacticsMove tactics) {
+	/// <summary>
+	/// Changes the stats screen to the next one.
+	/// </summary>
+	/// <param name="dir"></param>
+	public void ChangeStatsScreen() {
+		switch (page) {
+		case StatsPage.BASIC:		page = StatsPage.INVENTORY; break;
+		case StatsPage.INVENTORY:	page = StatsPage.STATS; break;
+		case StatsPage.STATS:		page = StatsPage.BASIC; break;
+		}
+		UpdateUI();
+	}
+
+	/// <summary>
+	/// Hides the stats page.
+	/// </summary>
+	private void HideStats() {
+		menuView.SetActive(false);
+		statsObject.SetActive(false);
+		basicObject.SetActive(false);
+		inventoryObject.SetActive(false);
+	}
+	
+	/// <summary>
+	/// Shows a basic overview of the character with some stats and combat stats.
+	/// </summary>
+	/// <param name="tactics"></param>
+	private void ShowBasicStats(TacticsMove tactics) {
 		if (tactics == null)
 			return;
 		StatsContainer stats = tactics.stats;
 		SkillsContainer skills = tactics.skills;
+		menuView.SetActive(true);
+		statsObject.SetActive(false);
+		basicObject.SetActive(true);
+		inventoryObject.SetActive(false);
+
 //		colorBackground.color = (tactics.faction == Faction.PLAYER) ? 
 //			new Color(0.2f,0.2f,0.5f) : new Color(0.5f,0.2f,0.2f);
 		
@@ -111,18 +196,17 @@ public class SimpleCharacterUI : MonoBehaviour {
 
 		//Terrain
 		boostAvoid.enabled = (tactics.currentTile.terrain.avoid > 0);
-		
-		statsObject.SetActive(false);
-		basicObject.SetActive(true);
-		inventoryObject.SetActive(false);
-
-		UpdateSelection(tactics);
 	}
 
-	public void ShowStatsStats(TacticsMove tactics) {
+	/// <summary>
+	/// Shows the stats page. Contains information about the current stats of the character.
+	/// </summary>
+	/// <param name="tactics"></param>
+	private void ShowStatsStats(TacticsMove tactics) {
 		if (tactics == null)
 			return;
 		StatsContainer stats = tactics.stats;
+		menuView.SetActive(true);
 		statsObject.SetActive(true);
 		basicObject.SetActive(false);
 		inventoryObject.SetActive(false);
@@ -163,19 +247,18 @@ public class SimpleCharacterUI : MonoBehaviour {
 		defText.text = stats.def.ToString();
 		resText.text = stats.res.ToString();
 		movText.text = stats.GetMovespeed().ToString();
-
-		UpdateSelection(tactics);
 	}
 
 	/// <summary>
 	/// Displays the inventory page. Contains information on the inventory, weaponskills and constitution.
 	/// </summary>
 	/// <param name="tactics"></param>
-	public void ShowInventoryStats(TacticsMove tactics) {
+	private void ShowInventoryStats(TacticsMove tactics) {
 		if (tactics == null)
 			return;
 		StatsContainer stats = tactics.stats;
 		InventoryContainer inventory = tactics.inventory;
+		menuView.SetActive(true);
 		statsObject.SetActive(false);
 		basicObject.SetActive(false);
 		inventoryObject.SetActive(true);
@@ -223,10 +306,14 @@ public class SimpleCharacterUI : MonoBehaviour {
 			}
 		}
 
-		UpdateSelection(tactics);
+		UpdateSelection();
 	}
 	
-	public void ShowObjectStats(MapTile tile) {
+	/// <summary>
+	/// Shows the stats for a non character tile.
+	/// </summary>
+	/// <param name="tile"></param>
+	private void ShowObjectStats(MapTile tile) {
 		if (tile.interactType == InteractType.BLOCK) {
 			StatsContainer stats = tile.blockMove.stats;
 	//		colorBackground.color = (tactics.faction == Faction.PLAYER) ? 
@@ -256,12 +343,19 @@ public class SimpleCharacterUI : MonoBehaviour {
 		avoidText.text = "Avo:  --";
 		boostAvoid.enabled = false;
 		
+		menuView.SetActive(true);
 		statsObject.SetActive(false);
 		basicObject.SetActive(true);
 		inventoryObject.SetActive(false);
 	}
 
-	public void ShowTerrainInfo(TerrainTile terrain, bool active) {
+	/// <summary>
+	/// Shows some terrain information of the currently selected tile.
+	/// </summary>
+	/// <param name="terrain"></param>
+	/// <param name="active"></param>
+	private void ShowTerrainInfo(bool active) {
+		TerrainTile terrain = selectedTile.value.terrain;
 		terrainObject.SetActive(active);
 		if (active) {
 			if (terrain.healPercent != 0)
@@ -274,20 +368,21 @@ public class SimpleCharacterUI : MonoBehaviour {
 	/// <summary>
 	/// Updates the highlight for each inventory slot and sets the appropriate color.
 	/// </summary>
-	public void UpdateSelection(TacticsMove tactics) {
+	public void UpdateSelection() {
 		for (int i = 0; i < 5; i++) {
 			inventoryHighlight[i].enabled = (i == inventoryIndex.value);
-			inventoryHighlight[i].color = (currentMenuMode.value == (int)MenuMode.STATS) ? new Color(0.35f,0.7f,1f,0.6f) : new Color(0.35f,1f,1f,0.75f);
+			inventoryHighlight[i].color = (currentMenuMode.value == (int)MenuMode.INV) ? new Color(0.35f,0.7f,1f,0.6f) : new Color(0.35f,1f,1f,0.75f);
 		}
 
-		helpButtons.SetActive(currentMenuMode.value != (int)MenuMode.STATS && currentMenuMode.value != (int)MenuMode.INV);
+		flipButton.SetActive(currentMenuMode.value != (int)MenuMode.INV);
+	}
 
-		//Tooltip
-		bool visible = (currentMenuMode.value == (int)MenuMode.STATS || currentMenuMode.value == (int)MenuMode.TOOLTIP);
-		tooltipObject.SetActive(visible);
-		if (inventoryIndex.value != -1) {
-			InventoryTuple item = tactics.inventory.GetTuple(inventoryIndex.value);
-			tooltipText.text = (item.item != null) ? item.item.GetDescription() : "";
-		}
+	/// <summary>
+	/// Updates the tooltip text. Disable the tooltip with empty message.
+	/// </summary>
+	/// <param name="message"></param>
+	public void UpdateTooltip(string message) {
+		tooltipText.text = message;
+		tooltipObject.SetActive(!string.IsNullOrEmpty(message));
 	}
 }

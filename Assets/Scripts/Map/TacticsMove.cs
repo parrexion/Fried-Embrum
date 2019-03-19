@@ -28,6 +28,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	public MapTile currentTile;
 	private Vector3 _velocity;
 	private Vector3 _heading;
+	private MapTile startTile;
 
 	[Header("Stats")]
 	public Faction faction;
@@ -190,6 +191,7 @@ public abstract class TacticsMove : MonoBehaviour {
 		lockControls.value = true;
 		_heading = transform.position;
 		currentTile.currentCharacter = null;
+		startTile = currentTile;
 		isMoving = true;
 	}
 	
@@ -210,7 +212,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// Undos the movement and returns the character to the starting tile again and updates all references.
 	/// </summary>
 	/// <param name="startTile"></param>
-	public void UndoMove(MapTile startTile) {
+	public void UndoMove() {
 		battleMap.ClearMovement();
 		currentTile.currentCharacter = null;
 		currentTile = startTile;

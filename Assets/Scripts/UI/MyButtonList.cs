@@ -12,6 +12,7 @@ public class MyButtonList : MonoBehaviour {
 	public MyButton[] buttons;
 
 	private List<string> buttonNames = new List<string>();
+	private List<int> buttonValues = new List<int>();
 	private int size;
 	private int position;
 	private int top;
@@ -25,6 +26,7 @@ public class MyButtonList : MonoBehaviour {
 	public void ResetButtons() {
 		size = buttons.Length;
 		buttonNames.Clear();
+		buttonValues.Clear();
 		bot = 0;
 		top = 0;
 		position = 0;
@@ -34,12 +36,13 @@ public class MyButtonList : MonoBehaviour {
 	/// <summary>
 	/// Adds a new button to the end of the list and updates the list.
 	/// </summary>
-	/// <param name="button"></param>
-	public void AddButton(string button) {
+	/// <param name="buttonText"></param>
+	public void AddButton(string buttonText, int buttonValue = -1) {
 		if (size == 0)
 			Debug.LogError("MyButtonList is not initialized");
 
-		buttonNames.Add(button);
+		buttonNames.Add(buttonText);
+		buttonValues.Add(buttonValue);
 		top = Mathf.Min(bot + size, buttonNames.Count);
 		UpdateButtons();
 	}
@@ -58,7 +61,7 @@ public class MyButtonList : MonoBehaviour {
 	/// dir defins which direction the selection should move in.
 	/// </summary>
 	/// <param name="dir"></param>
-	public void Move(int dir) {
+	public int Move(int dir) {
 		position = OPMath.FullLoop(0, buttonNames.Count, position + dir);
 		if(position <= bot)
 			bot = Mathf.Max(0, position - 1);
@@ -67,6 +70,7 @@ public class MyButtonList : MonoBehaviour {
 		top = Mathf.Min(bot + size, buttonNames.Count);
 
 		UpdateButtons();
+		return position;
 	}
 
 	/// <summary>
@@ -87,6 +91,14 @@ public class MyButtonList : MonoBehaviour {
 	/// <returns></returns>
 	public int GetPosition() {
 		return position;
+	}
+
+	/// <summary>
+	/// Get the index for the currently highlighted button.
+	/// </summary>
+	/// <returns></returns>
+	public int GetValue() {
+		return buttonValues[position];
 	}
 	
 	/// <summary>

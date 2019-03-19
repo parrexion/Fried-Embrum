@@ -93,6 +93,7 @@ public class BattlePrepController : InputReceiverDelegate {
 	/// Ends battle prep and starts the mission.
 	/// </summary>
 	public void StartMission() {
+		Debug.Log("Start mission!");
 		mainMenuView.SetActive(false);
 		menuCollectionView.SetActive(true);
 		nextStateEvent.Invoke();

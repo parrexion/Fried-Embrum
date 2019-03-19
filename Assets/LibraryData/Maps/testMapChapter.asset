@@ -39,7 +39,7 @@ MonoBehaviour:
     level: 1
     stats: {fileID: 11400000, guid: 6587ac31779338744838102a4e36b2cd, type: 2}
     inventory:
-    - item: {fileID: 0}
+    - item: {fileID: 11400000, guid: 0f3a39b4943c3394d894979e1c3bea9d, type: 2}
       droppable: 0
     skills: []
   - x: 8
@@ -71,6 +71,20 @@ MonoBehaviour:
     quotes: []
     huntX: 10
     huntY: 9
+  - spawnTurn: 0
+    x: 7
+    y: 8
+    level: 1
+    stats: {fileID: 11400000, guid: 3c62e59d0a22e10499d7722b228fdf6c, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 5d5e0c27d71f7334582f303ff4483c8a, type: 2}
+      droppable: 0
+    skills: []
+    aggroType: 2
+    hasQuotes: 0
+    quotes: []
+    huntX: 0
+    huntY: 0
   reinforcements:
   - spawnTurn: 2
     x: 1
@@ -162,6 +176,32 @@ MonoBehaviour:
     health: 0
     dialogue: {fileID: 11400000, guid: 00d834485ff097e419184cc797ba8cc7, type: 2}
     gift: {fileID: 0}
+    ally:
+      x: 0
+      y: 0
+      level: 0
+      stats: {fileID: 0}
+      inventory: []
+      skills: []
+  - x: 9
+    y: 4
+    interactType: 1
+    health: 20
+    dialogue: {fileID: 0}
+    gift: {fileID: 0}
+    ally:
+      x: 0
+      y: 0
+      level: 0
+      stats: {fileID: 0}
+      inventory: []
+      skills: []
+  - x: 12
+    y: 8
+    interactType: 3
+    health: 0
+    dialogue: {fileID: 11400000, guid: 4ca399a4972b5c14fbb5c99c0306417e, type: 2}
+    gift: {fileID: 11400000, guid: 5cfe55ac3336e614fa5dd18b43fd5a73, type: 2}
     ally:
       x: 0
       y: 0

@@ -9,7 +9,7 @@ public class DialogueInputController : InputReceiverDelegate {
 
 
 	public void StartDialogue() {
-		InputDelegateController.instance.TriggerMenuChange(MenuMode.DIALOGUE);
+		MenuChangeDelay(MenuMode.DIALOGUE);
 	}
 
 	public override void OnMenuModeChanged() {
@@ -29,6 +29,7 @@ public class DialogueInputController : InputReceiverDelegate {
 	public override void OnStartButton() {
 		textLines.SkipDialogue();
 		menuAcceptEvent.Invoke();
+		Debug.Log("SKIP!");
 	}
 
 

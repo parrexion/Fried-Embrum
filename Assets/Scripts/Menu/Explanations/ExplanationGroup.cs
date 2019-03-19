@@ -27,9 +27,10 @@ public class ExplanationGroup : MonoBehaviour {
 	}
 
 	public void UpdateSelection(bool active) {
+		int index = (active) ? currentIndex : -1;
 		for (int i = 0; i < explanations.Length; i++) {
-			explanations[i].highlight.enabled = (currentIndex == i && active);
-			if (currentIndex == i)
+			explanations[i].highlight.enabled = (index == i && active);
+			if (index == i)
 				tooltip.text = explanations[i].GetTooltip();
 		}
 	}

@@ -8,6 +8,7 @@ public class GameEvent : ScriptableObject {
 	private readonly List<GameEventListener> eventListeners = new List<GameEventListener>();
 
 	public void Raise() {
+		Debug.Log("Raised event  " + name);
 		for (int i = 0; i < eventListeners.Count; i++) {
 			eventListeners[i].OnEventRaised();
 		}

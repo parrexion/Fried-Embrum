@@ -112,12 +112,12 @@ public class TradeController : InputReceiverDelegate {
 			UpdateSelection();
 		}
 		else {
-			currentMode.value = ActionMode.MOVE;
-			MenuChangeDelay(MenuMode.UNIT);
+			currentMode.value = ActionMode.ACTION;
+			MenuChangeDelay(MenuMode.MAP);
 			selectedIndex = -1;
 			UpdateSelection();
 		}
-		menuAcceptEvent.Invoke();
+		menuBackEvent.Invoke();
     }
 
 	/// <summary>

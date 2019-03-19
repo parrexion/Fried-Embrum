@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum MenuMode { NONE, MAP, UNIT, INV, ATTACK, HEAL, STATS, INGAME, NNN, TRADE, DIALOGUE, TOOLTIP, 
+public enum MenuMode { NONE, MAP, MMM, INV, BATTLE, WEAPON, WWW, INGAME, NNN, TRADE, DIALOGUE, TOOLTIP, 
 						BASE_LAB, BASE_MISSION, BASE_HOUSE, BASE_TRAIN, BASE_SHOP, PREP, FORMATION, SAVE }
 
 public class InputDelegateController : MonoBehaviour {
@@ -16,7 +16,6 @@ public class InputDelegateController : MonoBehaviour {
 		else {
 			instance = this;
 			DontDestroyOnLoad(gameObject);
-			Setup();
 		}
 	}
 #endregion
@@ -61,12 +60,6 @@ public class InputDelegateController : MonoBehaviour {
 	public ButtonDelegate yButtonDelegate;
 	public ButtonDelegate startButtonDelegate;
 
-
-	private void Setup() {
-		//currentAction.value = ActionMode.NONE;
-		//StartCoroutine(TransitionDelay(startMode));
-		//StartCoroutine(CountPlayTime());
-	}
 
 	private IEnumerator TransitionDelay(MenuMode newMode) {
 		yield return null;

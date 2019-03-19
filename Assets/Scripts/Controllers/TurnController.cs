@@ -59,6 +59,7 @@ public class TurnController : MonoBehaviour {
 	public UnityEvent checkDialoguesEvent;
 	public UnityEvent checkMapChangeEvent;
 	public UnityEvent moveCursorEvent;
+	public UnityEvent characterChangedEvent;
 	
 	private bool gameover;
 	public BoolVariable autoWin;
@@ -262,7 +263,7 @@ public class TurnController : MonoBehaviour {
 		if (currentFactionTurn.value == Faction.PLAYER)
 			currentTurn.value++;
 
-		currentAction.value = ActionMode.NONE;
+		currentAction.value = ActionMode.LOCK;
 		InputDelegateController.instance.TriggerMenuChange(MenuMode.NONE);
 		turnChangeText.text = currentFactionTurn.value + " TURN";
 
@@ -274,7 +275,7 @@ public class TurnController : MonoBehaviour {
 		playSfxEvent.Invoke();
 
 		yield return new WaitForSeconds(duration);
-
+		
 		turnChangeDisplay.SetActive(false);
 		StartTurn();
 	}
@@ -304,6 +305,7 @@ public class TurnController : MonoBehaviour {
 			cursorY.value = playerList.values[0].posy;
 			moveCursorEvent.Invoke();
 			lockControls.value = false;
+			currentAction.value = ActionMode.NONE;
 			InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
 		}
 		else {
@@ -311,6 +313,14 @@ public class TurnController : MonoBehaviour {
 		}
 	}
 
+	public void InstaWin() {
+		if (gameover)
+			return;
+		Debug.Log("BATTLE WON");
+		gameover = true;
+		StartCoroutine(EndGameWin());
+	}
+	
 	public void GameOver() {
 		if (gameover)
 			return;
@@ -351,13 +361,5 @@ public class TurnController : MonoBehaviour {
 		playSfxEvent.Invoke();
 		yield return new WaitForSeconds(2f);
 		SceneManager.LoadScene("MainMenu");
-	}
-
-	public void InstaWin() {
-		if (gameover)
-			return;
-		Debug.Log("BATTLE WON");
-		gameover = true;
-		StartCoroutine(EndGameWin());
 	}
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ActionMode {NONE, MOVE, ATTACK, HEAL, USE, TRADE}
+public enum ActionMode {NONE, MOVE, ACTION, ATTACK, HEAL, USE, TRADE, WEAPON, LOCK}
 
 [CreateAssetMenu(menuName = "Enums/ActionMode")]
 public class ActionModeVariable : ScriptableObject {
