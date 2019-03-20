@@ -10,11 +10,13 @@ public class TargetController : MonoBehaviour {
 	public MapTileVariable target;
 
 	public UnityEvent targetChangedEvent;
+	public UnityEvent cursorMovedEvent;
 
 	private int targetIndex;
 
 
 	public void Clear() {
+		targetIndex = 0;
 		target.value = null;
 		targetChangedEvent.Invoke();
 	}

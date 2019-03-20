@@ -28,12 +28,16 @@ public class InventoryMenuController : InputReceiverDelegate {
 	
 	private void Start () {
 		inventoryMenu.SetActive(false);
+		inventoryButtons.ResetButtons();
 	}
 
     public override void OnMenuModeChanged() {
 		bool active = UpdateState(MenuMode.INV);
 		inventoryMenu.SetActive(active);
-		inventoryIndex.value = 0;
+		if (active) {
+			inventoryIndex.value = 0;
+			inventoryChangedEvent.Invoke();
+		}
     }
 
 	private void ButtonSetup() {
@@ -75,8 +79,12 @@ public class InventoryMenuController : InputReceiverDelegate {
 
     public override void OnOkButton() {
 		if (!selectMode) {
-			selectMode = true;
-			ButtonSetup();
+			InventoryTuple tuple = selectedCharacter.value.inventory.GetTuple(inventoryIndex.value);
+			if (tuple.item != null) {
+				selectMode = true;
+				ButtonSetup();
+				menuAcceptEvent.Invoke();
+			}
 		}
 		else {
 			switch (inventoryButtons.GetValue())
@@ -91,8 +99,8 @@ public class InventoryMenuController : InputReceiverDelegate {
 					DropItem();
 					break;
 			}
+			menuAcceptEvent.Invoke();
 		}
-		menuAcceptEvent.Invoke();
     }
 
     public override void OnBackButton() {
@@ -103,6 +111,7 @@ public class InventoryMenuController : InputReceiverDelegate {
 		}
 		else {
 			selectMode = false;
+			inventoryButtons.ResetButtons();
 		}
     }
 
@@ -111,6 +120,7 @@ public class InventoryMenuController : InputReceiverDelegate {
 	/// </summary>
 	private void EquipItem() {
 		selectMode = false;
+		inventoryButtons.ResetButtons();
 		selectedCharacter.value.inventory.EquipItem(inventoryIndex.value);
 		inventoryIndex.value = 0;
 		inventoryChangedEvent.Invoke();
@@ -121,6 +131,7 @@ public class InventoryMenuController : InputReceiverDelegate {
 	/// </summary>
 	private void UseItem() {
 		selectMode = false;
+		inventoryButtons.ResetButtons();
 		InventoryTuple tup = selectedCharacter.value.inventory.GetTuple(inventoryIndex.value);
 		SfxEntry sfx = (tup.item.itemType == ItemType.CHEAL) ? healItemSfx : boostItemSfx;
 		sfxQueue.Enqueue(sfx);
@@ -138,6 +149,7 @@ public class InventoryMenuController : InputReceiverDelegate {
 	/// </summary>
 	private void DropItem() {
 		selectMode = false;
+		inventoryButtons.ResetButtons();
 		selectedCharacter.value.inventory.DropItem(inventoryIndex.value, selectedCharacter.value.stats);
 		inventoryChangedEvent.Invoke();
 	}

@@ -294,6 +294,7 @@ public class InventoryContainer {
 	/// </summary>
 	/// <param name="index"></param>
 	public void DropItem(int index, StatsContainer stats) {
+		inventory[index].item = null;
 		inventory[index].charge = 0;
 		CleanupInventory(stats);
 	}

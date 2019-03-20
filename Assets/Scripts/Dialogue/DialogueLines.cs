@@ -50,7 +50,6 @@ public class DialogueLines : MonoBehaviour {
 	}
 
 	public void NextFrame(){
-
 		if (isWaiting)
 			return;
 

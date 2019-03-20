@@ -13,7 +13,10 @@ public class DialogueInputController : InputReceiverDelegate {
 	}
 
 	public override void OnMenuModeChanged() {
-        UpdateState(MenuMode.DIALOGUE);
+        bool active = UpdateState(MenuMode.DIALOGUE);
+		if (active) {
+			textLines.StartDialogue();
+		}
 	}
 
 	public override void OnOkButton() {

@@ -102,7 +102,6 @@ public class MapInputController : InputReceiverDelegate {
 			menuAcceptEvent.Invoke();
 		}
 		else if (currentAction.value == ActionMode.ACTION) {
-			Debug.Log("OK");
 			actionController.OkButton();
 			menuAcceptEvent.Invoke();
 		}
@@ -116,6 +115,7 @@ public class MapInputController : InputReceiverDelegate {
 		if (IsTargetMode()) {
 			targetController.Clear();
 			currentAction.value = ActionMode.ACTION;
+			cursor.Move(0,0);
 			menuBackEvent.Invoke();
 		}
 		else if (currentAction.value == ActionMode.ACTION) {

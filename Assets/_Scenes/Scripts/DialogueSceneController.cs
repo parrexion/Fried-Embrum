@@ -29,14 +29,11 @@ public class DialogueSceneController : MonoBehaviour {
 	/// </summary>
 	/// <param name="active"></param>
 	public void ActivateStuff(bool active) {
-		for (int i = 0; i < dialogueObjects.Length; i++) {
-			dialogueObjects[i].SetActive(active);
-		}
 		for (int i = 0; i < dialogueCanvases.Length; i++) {
 			dialogueCanvases[i].enabled = active;
 		}
-		if (active) {
-			lines.StartDialogue();
+		for (int i = 0; i < dialogueObjects.Length; i++) {
+			dialogueObjects[i].SetActive(active);
 		}
 	}
 
@@ -45,6 +42,7 @@ public class DialogueSceneController : MonoBehaviour {
 	/// Deactivates the dialogue stuff and returns back to game again.
 	/// </summary>
 	public void DialogueEnd() {
+
 		switch (currentDialogueMode.value)
 		{
 			case (int)DialogueMode.PRELUDE:

@@ -192,12 +192,10 @@ public class MapCursor : MonoBehaviour {
 				moveTile.value = tile;
 				selectCharacter.value.ShowMove(tile);
 				updateCharacterUI.Invoke();
-				Debug.Log("Select");
 			}
 			else {
 				moveTile.value = null;
 				battleMap.ClearMovement();
-				Debug.Log("Empty");
 			}
 		}
 
