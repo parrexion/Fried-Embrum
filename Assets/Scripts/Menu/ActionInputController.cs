@@ -56,8 +56,7 @@ public class ActionInputController : MonoBehaviour {
     }
 
     public void OkButton() {
-		switch ((ActionInputType)menuPosition)
-		{
+		switch ((ActionInputType)menuPosition) {
 			case ActionInputType.SEIZE:
 				triggeredWin.value = true;
 				currentActionMode.value = ActionMode.NONE;

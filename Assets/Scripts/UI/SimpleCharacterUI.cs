@@ -123,6 +123,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 			ShowBasicStats(tactics);
 
 		ShowTerrainInfo(active);
+		flipButton.SetActive(currentMenuMode.value != (int)MenuMode.INV);
 	}
 	
 	/// <summary>
@@ -373,8 +374,6 @@ public class SimpleCharacterUI : MonoBehaviour {
 			inventoryHighlight[i].enabled = (i == inventoryIndex.value);
 			inventoryHighlight[i].color = (currentMenuMode.value == (int)MenuMode.INV) ? new Color(0.35f,0.7f,1f,0.6f) : new Color(0.35f,1f,1f,0.75f);
 		}
-
-		flipButton.SetActive(currentMenuMode.value != (int)MenuMode.INV);
 	}
 
 	/// <summary>

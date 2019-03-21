@@ -25,11 +25,13 @@ public class TargetController : MonoBehaviour {
 		targetIndex = 0;
         target.value = targetList.values[0];
 		targetChangedEvent.Invoke();
+		cursorMovedEvent.Invoke();
     }
 
 	public void Move(int dir) {
 		targetIndex = OPMath.FullLoop(0, targetList.values.Count, targetIndex + dir);
         target.value = targetList.values[targetIndex];
 		targetChangedEvent.Invoke();
+		cursorMovedEvent.Invoke();
 	}
 }

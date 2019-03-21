@@ -115,6 +115,7 @@ public class MapInputController : InputReceiverDelegate {
 		if (IsTargetMode()) {
 			targetController.Clear();
 			currentAction.value = ActionMode.ACTION;
+			actionController.ShowMenu(true);
 			cursor.Move(0,0);
 			menuBackEvent.Invoke();
 		}
@@ -171,8 +172,8 @@ public class MapInputController : InputReceiverDelegate {
 	/// Triggered when battles end and updates the current menu mode.
 	/// </summary>
 	public void BattleEnd() {
-		//currentMode.value = ActionMode.NONE;
-		//cursor.ResetTargets();
-		//InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
+		currentAction.value = ActionMode.NONE;
+		cursor.ResetTargets();
+		MenuChangeDelay(MenuMode.MAP);
 	}
 }

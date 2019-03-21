@@ -235,6 +235,7 @@ public class NPCMove : TacticsMove {
 			inventory.EquipFirstInRangeItem(ItemCategory.STAFF, stats, distance);
             Heal(targetTile.value);
 		}
+		InputDelegateController.instance.TriggerMenuChange(MenuMode.BATTLE);
 		return true;
 	}
 

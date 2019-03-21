@@ -311,8 +311,6 @@ public abstract class TacticsMove : MonoBehaviour {
 		battleWeaponIndex.value = 0;
 		characterClicked.Invoke();
 		targetTile.value.target = true;
-		BattleContainer.instance.GenerateActions(this, target);
-		BattleContainer.instance.PlayBattleAnimations();
 	}
 
 	/// <summary>
@@ -325,8 +323,6 @@ public abstract class TacticsMove : MonoBehaviour {
 		battleWeaponIndex.value = 0;
 		characterClicked.Invoke();
 		targetTile.value.target = true;
-		BattleContainer.instance.GenerateHealAction(this, ally);
-		BattleContainer.instance.PlayBattleAnimations();
 	}
 
 	/// <summary>

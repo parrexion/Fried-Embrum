@@ -1,15 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ForcastInputController : InputReceiverDelegate {
 
 	public ForecastUI forecast;
 
 	public TacticsMoveVariable selectedCharacter;
-	public MapTileVariable defendCharacter;
+	public MapTileVariable defendTile;
 	public IntVariable battleWeaponIndex;
 	public ActionModeVariable currentAction;
+
+	public UnityEvent characterChangedEvent;
 
 	private List<InventoryTuple> attackerWeapons;
 	private int listIndex;
@@ -25,13 +28,14 @@ public class ForcastInputController : InputReceiverDelegate {
 
 		if (!active)
 			return;
-		Debug.Log("Active!");
+
 		listIndex = 0;
 		if (currentAction.value == ActionMode.ATTACK)
 			attackerWeapons = selectedCharacter.value.inventory.GetAllUsableItemTuple(ItemCategory.WEAPON, selectedCharacter.value.stats);
 		else
 			attackerWeapons = selectedCharacter.value.inventory.GetAllUsableItemTuple(ItemCategory.STAFF, selectedCharacter.value.stats);
 		battleWeaponIndex.value = attackerWeapons[listIndex].index;
+		characterChangedEvent.Invoke();
 	}
 
 	public override void OnLeftArrow() {
@@ -44,11 +48,13 @@ public class ForcastInputController : InputReceiverDelegate {
 
 	public override void OnOkButton() {
 		if (currentAction.value == ActionMode.ATTACK) {
-			selectedCharacter.value.Attack(defendCharacter.value);
+			selectedCharacter.value.Attack(defendTile.value);
+			MenuChangeDelay(MenuMode.BATTLE);
 			menuAcceptEvent.Invoke();
 		}
 		else if (currentAction.value == ActionMode.HEAL) {
-			selectedCharacter.value.Heal(defendCharacter.value);
+			selectedCharacter.value.Heal(defendTile.value);
+			MenuChangeDelay(MenuMode.BATTLE);
 			menuAcceptEvent.Invoke();
 		}
 	}

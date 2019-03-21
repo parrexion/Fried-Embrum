@@ -4,14 +4,10 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class BattleContainer : MonoBehaviour {
+public class BattleContainer : InputReceiverDelegate {
 
-	public static BattleContainer instance;
-
-	private void Awake() {
-		instance = this;
-	}
-
+	public MapTileVariable attackerTile;
+	public MapTileVariable defenderTile;
 	public ScrObjEntryReference currentMap;
 	public FactionVariable currentTurn;
 	public BoolVariable lockControls;
@@ -80,17 +76,27 @@ public class BattleContainer : MonoBehaviour {
 	private bool _attackerDealtDamage;
 	private bool _defenderDealtDamage;
 
+	
+	public override void OnMenuModeChanged() {
+		bool active = UpdateState(MenuMode.BATTLE);
+		if (active) {
+			GenerateActions();
+			PlayBattleAnimations();
+		}
+	}
 
-	public void GenerateActions(TacticsMove attacker, MapTile target) {
+
+	public void GenerateActions() {
+		TacticsMove attacker = attackerTile.value.currentCharacter;
+		TacticsMove defender = defenderTile.value.currentCharacter;
 		dialogue = null;
-		if (target.currentCharacter == null) {
+		if (defenderTile == null) {
 			_currentCharacter = attacker;
 			actions.Clear();
-			actions.Add(new BattleAction(true, true, attacker, target.blockMove));
+			actions.Add(new BattleAction(true, true, attacker, defenderTile.value.blockMove));
 			Debug.Log("BLOCK FIGHT!!");
 		}
 		else {
-			TacticsMove defender = target.currentCharacter;
 
 			// Add battle init boosts
 			attacker.ActivateSkills(Activation.INITCOMBAT, defender);
@@ -200,6 +206,7 @@ public class BattleContainer : MonoBehaviour {
 			battleAnimationObject.transform.localPosition.z
 		);
 		battleAnimationObject.SetActive(useBattleAnimations.value);
+		uiCanvas.gameObject.SetActive(!useBattleAnimations.value);
 
 		//Music
 		MapEntry map = (MapEntry)currentMap.value;
@@ -355,6 +362,7 @@ public class BattleContainer : MonoBehaviour {
 
 		//Clean up
 		battleAnimationObject.SetActive(false);
+		uiCanvas.SetActive(true);
 		// uiCanvas.SetActive(true);
 		leftDamageObject.SetActive(false);
 		rightDamageObject.SetActive(false);
@@ -513,4 +521,17 @@ public class BattleContainer : MonoBehaviour {
 		// Debug.Log("SINGLE:  " + nr + " -> " + hit);
 		return (nr < hit);
 	}
+
+
+	public override void OnUpArrow() {}
+	public override void OnDownArrow() {}
+	public override void OnLeftArrow() {}
+	public override void OnRightArrow() {}
+	public override void OnOkButton() {}
+	public override void OnBackButton() {}
+	public override void OnLButton() {}
+	public override void OnRButton() {}
+	public override void OnXButton() {}
+	public override void OnYButton() {}
+	public override void OnStartButton() {}
 }
