@@ -5,8 +5,10 @@ using UnityEngine;
 [System.Serializable]
 public class BattleAction {
 
+	public enum Type { DAMAGE, HEAL, BUFF }
+
 	public bool leftSide;
-	public bool isDamage;
+	public Type type;
 	public TacticsMove attacker;
 	public TacticsMove defender;
 	public InventoryTuple weaponAtk;
@@ -15,9 +17,9 @@ public class BattleAction {
 	public TerrainTile terrainDef;
 
 
-	public BattleAction(bool leftSide, bool damage, TacticsMove atk, TacticsMove def) {
+	public BattleAction(bool leftSide, Type type, TacticsMove atk, TacticsMove def) {
 		this.leftSide = leftSide;
-		isDamage = damage;
+		this.type = type;
 		attacker = atk;
 		defender = def;
 		weaponAtk = attacker.inventory.GetFirstUsableItemTuple(ItemCategory.WEAPON, attacker.stats);
@@ -73,7 +75,7 @@ public class BattleAction {
 	public int GetExperience() {
 
 		//Exp for support skills
-		if (!isDamage) {
+		if (type != Type.DAMAGE) {
 			return (attacker.faction == Faction.PLAYER) ? BattleCalc.GetExperienceSupport(staffAtk.item, attacker.stats) : 0;
 		}
 
@@ -97,5 +99,50 @@ public class BattleAction {
 			return false;
 
 		return weaponDef.item.InRange(distance);
+	}
+
+	/// <summary>
+	/// Attempts to attack. If the attacks hit, the damage dealt is returned.
+	/// If the attack misses, -1 is returned.
+	/// </summary>
+	/// <param name="useTrueHit"></param>
+	/// <returns></returns>
+	public int AttemptAttack(bool useTrueHit) {
+		return (GenerateHitNumber(GetHitRate(), useTrueHit)) ? GetDamage() : -1;
+	}
+
+	/// <summary>
+	/// Attempts to make a crit. If the crit rate is enough than true is returned.
+	/// </summary>
+	/// <returns></returns>
+	public bool AttemptCrit() {
+		return SingleNumberCheck(GetCritRate());
+	}
+	
+	/// <summary>
+	/// Generates two hit numbers from 100 and averages them.
+	/// Is a hit if it's below the hit number.
+	/// </summary>
+	/// <param name="hit"></param>
+	/// <returns></returns>
+	private bool GenerateHitNumber(int hit, bool useTrueHit) {
+		int nr = Random.Range(0, 100);
+		if (useTrueHit) {
+			nr += Random.Range(0, 100);
+			nr /= 2;
+		}
+		// Debug.Log("HIT:  " + nr + " -> " + hit);
+		return (nr < hit);
+	}
+
+	/// <summary>
+	/// Generates a single number out of 100 and hits if it's below the hit value.
+	/// </summary>
+	/// <param name="hit"></param>
+	/// <returns></returns>
+	private bool SingleNumberCheck(int hit) {
+		int nr = Random.Range(0, 100);
+		// Debug.Log("SINGLE:  " + nr + " -> " + hit);
+		return (nr < hit);
 	}
 }

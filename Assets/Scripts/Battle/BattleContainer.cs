@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class BattleContainer : InputReceiverDelegate {
 
+	public ActionModeVariable currentAction;
 	public MapTileVariable attackerTile;
 	public MapTileVariable defenderTile;
 	public ScrObjEntryReference currentMap;
@@ -80,20 +81,22 @@ public class BattleContainer : InputReceiverDelegate {
 	public override void OnMenuModeChanged() {
 		bool active = UpdateState(MenuMode.BATTLE);
 		if (active) {
-			GenerateActions();
+			if (currentAction.value == ActionMode.ATTACK)
+				GenerateDamageActions();
+			else 
+				GenerateHealAction();
 			PlayBattleAnimations();
 		}
 	}
 
-
-	public void GenerateActions() {
+	public void GenerateDamageActions() {
 		TacticsMove attacker = attackerTile.value.currentCharacter;
 		TacticsMove defender = defenderTile.value.currentCharacter;
 		dialogue = null;
 		if (defenderTile == null) {
 			_currentCharacter = attacker;
 			actions.Clear();
-			actions.Add(new BattleAction(true, true, attacker, defenderTile.value.blockMove));
+			actions.Add(new BattleAction(true, BattleAction.Type.DAMAGE, attacker, defenderTile.value.blockMove));
 			Debug.Log("BLOCK FIGHT!!");
 		}
 		else {
@@ -107,20 +110,20 @@ public class BattleContainer : InputReceiverDelegate {
 			InventoryTuple atkTup = attacker.GetEquippedWeapon(ItemCategory.WEAPON);
 			InventoryTuple defTup = defender.GetEquippedWeapon(ItemCategory.WEAPON);
 			actions.Clear();
-			actions.Add(new BattleAction(true, true, attacker, defender));
+			actions.Add(new BattleAction(true, BattleAction.Type.DAMAGE, attacker, defender));
 			int range = Mathf.Abs(attacker.posx - defender.posx) + Mathf.Abs(attacker.posy - defender.posy);
 			if (defTup.item != null && defTup.charge > 0 && defender.GetEquippedWeapon(ItemCategory.WEAPON).item.InRange(range)) {
-				actions.Add(new BattleAction(false, true, defender, attacker));
+				actions.Add(new BattleAction(false, BattleAction.Type.DAMAGE, defender, attacker));
 			}
 			//Compare speeds
 			int spdDiff = actions[0].GetSpeedDifference();
 			if (spdDiff >= doublingSpeed.value) {
 				if (atkTup.charge > 1)
-					actions.Add(new BattleAction(true, true, attacker, defender));
+					actions.Add(new BattleAction(true, BattleAction.Type.DAMAGE, attacker, defender));
 			}
 			else if (spdDiff <= - doublingSpeed.value) {
 				if (defTup.item != null && defTup.charge > 0 && defender.GetEquippedWeapon(ItemCategory.WEAPON).item.InRange(range)) {
-					actions.Add(new BattleAction(false, true, defender, attacker));
+					actions.Add(new BattleAction(false, BattleAction.Type.DAMAGE, defender, attacker));
 				}
 			}
 
@@ -144,15 +147,16 @@ public class BattleContainer : InputReceiverDelegate {
 		}
 	}
 
-	public void GenerateHealAction(TacticsMove attacker, MapTile target) {
-		if (target.currentCharacter == null) {
-
+	public void GenerateHealAction() {
+		TacticsMove attacker = attackerTile.value.currentCharacter;
+		TacticsMove defender = defenderTile.value.currentCharacter;
+		if (defender == null) {
+			Debug.LogError("There should be someone to heal, right!?");
 		}
 		else {
-			TacticsMove defender = target.currentCharacter;
 			_currentCharacter = attacker;
 			actions.Clear();
-			actions.Add(new BattleAction(true, false, attacker, defender));
+			actions.Add(new BattleAction(true, BattleAction.Type.HEAL, attacker, defender));
 		}
 	}
 
@@ -210,7 +214,7 @@ public class BattleContainer : InputReceiverDelegate {
 
 		//Music
 		MapEntry map = (MapEntry)currentMap.value;
-		subMusic.value = (actions[0].isDamage) ? map.battleMusic.clip : map.healMusic.clip;
+		subMusic.value = (actions[0].type == BattleAction.Type.DAMAGE) ? map.battleMusic.clip : map.healMusic.clip;
 		musicFocus.value = false;
 		playSubMusicEvent.Invoke();
 	}
@@ -223,10 +227,10 @@ public class BattleContainer : InputReceiverDelegate {
 		}
 		for (int i = 0; i < actions.Count; i++) {
 			BattleAction act = actions[i];
-			if (act.isDamage && act.attacker.inventory.GetFirstUsableItemTuple(ItemCategory.WEAPON, act.attacker.stats).charge <= 0) {
+			if (act.type == BattleAction.Type.DAMAGE && act.attacker.inventory.GetFirstUsableItemTuple(ItemCategory.WEAPON, act.attacker.stats).charge <= 0) {
 				continue; //Broken weapon
 			}
-			if (!act.isDamage && act.attacker.inventory.GetFirstUsableItemTuple(ItemCategory.STAFF, act.attacker.stats).charge <= 0) {
+			if (act.type != BattleAction.Type.DAMAGE && act.attacker.inventory.GetFirstUsableItemTuple(ItemCategory.STAFF, act.attacker.stats).charge <= 0) {
 				continue; //Broken staff
 			}
 			
@@ -253,9 +257,9 @@ public class BattleContainer : InputReceiverDelegate {
 			}
 			// Deal damage
 			bool isCrit = false;
-			if (act.isDamage) {
-				int damage = (GenerateHitNumber(act.GetHitRate())) ? act.GetDamage() : -1;
-				if (damage != -1 && SingleNumberCheck(act.GetCritRate())) {
+			if (act.type == BattleAction.Type.DAMAGE) {
+				int damage = act.AttemptAttack(useTrueHit.value);
+				if (damage != -1 && act.AttemptCrit()) {
 					damage *= 3;
 					isCrit = true;
 				}
@@ -355,7 +359,7 @@ public class BattleContainer : InputReceiverDelegate {
 		}
 
 		//Give debuffs
-		if (actions[0].isDamage) {
+		if (actions[0].type == BattleAction.Type.DAMAGE) {
 			actions[0].attacker.ActivateSkills(Activation.POSTCOMBAT, actions[0].defender);
 			actions[0].defender.ActivateSkills(Activation.POSTCOMBAT, actions[0].attacker);
 		}
@@ -363,7 +367,6 @@ public class BattleContainer : InputReceiverDelegate {
 		//Clean up
 		battleAnimationObject.SetActive(false);
 		uiCanvas.SetActive(true);
-		// uiCanvas.SetActive(true);
 		leftDamageObject.SetActive(false);
 		rightDamageObject.SetActive(false);
 		actions[0].attacker.EndSkills(Activation.INITCOMBAT, actions[0].defender);
@@ -459,7 +462,7 @@ public class BattleContainer : InputReceiverDelegate {
 
 	private IEnumerator HandleBrokenWeapons() {
 		//Broken weapons
-		if (actions[0].isDamage) {
+		if (actions[0].type == BattleAction.Type.DAMAGE) {
 			InventoryTuple invTup = actions[0].weaponAtk;
 			if (invTup.item != null && invTup.charge <= 0) {
 				yield return StartCoroutine(popup.ShowPopup(invTup.item.icon, invTup.item.entryName + " is out of ammo!", popup.brokenItemFanfare));
@@ -493,33 +496,6 @@ public class BattleContainer : InputReceiverDelegate {
 			yield return StartCoroutine(popup.ShowPopup(itemTup.item.icon, "Gained " + itemTup.item.entryName, popup.droppedItemFanfare));
 		}
 		yield break;
-	}
-
-	/// <summary>
-	/// Generates two hit numbers from 100 and averages them.
-	/// Is a hit if it's below the hit number.
-	/// </summary>
-	/// <param name="hit"></param>
-	/// <returns></returns>
-	private bool GenerateHitNumber(int hit) {
-		int nr = Random.Range(0, 100);
-		if (useTrueHit.value) {
-			nr += Random.Range(0, 100);
-			nr /= 2;
-		}
-		// Debug.Log("HIT:  " + nr + " -> " + hit);
-		return (nr < hit);
-	}
-
-	/// <summary>
-	/// Generates a single number out of 100 and hits if it's below the hit value.
-	/// </summary>
-	/// <param name="hit"></param>
-	/// <returns></returns>
-	private bool SingleNumberCheck(int hit) {
-		int nr = Random.Range(0, 100);
-		// Debug.Log("SINGLE:  " + nr + " -> " + hit);
-		return (nr < hit);
 	}
 
 

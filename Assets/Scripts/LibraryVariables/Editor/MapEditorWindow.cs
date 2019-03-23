@@ -195,6 +195,7 @@ public class MapEditorWindow {
 		GUILayout.Space(10);
 
 		GUILayout.Label("Dialogues", EditorStyles.boldLabel);
+		mapValues.skipBattlePrep = EditorGUILayout.Toggle("Skip battle preps?", mapValues.skipBattlePrep);
 		mapValues.preDialogue = (DialogueEntry)EditorGUILayout.ObjectField("Mission dialogue",mapValues.preDialogue, typeof(DialogueEntry),false);
 		mapValues.introDialogue = (DialogueEntry)EditorGUILayout.ObjectField("On mission start",mapValues.introDialogue, typeof(DialogueEntry),false);
 		mapValues.endDialogue = (DialogueEntry)EditorGUILayout.ObjectField("After win",mapValues.endDialogue, typeof(DialogueEntry),false);

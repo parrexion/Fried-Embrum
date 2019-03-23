@@ -89,7 +89,11 @@ public class TurnController : MonoBehaviour {
 			break;
 		case TurnState.STORY:
 			Debug.Log("Show prep");
-			//if (!prep) { TurnState.INTRO + nextAction };		
+			if (((MapEntry)currentMap.value).skipBattlePrep) {
+				currentState = TurnState.INTRO;
+				TriggerNextStep();
+				break;
+			};		
 			currentState = TurnState.PREP;
 			InputDelegateController.instance.TriggerMenuChange(MenuMode.PREP);
 			break;
@@ -361,5 +365,12 @@ public class TurnController : MonoBehaviour {
 		playSfxEvent.Invoke();
 		yield return new WaitForSeconds(2f);
 		SceneManager.LoadScene("MainMenu");
+	}
+
+
+	public void DamageAllPlayers() {
+		for (int i = 0; i < playerList.values.Count; i++) {
+			playerList.values[i].TakeDamage(5, false);
+		}
 	}
 }

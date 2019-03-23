@@ -48,6 +48,7 @@ public class MapEntry : ScrObjLibraryEntry {
 
 
 	public override void ResetValues() {
+		base.ResetValues();
 		sizeX = 0;
 		sizeY = 0;
 		mapSprite = null;
@@ -57,7 +58,7 @@ public class MapEntry : ScrObjLibraryEntry {
 		loseCondition = LoseCondition.NORMAL;
 		reward = new Reward();
 
-		base.ResetValues();
+		skipBattlePrep = false;
 		preDialogue = null;
 		introDialogue = null;
 		endDialogue = null;
@@ -88,6 +89,7 @@ public class MapEntry : ScrObjLibraryEntry {
 		loseCondition = map.loseCondition;
 		reward = map.reward;
 
+		skipBattlePrep = map.skipBattlePrep;
 		preDialogue = map.preDialogue;
 		introDialogue = map.introDialogue;
 		endDialogue = map.endDialogue;

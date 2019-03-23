@@ -41,6 +41,7 @@ public class DialogueLines : MonoBehaviour {
 			dialogueEntry = wpEntry;
 			overrideActionNumber.value = false;
 		}
+		isWaiting = false;
 		NextFrame();
 
 		scene.backgroundChanged.Invoke();

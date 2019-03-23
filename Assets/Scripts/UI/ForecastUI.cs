@@ -87,13 +87,13 @@ public class ForecastUI : MonoBehaviour {
 	private void CalculateShowForecast(TacticsMove attacker, MapTile target) {
 		if (target.currentCharacter == null) {
 			TacticsMove defender = target.blockMove;
-			bool attackmode = (currentMode.value == ActionMode.ATTACK);
-			BattleAction act1 = new BattleAction(true, attackmode, attacker, defender);
+			BattleAction.Type battleMode = (currentMode.value == ActionMode.ATTACK) ? BattleAction.Type.DAMAGE : BattleAction.Type.HEAL; 
+			BattleAction act1 = new BattleAction(true, battleMode, attacker, defender);
 			_attackerTactics = attacker;
 			_defenderTactics = defender;
 			act1.weaponAtk = attacker.inventory.GetTuple(battleWeaponIndex.value);
 
-			if (attackmode) {
+			if (battleMode == BattleAction.Type.DAMAGE) {
 				Debug.Log("ATTACK1!");
 				if (inBattle)
 					backgroundInBattle.SetActive(true);
@@ -120,17 +120,17 @@ public class ForecastUI : MonoBehaviour {
 		}
 		else {
 			TacticsMove defender = target.currentCharacter;
-			bool attackmode = (currentMode.value == ActionMode.ATTACK);
-			BattleAction act1 = new BattleAction(true, attackmode, attacker, defender);
+			BattleAction.Type battlemode = (currentMode.value == ActionMode.ATTACK) ? BattleAction.Type.DAMAGE : BattleAction.Type.HEAL; 
+			BattleAction act1 = new BattleAction(true, battlemode, attacker, defender);
 			_attackerTactics = attacker;
 			_defenderTactics = defender;
 			act1.weaponAtk = attacker.inventory.GetTuple(battleWeaponIndex.value);
 
-			if (attackmode) {
+			if (battlemode == BattleAction.Type.DAMAGE) {
 				if (inBattle)
 					backgroundInBattle.SetActive(true);
 
-				BattleAction act2 = new BattleAction(false, true, defender, attacker);
+				BattleAction act2 = new BattleAction(false, BattleAction.Type.DAMAGE, defender, attacker);
 				act2.weaponDef = attacker.inventory.GetTuple(battleWeaponIndex.value);
 				int distance = BattleMap.DistanceTo(defender, walkTile.value);
 				int atk = (act1.weaponAtk.item.InRange(distance)) ? act1.GetDamage() : -1;
@@ -152,7 +152,6 @@ public class ForecastUI : MonoBehaviour {
 				}
 			}
 			else {
-				Debug.Log("HEAL!");
 				ShowHealForecast(attacker, defender, act1.weaponAtk);
 				if (!inBattle) {
 					backgroundFight.SetActive(false);

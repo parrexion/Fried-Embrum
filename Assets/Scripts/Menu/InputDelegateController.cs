@@ -138,33 +138,26 @@ public class InputDelegateController : MonoBehaviour {
 		}
 
 		if (Input.GetKeyDown(KeyCode.Z) || Input.GetKeyDown(KeyCode.JoystickButton0)) {
-			if (okButtonDelegate != null)
-				okButtonDelegate();
+			okButtonDelegate?.Invoke();
 		}
 		if (Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.JoystickButton1)) {
-			if(backButtonDelegate != null)
-				backButtonDelegate();
+			backButtonDelegate?.Invoke();
 		}
 		if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.JoystickButton4)) {
-			if(lButtonDelegate != null)
-				lButtonDelegate();
+			lButtonDelegate?.Invoke();
 		}
 		if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.JoystickButton5)) {
-			if(rButtonDelegate != null)
-				rButtonDelegate();
+			rButtonDelegate?.Invoke();
 		}
 		if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.JoystickButton3)) {
-			if(xButtonDelegate != null)
-				xButtonDelegate();
+			xButtonDelegate?.Invoke();
 		}
 		if (Input.GetKeyDown(KeyCode.C) || Input.GetKeyDown(KeyCode.JoystickButton2)) {
-			if(yButtonDelegate != null)
-				yButtonDelegate();
+			yButtonDelegate?.Invoke();
 		}
 		if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.JoystickButton6) ||
 			Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.JoystickButton7)) {
-			if(startButtonDelegate != null)
-				startButtonDelegate();
+			startButtonDelegate?.Invoke();
 		}
 	}
 
