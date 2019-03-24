@@ -25,7 +25,8 @@ public class BattleAction {
 		weaponAtk = attacker.inventory.GetFirstUsableItemTuple(ItemCategory.WEAPON, attacker.stats);
 		weaponDef = defender.inventory.GetFirstUsableItemTuple(ItemCategory.WEAPON, defender.stats);
 		staffAtk = attacker.inventory.GetFirstUsableItemTuple(ItemCategory.STAFF, attacker.stats);
-		terrainDef = defender.currentTile.terrain;
+		if (defender.currentTile)
+			terrainDef = defender.currentTile.terrain;
 	}
 
 	/// <summary>

@@ -97,7 +97,8 @@ public class SimpleCharacterUI : MonoBehaviour {
 		//Set selected character to the targeted tile instead of the selected character
 		if (actionMode.value == ActionMode.ATTACK || actionMode.value == ActionMode.HEAL || actionMode.value == ActionMode.TRADE) {
 			tile = targetTile.value;
-			tactics = tile.currentCharacter;
+			if (tile)
+				tactics = tile.currentCharacter;
 		}
 
 		if (currentMenuMode.value != (int)MenuMode.MAP && currentMenuMode.value != (int)MenuMode.PREP &&

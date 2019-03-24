@@ -37,6 +37,7 @@ public class BattleContainer : InputReceiverDelegate {
 	public List<BattleAction> actions = new List<BattleAction>();
 	public float speed = 1.5f;
 	public BoolVariable useBattleAnimations;
+	private bool showBattleAnim;
 
 	[Header("Battle Animations")]
 	public GameObject battleAnimationObject;
@@ -106,13 +107,14 @@ public class BattleContainer : InputReceiverDelegate {
 		TacticsMove defender = defenderTile.value.currentCharacter;
 		dialogue = null;
 		if (defender == null) {
+			showBattleAnim = false;
 			_currentCharacter = attacker;
 			actions.Clear();
 			actions.Add(new BattleAction(true, BattleAction.Type.DAMAGE, attacker, defenderTile.value.blockMove));
 			Debug.Log("BLOCK FIGHT!!");
 		}
 		else {
-
+			showBattleAnim = useBattleAnimations.value;
 			// Add battle init boosts
 			attacker.ActivateSkills(Activation.INITCOMBAT, defender);
 			attacker.ActivateSkills(Activation.PRECOMBAT, defender);
@@ -203,8 +205,8 @@ public class BattleContainer : InputReceiverDelegate {
 			cameraPosY.value, 
 			battleAnimationObject.transform.localPosition.z
 		);
-		battleAnimationObject.SetActive(useBattleAnimations.value);
-		uiCanvas.gameObject.SetActive(!useBattleAnimations.value);
+		battleAnimationObject.SetActive(showBattleAnim);
+		uiCanvas.gameObject.SetActive(!showBattleAnim);
 
 		//Music
 		MapEntry map = (MapEntry)currentMap.value;
@@ -215,10 +217,7 @@ public class BattleContainer : InputReceiverDelegate {
 
 	private IEnumerator ActionLoop() {
 		state = State.ACTION;
-		bool useAnim = useBattleAnimations.value;
-		if (actions[0].defender.faction == Faction.WORLD) {
-			useAnim = false;
-		}
+
 		for (int i = 0; i < actions.Count; i++) {
 			Debug.Log("Next action");
 			BattleAction act = actions[i];
@@ -229,13 +228,13 @@ public class BattleContainer : InputReceiverDelegate {
 				continue; //Broken staff
 			}
 			
-			Transform attackTransform = (!useAnim) ? act.attacker.transform : (act.leftSide) ? leftTransform : rightTransform;
-			Transform defenseTransform = (!useAnim) ? act.defender.transform : (act.leftSide) ? rightTransform : leftTransform;
+			Transform attackTransform = (!showBattleAnim) ? act.attacker.transform : (act.leftSide) ? leftTransform : rightTransform;
+			Transform defenseTransform = (!showBattleAnim) ? act.defender.transform : (act.leftSide) ? rightTransform : leftTransform;
 			Vector3 startPos = attackTransform.position;
 			Vector3 enemyPos = defenseTransform.position;
 			enemyPos = startPos + (enemyPos - startPos).normalized;
 			forecastUI.UpdateUI(true);
-			if (useAnim) {
+			if (showBattleAnim) {
 				leftHealth.fillAmount = actions[0].attacker.GetHealthPercent();
 				rightHealth.fillAmount = actions[0].defender.GetHealthPercent();
 			}
