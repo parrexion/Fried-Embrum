@@ -191,6 +191,9 @@ public class TurnController : MonoBehaviour {
 	/// Checks to see if the win/lose condition has been met, displays a message and ends the game.
 	/// </summary>
 	public void CheckGameFinished() {
+		if (gameover)
+			return;
+
 		// Check if any players are alive
 		bool gameFinished = true;
 		MapEntry map = (MapEntry)currentMap.value;

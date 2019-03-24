@@ -10,6 +10,7 @@ public class ActionInputController : MonoBehaviour {
 
 	[Header("References")]
 	public TacticsMoveVariable selectedCharacter;
+	public ScrObjEntryReference currentMap;
 	public IntVariable currentMenuMode;
 	public ActionModeVariable currentActionMode;
 	public MapTileListVariable targetList;
@@ -130,7 +131,8 @@ public class ActionInputController : MonoBehaviour {
 	}
 
 	private void ButtonSetup() {
-		actionButtons[(int)ActionInputType.SEIZE].gameObject.SetActive(selectedCharacter.value.CanSeize());
+		bool seizeWin = ((MapEntry)currentMap.value).winCondition == WinCondition.SEIZE;
+		actionButtons[(int)ActionInputType.SEIZE].gameObject.SetActive(seizeWin && selectedCharacter.value.CanSeize());
 		actionButtons[(int)ActionInputType.ATTACK].gameObject.SetActive(selectedCharacter.value.CanAttack());
 		actionButtons[(int)ActionInputType.HEAL].gameObject.SetActive(selectedCharacter.value.CanSupport());
 		actionButtons[(int)ActionInputType.VISIT].gameObject.SetActive(selectedCharacter.value.CanVisit());
