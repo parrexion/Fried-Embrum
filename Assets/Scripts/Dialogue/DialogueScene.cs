@@ -8,6 +8,8 @@ enum DialogueMode { NONE, PRELUDE, INTRO, ENDING, EVENT, VISIT, QUOTE }
 [System.Serializable]
 public class DialogueScene : MonoBehaviour {
 
+	public BackgroundEntry emptyBackground;
+
 	public ScrObjEntryReference background;
 	public ScrObjEntryReference[] characters;
 	public IntVariable[] poses;
@@ -21,24 +23,23 @@ public class DialogueScene : MonoBehaviour {
 	public ScrObjEntryReference flashBackground;
 	public FloatVariable effectStartDuration;
 	public FloatVariable effectEndDuration;
-
 	
 	[Header("Animations")]
 	public Character[] characterTransforms;
 
 	[Header("Events")]
-	public UnityEvent dialogueEndEvent;
 	public UnityEvent backgroundChanged;
+	public UnityEvent characterChanged;
 	public UnityEvent bkgMusicChanged;
 	public UnityEvent playSfx;
-	public UnityEvent characterChanged;
 	public UnityEvent dialogueTextChanged;
+	public UnityEvent dialogueEndEvent;
 	public UnityEvent screenFlashEvent;
 	public UnityEvent screenShakeEvent;
 
 
 	public void Reset() {
-		background.value = null;
+		background.value = emptyBackground;
 		for (int i = 0; i < characters.Length; i++) {
 			characters[i].value = null;
 		}
@@ -49,6 +50,11 @@ public class DialogueScene : MonoBehaviour {
 		talkingIndex.value = -1;
 		dialogueText.value = "";
 		bkgMusic.value = null;
+		
+		backgroundChanged.Invoke();
+		characterChanged.Invoke();
+		bkgMusicChanged.Invoke();
+		dialogueTextChanged.Invoke();
 	}
 
 }

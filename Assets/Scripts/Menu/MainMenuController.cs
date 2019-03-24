@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class MainMenuController : InputReceiverDelegate {
 	private enum State { MAIN, CONTROLS, LOAD, OPTIONS }
@@ -55,11 +53,11 @@ public class MainMenuController : InputReceiverDelegate {
 		mainMusic.value = mainTheme.clip;
 		subMusic.value = null;
 		playBkgMusicEvent.Invoke();
-		InputDelegateController.instance.TriggerMenuChange(MenuMode.NONE);
+		InputDelegateController.instance.TriggerMenuChange(MenuMode.MAIN_MENU);
 	}
 
 	public override void OnMenuModeChanged() {
-		UpdateState(MenuMode.NONE);
+		UpdateState(MenuMode.MAIN_MENU);
 	}
 
 	public void ControlsClicked() {
@@ -87,9 +85,8 @@ public class MainMenuController : InputReceiverDelegate {
 		currentChapterIndex.value = 1;
 		currentPlayTime.value = 0;
 		currentMap.value = chapterList.values[0];
-		currentDialogue.value = ((MapEntry)currentMap.value).preDialogue;
 		Debug.Log("Set Dialogue to:  " + currentDialogue.value.entryName);
-		SceneManager.LoadScene("LoadingScreen");
+		InputDelegateController.instance.TriggerSceneChange(MenuMode.NONE, "LoadingScreen");
 	}
 
 	/// <summary>
@@ -97,10 +94,9 @@ public class MainMenuController : InputReceiverDelegate {
 	/// </summary>
 	public void LoadGameFinished() {
 		currentMap.value = chapterList.values[currentChapterIndex.value];
-		currentDialogue.value = ((MapEntry)currentMap.value).preDialogue;
 		currentChapterIndex.value++;
 		Debug.Log("Set DialogueC to:  " + currentDialogue.value.entryName);
-		SceneManager.LoadScene("LoadingScreen");
+		InputDelegateController.instance.TriggerSceneChange(MenuMode.NONE, "LoadingScreen");
 	}
 
     public override void OnUpArrow() {

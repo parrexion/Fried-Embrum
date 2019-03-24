@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public enum MenuMode { NONE, MAP, MMM, INV, BATTLE, WEAPON, WWW, INGAME, NNN, TRADE, DIALOGUE, TOOLTIP, 
+public enum MenuMode { NONE, MAP, MAIN_MENU, INV, BATTLE, WEAPON, WWW, INGAME, NNN, TRADE, DIALOGUE, TOOLTIP, 
 						BASE_LAB, BASE_MISSION, BASE_HOUSE, BASE_TRAIN, BASE_SHOP, PREP, FORMATION, SAVE }
 
 public class InputDelegateController : MonoBehaviour {
@@ -61,6 +62,11 @@ public class InputDelegateController : MonoBehaviour {
 	public ButtonDelegate startButtonDelegate;
 
 
+	public void TriggerMenuChange(MenuMode newMode) {
+		lockAllControls.value = true;
+		StartCoroutine(TransitionDelay(newMode));
+	}
+
 	private IEnumerator TransitionDelay(MenuMode newMode) {
 		yield return null;
 		menuMode.value = (int)newMode;
@@ -69,9 +75,18 @@ public class InputDelegateController : MonoBehaviour {
 		lockAllControls.value = false;
 	}
 
-	public void TriggerMenuChange(MenuMode newMode) {
+	public void TriggerSceneChange(MenuMode newMode, string scene) {
 		lockAllControls.value = true;
-		StartCoroutine(TransitionDelay(newMode));
+		StartCoroutine(LoadNextScene(newMode, scene));
+	}
+
+	private IEnumerator LoadNextScene(MenuMode newMode, string scene) {
+		yield return null;
+		menuMode.value = (int)newMode;
+		if(menuModeChanged != null)
+			menuModeChanged.Invoke();
+		yield return null;
+		SceneManager.LoadScene(scene);
 	}
 
 	private void Update() {

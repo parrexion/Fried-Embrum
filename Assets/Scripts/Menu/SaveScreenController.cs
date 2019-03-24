@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.SceneManagement;
 
 public class SaveScreenController : InputReceiverDelegate {
 
@@ -31,13 +30,13 @@ public class SaveScreenController : InputReceiverDelegate {
 
 	public void NextLevel() {
 		if (chapterIndex.value >= chapterList.values.Count) {
-			SceneManager.LoadScene("MainMenu");
+			InputDelegateController.instance.TriggerSceneChange(MenuMode.MAIN_MENU, "MainMenu");
 		}
 		else {
 			currentMap.value = chapterList.values[chapterIndex.value];
 			chapterIndex.value++;
 			currentDialogue.value = ((MapEntry)currentMap.value).preDialogue;
-			SceneManager.LoadScene("LoadingScreen");
+			InputDelegateController.instance.TriggerSceneChange(MenuMode.NONE, "LoadingScreen");
 		}
 	}
 

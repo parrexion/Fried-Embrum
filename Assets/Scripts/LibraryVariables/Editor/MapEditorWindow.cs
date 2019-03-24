@@ -316,7 +316,7 @@ public class MapEditorWindow {
 					if (GUILayout.Button("X", GUILayout.Width(50))) {
 						GUI.FocusControl(null);
 						mapValues.spawnPoints[i].inventory.RemoveAt(j);
-						i--;
+						j--;
 					}
 					GUILayout.EndHorizontal();
 				}

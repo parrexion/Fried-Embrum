@@ -232,6 +232,8 @@ public abstract class TacticsMove : MonoBehaviour {
 		List<MapTile> enemies = new List<MapTile>();
 		// currentTile.current = true;
 		for (int i = 0; i < enemyList.values.Count; i++) {
+			if (!enemyList.values[i].IsAlive())
+				continue;
 			int tempDist = BattleMap.DistanceTo(this, enemyList.values[i]);
 			for (int w = 0; w < weaponList.Count; w++) {
 				if (weaponList[w].item == null)
@@ -264,7 +266,7 @@ public abstract class TacticsMove : MonoBehaviour {
 		ItemEntry staff = inventory.GetFirstUsableItem(ItemCategory.STAFF, stats);
 		List<MapTile> supportables = new List<MapTile>();
 		for (int i = 0; i < playerList.values.Count; i++) {
-			if (this == playerList.values[i] || !playerList.values[i].IsInjured())
+			if (this == playerList.values[i] || !playerList.values[i].IsInjured() || !playerList.values[i].IsAlive())
 				continue;
 
 			int tempDist = BattleMap.DistanceTo(this, playerList.values[i]);

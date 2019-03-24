@@ -3233,6 +3233,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f20eebd0bdf54304fa4a6a7905c3735a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  emptyBackground: {fileID: 11400000, guid: 7a1bd7598c72fc94c9a8549263a2e0ba, type: 2}
   background: {fileID: 11400000, guid: 33021f19ef3d298458c7b63996515608, type: 2}
   characters:
   - {fileID: 11400000, guid: 227387ed6a3a4114db140589a86b1a47, type: 2}
@@ -3272,10 +3273,10 @@ MonoBehaviour:
   - {fileID: 1534808035}
   - {fileID: 709763638}
   - {fileID: 959462074}
-  dialogueEndEvent:
+  backgroundChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11400000, guid: 4059b0cafd33cf347958e8d41d8bce46, type: 2}
+      - m_Target: {fileID: 11400000, guid: 23d1ed284057cf248a5612e38dac5d39, type: 2}
         m_MethodName: Raise
         m_Mode: 1
         m_Arguments:
@@ -3288,10 +3289,10 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  backgroundChanged:
+  characterChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11400000, guid: 23d1ed284057cf248a5612e38dac5d39, type: 2}
+      - m_Target: {fileID: 11400000, guid: d896d79bcba868c478d1463374e28180, type: 2}
         m_MethodName: Raise
         m_Mode: 1
         m_Arguments:
@@ -3336,10 +3337,10 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  characterChanged:
+  dialogueTextChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11400000, guid: d896d79bcba868c478d1463374e28180, type: 2}
+      - m_Target: {fileID: 11400000, guid: f6c03891487cff8488007e94cfc9f462, type: 2}
         m_MethodName: Raise
         m_Mode: 1
         m_Arguments:
@@ -3352,10 +3353,10 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  dialogueTextChanged:
+  dialogueEndEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11400000, guid: f6c03891487cff8488007e94cfc9f462, type: 2}
+      - m_Target: {fileID: 11400000, guid: 4059b0cafd33cf347958e8d41d8bce46, type: 2}
         m_MethodName: Raise
         m_Mode: 1
         m_Arguments:
@@ -4697,7 +4698,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1827979825
 MonoBehaviour:
   m_ObjectHideFlags: 0

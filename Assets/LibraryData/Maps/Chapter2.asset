@@ -24,11 +24,12 @@ MonoBehaviour:
   loseCondition: 0
   reward:
     money: 0
-    scrap: 25
+    scrap: 0
     items: []
-  skipBattlePrep: 0
+  skipBattlePrep: 1
   preDialogue: {fileID: 11400000, guid: 6f84cbd5fbe1eb946a719ea208f697d3, type: 2}
-  postDialogue: {fileID: 11400000, guid: 00a5adf2124c59443bac12ecc1b2caa4, type: 2}
+  introDialogue: {fileID: 0}
+  endDialogue: {fileID: 11400000, guid: 00a5adf2124c59443bac12ecc1b2caa4, type: 2}
   owMusic: {fileID: 11400000, guid: c5d55a00157aa9d45904a928008f24d0, type: 2}
   battleMusic: {fileID: 11400000, guid: a157ae89a4b1e784cbe12bd1e184e2ea, type: 2}
   healMusic: {fileID: 11400000, guid: c9ab7f5c344f22c458bafeb1c2e29d45, type: 2}
@@ -132,7 +133,7 @@ MonoBehaviour:
     inventory:
     - item: {fileID: 11400000, guid: 21e0cdf65dcd3c64f99de572c0526714, type: 2}
       droppable: 0
-    - item: {fileID: 0}
+    - item: {fileID: 11400000, guid: a2e37062da4ad09429243928a67e726e, type: 2}
       droppable: 1
     skills: []
     aggroType: 3

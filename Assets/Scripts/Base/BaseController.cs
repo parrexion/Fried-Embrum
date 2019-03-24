@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class BaseController : InputReceiverDelegate {
 
@@ -69,7 +68,7 @@ public class BaseController : InputReceiverDelegate {
 	public void StartMission() {
 		lockControls.value = false;
 		UpdateState(0);
-		SceneManager.LoadScene("LoadingScreen");
+		InputDelegateController.instance.TriggerSceneChange(MenuMode.NONE, "LoadingScreen");
 	}
 
 

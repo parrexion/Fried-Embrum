@@ -16,7 +16,7 @@ public class Character : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		moveIndex = -1;
-		// UpdateCharacter();
+		characterSprite.enabled = false;
 	}
 
 	public void UpdateCharacter() {

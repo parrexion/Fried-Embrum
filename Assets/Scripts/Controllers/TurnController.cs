@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public enum TurnState { INIT, STORY, PREP, INTRO, ACTION, REINFORCE, EVENTS, DIALOGUE, FINISHED }
@@ -78,6 +77,7 @@ public class TurnController : MonoBehaviour {
 	}
 
 	public void TriggerNextStep() {
+		Debug.Log("NEXT");
 		switch (currentState)
 		{
 		case TurnState.INIT:
@@ -367,7 +367,7 @@ public class TurnController : MonoBehaviour {
 		sfxQueue.Enqueue(gameOverFanfare);
 		playSfxEvent.Invoke();
 		yield return new WaitForSeconds(2f);
-		SceneManager.LoadScene("MainMenu");
+		InputDelegateController.instance.TriggerSceneChange(MenuMode.MAIN_MENU, "MainMenu");
 	}
 
 

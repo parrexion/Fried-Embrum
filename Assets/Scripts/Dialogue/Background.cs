@@ -9,12 +9,12 @@ public class Background : MonoBehaviour {
 	public Image image;
 	public Image backdrop;
 
-	// Use this for initialization
-	void Start () {
-		UpdateBackground();
+	
+	private void Start () {
+		backdrop.enabled = true;
+		image.enabled = false;
 	}
 	
-	// Update is called once per frame
 	public void UpdateBackground () {
 		if (dialogueBackground.value == null) {
 			backdrop.enabled = true;

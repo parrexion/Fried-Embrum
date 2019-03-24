@@ -22,6 +22,7 @@ public class DialogueSceneController : MonoBehaviour {
 	private void Start () {
 		currentDialogueMode.value = 0;
 		ActivateStuff(false);
+		lines.scene.Reset();
 	}
 
 	/// <summary>
@@ -35,6 +36,7 @@ public class DialogueSceneController : MonoBehaviour {
 		for (int i = 0; i < dialogueObjects.Length; i++) {
 			dialogueObjects[i].SetActive(active);
 		}
+
 	}
 
 	/// <summary>
