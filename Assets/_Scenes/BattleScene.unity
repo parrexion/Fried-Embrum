@@ -7043,6 +7043,7 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   currentMap: {fileID: 11400000, guid: 188cfd11b445e1244a89510ca126c756, type: 2}
   currentAction: {fileID: 11400000, guid: b0e392ad086e2ab4e9c4feb871cf0d41, type: 2}
+  dialogueMode: {fileID: 11400000, guid: 9ebc847de791cc24bbd938f1f28012e7, type: 2}
   cursor: {fileID: 1546354684}
   actionController: {fileID: 1110140014}
   targetController: {fileID: 102152792}
@@ -8457,6 +8458,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inBattle: 0
+  currentMenuMode: {fileID: 11400000, guid: 67e3bf56b86dc2f49a9bd4d641b3339a, type: 2}
   selectCharacter: {fileID: 11400000, guid: 9514266d05ac5174781ef48f42fe570e, type: 2}
   walkTile: {fileID: 11400000, guid: 3a98548c39c09914ba5bd9f128964722, type: 2}
   defendCharacter: {fileID: 11400000, guid: e8b7dd401b514bc4981715e9cfe766fc, type: 2}
@@ -13757,7 +13759,6 @@ GameObject:
   m_Component:
   - component: {fileID: 380835677}
   - component: {fileID: 380835676}
-  - component: {fileID: 380835678}
   m_Layer: 0
   m_Name: BattleController
   m_TagString: Untagged
@@ -13946,35 +13947,6 @@ Transform:
   m_Father: {fileID: 1803605348}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &380835678
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 380835675}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14602ab6441821f43883d0b13d4f57c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  evnt: {fileID: 11400000, guid: c4a24de7e09302747a7077075726c27d, type: 2}
-  response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 380835676}
-        m_MethodName: ResumeBattle
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!1 &385317817
 GameObject:
   m_ObjectHideFlags: 0
@@ -29699,6 +29671,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inBattle: 1
+  currentMenuMode: {fileID: 11400000, guid: 67e3bf56b86dc2f49a9bd4d641b3339a, type: 2}
   selectCharacter: {fileID: 11400000, guid: 9514266d05ac5174781ef48f42fe570e, type: 2}
   walkTile: {fileID: 11400000, guid: 3a98548c39c09914ba5bd9f128964722, type: 2}
   defendCharacter: {fileID: 11400000, guid: e8b7dd401b514bc4981715e9cfe766fc, type: 2}
@@ -32744,7 +32717,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1110140013}
   - component: {fileID: 1110140014}
-  - component: {fileID: 1110140020}
   m_Layer: 5
   m_Name: ActionInputController
   m_TagString: Untagged
@@ -32794,35 +32766,6 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 11400000, guid: 6f15e75a555993c48a97e8b2c7be0718, type: 2}
         m_MethodName: Raise
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
---- !u!114 &1110140020
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1110140012}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14602ab6441821f43883d0b13d4f57c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  evnt: {fileID: 11400000, guid: c4a24de7e09302747a7077075726c27d, type: 2}
-  response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1110140014}
-        m_MethodName: ResumeBattle
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -52542,7 +52485,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14602ab6441821f43883d0b13d4f57c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  evnt: {fileID: 11400000, guid: c4a24de7e09302747a7077075726c27d, type: 2}
+  evnt: {fileID: 11400000, guid: 076c7388e6f3e024781734d60b1aefcc, type: 2}
   response:
     m_PersistentCalls:
       m_Calls:

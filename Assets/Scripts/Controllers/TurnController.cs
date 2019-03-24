@@ -88,7 +88,7 @@ public class TurnController : MonoBehaviour {
 			startDialogueEvent.Invoke();
 			break;
 		case TurnState.STORY:
-			Debug.Log("Show prep");
+			Debug.Log("Show prep?");
 			if (((MapEntry)currentMap.value).skipBattlePrep) {
 				currentState = TurnState.INTRO;
 				TriggerNextStep();

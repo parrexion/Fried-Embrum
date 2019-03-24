@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class BattleContainer : InputReceiverDelegate {
 
+	private enum State { INIT, QUOTE, ACTION, DEATH, FINISH }
+
 	public ActionModeVariable currentAction;
 	public MapTileVariable attackerTile;
 	public MapTileVariable defenderTile;
@@ -72,7 +74,7 @@ public class BattleContainer : InputReceiverDelegate {
 	public UnityEvent playSfxEvent;
 	public UnityEvent stopSfxEvent;
 	
-	private bool runningLoop;
+	private State state;
 	private TacticsMove _currentCharacter;
 	private bool _attackerDealtDamage;
 	private bool _defenderDealtDamage;
@@ -80,12 +82,22 @@ public class BattleContainer : InputReceiverDelegate {
 	
 	public override void OnMenuModeChanged() {
 		bool active = UpdateState(MenuMode.BATTLE);
-		if (active) {
+		if (!active)
+			return;
+		if (state == State.INIT) {
 			if (currentAction.value == ActionMode.ATTACK)
 				GenerateDamageActions();
 			else 
 				GenerateHealAction();
 			PlayBattleAnimations();
+		}
+		else if (state == State.QUOTE) {
+			lockControls.value = true;
+			StartCoroutine(ActionLoop());
+		}
+		else if (state == State.DEATH) {
+			lockControls.value = true;
+			state = State.FINISH;
 		}
 	}
 
@@ -93,7 +105,7 @@ public class BattleContainer : InputReceiverDelegate {
 		TacticsMove attacker = attackerTile.value.currentCharacter;
 		TacticsMove defender = defenderTile.value.currentCharacter;
 		dialogue = null;
-		if (defenderTile == null) {
+		if (defender == null) {
 			_currentCharacter = attacker;
 			actions.Clear();
 			actions.Add(new BattleAction(true, BattleAction.Type.DAMAGE, attacker, defenderTile.value.blockMove));
@@ -163,32 +175,14 @@ public class BattleContainer : InputReceiverDelegate {
 	public void PlayBattleAnimations() {
 		SetupBattle();
 		if (dialogue != null) {
+			Debug.Log("SHOW");
 			dialogueMode.value = (int)DialogueMode.QUOTE;
 			currentDialogue.value = dialogue;
 			showDialogueEvent.Invoke();
-			lockControls.value = false;
-		}
-		else
-			StartCoroutine(ActionLoop());
-	}
-
-	public void ResumeBattle() {
-		Debug.Log("Resuming");
-		if (dialogue == null)
-			return;
-		if (dialogueMode.value == (int)DialogueMode.QUOTE) {
-			lockControls.value = true;
-			if (runningLoop) {
-				runningLoop = false;
-				Debug.Log("Continue");
-			}
-			else {
-				StartCoroutine(ActionLoop());
-				Debug.Log("Action!");
-			}
 		}
 		else {
-			Debug.Log("NOPE");
+			Debug.Log("Action");
+			StartCoroutine(ActionLoop());
 		}
 	}
 
@@ -220,12 +214,13 @@ public class BattleContainer : InputReceiverDelegate {
 	}
 
 	private IEnumerator ActionLoop() {
-		runningLoop = false;
+		state = State.ACTION;
 		bool useAnim = useBattleAnimations.value;
 		if (actions[0].defender.faction == Faction.WORLD) {
 			useAnim = false;
 		}
 		for (int i = 0; i < actions.Count; i++) {
+			Debug.Log("Next action");
 			BattleAction act = actions[i];
 			if (act.type == BattleAction.Type.DAMAGE && act.attacker.inventory.GetFirstUsableItemTuple(ItemCategory.WEAPON, act.attacker.stats).charge <= 0) {
 				continue; //Broken weapon
@@ -330,13 +325,13 @@ public class BattleContainer : InputReceiverDelegate {
 				yield return new WaitForSeconds(1f * slowGameSpeed.value / currentGameSpeed.value);
 				if (act.defender.stats.charData.deathQuote != null) {
 					Debug.Log("Death quote");
-					runningLoop = true;
+					state = State.DEATH;
 					dialogueMode.value = (int)DialogueMode.QUOTE;
 					currentDialogue.value = dialogue = act.defender.stats.charData.deathQuote;
 					showDialogueEvent.Invoke();
 					lockControls.value = false;
 
-					while(runningLoop) {
+					while(state == State.DEATH) {
 						yield return null;
 					}
 				}
@@ -365,6 +360,7 @@ public class BattleContainer : InputReceiverDelegate {
 		}
 
 		//Clean up
+		state = State.INIT;
 		battleAnimationObject.SetActive(false);
 		uiCanvas.SetActive(true);
 		leftDamageObject.SetActive(false);

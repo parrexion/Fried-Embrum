@@ -33,10 +33,13 @@ public class ActionInputController : MonoBehaviour {
 		actionButtons = actionMenu.GetComponentsInChildren<Image>(true);
 	}
 
-    public void ShowMenu(bool active) {
+    public void ShowMenu(bool active, bool reset) {
 		actionMenu.SetActive(active);
-		if (active)
+		if (active) {
+			if (reset)
+				menuPosition = 0;
 			ButtonSetup();
+		}
     }
 
     public bool MoveVertical(int dir) {
@@ -75,8 +78,7 @@ public class ActionInputController : MonoBehaviour {
 				break;
 			case ActionInputType.VISIT: // VISIT
 				selectedCharacter.value.currentTile.interacted = true;
-				//TODO active = false;
-				InputDelegateController.instance.TriggerMenuChange((MenuMode)currentMenuMode.value);
+				selectedCharacter.value.canUndoMove = false;
 				currentActionMode.value = ActionMode.NONE;
 				dialogueMode.value = (int)DialogueMode.VISIT;
 				dialogueEntry.value = selectedCharacter.value.currentTile.dialogue;
@@ -99,25 +101,23 @@ public class ActionInputController : MonoBehaviour {
 		}
     }
 	
-	public void ResumeBattle() {
-		if (dialogueMode.value == (int)DialogueMode.VISIT) {
-			currentActionMode.value = ActionMode.NONE;
-			InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
-			if (selectedCharacter.value.currentTile.gift != null) {
-				StartCoroutine(WaitForItemGain());
-			}
-			else if (selectedCharacter.value.currentTile.ally != null) {
-				MapTile closest = selectedCharacter.value.battleMap.GetClosestEmptyTile(selectedCharacter.value.currentTile);
-				TacticsMove tactics = selectedCharacter.value.currentTile.ally;
-				tactics.posx = closest.posx;
-				tactics.posy = closest.posy;
-				tactics.Setup();
-				selectedCharacter.value.End();
-			}
-			else {
-				Debug.Log("OK");
-				selectedCharacter.value.End();
-			}
+	public void ReturnFromVisit() {
+		currentActionMode.value = ActionMode.NONE;
+		InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
+		if (selectedCharacter.value.currentTile.gift != null) {
+			StartCoroutine(WaitForItemGain());
+		}
+		else if (selectedCharacter.value.currentTile.ally != null) {
+			MapTile closest = selectedCharacter.value.battleMap.GetClosestEmptyTile(selectedCharacter.value.currentTile);
+			TacticsMove tactics = selectedCharacter.value.currentTile.ally;
+			tactics.posx = closest.posx;
+			tactics.posy = closest.posy;
+			tactics.Setup();
+			selectedCharacter.value.End();
+		}
+		else {
+			Debug.Log("OK");
+			selectedCharacter.value.End();
 		}
 
 		dialogueMode.value = (int)DialogueMode.NONE;

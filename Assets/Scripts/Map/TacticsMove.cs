@@ -333,7 +333,6 @@ public abstract class TacticsMove : MonoBehaviour {
 		GetComponent<SpriteRenderer>().color = new Color(0.66f,0.66f,0.66f);
 		battleMap.ResetMap();
 		currentTile.current = true;
-		Debug.Log("This is the end!");
 		waitEvent.Invoke();
 	}
 

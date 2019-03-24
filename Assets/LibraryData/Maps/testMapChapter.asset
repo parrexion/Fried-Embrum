@@ -26,7 +26,7 @@ MonoBehaviour:
     money: 1234
     scrap: 0
     items: []
-  skipBattlePrep: 0
+  skipBattlePrep: 1
   preDialogue: {fileID: 11400000, guid: 60b2b588570390f4fa5614660432dbbb, type: 2}
   introDialogue: {fileID: 11400000, guid: 3a3dfd1a96530fd4aa92c93c01ac7041, type: 2}
   endDialogue: {fileID: 11400000, guid: 3437291ceec4cd64c8b13b3d61dde437, type: 2}
@@ -37,7 +37,7 @@ MonoBehaviour:
   - x: 6
     y: 5
     level: 1
-    stats: {fileID: 11400000, guid: 6587ac31779338744838102a4e36b2cd, type: 2}
+    stats: {fileID: 11400000, guid: ebe64c7e451dc494fbc8211be6f10d6a, type: 2}
     inventory:
     - item: {fileID: 11400000, guid: 0f3a39b4943c3394d894979e1c3bea9d, type: 2}
       droppable: 0
@@ -97,6 +97,23 @@ MonoBehaviour:
       droppable: 0
     skills: []
     aggroType: 2
+    hasQuotes: 1
+    quotes:
+    - triggerer: {fileID: 0}
+      quote: {fileID: 11400000, guid: 0d079fc5442fd004ba690c6a64087362, type: 2}
+      activated: 0
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 0
+    x: 6
+    y: 9
+    level: 1
+    stats: {fileID: 11400000, guid: e073228f081b5ec48b55e2e1ac4062f9, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 5d5e0c27d71f7334582f303ff4483c8a, type: 2}
+      droppable: 0
+    skills: []
+    aggroType: 0
     hasQuotes: 0
     quotes: []
     huntX: 0

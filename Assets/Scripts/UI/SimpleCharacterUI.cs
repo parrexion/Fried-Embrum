@@ -97,9 +97,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 		//Set selected character to the targeted tile instead of the selected character
 		if (actionMode.value == ActionMode.ATTACK || actionMode.value == ActionMode.HEAL || actionMode.value == ActionMode.TRADE) {
 			tile = targetTile.value;
-			if (tile && tile.currentCharacter) {
-				tactics = tile.currentCharacter;
-			}
+			tactics = tile.currentCharacter;
 		}
 
 		if (currentMenuMode.value != (int)MenuMode.MAP && currentMenuMode.value != (int)MenuMode.PREP &&
@@ -107,10 +105,10 @@ public class SimpleCharacterUI : MonoBehaviour {
 			HideStats();
 			active = false;
 		}
-		else if (selectedCharacter.value == null && selectedTile.value.interactType != InteractType.NONE) {
+		else if (tactics == null && tile.interactType != InteractType.NONE) {
 			ShowObjectStats(tile);
 		}
-		else if (selectedCharacter.value == null) {
+		else if (tactics == null) {
 			HideStats();
 		}
 		else if (page == StatsPage.INVENTORY || currentMenuMode.value == (int)MenuMode.INV) {
@@ -119,8 +117,9 @@ public class SimpleCharacterUI : MonoBehaviour {
 		else if (page == StatsPage.STATS) {
 			ShowStatsStats(tactics);
 		}
-		else if (page == StatsPage.BASIC)
+		else if (page == StatsPage.BASIC) {
 			ShowBasicStats(tactics);
+		}
 
 		ShowTerrainInfo(active);
 		flipButton.SetActive(currentMenuMode.value != (int)MenuMode.INV);
@@ -132,9 +131,9 @@ public class SimpleCharacterUI : MonoBehaviour {
 	/// <param name="dir"></param>
 	public void ChangeStatsScreen() {
 		switch (page) {
-		case StatsPage.BASIC:		page = StatsPage.INVENTORY; break;
-		case StatsPage.INVENTORY:	page = StatsPage.STATS; break;
-		case StatsPage.STATS:		page = StatsPage.BASIC; break;
+		case StatsPage.BASIC:		page = StatsPage.STATS; break;
+		case StatsPage.STATS:		page = StatsPage.INVENTORY; break;
+		case StatsPage.INVENTORY:	page = StatsPage.BASIC; break;
 		}
 		UpdateUI();
 	}

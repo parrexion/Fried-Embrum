@@ -23,8 +23,8 @@ public class ForcastInputController : InputReceiverDelegate {
 	}
 
 	public override void OnMenuModeChanged() {
-		bool active = UpdateState(MenuMode.BATTLE, MenuMode.WEAPON);
-		forecast.UpdateUI(active);
+		bool active = UpdateState(MenuMode.WEAPON);
+		forecast.UpdateUI(active || currentMenuMode.value == (int)MenuMode.BATTLE);
 
 		if (!active)
 			return;

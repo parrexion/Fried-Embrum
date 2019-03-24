@@ -74,11 +74,14 @@ public class NPCMove : TacticsMove {
 		if (aggroType == AggroType.HUNT) {
 			tileBest = huntTile;
 			tileGood = null;
-			while(tileBest.distance > moveSpeed) {
+			while(tileBest != null && tileBest.distance > moveSpeed) {
+				Debug.Log("EY!");
 				tileBest = tileBest.parent;
 			}
-			tileBest.PrintPos();
-			return;
+			if (tileBest != null) {
+				tileBest.PrintPos();
+				return;
+			}
 		}
 
 		// Go through all tiles and find the best one to move to or towards

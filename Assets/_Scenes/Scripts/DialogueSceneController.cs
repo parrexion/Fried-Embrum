@@ -63,15 +63,16 @@ public class DialogueSceneController : MonoBehaviour {
 				playSubMusicEvent.Invoke();
 				break;
 			case (int)DialogueMode.VISIT:
-				resumeBattleEvent.Invoke();
+				InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
 				musicFocusSource.value = true;
 				playSubMusicEvent.Invoke();
 				break;
 			case (int)DialogueMode.QUOTE:
+				InputDelegateController.instance.TriggerMenuChange(MenuMode.BATTLE);
 				resumeBattleEvent.Invoke();
 				break;
 		}
-		currentDialogueMode.value = (int)DialogueMode.NONE;
+		//currentDialogueMode.value = (int)DialogueMode.NONE;
 	}
 
 

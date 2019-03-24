@@ -7,6 +7,7 @@ public class MapInputController : InputReceiverDelegate {
 
 	public ScrObjEntryReference currentMap;
 	public ActionModeVariable currentAction;
+	public IntVariable dialogueMode;
 
 	[Header("Controllers")]
 	public MapCursor cursor;
@@ -24,12 +25,15 @@ public class MapInputController : InputReceiverDelegate {
 
     public override void OnMenuModeChanged() {
 		bool active = UpdateState(MenuMode.MAP);
-		actionController.ShowMenu(currentMenuMode.value == (int)MenuMode.MAP && currentAction.value == ActionMode.ACTION);
+		actionController.ShowMenu(currentMenuMode.value == (int)MenuMode.MAP && currentAction.value == ActionMode.ACTION, false);
 		if (!active)
 			return;
 		
 		if (IsTargetMode())
 			targetController.UpdateSelection();
+
+		if (dialogueMode.value == (int)DialogueMode.VISIT)
+			actionController.ReturnFromVisit();
 
 		cursor.Move(0,0);
     }
@@ -115,7 +119,7 @@ public class MapInputController : InputReceiverDelegate {
 		if (IsTargetMode()) {
 			targetController.Clear();
 			currentAction.value = ActionMode.ACTION;
-			actionController.ShowMenu(true);
+			actionController.ShowMenu(true, false);
 			cursor.Move(0,0);
 			menuBackEvent.Invoke();
 		}
@@ -123,7 +127,7 @@ public class MapInputController : InputReceiverDelegate {
 			if (actionController.BackButton()) {
 				currentAction.value = ActionMode.MOVE;
 				cursor.UndoMove();
-				actionController.ShowMenu(false);
+				actionController.ShowMenu(false, false);
 				menuBackEvent.Invoke();
 			}
 		}
@@ -165,13 +169,14 @@ public class MapInputController : InputReceiverDelegate {
 
 	public void FinishedMove() {
 		currentAction.value = ActionMode.ACTION;
-		actionController.ShowMenu(true);
+		actionController.ShowMenu(true, true);
 	}
 
 	/// <summary>
 	/// Triggered when battles end and updates the current menu mode.
 	/// </summary>
 	public void BattleEnd() {
+		actionController.selectedCharacter.value.End();
 		currentAction.value = ActionMode.NONE;
 		cursor.ResetTargets();
 		MenuChangeDelay(MenuMode.MAP);

@@ -1,13 +1,15 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Net.Sockets;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ForecastUI : MonoBehaviour {
 	
+	private static TacticsMove _attackerTactics;
+	private static TacticsMove _defenderTactics;
+
 	public bool inBattle;
+	public IntVariable currentMenuMode;
 	public TacticsMoveVariable selectCharacter;
 	public MapTileVariable walkTile;
 	public MapTileVariable defendCharacter;
@@ -36,7 +38,6 @@ public class ForecastUI : MonoBehaviour {
 	public GameObject doubleDamage;
 	public Text hitText;
 	public Text critText;
-	private TacticsMove _attackerTactics;
 	
 	[Header("Defender Stats")]
 //	public Image colorBackground;
@@ -51,7 +52,6 @@ public class ForecastUI : MonoBehaviour {
 	public GameObject eDoubleDamage;
 	public Text eHitText;
 	public Text eCritText;
-	private TacticsMove _defenderTactics;
 	
 	[Header("Healing Stats")]
 //	public Image colorBackground;
@@ -86,6 +86,7 @@ public class ForecastUI : MonoBehaviour {
 
 	private void CalculateShowForecast(TacticsMove attacker, MapTile target) {
 		if (target.currentCharacter == null) {
+			// BLOCK FIGHT
 			TacticsMove defender = target.blockMove;
 			BattleAction.Type battleMode = (currentMode.value == ActionMode.ATTACK) ? BattleAction.Type.DAMAGE : BattleAction.Type.HEAL; 
 			BattleAction act1 = new BattleAction(true, battleMode, attacker, defender);
@@ -94,11 +95,10 @@ public class ForecastUI : MonoBehaviour {
 			act1.weaponAtk = attacker.inventory.GetTuple(battleWeaponIndex.value);
 
 			if (battleMode == BattleAction.Type.DAMAGE) {
-				Debug.Log("ATTACK1!");
 				if (inBattle)
 					backgroundInBattle.SetActive(true);
 
-				int distance = BattleMap.DistanceTo(defender, walkTile.value);
+				int distance = BattleMap.DistanceTo(attacker, target);
 				int atk = (act1.weaponAtk.item.InRange(distance)) ? act1.GetDamage() : -1;
 				int ret = -1;
 				int spd = 0;
@@ -111,7 +111,7 @@ public class ForecastUI : MonoBehaviour {
 				int atkAdv = 0;
 				int defAdv = 0;
 				ShowAttackerStats(attacker, act1.weaponAtk, atk, spd, hit, crit, atkAdv, atkWeak);
-				ShowDefenderStats(defender, null, ret, spd, hit2, crit2, defAdv, defWeak);
+				ShowDefenderStats(defender, new InventoryTuple(), ret, spd, hit2, crit2, defAdv, defWeak);
 				if (!inBattle) {
 					backgroundFight.SetActive(true);
 					backgroundHeal.SetActive(false);

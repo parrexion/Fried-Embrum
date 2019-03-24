@@ -71,7 +71,6 @@ public class InputDelegateController : MonoBehaviour {
 
 	public void TriggerMenuChange(MenuMode newMode) {
 		lockAllControls.value = true;
-		Debug.Log("set MENU to:  " + newMode);
 		StartCoroutine(TransitionDelay(newMode));
 	}
 

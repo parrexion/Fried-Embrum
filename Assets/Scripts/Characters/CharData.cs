@@ -34,7 +34,7 @@ public class CharData : ScrObjLibraryEntry {
 	public int gRes;
 
 	[Header("Supports")]
-	public List<SupportTuple> supports;
+	public List<SupportTuple> supports = new List<SupportTuple>();
 
 	[Header("Other Data")]
 	public bool mustSurvive;
