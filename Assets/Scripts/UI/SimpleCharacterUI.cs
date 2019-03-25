@@ -90,6 +90,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 	/// Updates the information in the UI whenever the state or character changes.
 	/// </summary>
 	public void UpdateUI() {
+		Debug.Log("UI UPDATE");
 		TacticsMove tactics = selectedCharacter.value;
 		MapTile tile = selectedTile.value;
 		bool active = true;
@@ -315,6 +316,11 @@ public class SimpleCharacterUI : MonoBehaviour {
 	/// </summary>
 	/// <param name="tile"></param>
 	private void ShowObjectStats(MapTile tile) {
+		menuView.SetActive(true);
+		statsObject.SetActive(false);
+		basicObject.SetActive(true);
+		inventoryObject.SetActive(false);
+
 		if (tile.interactType == InteractType.BLOCK) {
 			StatsContainer stats = tile.blockMove.stats;
 	//		colorBackground.color = (tactics.faction == Faction.PLAYER) ? 
@@ -343,11 +349,6 @@ public class SimpleCharacterUI : MonoBehaviour {
 		critText.text = "Crit:   --";
 		avoidText.text = "Avo:  --";
 		boostAvoid.enabled = false;
-		
-		menuView.SetActive(true);
-		statsObject.SetActive(false);
-		basicObject.SetActive(true);
-		inventoryObject.SetActive(false);
 	}
 
 	/// <summary>

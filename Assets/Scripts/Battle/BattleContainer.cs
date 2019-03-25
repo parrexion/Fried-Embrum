@@ -178,6 +178,7 @@ public class BattleContainer : InputReceiverDelegate {
 		SetupBattle();
 		if (dialogue != null) {
 			Debug.Log("SHOW");
+			uiCanvas.gameObject.SetActive(!showBattleAnim);
 			dialogueMode.value = (int)DialogueMode.QUOTE;
 			currentDialogue.value = dialogue;
 			showDialogueEvent.Invoke();
@@ -207,6 +208,7 @@ public class BattleContainer : InputReceiverDelegate {
 		);
 		battleAnimationObject.SetActive(showBattleAnim);
 		uiCanvas.gameObject.SetActive(!showBattleAnim);
+		Debug.Log("UI MENU");
 
 		//Music
 		MapEntry map = (MapEntry)currentMap.value;
