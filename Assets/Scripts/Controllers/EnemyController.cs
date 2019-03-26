@@ -64,6 +64,7 @@ public class EnemyController : MonoBehaviour {
 			// Calculate the tile to move towards and wait for the character to move there if any
 			MapTile moveTile = enemy.CalculateMovement();
 			if (moveTile == null) {
+				Debug.Log("No tiles!");
 				enemy.EndMovement();
 				waitForNextAction = false;
 			}

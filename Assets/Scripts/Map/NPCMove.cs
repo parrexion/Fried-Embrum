@@ -64,9 +64,25 @@ public class NPCMove : TacticsMove {
 	private void FindBestTile(List<InventoryTuple> weapons, out MapTile tileBest, out MapTile tileGood) {
 		// Generate map links
 		GenerateHitTiles(weapons);
+
+		// Skip move if guarding type of enemy
+		if (aggroType == AggroType.GUARD || aggroType == AggroType.BOSS) {
+			if (currentTile.attackable) {
+				currentMode.value = (weapons[0].item.itemCategory == ItemCategory.WEAPON) ? ActionMode.ATTACK : ActionMode.HEAL;
+				tileBest = currentTile;
+				tileGood = null;
+			}
+			else {
+				tileBest = null;
+				tileGood = currentTile;
+				currentMode.value = ActionMode.NONE;
+			}
+			return;
+		}
+
 		BFS();
 
-		int moveSpeed = (aggroType == AggroType.GUARD || aggroType == AggroType.BOSS) ? 0 : stats.GetMovespeed();
+		int moveSpeed = stats.GetMovespeed();
 		MapTile bestTile = null; // Reachable this turn
 		MapTile goodTile = null; // Reachable in multiple turns
 
@@ -197,7 +213,7 @@ public class NPCMove : TacticsMove {
 	}
 	
 	/// <summary>
-	/// Ends the character's movement and clears the map.
+	/// Ends the character's movement and clears the map of the selection.
 	/// </summary>
 	public override void EndMovement() {
 		Debug.Log("Finished move");
@@ -211,7 +227,6 @@ public class NPCMove : TacticsMove {
 			destroyedTileEvent.Invoke();
 		}
 		else {
-			Debug.Log("FALSE");
 			finishedMovingEvent.Invoke();
 		}
 	}

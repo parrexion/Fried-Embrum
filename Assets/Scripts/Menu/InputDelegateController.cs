@@ -16,6 +16,7 @@ public class InputDelegateController : MonoBehaviour {
 		}
 		else {
 			instance = this;
+			StartCoroutine(CountPlayTime());
 			DontDestroyOnLoad(gameObject);
 		}
 	}

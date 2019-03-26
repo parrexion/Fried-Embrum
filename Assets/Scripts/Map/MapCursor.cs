@@ -144,10 +144,6 @@ public class MapCursor : MonoBehaviour {
 			ResetTargets();
 			cursorMovedEvent.Invoke();
 		}
-		//else if (currentActionMode.value == ActionMode.ATTACK || currentActionMode.value == ActionMode.HEAL || currentActionMode.value == ActionMode.TRADE) {
-		//	currentActionMode.value = ActionMode.MOVE;
-		//	UpdateCursor();
-		//}
 		UpdateCursor();
 	}
 
@@ -207,20 +203,19 @@ public class MapCursor : MonoBehaviour {
 	/// If no character is hovered, show the in-game menu instead.
 	/// </summary>
 	private bool SelectCharacter(bool playing) {
-		if (selectCharacter.value == null) {
+		if (selectCharacter.value == null || selectCharacter.value.hasMoved || selectCharacter.value.faction != Faction.PLAYER) {
 			if (playing)
 				InputDelegateController.instance.TriggerMenuChange(MenuMode.INGAME);
 			return playing;
 		}
-		else if (selectCharacter.value.faction == Faction.PLAYER && !selectCharacter.value.hasMoved) {
+		else {
+			if (!playing && !selectCharacter.value.currentTile.deployable)
+				return false;
 			currentActionMode.value = ActionMode.MOVE;
 			moveTile.value = battleMap.GetTile(cursorX.value, cursorY.value);
 			moveTile.value.current = true;
 			selectCharacter.value.path.Clear();
 			return true;
-		}
-		else {
-			return false;
 		}
 	}
 
@@ -326,9 +321,6 @@ public class MapCursor : MonoBehaviour {
 	/// Resets the targets after swapping places during preparations.
 	/// </summary>
 	public void PrepSwapped() {
-		Debug.Log("DONE");
-		//cursorX.value = startTile.posx;
-		//cursorY.value = startTile.posy;
 		currentActionMode.value = ActionMode.NONE;
 		ResetTargets();
 		SelectHover();

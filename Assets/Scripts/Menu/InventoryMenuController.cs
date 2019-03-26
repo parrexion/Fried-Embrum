@@ -140,6 +140,7 @@ public class InventoryMenuController : InputReceiverDelegate {
 		selectedCharacter.value.inventory.UseItem(inventoryIndex.value, selectedCharacter.value);
 		inventoryIndex.value = -1;
 		currentMode.value = ActionMode.NONE;
+		InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
 		selectedCharacter.value.End();
 		inventoryChangedEvent.Invoke();
 	}

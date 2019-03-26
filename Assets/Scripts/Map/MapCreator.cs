@@ -7,6 +7,7 @@ public class MapCreator : MonoBehaviour {
 
 	public ScrObjEntryReference currentMap;
 	public SaveListVariable availableCharacters;
+	public CharacterListVariable playerList;
 	public BattleMap battleMap;
 	public MapCursor mapClicker;
 
@@ -74,7 +75,8 @@ public class MapCreator : MonoBehaviour {
 		cursorX.value = map.spawnPoints[0].x;
 		cursorY.value = map.spawnPoints[0].y;
 		cursorMoveEvent.Invoke();
-		SpawnCharacters();
+		SpawnPlayers();
+		SpawnEnemies();
 		Debug.Log("Finished creating map");
 	}
 
@@ -161,9 +163,9 @@ public class MapCreator : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Takes the map information and spawns all the characters on their given positions.
+	/// Spawns the player characters on their designated spawn zones.
 	/// </summary>
-	private void SpawnCharacters() {
+	private void SpawnPlayers() {
 		MapEntry map = (MapEntry)currentMap.value;
 		
 		//Players
@@ -193,6 +195,13 @@ public class MapCreator : MonoBehaviour {
 
 			SpawnPlayerCharacter(pos.x, pos.y, stats, inventory, skills, true);
 		}
+	}
+
+	/// <summary>
+	/// Takes the map information and spawns all the enemy characters on their given positions.
+	/// </summary>
+	private void SpawnEnemies() {
+		MapEntry map = (MapEntry)currentMap.value;
 		
 		//Enemies
 		for (int i = 0; i < map.enemies.Count; i++) {
@@ -213,6 +222,15 @@ public class MapCreator : MonoBehaviour {
 
 			SpawnEnemyCharacter(pos.x, pos.y, stats, inventory, skills, quotes, pos.aggroType, huntTile);
 		}
+	}
+
+	public void RespawnPlayers() {
+		for (int i = 0; i < playerList.values.Count; i++) {
+			Destroy(playerList.values[i].gameObject);
+		}
+		playerList.values.Clear();
+
+		SpawnPlayers();
 	}
 
 	/// <summary>
@@ -313,9 +331,8 @@ public class MapCreator : MonoBehaviour {
 		MapEntry map = (MapEntry)currentMap.value;
 		for (int i = 0; i < map.turnEvents.Count; i++) {
 			TurnEvent pos = map.turnEvents[i];
-			Debug.Log(pos.ToString());
+			//Debug.Log(pos.ToString());
 			if (currentTurn.value == pos.turn && currentFaction.value == pos.factionTurn && pos.type == TurnEventType.DIALOGUE) {
-				Debug.Log("It's time!");
 				currentDialogue.value = pos.dialogue;
 				currentDialogueMode.value = (int)DialogueMode.EVENT;
 				startDialogueEvent.Invoke();

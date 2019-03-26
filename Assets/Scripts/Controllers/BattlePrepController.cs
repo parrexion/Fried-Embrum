@@ -12,6 +12,7 @@ public class BattlePrepController : InputReceiverDelegate {
 	public PrepListVariable prepList;
 	
 	public UnityEvent nextStateEvent;
+	public UnityEvent respawnCharactersEvent;
 
 	[Header("Main menu")]
 	public MyButtonList mainButtons;
@@ -51,11 +52,10 @@ public class BattlePrepController : InputReceiverDelegate {
     public override void OnMenuModeChanged() {
 		bool active = UpdateState(MenuMode.PREP);
 		mainMenuView.SetActive(active);
-		menuCollectionView.SetActive(!active);
 		if (active) {
+			menuCollectionView.SetActive(!active);
 			currentState = State.MAIN;
 			mainButtons.ForcePosition(0);
-			//SkipBattlePrep();
 		}
 	}
 
@@ -93,7 +93,6 @@ public class BattlePrepController : InputReceiverDelegate {
 	/// Ends battle prep and starts the mission.
 	/// </summary>
 	public void StartMission() {
-		Debug.Log("Start mission!");
 		mainMenuView.SetActive(false);
 		menuCollectionView.SetActive(true);
 		nextStateEvent.Invoke();
@@ -195,6 +194,7 @@ public class BattlePrepController : InputReceiverDelegate {
 			currentState = State.MAIN;
 			characterSelect.LeaveMenu();
 			characterSelectView.SetActive(false);
+			respawnCharactersEvent.Invoke();
 		}
 		else if (currentState == State.INVENTORY) {
 			if (inventorySelect.DeselectItem()) {

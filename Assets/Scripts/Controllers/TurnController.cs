@@ -77,7 +77,7 @@ public class TurnController : MonoBehaviour {
 	}
 
 	public void TriggerNextStep() {
-		Debug.Log("NEXT");
+
 		switch (currentState)
 		{
 		case TurnState.INIT:

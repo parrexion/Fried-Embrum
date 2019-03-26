@@ -223,8 +223,8 @@ public class SaveController : MonoBehaviour {
 			playerData.stats.Add(new StatsContainer(loadedData.characters[i], cStats, cClass));
 			playerData.inventory.Add(new InventoryContainer(itemLibrary, loadedData.characters[i]));
 			playerData.skills.Add(new SkillsContainer(skillLibrary, loadedData.characters[i]));
-			Debug.Log("Done loading " + cStats.entryName);
 		}
+		Debug.Log("Successfully loaded " + loadedData.characters.Count + " characters");
 		for (int i = 0; i < loadedData.items.Count; i++) {
 			ItemEntry item = (ItemEntry)itemLibrary.GetEntry(loadedData.items[i].id);
 			playerData.items.Add(new InventoryItem { item = item, charges = loadedData.items[i].charges });

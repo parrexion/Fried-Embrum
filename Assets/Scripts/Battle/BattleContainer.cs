@@ -177,14 +177,13 @@ public class BattleContainer : InputReceiverDelegate {
 	public void PlayBattleAnimations() {
 		SetupBattle();
 		if (dialogue != null) {
-			Debug.Log("SHOW");
 			uiCanvas.gameObject.SetActive(!showBattleAnim);
+			uiCanvas.gameObject.SetActive(false);
 			dialogueMode.value = (int)DialogueMode.QUOTE;
 			currentDialogue.value = dialogue;
 			showDialogueEvent.Invoke();
 		}
 		else {
-			Debug.Log("Action");
 			StartCoroutine(ActionLoop());
 		}
 	}
@@ -208,7 +207,7 @@ public class BattleContainer : InputReceiverDelegate {
 		);
 		battleAnimationObject.SetActive(showBattleAnim);
 		uiCanvas.gameObject.SetActive(!showBattleAnim);
-		Debug.Log("UI MENU");
+		uiCanvas.gameObject.SetActive(false);
 
 		//Music
 		MapEntry map = (MapEntry)currentMap.value;
@@ -362,6 +361,7 @@ public class BattleContainer : InputReceiverDelegate {
 
 		//Clean up
 		state = State.INIT;
+		currentAction.value = ActionMode.NONE;
 		battleAnimationObject.SetActive(false);
 		uiCanvas.SetActive(true);
 		leftDamageObject.SetActive(false);

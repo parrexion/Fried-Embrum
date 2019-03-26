@@ -90,7 +90,6 @@ public class SimpleCharacterUI : MonoBehaviour {
 	/// Updates the information in the UI whenever the state or character changes.
 	/// </summary>
 	public void UpdateUI() {
-		Debug.Log("UI UPDATE");
 		TacticsMove tactics = selectedCharacter.value;
 		MapTile tile = selectedTile.value;
 		bool active = true;
@@ -103,7 +102,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 		}
 
 		if (currentMenuMode.value != (int)MenuMode.MAP && currentMenuMode.value != (int)MenuMode.PREP &&
-			currentMenuMode.value != (int)MenuMode.INV) {
+			currentMenuMode.value != (int)MenuMode.INV && currentMenuMode.value != (int)MenuMode.FORMATION) {
 			HideStats();
 			active = false;
 		}
