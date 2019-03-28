@@ -32,13 +32,13 @@ public class MapEntry : ScrObjLibraryEntry {
 	public MusicEntry healMusic;
 
 	[Header("Players")]
-	public List<PlayerPosition> spawnPoints = new List<PlayerPosition>();
+	public List<Position> spawnPoints = new List<Position>();
 	public List<CharData> forcedCharacters = new List<CharData>();
 	public List<CharData> lockedCharacters = new List<CharData>();
 	
 	[Header("Enemies")]
 	public List<EnemyPosition> enemies = new List<EnemyPosition>();
-	public List<EnemyPosition> reinforcements = new List<EnemyPosition>();
+	public List<ReinforcementPosition> reinforcements = new List<ReinforcementPosition>();
 	
 	[Header("Interactions")]
 	public List<InteractPosition> interactions = new List<InteractPosition>();
@@ -67,13 +67,13 @@ public class MapEntry : ScrObjLibraryEntry {
 		battleMusic = null;
 		healMusic = null;
 
-		spawnPoints = new List<PlayerPosition>();
+		spawnPoints = new List<Position>();
 		forcedCharacters = new List<CharData>();
 		lockedCharacters = new List<CharData>();
 		enemies = new List<EnemyPosition>();
 		interactions = new List<InteractPosition>();
 		turnEvents = new List<TurnEvent>();
-		reinforcements = new List<EnemyPosition>();
+		reinforcements = new List<ReinforcementPosition>();
 	}
 
 	public override void CopyValues(ScrObjLibraryEntry other) {
@@ -98,7 +98,7 @@ public class MapEntry : ScrObjLibraryEntry {
 		battleMusic = map.battleMusic;
 		healMusic = map.healMusic;
 
-		spawnPoints = new List<PlayerPosition>();
+		spawnPoints = new List<Position>();
 		for (int i = 0; i < map.spawnPoints.Count; i++) {
 			spawnPoints.Add(map.spawnPoints[i]);
 		}
@@ -122,7 +122,7 @@ public class MapEntry : ScrObjLibraryEntry {
 		for (int i = 0; i < map.turnEvents.Count; i++) {
 			turnEvents.Add(map.turnEvents[i]);
 		}
-		reinforcements = new List<EnemyPosition>();
+		reinforcements = new List<ReinforcementPosition>();
 		for (int i = 0; i < map.reinforcements.Count; i++) {
 			reinforcements.Add(map.reinforcements[i]);
 		}
@@ -156,6 +156,12 @@ public class MapEntry : ScrObjLibraryEntry {
 }
 
 [System.Serializable]
+public class Position {
+	public int x;
+	public int y;
+}
+
+[System.Serializable]
 public class PlayerPosition {
 	public int x;
 	public int y;
@@ -180,6 +186,23 @@ public class EnemyPosition {
 	public CharData stats;
 	public List<WeaponTuple> inventory = new List<WeaponTuple>();
 	public CharacterSkill[] skills;
+	public AggroType aggroType;
+	public bool hasQuotes;
+	public List<FightQuote> quotes = new List<FightQuote>();
+	public int huntX, huntY;
+}
+
+[System.Serializable]
+public class ReinforcementPosition {
+	public int spawnTurn;
+	public Faction faction;
+	public int x;
+	public int y;
+	public int level;
+	public CharData stats;
+	public List<WeaponTuple> inventory = new List<WeaponTuple>();
+	public CharacterSkill[] skills;
+	// Enemy only
 	public AggroType aggroType;
 	public bool hasQuotes;
 	public List<FightQuote> quotes = new List<FightQuote>();

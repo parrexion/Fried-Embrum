@@ -47,6 +47,7 @@ public class BattlePrepController : InputReceiverDelegate {
 		mainButtons.AddButton("Start game");
 
 		GeneratePrepList();
+		mainButtons.ForcePosition(0);
 	}
 
     public override void OnMenuModeChanged() {
@@ -55,14 +56,13 @@ public class BattlePrepController : InputReceiverDelegate {
 		if (active) {
 			menuCollectionView.SetActive(!active);
 			currentState = State.MAIN;
-			mainButtons.ForcePosition(0);
 		}
 	}
 
 	private void GeneratePrepList() {
 		MapEntry map = (MapEntry)currentMapEntry.value;
 		int playerCap = map.spawnPoints.Count;
-		prepList.preps = new List<PrepCharacter>();
+		prepList.values = new List<PrepCharacter>();
 		for (int i = 0; i < playerData.stats.Count; i++) {
 			PrepCharacter pc = new PrepCharacter {
 				index = i,
@@ -73,7 +73,7 @@ public class BattlePrepController : InputReceiverDelegate {
 				pc.selected = (playerCap > 0);
 				playerCap--;
 			}
-			prepList.preps.Add(pc);
+			prepList.values.Add(pc);
 		}
 		prepList.SortListPicked();
 	}

@@ -36,56 +36,14 @@ MonoBehaviour:
   spawnPoints:
   - x: 6
     y: 5
-    level: 1
-    stats: {fileID: 11400000, guid: 6587ac31779338744838102a4e36b2cd, type: 2}
-    inventory:
-    - item: {fileID: 11400000, guid: 0f3a39b4943c3394d894979e1c3bea9d, type: 2}
-      droppable: 0
-    - item: {fileID: 11400000, guid: 5d5e0c27d71f7334582f303ff4483c8a, type: 2}
-      droppable: 0
-    - item: {fileID: 11400000, guid: 21e0cdf65dcd3c64f99de572c0526714, type: 2}
-      droppable: 0
-    - item: {fileID: 11400000, guid: 0f3a39b4943c3394d894979e1c3bea9d, type: 2}
-      droppable: 0
-    skills: []
   - x: 8
     y: 5
-    level: 2
-    stats: {fileID: 11400000, guid: cf951a3da37e1794b9cd29749c715911, type: 2}
-    inventory:
-    - item: {fileID: 11400000, guid: 21e0cdf65dcd3c64f99de572c0526714, type: 2}
-      droppable: 0
-    - item: {fileID: 11400000, guid: 0f3a39b4943c3394d894979e1c3bea9d, type: 2}
-      droppable: 0
-    - item: {fileID: 11400000, guid: a2e37062da4ad09429243928a67e726e, type: 2}
-      droppable: 0
-    skills: []
   - x: 7
     y: 5
-    level: 1
-    stats: {fileID: 11400000, guid: f8c060ade1d092c45938179716174baf, type: 2}
-    inventory:
-    - item: {fileID: 11400000, guid: 893385ff6ea1c6d46a059ef8c34e1cc9, type: 2}
-      droppable: 0
-    - item: {fileID: 11400000, guid: ff9ea282dd22b8f408577dc57bbdbfac, type: 2}
-      droppable: 0
-    - item: {fileID: 11400000, guid: 21e0cdf65dcd3c64f99de572c0526714, type: 2}
-      droppable: 0
-    - item: {fileID: 11400000, guid: a2e37062da4ad09429243928a67e726e, type: 2}
-      droppable: 0
-    skills: []
   - x: 2
     y: 0
-    level: 0
-    stats: {fileID: 0}
-    inventory: []
-    skills: []
   - x: 0
     y: 2
-    level: 0
-    stats: {fileID: 0}
-    inventory: []
-    skills: []
   forcedCharacters: []
   lockedCharacters: []
   enemies:
@@ -136,6 +94,7 @@ MonoBehaviour:
     huntY: 0
   reinforcements:
   - spawnTurn: 2
+    faction: 1
     x: 1
     y: 8
     level: 1
@@ -150,6 +109,7 @@ MonoBehaviour:
     huntX: 0
     huntY: 0
   - spawnTurn: 3
+    faction: 1
     x: 2
     y: 8
     level: 3
@@ -164,6 +124,7 @@ MonoBehaviour:
     huntX: 0
     huntY: 0
   - spawnTurn: 2
+    faction: 1
     x: 2
     y: 8
     level: 2
@@ -171,6 +132,21 @@ MonoBehaviour:
     inventory:
     - item: {fileID: 11400000, guid: 5d5e0c27d71f7334582f303ff4483c8a, type: 2}
       droppable: 1
+    skills: []
+    aggroType: 0
+    hasQuotes: 0
+    quotes: []
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 1
+    faction: 0
+    x: 11
+    y: 3
+    level: 1
+    stats: {fileID: 11400000, guid: 6587ac31779338744838102a4e36b2cd, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 0f3a39b4943c3394d894979e1c3bea9d, type: 2}
+      droppable: 0
     skills: []
     aggroType: 0
     hasQuotes: 0

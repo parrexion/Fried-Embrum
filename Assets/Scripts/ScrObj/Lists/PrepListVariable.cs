@@ -6,22 +6,22 @@ using UnityEngine;
 public class PrepListVariable : ScriptableObject {
 
 	// Characters
-	public List<PrepCharacter> preps = new List<PrepCharacter>();
+	public List<PrepCharacter> values = new List<PrepCharacter>();
 
 
 	public void ResetData() {
-		preps = new List<PrepCharacter>();
+		values = new List<PrepCharacter>();
 	}
 
 	public void SortListIndex() {
 		Debug.Log("SORT index");
-		preps.Sort((x,y) => x.index - y.index);
+		values.Sort((x,y) => x.index - y.index);
 	}
 
 	private const int XIsBetter = -1;
 	private const int YIsBetter = 1;
 	public void SortListPicked() {
-		preps.Sort((x, y) => {
+		values.Sort((x, y) => {
 			if (x.forced != y.forced) {
 				return (x.forced) ? XIsBetter : YIsBetter;
 			}

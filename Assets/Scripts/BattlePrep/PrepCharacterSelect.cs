@@ -27,10 +27,10 @@ public class PrepCharacterSelect : MonoBehaviour {
 		MapEntry map = (MapEntry)currentMap.value;
 		playerCap = map.spawnPoints.Count;
 
-		for (int i = 0; i < prepList.preps.Count; i++) {
+		for (int i = 0; i < prepList.values.Count; i++) {
 			Transform entry = Instantiate(entryPrefab, listParent.transform);
 			PrepCharacterEntry pce = entryList.CreateEntry(entry);
-			pce.FillData(playerData.stats[prepList.preps[i].index], null, prepList.preps[i]);
+			pce.FillData(playerData.stats[prepList.values[i].index], null, prepList.values[i]);
 		}
 		MoveSelection(0);
 		ShowInfo();
@@ -47,7 +47,7 @@ public class PrepCharacterSelect : MonoBehaviour {
 	}
 
 	public void SelectCharacter() {
-		PrepCharacter pc = prepList.preps[entryList.GetPosition()];
+		PrepCharacter pc = prepList.values[entryList.GetPosition()];
 		int sum = CountSelected();
 		if (pc.selected) {
 			if (sum > 1 && !pc.forced)
@@ -67,7 +67,7 @@ public class PrepCharacterSelect : MonoBehaviour {
 	private int CountSelected() {
 		int selected = 0;
 		for (int i = 0; i < entryList.Size; i++) {
-			if (prepList.preps[i].selected) {
+			if (prepList.values[i].selected) {
 				selected++;
 			}
 		}

@@ -60,10 +60,10 @@ public class PrepInventorySelect : MonoBehaviour {
 			charList = new EntryList<PrepCharacterEntry>(visibleSize);
 		charList.ResetList();
 		
-		for (int i = 0; i < prepList.preps.Count; i++) {
+		for (int i = 0; i < prepList.values.Count; i++) {
 			Transform t = Instantiate(charEntryPrefab, charListParent.transform);
 			PrepCharacterEntry entry = charList.CreateEntry(t);
-			entry.FillData(playerData.stats[prepList.preps[i].index], playerData.inventory[prepList.preps[i].index], prepList.preps[i]);
+			entry.FillData(playerData.stats[prepList.values[i].index], playerData.inventory[prepList.values[i].index], prepList.values[i]);
 		}
 		ShowCharInfo();
 		charEntryPrefab.gameObject.SetActive(false);

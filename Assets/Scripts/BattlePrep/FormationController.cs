@@ -33,19 +33,16 @@ public class FormationController : InputReceiverDelegate {
 
     public override void OnMenuModeChanged() {
 		bool active = UpdateState(MenuMode.FORMATION);
-		//clicker.cursorSprite.enabled = active;
-		if (!active)
-			return;
-		
-		battleMap.ResetMap();
-		battleMap.ClearDeployment();
-		for (int i = 0; i < map.spawnPoints.Count; i++) {
-			if (map.spawnPoints[i].stats != null)
-				continue;
 
-			battleMap.GetTile(map.spawnPoints[i].x, map.spawnPoints[i].y).deployable = true;
+		if (active) {
+			battleMap.ResetMap();
+			battleMap.ClearDeployment();
+			cursorMovedEvent.Invoke();
 		}
-		cursorMovedEvent.Invoke();
+		
+		for (int i = 0; i < map.spawnPoints.Count; i++) {
+			battleMap.GetTile(map.spawnPoints[i].x, map.spawnPoints[i].y).deployable = active;
+		}
     }
 
 	public override void OnUpArrow() {

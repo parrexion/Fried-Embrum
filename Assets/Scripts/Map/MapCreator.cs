@@ -8,6 +8,7 @@ public class MapCreator : MonoBehaviour {
 	public ScrObjEntryReference currentMap;
 	public SaveListVariable availableCharacters;
 	public CharacterListVariable playerList;
+	public PrepListVariable prepList;
 	public BattleMap battleMap;
 	public MapCursor mapClicker;
 
@@ -169,30 +170,21 @@ public class MapCreator : MonoBehaviour {
 		MapEntry map = (MapEntry)currentMap.value;
 		
 		//Players
+		int prepPos = 0;
 		for (int i = 0; i < map.spawnPoints.Count; i++) {
-			PlayerPosition pos = map.spawnPoints[i];
-			StatsContainer stats;
-			InventoryContainer inventory;
-			SkillsContainer skills;
+			Position pos = map.spawnPoints[i];
 
-			if (pos.stats != null) {
-				stats = new StatsContainer(pos.stats, pos.stats.charClass, pos.level);
-				inventory = new InventoryContainer(pos.inventory);
-				skills = new SkillsContainer(pos.skills);
-				availableCharacters.stats.Add(stats);
-				availableCharacters.inventory.Add(inventory);
-				availableCharacters.skills.Add(skills);
-			}
-			else if (i >= availableCharacters.stats.Count) {
+			if (prepPos >= prepList.values.Count || !prepList.values[prepPos].selected) {
 				battleMap.GetTile(pos.x, pos.y).selectable = true;
 				continue;
 			}
-			else {
-				stats = availableCharacters.stats[i];
-				inventory = availableCharacters.inventory[i];
-				skills = availableCharacters.skills[i];
-			}
 
+			int index = prepList.values[prepPos].index;
+			StatsContainer stats = availableCharacters.stats[index];
+			InventoryContainer inventory = availableCharacters.inventory[index];
+			SkillsContainer skills = availableCharacters.skills[index];
+			prepPos++;
+			
 			SpawnPlayerCharacter(pos.x, pos.y, stats, inventory, skills, true);
 		}
 	}
@@ -302,15 +294,22 @@ public class MapCreator : MonoBehaviour {
 	private IEnumerator SpawnReinforcementsLoop() {
 		MapEntry map = (MapEntry)currentMap.value;
 		for (int i = 0; i < map.reinforcements.Count; i++) {
-			EnemyPosition pos = map.reinforcements[i];
+			ReinforcementPosition pos = map.reinforcements[i];
 			if (currentTurn.value == pos.spawnTurn) {
 				MapTile tile = battleMap.GetTile(pos.x, pos.y);
 				if (tile.currentCharacter == null) {
 					StatsContainer stats = new StatsContainer(pos.stats, pos.stats.charClass, pos.level);
 					InventoryContainer inventory = new InventoryContainer(pos.inventory);
 					SkillsContainer skills = new SkillsContainer(pos.skills);
-
-					SpawnEnemyCharacter(pos.x, pos.y, stats, inventory, skills, new List<FightQuote>(), AggroType.CHARGE, null);
+					if (pos.faction == Faction.PLAYER) {
+						SpawnPlayerCharacter(pos.x, pos.y, stats, inventory, skills, true);
+					}
+					else if (pos.faction == Faction.ENEMY) {
+						SpawnEnemyCharacter(pos.x, pos.y, stats, inventory, skills, pos.quotes, pos.aggroType, battleMap.GetTile(pos.huntX, pos.huntY));
+					}
+					else {
+						Debug.LogError("Unimplemented faction  " + pos.faction);
+					}
 					cursorX.value = pos.x;
 					cursorY.value = pos.y;
 					cursorMoveEvent.Invoke();
