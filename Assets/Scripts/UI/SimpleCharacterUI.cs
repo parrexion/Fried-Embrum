@@ -17,6 +17,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 	public TacticsMoveVariable selectedCharacter;
 	public MapTileVariable selectedTile;
 	public MapTileVariable targetTile;
+	public IntVariable currentPage;
 	public IntVariable inventoryIndex;
 	
 	[Header("Icons")]
@@ -69,20 +70,13 @@ public class SimpleCharacterUI : MonoBehaviour {
 	public Text[] inventoryFields;
 	public Text[] inventoryValues;
 
-	[Header("Tooltip")]
-	public GameObject tooltipObject;
-	public Text tooltipText;
-
 	[Header("Terrain Info")]
 	public GameObject terrainObject;
 	public Text terrainText;
 
-	private StatsPage page;
-
 
 	private void Start() {
-		UpdateTooltip("");
-		page = StatsPage.BASIC;
+		currentPage.value = (int)StatsPage.BASIC;
 		HideStats();
 	}
 
@@ -102,7 +96,8 @@ public class SimpleCharacterUI : MonoBehaviour {
 		}
 
 		if (currentMenuMode.value != (int)MenuMode.MAP && currentMenuMode.value != (int)MenuMode.PREP &&
-			currentMenuMode.value != (int)MenuMode.INV && currentMenuMode.value != (int)MenuMode.FORMATION) {
+			currentMenuMode.value != (int)MenuMode.INV && currentMenuMode.value != (int)MenuMode.FORMATION && 
+			currentMenuMode.value != (int)MenuMode.TOOLTIP) {
 			HideStats();
 			active = false;
 		}
@@ -112,13 +107,13 @@ public class SimpleCharacterUI : MonoBehaviour {
 		else if (tactics == null) {
 			HideStats();
 		}
-		else if (page == StatsPage.INVENTORY || currentMenuMode.value == (int)MenuMode.INV) {
+		else if (currentPage.value == (int)StatsPage.INVENTORY || currentMenuMode.value == (int)MenuMode.INV) {
 			ShowInventoryStats(tactics);
 		}
-		else if (page == StatsPage.STATS) {
+		else if (currentPage.value == (int)StatsPage.STATS) {
 			ShowStatsStats(tactics);
 		}
-		else if (page == StatsPage.BASIC) {
+		else if (currentPage.value == (int)StatsPage.BASIC) {
 			ShowBasicStats(tactics);
 		}
 
@@ -131,10 +126,10 @@ public class SimpleCharacterUI : MonoBehaviour {
 	/// </summary>
 	/// <param name="dir"></param>
 	public void ChangeStatsScreen() {
-		switch (page) {
-		case StatsPage.BASIC:		page = StatsPage.STATS; break;
-		case StatsPage.STATS:		page = StatsPage.INVENTORY; break;
-		case StatsPage.INVENTORY:	page = StatsPage.BASIC; break;
+		switch ((StatsPage)currentPage.value) {
+		case StatsPage.BASIC:		currentPage.value = (int)StatsPage.STATS; break;
+		case StatsPage.STATS:		currentPage.value = (int)StatsPage.INVENTORY; break;
+		case StatsPage.INVENTORY:	currentPage.value = (int)StatsPage.BASIC; break;
 		}
 		UpdateUI();
 	}
@@ -376,12 +371,5 @@ public class SimpleCharacterUI : MonoBehaviour {
 		}
 	}
 
-	/// <summary>
-	/// Updates the tooltip text. Disable the tooltip with empty message.
-	/// </summary>
-	/// <param name="message"></param>
-	public void UpdateTooltip(string message) {
-		tooltipText.text = message;
-		tooltipObject.SetActive(!string.IsNullOrEmpty(message));
-	}
+
 }

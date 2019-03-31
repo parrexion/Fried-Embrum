@@ -1,56 +1,78 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ExplanationController : InputReceiverDelegate {
-
-	public IntVariable currentPage;
-	public ExplanationGroup baseStats;
-	public ExplanationGroup statsStats;
-	public ExplanationGroup inventoryStats;
 
     [Header("Character stats")]
     public TacticsMoveVariable selectedCharacter;
     public ScrObjEntryReference[] inventory;
 
+	[Header("Pages")]
+	public IntVariable currentPage;
+	public ExplanationGroup baseStats;
+	public ExplanationGroup statsStats;
+	public ExplanationGroup inventoryStats;
 
-    public override void OnMenuModeChanged() {
+	[Header("Tooltip")]
+	public GameObject tooltipObject;
+	public UnityEvent changeStatsPageEvent;
+
+	private StatsPage page;
+	private bool changing;
+
+
+	private void Start() {
+		tooltipObject.SetActive(false);
+		baseStats.UpdateSelection(false);
+		statsStats.UpdateSelection(false);
+		inventoryStats.UpdateSelection(false);
+	}
+
+	public override void OnMenuModeChanged() {
 		bool active = UpdateState(MenuMode.TOOLTIP);
-		baseStats.UpdateSelection(active && currentPage.value == (int)StatsPage.BASIC);
-		statsStats.UpdateSelection(active && currentPage.value == (int)StatsPage.STATS);
-		inventoryStats.UpdateSelection(active && currentPage.value == (int)StatsPage.INVENTORY);
+		page = (currentMenuMode.value == (int)MenuMode.INV) ? StatsPage.INVENTORY : (StatsPage)currentPage.value;
 
+		tooltipObject.SetActive(active);
         if (active)
             Setup();
 	}
 
+	/// <summary>
+	/// Updates the inventory and the explanation groups.
+	/// </summary>
     private void Setup() {
         InventoryContainer inv = selectedCharacter.value.inventory;
         for (int i = 0; i < InventoryContainer.INVENTORY_SIZE; i++) {
             inventory[i].value = inv.GetTuple(i).item;
         }
+
+		baseStats.UpdateSelection(page == StatsPage.BASIC);
+		statsStats.UpdateSelection(page == StatsPage.STATS);
+		inventoryStats.UpdateSelection(page == StatsPage.INVENTORY);
     }
 
     public override void OnDownArrow() {
-        if (currentPage.value == (int)StatsPage.BASIC) {
+        if (page == StatsPage.BASIC) {
             baseStats.Move(1);
         }
-        else if (currentPage.value == (int)StatsPage.STATS) {
+        else if (page == StatsPage.STATS) {
             statsStats.Move(1);
         }
-        else if (currentPage.value == (int)StatsPage.INVENTORY) {
+        else if (page == StatsPage.INVENTORY) {
             inventoryStats.Move(1);
         }
     }
 
     public override void OnUpArrow() {
-        if (currentPage.value == (int)StatsPage.BASIC) {
+        if (page == StatsPage.BASIC) {
             baseStats.Move(-1);
         }
-        else if (currentPage.value == (int)StatsPage.STATS) {
+        else if (page == StatsPage.STATS) {
             statsStats.Move(-1);
         }
-        else if (currentPage.value == (int)StatsPage.INVENTORY) {
+        else if (page == StatsPage.INVENTORY) {
             inventoryStats.Move(-1);
         }
     }
@@ -61,23 +83,32 @@ public class ExplanationController : InputReceiverDelegate {
 
     public override void OnBackButton() {
 		menuBackEvent.Invoke();
-		MenuChangeDelay(MenuMode.MAP);
 		baseStats.UpdateSelection(false);
 		statsStats.UpdateSelection(false);
 		inventoryStats.UpdateSelection(false);
+		MenuChangeDelay(MenuMode.MAP);
     }
 
     public override void OnYButton() {
-        StartCoroutine(WaitForPageUpdate());
+		if (currentMenuMode.value == (int)MenuMode.INV || changing)
+			return;
+
+		changing = true;
+        StartCoroutine(ChangeStatsScreen());
     }
 
-    private IEnumerator WaitForPageUpdate() {
-        yield return null;
-		baseStats.UpdateSelection(currentPage.value == (int)StatsPage.BASIC);
-		statsStats.UpdateSelection(currentPage.value == (int)StatsPage.STATS);
-		inventoryStats.UpdateSelection(currentPage.value == (int)StatsPage.INVENTORY);
-    }
-
+    /// <summary>
+	/// Changes the stats screen to the next one if possible.
+	/// </summary>
+	/// <param name="dir"></param>
+	private IEnumerator ChangeStatsScreen() {
+		changeStatsPageEvent.Invoke();
+		yield return null;
+		page = (StatsPage)currentPage.value;
+		Setup();
+		changing = false;
+	}
+	
 	
     public override void OnLeftArrow() { }
     public override void OnRightArrow() { }

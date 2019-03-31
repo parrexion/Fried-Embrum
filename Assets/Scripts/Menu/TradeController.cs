@@ -9,6 +9,7 @@ public class TradeController : InputReceiverDelegate {
 	public ActionModeVariable currentMode;
 	public TacticsMoveVariable selectedCharacter;
 	public MapTileVariable targetTile;
+	public GameObject statsObject;
 
 	[Header("Trade Windows")]
 	public GameObject tradeWindowLeft;
@@ -43,6 +44,7 @@ public class TradeController : InputReceiverDelegate {
 
 		menuPosition = 0;
 		selectedIndex = -1;
+		statsObject.SetActive(false);
 
 		UpdateInventories();
 		UpdateSelection();
@@ -113,9 +115,9 @@ public class TradeController : InputReceiverDelegate {
 		}
 		else {
 			currentMode.value = ActionMode.ACTION;
-			MenuChangeDelay(MenuMode.MAP);
 			selectedIndex = -1;
-			UpdateSelection();
+			statsObject.SetActive(true);
+			MenuChangeDelay(MenuMode.MAP);
 		}
 		menuBackEvent.Invoke();
     }
