@@ -32,6 +32,10 @@ public class MainMenuController : InputReceiverDelegate {
 	public BoolVariable musicFocus;
 	public UnityEvent playBkgMusicEvent;
 
+	[Header("New Game Data")]
+	public PlayerPosition[] startingCharacters;
+	public SaveListVariable playerData;
+
 	public UnityEvent saveGameEvent;
 
 	private State currentState;
@@ -86,6 +90,12 @@ public class MainMenuController : InputReceiverDelegate {
 		currentPlayTime.value = 0;
 		currentMap.value = chapterList.values[0];
 		Debug.Log("Set Dialogue to:  " + currentDialogue.value.entryName);
+		playerData.ResetData();
+		for (int i = 0; i < startingCharacters.Length; i++) {
+			playerData.stats.Add(new StatsContainer(startingCharacters[i].stats, startingCharacters[i].stats.charClass, startingCharacters[i].level));
+			playerData.inventory.Add(new InventoryContainer(startingCharacters[i].inventory));
+			playerData.skills.Add(new SkillsContainer(startingCharacters[i].skills));
+		}
 		InputDelegateController.instance.TriggerSceneChange(MenuMode.NONE, "LoadingScreen");
 	}
 

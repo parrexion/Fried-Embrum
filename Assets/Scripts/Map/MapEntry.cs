@@ -165,7 +165,7 @@ public class Position {
 public class PlayerPosition {
 	public int x;
 	public int y;
-	public int level;
+	public int level = 1;
 	public CharData stats;
 	public List<WeaponTuple> inventory = new List<WeaponTuple>();
 	public CharacterSkill[] skills;

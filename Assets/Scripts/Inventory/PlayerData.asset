@@ -15,18 +15,18 @@ MonoBehaviour:
   stats:
   - charData: {fileID: 11400000, guid: ebe64c7e451dc494fbc8211be6f10d6a, type: 2}
     classData: {fileID: 11400000, guid: 46169fca396b47d43add3446fcc356fe, type: 2}
-    level: 2
-    currentLevel: 3
+    level: 1
+    currentLevel: 1
     currentExp: 0
     wpnSkills: 0000000001000000000000000000000000000000000000000000000000000000
-    hp: 17
+    hp: 16
     atk: 4
     spd: 9
     skl: 7
     lck: 5
     def: 2
     res: 0
-    eHp: 17
+    eHp: 16
     eAtk: 4
     eSpd: 9
     eSkl: 7
@@ -107,12 +107,12 @@ MonoBehaviour:
       charge: 46
       droppable: 0
     - index: 1
-      item: {fileID: 0}
-      charge: 0
+      item: {fileID: 11400000, guid: a2e37062da4ad09429243928a67e726e, type: 2}
+      charge: 3
       droppable: 0
     - index: 2
-      item: {fileID: 0}
-      charge: 0
+      item: {fileID: 11400000, guid: a2e37062da4ad09429243928a67e726e, type: 2}
+      charge: 3
       droppable: 0
     - index: 3
       item: {fileID: 0}
@@ -128,12 +128,12 @@ MonoBehaviour:
       charge: 46
       droppable: 0
     - index: 1
-      item: {fileID: 0}
-      charge: 0
+      item: {fileID: 11400000, guid: 0f3a39b4943c3394d894979e1c3bea9d, type: 2}
+      charge: 45
       droppable: 0
     - index: 2
-      item: {fileID: 0}
-      charge: 0
+      item: {fileID: 11400000, guid: 21e0cdf65dcd3c64f99de572c0526714, type: 2}
+      charge: 46
       droppable: 0
     - index: 3
       item: {fileID: 0}
@@ -145,12 +145,12 @@ MonoBehaviour:
       droppable: 0
   - inventory:
     - index: 0
-      item: {fileID: 11400000, guid: 21e0cdf65dcd3c64f99de572c0526714, type: 2}
-      charge: 46
+      item: {fileID: 11400000, guid: 0f3a39b4943c3394d894979e1c3bea9d, type: 2}
+      charge: 45
       droppable: 0
     - index: 1
-      item: {fileID: 0}
-      charge: 0
+      item: {fileID: 11400000, guid: a2e37062da4ad09429243928a67e726e, type: 2}
+      charge: 3
       droppable: 0
     - index: 2
       item: {fileID: 0}
@@ -184,20 +184,8 @@ MonoBehaviour:
     - {fileID: 0}
     - {fileID: 0}
   items: []
-  missions:
-  - map: {fileID: 11400000, guid: 0a7809c902aa4d844a70ed2c691ea4a2, type: 2}
-    cleared: 0
-  - map: {fileID: 11400000, guid: a433301cc1f14f043ab12fbd97fedd44, type: 2}
-    cleared: 0
-  - map: {fileID: 11400000, guid: c68da9216d8057b4e829f9f87b9ae6c5, type: 2}
-    cleared: 0
-  - map: {fileID: 11400000, guid: 00776eff4b74d074c8be7b2dbe865331, type: 2}
-    cleared: 0
-  - map: {fileID: 11400000, guid: 0a7809c902aa4d844a70ed2c691ea4a2, type: 2}
-    cleared: 0
-  - map: {fileID: 11400000, guid: a433301cc1f14f043ab12fbd97fedd44, type: 2}
-    cleared: 0
-  - map: {fileID: 11400000, guid: c68da9216d8057b4e829f9f87b9ae6c5, type: 2}
-    cleared: 0
-  - map: {fileID: 11400000, guid: 00776eff4b74d074c8be7b2dbe865331, type: 2}
-    cleared: 0
+  upgrader:
+    listSize: 0
+    upgrades: []
+    developed: []
+  missions: []
