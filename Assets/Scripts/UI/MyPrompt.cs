@@ -1,19 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// UI class for handling a simple prompt view with a yes and a no button.
 /// </summary>
 public class MyPrompt : MonoBehaviour {
 
+	public enum PromptType { NONE, BIG, SMALL }
 	public enum Result { OK1, OK2, CANCEL, LOCKED }
 	const string YES_NAME = "YES";
 	const string NO_NAME = "NO";
 	const string OK_NAME = "OK";
+	
+	public PromptType style;
 
+	[Header("Objects")]
+	public Image backgroundImage;
 	public GameObject promptView;
-	public TMPro.TextMeshProUGUI textArea;
+	public Text textArea;
 	public MyButton yesButton;
 	public MyButton yes2Button;
 	public MyButton noButton;
@@ -148,5 +154,15 @@ public class MyPrompt : MonoBehaviour {
 		noButton.SetSelected(position == 0);
 		yesButton.SetSelected(position == 1);
 		yes2Button.SetSelected(position == 2);
+	}
+
+	public void SetStyle(PromptStyle style) {
+		backgroundImage.sprite = style.backgroundImage;
+		backgroundImage.color = style.backgroundColor;
+		
+		yesButton.SetStyle(style.buttonStyle);
+		yes2Button.SetStyle(style.buttonStyle);
+		noButton.SetStyle(style.buttonStyle);
+		okButton.SetStyle(style.buttonStyle);
 	}
 }

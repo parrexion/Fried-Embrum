@@ -16,6 +16,10 @@ public class UiStyler : ScriptableObject {
 	public UIStyle baseStyle;
 	public UIStyle actionStyle;
 
+	[Header("Prompt Styles")]
+	public PromptStyle selectPopup;
+	public PromptStyle smallPopup;
+
 }
 
 
@@ -35,4 +39,11 @@ public class TextStyle {
 	public Color color = Color.black;
 	public Font font;
 	public int fontMaxSize = 40;
+}
+
+[System.Serializable]
+public class PromptStyle {
+	public Sprite backgroundImage;
+	public Color backgroundColor = Color.white;
+	public UIStyle buttonStyle;
 }
