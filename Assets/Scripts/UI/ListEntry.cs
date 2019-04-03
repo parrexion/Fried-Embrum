@@ -6,6 +6,10 @@ using UnityEngine.UI;
 [System.Serializable]
 public abstract class ListEntry : MonoBehaviour {
 
+	public enum ListType { NONE, NORMAL, THIN }
+	public ListType style;
+
+	public Image background;
 	public Image highlight;
 	public bool dark;
 
@@ -28,5 +32,17 @@ public abstract class ListEntry : MonoBehaviour {
 	public void SetDark(bool state) {
 		dark = state;
 		icon.color = (state) ? Color.grey : Color.white;
+	}
+
+	public virtual void SetStyle(UIStyle style, Font font) {
+		background.sprite = style.baseImage;
+		background.color = style.baseColor;
+		highlight.sprite = style.highImage;
+		highlight.color = style.highColor;
+
+		entryName.font = font;
+		entryName.color = style.fontColor;
+		entryName.resizeTextMaxSize = style.fontMaxSize;
+		entryName.resizeTextForBestFit = true;
 	}
 }

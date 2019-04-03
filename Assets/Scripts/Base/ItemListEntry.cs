@@ -52,4 +52,16 @@ public class ItemListEntry : ListEntry {
 		this.affordable = affordable;
 		SetDark(!affordable);
 	}
+
+	public override void SetStyle(UIStyle style, Font font) {
+		base.SetStyle(style, font);
+		maxCharge.font = font;
+		maxCharge.color = style.fontColor;
+		maxCharge.resizeTextMaxSize = style.fontMaxSize;
+		maxCharge.resizeTextForBestFit = true;
+		cost.font = font;
+		cost.color = style.fontColor;
+		cost.resizeTextMaxSize = style.fontMaxSize;
+		cost.resizeTextForBestFit = true;
+	}
 }

@@ -18,10 +18,10 @@ public class UiStylerEditor : Editor {
 				switch (buttons[b].style)
 				{
 				case MyButton.ButtonType.MAIN:
-					buttons[b].SetStyle(styler.mainStyle);
+					buttons[b].SetStyle(styler.mainStyle, styler.font);
 					break;
 				case MyButton.ButtonType.BASE:
-					buttons[b].SetStyle(styler.baseStyle);
+					buttons[b].SetStyle(styler.baseStyle, styler.font);
 					break;
 				}
 				if (buttons[b].gameObject.scene.name == null) {
@@ -34,16 +34,22 @@ public class UiStylerEditor : Editor {
 				switch (texts[t].style)
 				{
 				case MyText.TextType.HUGE:
-					texts[t].SetStyle(styler.hugeText);
+					texts[t].SetStyle(styler.hugeText, styler.font);
 					break;
 				case MyText.TextType.TITLE:
-					texts[t].SetStyle(styler.titleText);
+					texts[t].SetStyle(styler.titleText, styler.font);
 					break;
 				case MyText.TextType.SUBTITLE:
-					texts[t].SetStyle(styler.subTitleText);
+					texts[t].SetStyle(styler.subTitleText, styler.font);
 					break;
 				case MyText.TextType.BREAD:
-					texts[t].SetStyle(styler.breadText);
+					texts[t].SetStyle(styler.breadText, styler.font);
+					break;
+				case MyText.TextType.LIST_TITLE:
+					texts[t].SetStyle(styler.listTitleText, styler.font);
+					break;
+				case MyText.TextType.MENU_TITLE:
+					texts[t].SetStyle(styler.menuTitleText, styler.font);
 					break;
 				}
 				if(texts[t].gameObject.scene.name == null) {
@@ -55,14 +61,26 @@ public class UiStylerEditor : Editor {
 			for(int p = 0; p < prompts.Length; p++) {
 				switch(prompts[p].style) {
 					case MyPrompt.PromptType.BIG:
-						prompts[p].SetStyle(styler.selectPopup);
+						prompts[p].SetStyle(styler.selectPopup, styler.font);
 						break;
 					case MyPrompt.PromptType.SMALL:
-						prompts[p].SetStyle(styler.smallPopup);
+						prompts[p].SetStyle(styler.smallPopup, styler.font);
 						break;
 				}
 				if(prompts[p].gameObject.scene.name == null) {
 					EditorUtility.SetDirty(prompts[p]);
+				}
+			}
+
+			ListEntry[] lists = Resources.FindObjectsOfTypeAll<ListEntry>();
+			for(int l = 0; l < lists.Length; l++) {
+				switch(lists[l].style) {
+					case ListEntry.ListType.NORMAL:
+						lists[l].SetStyle(styler.normalList, styler.font);
+						break;
+				}
+				if(lists[l].gameObject.scene.name == null) {
+					EditorUtility.SetDirty(lists[l]);
 				}
 			}
 

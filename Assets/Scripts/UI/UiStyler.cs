@@ -4,17 +4,24 @@ using UnityEngine;
 
 [CreateAssetMenu]
 public class UiStyler : ScriptableObject {
+	
+	public Font font;
 
-	[Header("Text styles")]
+	[Header("Text Styles")]
 	public TextStyle hugeText;
 	public TextStyle titleText;
 	public TextStyle subTitleText;
 	public TextStyle breadText;
+	public TextStyle listTitleText;
+	public TextStyle menuTitleText;
 
 	[Header("Button Styles")]
 	public UIStyle mainStyle;
 	public UIStyle baseStyle;
 	public UIStyle actionStyle;
+
+	[Header("List Styles")]
+	public UIStyle normalList;
 
 	[Header("Prompt Styles")]
 	public PromptStyle selectPopup;
@@ -22,14 +29,12 @@ public class UiStyler : ScriptableObject {
 
 }
 
-
 [System.Serializable]
 public class UIStyle {
 	public Sprite baseImage;
 	public Color baseColor = Color.white;
 	public Sprite highImage;
 	public Color highColor = Color.white;
-	public Font font;
 	public Color fontColor = Color.black;
 	public int fontMaxSize = 40;
 }
@@ -37,7 +42,6 @@ public class UIStyle {
 [System.Serializable]
 public class TextStyle {
 	public Color color = Color.black;
-	public Font font;
 	public int fontMaxSize = 40;
 }
 
@@ -47,3 +51,4 @@ public class PromptStyle {
 	public Color backgroundColor = Color.white;
 	public UIStyle buttonStyle;
 }
+

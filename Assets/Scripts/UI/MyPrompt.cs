@@ -156,13 +156,13 @@ public class MyPrompt : MonoBehaviour {
 		yes2Button.SetSelected(position == 2);
 	}
 
-	public void SetStyle(PromptStyle style) {
+	public void SetStyle(PromptStyle style, Font font) {
 		backgroundImage.sprite = style.backgroundImage;
 		backgroundImage.color = style.backgroundColor;
 		
-		yesButton.SetStyle(style.buttonStyle);
-		yes2Button.SetStyle(style.buttonStyle);
-		noButton.SetStyle(style.buttonStyle);
-		okButton.SetStyle(style.buttonStyle);
+		yesButton.SetStyle(style.buttonStyle, font);
+		yes2Button.SetStyle(style.buttonStyle, font);
+		noButton.SetStyle(style.buttonStyle, font);
+		okButton.SetStyle(style.buttonStyle, font);
 	}
 }

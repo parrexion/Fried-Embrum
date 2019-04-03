@@ -12,28 +12,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 175654749afa67548826ca9b09d7da02, type: 3}
   m_Name: UIStyler
   m_EditorClassIdentifier: 
+  font: {fileID: 12800000, guid: 3e76c4cf634b20f48a6c254139fabba4, type: 3}
   hugeText:
     color: {r: 0.97885394, g: 1, b: 0, a: 1}
-    font: {fileID: 12800000, guid: 3e76c4cf634b20f48a6c254139fabba4, type: 3}
     fontMaxSize: 120
   titleText:
     color: {r: 0.97885394, g: 1, b: 0, a: 1}
-    font: {fileID: 12800000, guid: 3e76c4cf634b20f48a6c254139fabba4, type: 3}
     fontMaxSize: 70
   subTitleText:
     color: {r: 0.97885394, g: 1, b: 0, a: 1}
-    font: {fileID: 12800000, guid: 3e76c4cf634b20f48a6c254139fabba4, type: 3}
     fontMaxSize: 60
   breadText:
     color: {r: 0.30411178, g: 0.9622642, b: 0.67519104, a: 1}
-    font: {fileID: 12800000, guid: 3e76c4cf634b20f48a6c254139fabba4, type: 3}
     fontMaxSize: 40
+  listTitleText:
+    color: {r: 0, g: 0, b: 0, a: 1}
+    fontMaxSize: 50
+  menuTitleText:
+    color: {r: 1, g: 1, b: 0, a: 1}
+    fontMaxSize: 90
   mainStyle:
     baseImage: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
     baseColor: {r: 1, g: 1, b: 1, a: 1}
     highImage: {fileID: 0}
     highColor: {r: 0.97885394, g: 1, b: 0, a: 1}
-    font: {fileID: 12800000, guid: 3e76c4cf634b20f48a6c254139fabba4, type: 3}
     fontColor: {r: 0, g: 0, b: 0, a: 1}
     fontMaxSize: 60
   baseStyle:
@@ -41,15 +43,20 @@ MonoBehaviour:
     baseColor: {r: 1, g: 1, b: 1, a: 1}
     highImage: {fileID: 0}
     highColor: {r: 0.32298875, g: 0.75735295, b: 0.54166865, a: 1}
-    font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     fontColor: {r: 0, g: 0, b: 0, a: 1}
-    fontMaxSize: 40
+    fontMaxSize: 60
   actionStyle:
     baseImage: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
     baseColor: {r: 1, g: 1, b: 1, a: 1}
     highImage: {fileID: 0}
     highColor: {r: 0.32298875, g: 0.75735295, b: 0.54166865, a: 1}
-    font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    fontColor: {r: 0, g: 0, b: 0, a: 1}
+    fontMaxSize: 40
+  normalList:
+    baseImage: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+    baseColor: {r: 1, g: 1, b: 1, a: 1}
+    highImage: {fileID: 0}
+    highColor: {r: 0.44705886, g: 0.74509805, b: 0.95294124, a: 1}
     fontColor: {r: 0, g: 0, b: 0, a: 1}
     fontMaxSize: 40
   selectPopup:
@@ -60,7 +67,6 @@ MonoBehaviour:
       baseColor: {r: 1, g: 1, b: 1, a: 1}
       highImage: {fileID: 0}
       highColor: {r: 1, g: 1, b: 0, a: 1}
-      font: {fileID: 12800000, guid: 3e76c4cf634b20f48a6c254139fabba4, type: 3}
       fontColor: {r: 0, g: 0, b: 0, a: 1}
       fontMaxSize: 60
   smallPopup:
@@ -71,6 +77,5 @@ MonoBehaviour:
       baseColor: {r: 1, g: 1, b: 1, a: 1}
       highImage: {fileID: 0}
       highColor: {r: 0.32298875, g: 0.75735295, b: 0.54166865, a: 1}
-      font: {fileID: 0}
       fontColor: {r: 0, g: 0, b: 0, a: 1}
       fontMaxSize: 40
