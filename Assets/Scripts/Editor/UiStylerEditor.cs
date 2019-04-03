@@ -78,6 +78,9 @@ public class UiStylerEditor : Editor {
 					case ListEntry.ListType.NORMAL:
 						lists[l].SetStyle(styler.normalList, styler.font);
 						break;
+					case ListEntry.ListType.THIN:
+						lists[l].SetStyle(styler.thinList, styler.font);
+						break;
 				}
 				if(lists[l].gameObject.scene.name == null) {
 					EditorUtility.SetDirty(lists[l]);

@@ -27,6 +27,7 @@ public class SaveController : MonoBehaviour {
 	#endregion
 	
 	public ScrObjEntryReference currentMap;
+	public ScrObjEntryReference currentDialogue;
 	public SaveListVariable playerData;
 	public IntVariable saveIndex;
 

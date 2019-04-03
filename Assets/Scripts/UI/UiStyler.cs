@@ -22,6 +22,7 @@ public class UiStyler : ScriptableObject {
 
 	[Header("List Styles")]
 	public UIStyle normalList;
+	public UIStyle thinList;
 
 	[Header("Prompt Styles")]
 	public PromptStyle selectPopup;

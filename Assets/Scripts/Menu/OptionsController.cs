@@ -16,6 +16,7 @@ public class OptionsController : MonoBehaviour {
 		optionList = new EntryList<OptionEntry>(options.Length);
 		for (int i = 0; i < options.Length; i++) {
 			optionList.CreateEntry(options[i].transform);
+			options[i].UpdateUI();
 		}
 		optionMenu.SetActive(false);
 	}
@@ -27,7 +28,7 @@ public class OptionsController : MonoBehaviour {
     public void UpdateState(bool active) {
 		optionList.ForcePosition(0);
         optionMenu.SetActive(active);
-		UpdateOptions();
+		explanationField.text = optionList.GetEntry().explanation;
 	}
 
 	/// <summary>
@@ -35,6 +36,7 @@ public class OptionsController : MonoBehaviour {
 	/// </summary>
     public void MoveVertical(int dir) {
 		optionList.Move(dir);
+		explanationField.text = optionList.GetEntry().explanation;
     }
 
 	/// <summary>
@@ -57,17 +59,6 @@ public class OptionsController : MonoBehaviour {
 	/// <returns></returns>
 	public bool OKClicked() {
 		return optionList.GetEntry().OnClick();
-	}
-
-
-	/// <summary>
-	/// Shows the current controls screen as well as scroll arrows.
-	/// </summary>
-	private void UpdateOptions() {
-		explanationField.text = optionList.GetEntry().explanation;
-		for (int i = 0; i < optionList.Size; i++) {
-			optionList.GetEntry(i).UpdateUI();
-		}
 	}
 
 }

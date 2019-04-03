@@ -29,4 +29,10 @@ public class OptionEntrySlider : OptionEntry {
 		return (before != value.value);
     }
 
+	public override void SetStyle(UIStyle style, Font font) {
+		base.SetStyle(style, font);
+		valueText.font = font;
+		valueText.color = style.fontColor;
+		valueText.resizeTextMaxSize = style.fontMaxSize;
+	}
 }
