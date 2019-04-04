@@ -33,10 +33,12 @@ public class SaveController : MonoBehaviour {
 
 	[Header("Simple Data")]
 	public IntVariable[] simpleChapterIndex;
+	public IntVariable[] simpleTotalDays;
 	public IntVariable[] simplePlayTimes;
 
 	[Header("Current Data")]
 	public IntVariable currentChapterIndex;
+	public IntVariable currentTotalDays;
 	public IntVariable currentPlayTime;
 	public IntVariable currentMoney;
 	public IntVariable currentScrap;
@@ -108,11 +110,13 @@ public class SaveController : MonoBehaviour {
 		if (!onlyOptions) {
 			// Update data
 			simpleChapterIndex[saveIndex.value].value = currentChapterIndex.value;
+			simpleTotalDays[saveIndex.value].value = currentTotalDays.value;
 			simplePlayTimes[saveIndex.value].value = currentPlayTime.value;
 
 			// Setup save data
 			SaveData data = new SaveData {
 				chapterIndex = simpleChapterIndex[saveIndex.value].value,
+				totalDays = simpleTotalDays[saveIndex.value].value,
 				playTime = simplePlayTimes[saveIndex.value].value,
 				money = currentMoney.value,
 				scrap = currentScrap.value,
@@ -188,6 +192,7 @@ public class SaveController : MonoBehaviour {
 			if (saveFileData.saveFiles[i] == null)
 				continue;
 			simpleChapterIndex[i].value = saveFileData.saveFiles[i].chapterIndex;
+			simpleTotalDays[i].value = saveFileData.saveFiles[i].totalDays;
 			simplePlayTimes[i].value = saveFileData.saveFiles[i].playTime;
 		}
 		
@@ -209,6 +214,7 @@ public class SaveController : MonoBehaviour {
 		
 		// Set basic data
 		currentChapterIndex.value = simpleChapterIndex[saveIndex.value].value;
+		currentTotalDays.value = simpleTotalDays[saveIndex.value].value;
 		currentPlayTime.value = simplePlayTimes[saveIndex.value].value;
 
 		// Read data in save file
@@ -259,6 +265,7 @@ public class SavePackage {
 public class SaveData {
 	public int chapterIndex;
 	public string levelName;
+	public int totalDays;
 	public int playTime;
 	public int money;
 	public int scrap;

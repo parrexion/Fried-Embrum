@@ -103,10 +103,16 @@ public class MainMenuController : InputReceiverDelegate {
 	/// Called when starting a new game. Sets the starting values.
 	/// </summary>
 	public void LoadGameFinished() {
-		currentMap.value = chapterList.values[currentChapterIndex.value];
-		currentChapterIndex.value++;
-		Debug.Log("Set DialogueC to:  " + currentDialogue.value.entryName);
-		InputDelegateController.instance.TriggerSceneChange(MenuMode.NONE, "LoadingScreen");
+		if (currentChapterIndex.value == -1) {
+			currentMap.value = null;
+			Debug.Log("Set DialogueC to:  BASE");
+			InputDelegateController.instance.TriggerSceneChange(MenuMode.NONE, "BaseScene");
+		}
+		else {
+			currentMap.value = chapterList.values[currentChapterIndex.value];
+			Debug.Log("Set DialogueC to:  " + currentDialogue.value.entryName);
+			InputDelegateController.instance.TriggerSceneChange(MenuMode.NONE, "LoadingScreen");
+		}
 	}
 
     public override void OnUpArrow() {

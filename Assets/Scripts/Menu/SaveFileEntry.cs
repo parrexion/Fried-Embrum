@@ -14,9 +14,9 @@ public class SaveFileEntry : ListEntry {
 	/// Fills the entry with the data of the character.
 	/// </summary>
 	/// <param name="statsCon"></param>
-	public void FillData(string mapName, int chapter, int time) {
+	public void FillData(string mapName, int day, int time) {
 		entryName.text = (time > 0) ? mapName : "";
-		chapterText.text = "ch  " + chapter;
+		chapterText.text = "day  " + day;
 		timeText.text = Utility.PlayTimeFromInt(time, false);
 		emptyFile.SetActive(time == 0);
 	}

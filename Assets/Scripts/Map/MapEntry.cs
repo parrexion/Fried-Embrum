@@ -20,8 +20,11 @@ public class MapEntry : ScrObjLibraryEntry {
 	public LoseCondition loseCondition;
 	public Reward reward = new Reward();
 
-	[Header("Dialogues")]
+	[Header("Chapter Linking")]
 	public bool skipBattlePrep;
+	public MapEntry autoNextChapter;
+
+	[Header("Dialogues")]
 	public DialogueEntry preDialogue;
 	public DialogueEntry introDialogue;
 	public DialogueEntry endDialogue;
@@ -59,6 +62,8 @@ public class MapEntry : ScrObjLibraryEntry {
 		reward = new Reward();
 
 		skipBattlePrep = false;
+		autoNextChapter = null;
+
 		preDialogue = null;
 		introDialogue = null;
 		endDialogue = null;
@@ -90,6 +95,8 @@ public class MapEntry : ScrObjLibraryEntry {
 		reward = map.reward;
 
 		skipBattlePrep = map.skipBattlePrep;
+		autoNextChapter = map.autoNextChapter;
+
 		preDialogue = map.preDialogue;
 		introDialogue = map.introDialogue;
 		endDialogue = map.endDialogue;

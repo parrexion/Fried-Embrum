@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class SaveFileController : MonoBehaviour {
 
 	public MapInfoListVariable chapterList;
+	public ScrObjEntryReference currenMap;
 
 	[Header("Popup")]
 	public bool usedForLoad;
@@ -21,6 +22,7 @@ public class SaveFileController : MonoBehaviour {
 
 	[Header("Save Data")]
 	public IntVariable[] chapterIndex;
+	public IntVariable[] totalDays;
 	public IntVariable[] playTimes;
 
 	public UnityEvent saveGameEvent;
@@ -109,10 +111,13 @@ public class SaveFileController : MonoBehaviour {
 			Transform t = Instantiate(entryPrefab, listParent);
 			SaveFileEntry entry = saveFiles.CreateEntry(t);
 			if (chapterIndex[i].value >= chapterList.values.Count) {
-				entry.FillData("All maps cleared!", chapterIndex[i].value, playTimes[i].value);
+				entry.FillData("All maps cleared!", totalDays[i].value, playTimes[i].value);
+			}
+			else if (chapterIndex[i].value == -1) {
+				entry.FillData("BASE", totalDays[i].value, playTimes[i].value);
 			}
 			else {
-				entry.FillData(chapterList.values[chapterIndex[i].value].entryName, chapterIndex[i].value, playTimes[i].value);
+				entry.FillData(chapterList.values[chapterIndex[i].value].entryName, totalDays[i].value, playTimes[i].value);
 			}
 		}
 		entryPrefab.gameObject.SetActive(false);
