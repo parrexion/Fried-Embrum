@@ -234,15 +234,15 @@ public class SaveController : MonoBehaviour {
 		Debug.Log("Successfully loaded " + loadedData.characters.Count + " characters");
 		for (int i = 0; i < loadedData.items.Count; i++) {
 			ItemEntry item = (ItemEntry)itemLibrary.GetEntry(loadedData.items[i].id);
-			playerData.items.Add(new InventoryItem { item = item, charges = loadedData.items[i].charges });
+			playerData.items.Add(new InventoryItem(item, loadedData.items[i].charges));
 		}
 		for (int i = 0; i < loadedData.upgrade.Count; i++) {
 			UpgradeEntry upgrade = (UpgradeEntry)upgradeLibrary.GetEntry(loadedData.upgrade[i].id);
-			playerData.upgrader.upgrades.Add(new UpgradeItem { upgrade = upgrade, researched = loadedData.upgrade[i].researched });
+			playerData.upgrader.upgrades.Add(new UpgradeItem(upgrade, loadedData.upgrade[i].researched));
 		}
 		for (int i = 0; i < loadedData.missions.Count; i++) {
 			MapEntry map = (MapEntry)missionLibrary.GetEntry(loadedData.missions[i].id);
-			playerData.missions.Add(new MissionContainer { map = map, cleared = loadedData.missions[i].cleared });
+			playerData.missions.Add(new MissionContainer(map, loadedData.missions[i].cleared));
 		}
 		playerData.upgrader.CalculateResearch();
 		Debug.Log("Successfully loaded the save data!");

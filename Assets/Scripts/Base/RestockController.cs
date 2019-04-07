@@ -313,10 +313,7 @@ public class RestockController : MonoBehaviour {
 			return;
 
 		InventoryTuple tuple = characters.GetEntry().invCon.GetTuple(itemList.GetPosition());
-		InventoryItem item = new InventoryItem() {
-			charges = tuple.charge,
-			item = tuple.item
-		};
+		InventoryItem item = new InventoryItem(tuple);
 		playerData.items.Add(item);
 		tuple.item = null;
 		characters.GetEntry().invCon.CleanupInventory(null);

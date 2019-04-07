@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class BaseHousing : InputReceiverDelegate {
 
+	private enum State { MAIN, HOUSE, SUPPORT }
+
 	[Header("Button menu")]
 	public MyButtonList buttons;
     public SaveListVariable saveList;
@@ -17,9 +19,7 @@ public class BaseHousing : InputReceiverDelegate {
 	public GameObject supportCanvas;
 
     [Header("Housing")]
-    public GameObject roomGrid;
-    private House[] houses;
-	private House selectedHouse;
+	public HousingController housingController;
 
 	[Header("Information")]
 	public Text roomNumber;
@@ -33,16 +33,11 @@ public class BaseHousing : InputReceiverDelegate {
 	[Header("Supports")]
 	public SupportList supportList;
 	
-	private int menuMode;
-	private Room targetRoom;
+	private State menuMode;
 
 
 	private void Start() {
-		menuMode = 0;
-        houses = roomGrid.GetComponentsInChildren<House>();
-        for (int i = 0; i < houses.Length; i++) {
-            houses[i].SetupRooms(i+1,null,null,null);
-        }
+		menuMode = State.MAIN;
 		basicCanvas.SetActive(true);
 		houseCanvas.SetActive(false);
 		supportCanvas.SetActive(false);
@@ -50,12 +45,6 @@ public class BaseHousing : InputReceiverDelegate {
 		buttons.ResetButtons();
 		buttons.AddButton("EDIT ROOMS");
 		buttons.AddButton("CHECK SUPPORTS");
-		buttons.AddButton("SUPPORT LIST");
-
-		//DEBUG
-		houses[0].SetupRooms(1, saveList.stats[0], null, null);
-		houses[1].SetupRooms(2, null, saveList.stats[1], null);
-		houses[2].SetupRooms(3, null, null, saveList.stats[2]);
 	}
 
     public override void OnMenuModeChanged() {
@@ -64,122 +53,112 @@ public class BaseHousing : InputReceiverDelegate {
 	}
 
 	public override void OnOkButton() {
-		if (menuMode == 0) {
+		if (menuMode == State.MAIN) {
 			int currentIndex = buttons.GetPosition();
 			if (currentIndex == 0) {
+				menuMode = State.HOUSE;
 				basicCanvas.SetActive(false);
 				houseCanvas.SetActive(true);
-				selectedHouse = houses[0].HoverRoom(0);
-				UpdateSelectedHouse();
-				menuMode = 1;
+				housingController.CreateHousing();
 				menuAcceptEvent.Invoke();
 			}
 			else if (currentIndex == 1) {
+				menuMode = State.SUPPORT;
 				basicCanvas.SetActive(false);
 				supportCanvas.SetActive(true);
-				menuMode = 2;
 				supportList.CreateList();
 				menuAcceptEvent.Invoke();
 			}
 		}
-		else if (menuMode == 1) {
-			if (!targetRoom) {
-				selectedHouse.SelectRoom(true);
-				targetRoom = selectedHouse.GetSelectedRoom();
-			}
-			else {
-				Room secondRoom = selectedHouse.GetSelectedRoom();
-				Room.SwapRoom(targetRoom, secondRoom);
-				targetRoom = null;
-				secondRoom.SetHover(true);
-				UpdateSelectedHouse();
-			}
+		else if (menuMode == State.HOUSE) {
+			housingController.SelectClick();
+			menuAcceptEvent.Invoke();
 		}
-		else if (menuMode == 2) {
+		else if (menuMode == State.SUPPORT) {
 			supportList.SelectCharacter();
+			menuAcceptEvent.Invoke();
 		}
 	}
 
 	public override void OnBackButton() {
-		if (menuMode == 0) {
-
-		}
-		else if (menuMode == 1) {
-			basicCanvas.SetActive(true);
-			houseCanvas.SetActive(false);
-			selectedHouse.HideRoom();
-			menuMode = 0;
+		if (menuMode == State.HOUSE) {
+			bool res = housingController.BackClicked();
+			if (res) {
+				menuMode = State.MAIN;
+				basicCanvas.SetActive(true);
+				houseCanvas.SetActive(false);
+			}
 			menuBackEvent.Invoke();
 		}
-		else if (menuMode == 2) {
+		else if (menuMode == State.SUPPORT) {
 			bool res = supportList.DeselectCharacter();
 			if (res) {
+				menuMode = State.MAIN;
 				basicCanvas.SetActive(true);
 				supportCanvas.SetActive(false);
-				menuMode = 0;
-				menuBackEvent.Invoke();
 			}
+			menuBackEvent.Invoke();
 		}
 	}
 
     public override void OnUpArrow() {
-		if (menuMode == 0) {
+		if (menuMode == State.MAIN) {
 			buttons.Move(-1);
 			housingChangedEvent.Invoke();
 		}
-		else if (menuMode == 1) {
-			selectedHouse = selectedHouse.MoveUp();
+		else if (menuMode == State.HOUSE) {
+			housingController.MoveVertical(-1);
 			UpdateSelectedHouse();
 		}
-		else if (menuMode == 2) {
+		else if (menuMode == State.SUPPORT) {
 			supportList.MoveVertical(-1);
 		}
 	}
 
     public override void OnDownArrow() {
-		if (menuMode == 0) {
+		if (menuMode == State.MAIN) {
 			buttons.Move(1);
 			housingChangedEvent.Invoke();
 		}
-		else if (menuMode == 1) {
-			selectedHouse = selectedHouse.MoveDown();
+		else if (menuMode == State.HOUSE) {
+			housingController.MoveVertical(1);
 			UpdateSelectedHouse();
 		}
-		else if (menuMode == 2) {
+		else if (menuMode == State.SUPPORT) {
 			supportList.MoveVertical(1);
 		}
 	}
 
     public override void OnLeftArrow() {
-		if (menuMode == 1) {
-			selectedHouse = selectedHouse.MoveLeft();
+		if (menuMode == State.HOUSE) {
+			housingController.MoveHorizontal(-1);
 			UpdateSelectedHouse();
 		}
-		else if (menuMode == 2) {
+		else if (menuMode == State.SUPPORT) {
 			supportList.MoveHorizontal(-1);
 		}
 	}
     
     public override void OnRightArrow() {
-		if (menuMode == 1) {
-			selectedHouse = selectedHouse.MoveRight();
+		if (menuMode == State.HOUSE) {
+			housingController.MoveHorizontal(1);
 			UpdateSelectedHouse();
 		}
-		else if (menuMode == 2) {
+		else if (menuMode == State.SUPPORT) {
 			supportList.MoveHorizontal(1);
 		}
 	}
 
 	private void UpdateSelectedHouse() {
-		Room currentRoom = selectedHouse.GetSelectedRoom();
+		Room currentRoom = housingController.GetCurrentRoom();
 		StatsContainer data = currentRoom.resident;
-		roomNumber.text = string.Format("Room  {0} - {1}", selectedHouse.number, currentRoom.number);
+		roomNumber.text = housingController.GetRoomName();
 		characterName.text = (data != null) ? data.charData.entryName : "";
 		characterClass.text = (data != null) ? data.classData.entryName : "";
 		characterLevel.text = (data != null) ? "Level  " + data.currentLevel : "";
 		portrait.sprite = (data != null) ? data.charData.bigPortrait : null;
 
-		List<Room> neighbours = selectedHouse.GetNeighbours();
+		List<Room> neighbours = currentRoom.house.GetNeighbours(currentRoom);
 		string nr1 = "", nr2 = "";
 		if (data != null) {
 			if (neighbours.Count > 0) {

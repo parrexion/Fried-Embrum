@@ -10,6 +10,16 @@ public class UpgradeCalculator {
 	[SerializeField] private List<string> developed = new List<string>();
 
 
+	public void AddEntry(UpgradeItem item) {
+		upgrades.Add(item);
+		if (item.researched) {
+			developed.Add(item.upgrade.uuid);
+		}
+		else {
+			listSize++;
+		}
+	}
+
 	public void CalculateResearch() {
 		developed = new List<string>();
 		listSize = upgrades.Count;

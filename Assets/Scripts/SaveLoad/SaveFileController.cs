@@ -16,6 +16,7 @@ public class SaveFileController : MonoBehaviour {
 
 	[Header("Save Files")]
 	public int visibleSize = 3;
+	public IntVariable saveFileIndex;
 	public Transform listParent;
 	public Transform entryPrefab;
 	private EntryList<SaveFileEntry> saveFiles;
@@ -41,6 +42,7 @@ public class SaveFileController : MonoBehaviour {
 			return;
 
 		saveFiles.Move(dir);
+		saveFileIndex.value = saveFiles.GetPosition();
 	}
 
 	/// <summary>

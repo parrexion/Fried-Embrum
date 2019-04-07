@@ -24,11 +24,9 @@ public class SupportList : MonoBehaviour {
 	private int selectedIndex;
 
 
-	private void Start() {
-		supportList = new EntryList<SupportListEntry>(maxEntries);
-	}
-
 	public void CreateList() {
+		if (supportList == null)
+			supportList = new EntryList<SupportListEntry>(maxEntries);
 		supportList.ResetList();
 
 		for (int i = 0; i < playerData.stats.Count; i++) {

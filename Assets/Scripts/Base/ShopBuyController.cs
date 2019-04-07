@@ -72,7 +72,7 @@ public class ShopBuyController : MonoBehaviour {
 					ItemEntry item = ScriptableObject.CreateInstance<ItemEntry>();
 					item.CopyValues(itemEntry.item);
 					totalMoney.value -= item.cost;
-					playerData.items.Add(new InventoryItem { item = item, charges = item.maxCharge });
+					playerData.items.Add(new InventoryItem(item));
 				}
 				else { // Sell item
 					ItemEntry item = itemEntry.item;

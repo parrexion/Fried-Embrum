@@ -6,5 +6,4 @@ using UnityEngine;
 public class ItemListVariable : ScriptableObject {
 
 	public List<ItemEntry> items = new List<ItemEntry>();
-	public List<int> charges = new List<int>();
 }

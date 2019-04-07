@@ -48,6 +48,7 @@ public class StatsContainer {
 	public List<Boost> boosts = new List<Boost>();
 
 	[Header("Supports")]
+	public int roomNo = -1;
 	public List<SupportValue> supportValues = new List<SupportValue>();
 
 
@@ -91,6 +92,7 @@ public class StatsContainer {
 		eDef = saveData.eDef;
 		eRes = saveData.eRes;
 
+		roomNo = saveData.roomNo;
 		supportValues = new List<SupportValue>();
 		// for (int i = 0; i < charData.supports.Count; i++) {
 		// 	supportValues.Add(new SupportValue(){uuid = charData.supports[i].partner.uuid});

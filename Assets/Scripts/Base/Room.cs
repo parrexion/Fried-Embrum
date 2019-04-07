@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Room : MonoBehaviour {
-
+	
+	public House house;
 	public int number;
 	public Image occupied;
 	public Image cursor;
@@ -17,8 +18,7 @@ public class Room : MonoBehaviour {
 		cursor.enabled = false;
 	}
 
-	public void SetResident(StatsContainer character, int index) {
-		number = index;
+	public void SetResident(StatsContainer character) {
 		resident = character;
 		UpdateAvailablity();
 	}
@@ -35,7 +35,6 @@ public class Room : MonoBehaviour {
 	public void SetSelect(bool select) {
 		selected = select;
 	}
-
 
 	public static void SwapRoom(Room r1, Room r2) {
 		StatsContainer temp = r1.resident;

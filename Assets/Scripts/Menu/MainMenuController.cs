@@ -33,8 +33,11 @@ public class MainMenuController : InputReceiverDelegate {
 	public UnityEvent playBkgMusicEvent;
 
 	[Header("New Game Data")]
-	public PlayerPosition[] startingCharacters;
 	public SaveListVariable playerData;
+	public PlayerPosition[] startingCharacters;
+	public ItemEntry[] startItems;
+	public UpgradeEntry[] startUpgrade;
+	public MapEntry[] startMissions;
 
 	public UnityEvent saveGameEvent;
 
@@ -86,7 +89,7 @@ public class MainMenuController : InputReceiverDelegate {
 	/// Called when starting a new game. Sets the starting values.
 	/// </summary>
 	public void NewGameClicked() {
-		currentChapterIndex.value = 1;
+		currentChapterIndex.value = -1;
 		currentPlayTime.value = 0;
 		currentMap.value = chapterList.values[0];
 		Debug.Log("Set Dialogue to:  " + currentDialogue.value.entryName);
@@ -96,7 +99,17 @@ public class MainMenuController : InputReceiverDelegate {
 			playerData.inventory.Add(new InventoryContainer(startingCharacters[i].inventory));
 			playerData.skills.Add(new SkillsContainer(startingCharacters[i].skills));
 		}
-		InputDelegateController.instance.TriggerSceneChange(MenuMode.NONE, "LoadingScreen");
+		for (int i = 0; i < startItems.Length; i++) {
+			playerData.items.Add(new InventoryItem(startItems[i]));
+		}
+		for (int i = 0; i < startUpgrade.Length; i++) {
+			playerData.upgrader.AddEntry(new UpgradeItem(startUpgrade[i]));
+		}
+		for (int i = 0; i < startMissions.Length; i++) {
+			playerData.missions.Add(new MissionContainer(startMissions[i]));
+		}
+		//InputDelegateController.instance.TriggerSceneChange(MenuMode.NONE, "LoadingScreen");
+		InputDelegateController.instance.TriggerSceneChange(MenuMode.NONE, "BaseScene");
 	}
 
 	/// <summary>

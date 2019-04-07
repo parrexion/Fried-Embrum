@@ -52,7 +52,7 @@ public class MyButtonList : MonoBehaviour {
 	/// </summary>
 	/// <param name="pos"></param>
 	public void ForcePosition(int pos) {
-		position = pos;
+		position = (buttonNames.Count != 0) ? pos : -1;
 		UpdateButtons();
 	}
 
@@ -62,6 +62,9 @@ public class MyButtonList : MonoBehaviour {
 	/// </summary>
 	/// <param name="dir"></param>
 	public int Move(int dir) {
+		if (buttonNames.Count == 0)
+			return -1;
+
 		position = OPMath.FullLoop(0, buttonNames.Count, position + dir);
 		if(position <= bot)
 			bot = Mathf.Max(0, position - 1);
@@ -90,7 +93,7 @@ public class MyButtonList : MonoBehaviour {
 	/// </summary>
 	/// <returns></returns>
 	public int GetPosition() {
-		return position;
+		return (buttonNames.Count != 0) ? position : -1;
 	}
 
 	/// <summary>
@@ -98,7 +101,7 @@ public class MyButtonList : MonoBehaviour {
 	/// </summary>
 	/// <returns></returns>
 	public int GetValue() {
-		return buttonValues[position];
+		return (position != -1) ? buttonValues[position] : 0;
 	}
 	
 	/// <summary>

@@ -240,10 +240,7 @@ public class PrepInventorySelect : MonoBehaviour {
 			return;
 
 		InventoryTuple tuple = charList.GetEntry().invCon.GetTuple(itemList.GetPosition());
-		InventoryItem item = new InventoryItem() {
-			charges = tuple.charge,
-			item = tuple.item
-		};
+		InventoryItem item = new InventoryItem(tuple);
 		playerData.items.Add(item);
 		tuple.item = null;
 		charList.GetEntry().invCon.CleanupInventory(null);

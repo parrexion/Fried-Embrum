@@ -26,6 +26,7 @@ public class CharacterSaveData {
 	public int eRes;
 
 	[Header("Supports")]
+	public int roomNo;
 	public List<SupportValue> supports;
 	
 
@@ -74,6 +75,7 @@ public class CharacterSaveData {
 		eDef = stats.eDef;
 		eRes = stats.eRes;
 
+		roomNo = stats.roomNo;
 		supports = new List<SupportValue>();
 		for (int i = 0; i < stats.supportValues.Count; i++) {
 			supports.Add(stats.supportValues[i]);

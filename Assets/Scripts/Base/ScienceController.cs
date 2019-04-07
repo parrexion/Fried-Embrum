@@ -48,11 +48,7 @@ public class ScienceController : MonoBehaviour {
 	[Header("Buy upgrade promt")]
 	public MyPrompt buyPrompt;
 	private bool promptMode;
-
-
-	private void Start() {
-        entryList = new EntryList<UpgradeListEntry>(visibleSize);
-	}
+	
 
 	public void GenerateLists(bool upgrading) {
 		upgradeMode = upgrading;
@@ -64,6 +60,8 @@ public class ScienceController : MonoBehaviour {
 		TotalScrapText.text = "Scraps:  " + totalScrap.value;
 		TotalMoneyText.text = "Money:  " + totalMoney.value;
 
+		if (entryList == null)
+			entryList = new EntryList<UpgradeListEntry>(visibleSize);
         entryList.ResetList();
         int tempListSize = playerData.upgrader.listSize;
 		UpgradeType currentType = (upgradeMode) ? UpgradeType.UPGRADE : UpgradeType.INVENTION;

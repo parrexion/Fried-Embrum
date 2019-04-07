@@ -56,12 +56,13 @@ public class BexpController : MonoBehaviour {
 
 
 	private void Start() {
-		entryList = new EntryList<TrainingListEntry>(visibleSize);
 		listView.SetActive(true);
 		awardView.SetActive(false);
 	}
 
 	public void GenerateList() {
+		if (entryList == null)
+			entryList = new EntryList<TrainingListEntry>(visibleSize);
 		entryList.ResetList();
 		for (int i = 0; i < playerData.stats.Count; i++) {
 			Transform t = Instantiate(entryPrefab, listParent);

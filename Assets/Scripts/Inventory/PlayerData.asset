@@ -19,12 +19,12 @@ MonoBehaviour:
     currentLevel: 1
     currentExp: 0
     wpnSkills: 0000000001000000000000000000000000000000000000000000000000000000
-    hp: 16
-    atk: 4
-    spd: 9
-    skl: 7
-    lck: 5
-    def: 2
+    hp: 0
+    atk: 0
+    spd: 0
+    skl: 0
+    lck: 0
+    def: 0
     res: 0
     eHp: 16
     eAtk: 4
@@ -48,13 +48,13 @@ MonoBehaviour:
     currentLevel: 1
     currentExp: 0
     wpnSkills: 0000000001000000010000000000000000000000000000000000000000000000
-    hp: 20
-    atk: 6
-    spd: 7
-    skl: 6
-    lck: 2
-    def: 5
-    res: 1
+    hp: 0
+    atk: 0
+    spd: 0
+    skl: 0
+    lck: 0
+    def: 0
+    res: 0
     eHp: 20
     eAtk: 6
     eSpd: 7
@@ -77,12 +77,12 @@ MonoBehaviour:
     currentLevel: 1
     currentExp: 0
     wpnSkills: 0000000001000000010000000000000000000000000000000000000000000000
-    hp: 19
-    atk: 8
-    spd: 6
-    skl: 5
-    lck: 4
-    def: 6
+    hp: 0
+    atk: 0
+    spd: 0
+    skl: 0
+    lck: 0
+    def: 0
     res: 0
     eHp: 19
     eAtk: 8
@@ -183,9 +183,23 @@ MonoBehaviour:
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
-  items: []
+  items:
+  - item: {fileID: 11400000, guid: a2e37062da4ad09429243928a67e726e, type: 2}
+    charges: 3
   upgrader:
-    listSize: 0
-    upgrades: []
+    listSize: 5
+    upgrades:
+    - upgrade: {fileID: 11400000, guid: 4035965c954be614e8ec78461529e883, type: 2}
+      researched: 0
+    - upgrade: {fileID: 11400000, guid: f3394d16d0d3fab42a82ea1e02f8194c, type: 2}
+      researched: 0
+    - upgrade: {fileID: 11400000, guid: b09902473c3c96940942ae49da97fc4d, type: 2}
+      researched: 0
+    - upgrade: {fileID: 11400000, guid: 170d5cbfd40f8fc4f8591920d6fd3385, type: 2}
+      researched: 0
+    - upgrade: {fileID: 11400000, guid: 888645a9dd134f5499d3487214fd78ae, type: 2}
+      researched: 0
     developed: []
-  missions: []
+  missions:
+  - map: {fileID: 11400000, guid: 00776eff4b74d074c8be7b2dbe865331, type: 2}
+    cleared: 0

@@ -104,6 +104,8 @@ public class BaseMission : InputReceiverDelegate {
 
 	private void ShowMissionInfo() {
 		int currentIndex = buttons.GetPosition();
+		if (currentIndex == -1)
+			return;
 
 		MapEntry map = availableMaps[currentIndex].map;
 		missionName.text = map.entryName;
