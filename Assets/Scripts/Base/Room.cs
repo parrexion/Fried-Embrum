@@ -14,10 +14,6 @@ public class Room : MonoBehaviour {
 	public bool selected;
 
 
-	private void Start() {
-		cursor.enabled = false;
-	}
-
 	public void SetResident(StatsContainer character) {
 		resident = character;
 		UpdateAvailablity();
@@ -40,11 +36,5 @@ public class Room : MonoBehaviour {
 		StatsContainer temp = r1.resident;
 		r1.resident = r2.resident;
 		r2.resident = temp;
-		r1.SetSelect(false);
-		r2.SetSelect(false);
-		r1.SetHover(false);
-		r2.SetHover(false);
-		r1.UpdateAvailablity();
-		r2.UpdateAvailablity();
 	}
 }

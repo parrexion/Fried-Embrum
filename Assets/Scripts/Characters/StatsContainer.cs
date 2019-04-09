@@ -253,6 +253,6 @@ public class StatsContainer {
 			if (supportValues[i].uuid == other.uuid)
 				return supportValues[i];
 		}
-		return null;
+		return new SupportValue(){ uuid = other.uuid };
 	}
 }

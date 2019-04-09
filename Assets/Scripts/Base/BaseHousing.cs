@@ -72,6 +72,7 @@ public class BaseHousing : InputReceiverDelegate {
 		}
 		else if (menuMode == State.HOUSE) {
 			housingController.SelectClick();
+			UpdateSelectedHouse();
 			menuAcceptEvent.Invoke();
 		}
 		else if (menuMode == State.SUPPORT) {

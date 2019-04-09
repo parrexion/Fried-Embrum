@@ -81,6 +81,7 @@ public class HousingController : MonoBehaviour {
 			Room firstRoom = GetRoom(selectPosition);
 			Room secondRoom = GetRoom(position);
 			Room.SwapRoom(firstRoom, secondRoom);
+			selectPosition = -1;
 			secondRoom.SetHover(true);
 		}
 		UpdateSelection();
