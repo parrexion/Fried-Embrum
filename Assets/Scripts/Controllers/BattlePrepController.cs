@@ -8,7 +8,7 @@ public class BattlePrepController : InputReceiverDelegate {
 	private enum State { MAIN, CHAR, FORMATION, INVENTORY, OBJECTIVE, PROMPT }
 
 	public ScrObjEntryReference currentMapEntry;
-	public SaveListVariable playerData;
+	public PlayerData playerData;
 	public PrepListVariable prepList;
 	
 	public UnityEvent nextStateEvent;

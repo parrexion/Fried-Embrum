@@ -19,7 +19,7 @@ public class BaseShop : InputReceiverDelegate {
 
 	[Header("Data")]
 	public ItemListVariable shopList;
-	public SaveListVariable playerData;
+	public PlayerData playerData;
 
 	private int menuMode;
 	private int itemIndex;

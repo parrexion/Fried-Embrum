@@ -6,7 +6,7 @@ using UnityEngine.Events;
 public class MapCreator : MonoBehaviour {
 
 	public ScrObjEntryReference currentMap;
-	public SaveListVariable availableCharacters;
+	public PlayerData availableCharacters;
 	public CharacterListVariable playerList;
 	public PrepListVariable prepList;
 	public BattleMap battleMap;

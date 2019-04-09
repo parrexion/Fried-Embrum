@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class BexpController : MonoBehaviour {
 
-    public SaveListVariable playerData;
+    public PlayerData playerData;
 	public GameObject listView;
 	public GameObject awardView;
 	private bool awardMode;

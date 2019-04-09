@@ -7,7 +7,7 @@ public class PrepInventorySelect : MonoBehaviour {
 
 	private enum State { CHAR, MENU, TAKE, STORE, PROMPT }
 
-	public SaveListVariable playerData;
+	public PlayerData playerData;
 	public PrepListVariable prepList;
 	public IntVariable totalMoney;
 	private State currentMode;

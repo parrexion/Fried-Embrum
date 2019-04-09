@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class BaseMission : InputReceiverDelegate {
 
-	public SaveListVariable playerData;
+	public PlayerData playerData;
 	public MyButtonList buttons;
 	public IntVariable missionIndex;
 	public UnityEvent missionChangedEvent;

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class HousingController : MonoBehaviour {
 
-	public SaveListVariable saveList;
+	public PlayerData saveList;
 
 	[Header("Housing")]
 	public IntVariable houseCount;
@@ -39,7 +39,7 @@ public class HousingController : MonoBehaviour {
 			int roomNo = saveList.stats[i].roomNo;
 			if (roomNo != -1) {
 				Room room = GetRoom(roomNo);
-				room.SetResident(saveList.stats[i]);
+				room.resident = saveList.stats[i];
 			}
 			else {
 				noRoomers.Add(saveList.stats[i]);
@@ -51,10 +51,9 @@ public class HousingController : MonoBehaviour {
 				if (index >= noRoomers.Count)
 					break;
 				if (houses[i].rooms[j].resident == null) {
-					noRoomers[i].roomNo = i * roomCount.value + j;
-					houses[i].rooms[j].SetResident(noRoomers[index]);
+					noRoomers[index].roomNo = i * roomCount.value + j;
+					houses[i].rooms[j].resident = noRoomers[index];
 					index++;
-					Debug.Log("Houses in " + i + " , " + j);
 				}
 			}
 		}
@@ -75,14 +74,18 @@ public class HousingController : MonoBehaviour {
 	public void SelectClick() {
 		if (selectPosition == -1) {
 			selectPosition = position;
-			GetRoom(position).SetSelect(true);
 		}
 		else {
 			Room firstRoom = GetRoom(selectPosition);
 			Room secondRoom = GetRoom(position);
+			
+			if (firstRoom.resident != null)
+				firstRoom.resident.roomNo = position;
+			if (secondRoom.resident != null)
+				secondRoom.resident.roomNo = selectPosition;
+
 			Room.SwapRoom(firstRoom, secondRoom);
 			selectPosition = -1;
-			secondRoom.SetHover(true);
 		}
 		UpdateSelection();
 	}
@@ -102,13 +105,14 @@ public class HousingController : MonoBehaviour {
 		for (int i = 0; i < houseCount.value; i++) {
 			for (int j = 0; j < roomCount.value; j++) {
 				houses[i].rooms[j].UpdateAvailablity();
-				houses[i].rooms[j].SetHover(false);
 				houses[i].rooms[j].SetSelect(false);
+				houses[i].rooms[j].SetHover(false);
 			}
 		}
-		GetRoom(position).SetHover(true);
-		if (selectPosition != -1)
+		if (selectPosition != -1) {
 			GetRoom(selectPosition).SetSelect(true);
+		}
+		GetRoom(position).SetHover(true);
 	}
 
 	public string GetRoomName() {

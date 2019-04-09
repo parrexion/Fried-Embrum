@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class SupportList : MonoBehaviour {
 	private enum Mode { LIST, DETAILED, PROMPT }
-    public SaveListVariable playerData;
+    public PlayerData playerData;
 	public Transform listParent;
 	public Transform entryPrefab;
 

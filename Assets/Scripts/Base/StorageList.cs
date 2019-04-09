@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class StorageList : MonoBehaviour {
 
 	[Header("Data")]
-	public SaveListVariable playerData;
+	public PlayerData playerData;
 	public IntVariable totalMoney;
 	public FloatVariable sellRatio;
 	private ItemListVariable shopList;

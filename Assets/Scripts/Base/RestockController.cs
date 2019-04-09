@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class RestockController : MonoBehaviour {
     enum MenuState { CHARACTER, MENU, RECHARGE, TAKE, STORE }
 	private MenuState currentMode;
-	public SaveListVariable playerData;
+	public PlayerData playerData;
 	public IntVariable totalMoney;
 
 	[Header("Views")]

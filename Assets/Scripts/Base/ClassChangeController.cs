@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class ClassChangeController : MonoBehaviour {
 
-    public SaveListVariable playerData;
+    public PlayerData playerData;
 	public GameObject listView;
 	public GameObject changeView;
 	private bool changeMode;

@@ -30,7 +30,6 @@ public class DialogueInputController : InputReceiverDelegate {
 	}
 
 	public override void OnStartButton() {
-		Debug.Log("SKIP!");
 		textLines.SkipDialogue();
 		menuAcceptEvent.Invoke();
 	}

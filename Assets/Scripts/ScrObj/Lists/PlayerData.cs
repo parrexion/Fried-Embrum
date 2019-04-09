@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "List Variables/Save List")]
-public class SaveListVariable : ScriptableObject {
+public class PlayerData : ScriptableObject {
 
 	// Characters
 	public List<StatsContainer> stats = new List<StatsContainer>();

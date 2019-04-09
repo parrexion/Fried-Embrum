@@ -5,8 +5,9 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class SaveFileController : MonoBehaviour {
+	public const string CLEAR_GAME_ID = "Game Clear!";
 
-	public MapInfoListVariable chapterList;
+	public ScrObjLibraryVariable chapterLibrary;
 	public ScrObjEntryReference currenMap;
 
 	[Header("Popup")]
@@ -22,7 +23,7 @@ public class SaveFileController : MonoBehaviour {
 	private EntryList<SaveFileEntry> saveFiles;
 
 	[Header("Save Data")]
-	public IntVariable[] chapterIndex;
+	public StringVariable[] chapterIDs;
 	public IntVariable[] totalDays;
 	public IntVariable[] playTimes;
 
@@ -62,7 +63,7 @@ public class SaveFileController : MonoBehaviour {
 	/// <returns></returns>
 	public bool OkClicked() {
 		if (!isPopup) {
-			if (usedForLoad && (playTimes[saveFiles.GetPosition()].value == 0 || chapterIndex[saveFiles.GetPosition()].value >= chapterList.values.Count))
+			if (usedForLoad && (playTimes[saveFiles.GetPosition()].value == 0 || chapterIDs[saveFiles.GetPosition()].value == CLEAR_GAME_ID))
 				return false;
 
 			isPopup = true;
@@ -103,6 +104,21 @@ public class SaveFileController : MonoBehaviour {
 		return true;
 	}
 
+	public void UpdateFiles() {
+		int i = saveFiles.GetPosition();
+		SaveFileEntry entry = saveFiles.GetEntry();
+		if (chapterIDs[i].value == CLEAR_GAME_ID) {
+			entry.FillData("All maps cleared!", totalDays[i].value, playTimes[i].value);
+		}
+		else if (chapterIDs[i].value == "") {
+			entry.FillData("BASE", totalDays[i].value, playTimes[i].value);
+		}
+		else {
+			MapEntry map = (MapEntry)chapterLibrary.GetEntry(chapterIDs[i].value);
+			entry.FillData(map.entryName, totalDays[i].value, playTimes[i].value);
+		}
+	}
+
 	/// <summary>
 	/// Sets up the save file information for the save files.
 	/// </summary>
@@ -112,14 +128,15 @@ public class SaveFileController : MonoBehaviour {
 		for (int i = 0; i < SaveController.SAVE_FILES_COUNT; i++) {
 			Transform t = Instantiate(entryPrefab, listParent);
 			SaveFileEntry entry = saveFiles.CreateEntry(t);
-			if (chapterIndex[i].value >= chapterList.values.Count) {
+			if (chapterIDs[i].value == CLEAR_GAME_ID) {
 				entry.FillData("All maps cleared!", totalDays[i].value, playTimes[i].value);
 			}
-			else if (chapterIndex[i].value == -1) {
+			else if (chapterIDs[i].value == "") {
 				entry.FillData("BASE", totalDays[i].value, playTimes[i].value);
 			}
 			else {
-				entry.FillData(chapterList.values[chapterIndex[i].value].entryName, totalDays[i].value, playTimes[i].value);
+				MapEntry map = (MapEntry)chapterLibrary.GetEntry(chapterIDs[i].value);
+				entry.FillData(map.entryName, totalDays[i].value, playTimes[i].value);
 			}
 		}
 		entryPrefab.gameObject.SetActive(false);

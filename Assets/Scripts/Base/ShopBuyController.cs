@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ShopBuyController : MonoBehaviour {
     
-	public SaveListVariable playerData;
+	public PlayerData playerData;
 	public IntVariable totalMoney;
 	public FloatVariable sellRatio;
 

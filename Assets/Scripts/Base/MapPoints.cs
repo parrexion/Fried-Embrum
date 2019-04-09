@@ -6,7 +6,7 @@ public class MapPoints : MonoBehaviour {
     
 	public Transform[] mapLocations;
 	public IntVariable locationPointIndex;
-	public SaveListVariable playerData;
+	public PlayerData playerData;
 	private SpriteRenderer[] highlights;
 
 	private void Start() {

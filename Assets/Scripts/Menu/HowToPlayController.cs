@@ -8,7 +8,7 @@ public class HowToPlayController : MonoBehaviour {
 	public GameObject controlsObject;
 
 	public Text currentTopicText;
-	public IntVariable currentChapterIndex;
+	public IntVariable currentDays;
 
 	[Header("Screens")]
 	public List<HelpScreenTopic> topics = new List<HelpScreenTopic>();
@@ -31,11 +31,11 @@ public class HowToPlayController : MonoBehaviour {
 		topicEntryList = new EntryList<TopicEntry>(visibleSize);
 		topics.Sort((x,y) => string.Compare(x.topic, y.topic));
 		for (int i = 0; i < topics.Count; i++) {
-			if (topics[i].unlockChapter > currentChapterIndex.value)
+			if (topics[i].unlockChapter > currentDays.value)
 				continue;
 			Transform t = Instantiate(topicPrefab, topicListParent);
 			TopicEntry entry = topicEntryList.CreateEntry(t);
-			bool enabled = (currentChapterIndex.value == topics[i].unlockChapter);
+			bool enabled = (currentDays.value == topics[i].unlockChapter);
 			entry.FillData(i, topics[i].topic, enabled);
 		}
 		topicPrefab.gameObject.SetActive(false);

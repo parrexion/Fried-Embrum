@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PrepCharacterSelect : MonoBehaviour {
 
-	public SaveListVariable playerData;
+	public PlayerData playerData;
 	public PrepListVariable prepList;
 	public ScrObjEntryReference currentMap;
 

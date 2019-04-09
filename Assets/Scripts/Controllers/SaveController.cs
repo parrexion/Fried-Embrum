@@ -28,16 +28,16 @@ public class SaveController : MonoBehaviour {
 	
 	public ScrObjEntryReference currentMap;
 	public ScrObjEntryReference currentDialogue;
-	public SaveListVariable playerData;
+	public PlayerData playerData;
 	public IntVariable saveIndex;
 
 	[Header("Simple Data")]
-	public IntVariable[] simpleChapterIndex;
+	public StringVariable[] simpleChapterIndex;
 	public IntVariable[] simpleTotalDays;
 	public IntVariable[] simplePlayTimes;
 
 	[Header("Current Data")]
-	public IntVariable currentChapterIndex;
+	public StringVariable currentChapterIndex;
 	public IntVariable currentTotalDays;
 	public IntVariable currentPlayTime;
 	public IntVariable currentMoney;
@@ -85,8 +85,7 @@ public class SaveController : MonoBehaviour {
 			autoEnd = true
 		};
 		for (int i = 0; i < SAVE_FILES_COUNT; i++) {
-			SaveData data = new SaveData(){chapterIndex = 1, playTime = 0};
-			saveFileData.saveFiles[i] = data;
+			saveFileData.saveFiles[i] = new SaveData();
 		}
 
 		//Write to file
@@ -96,6 +95,13 @@ public class SaveController : MonoBehaviour {
 			serializer.Serialize(xmlWriter, saveFileData);
 		}
 		Debug.Log("Successfully created a new save file!\n" + _savePath);
+	}
+
+	public void ResetCurrentData() {
+		currentMoney.value = 0;
+		currentScrap.value = 0;
+		currentBexp.value = 0;
+		playerData.ResetData();
 	}
 
 	public void Save(bool onlyOptions) {
@@ -263,7 +269,7 @@ public class SavePackage {
 
 [System.Serializable]
 public class SaveData {
-	public int chapterIndex;
+	public string chapterIndex;
 	public string levelName;
 	public int totalDays;
 	public int playTime;

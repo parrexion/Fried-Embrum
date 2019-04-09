@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class ScienceController : MonoBehaviour {
 
 	[Header("Data")]
-	public SaveListVariable playerData;
+	public PlayerData playerData;
 	public IntVariable totalScrap;
 	public IntVariable totalMoney;
 

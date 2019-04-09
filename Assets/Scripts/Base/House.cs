@@ -10,9 +10,9 @@ public class House : MonoBehaviour {
 
 	public void ResetRooms(int index) {
 		number = index;
-		rooms[0].SetResident(null);
-		rooms[1].SetResident(null);
-		rooms[2].SetResident(null);
+		rooms[0].resident = null;
+		rooms[1].resident = null;
+		rooms[2].resident = null;
 	}
 
 	public List<Room> GetNeighbours(Room main) {

@@ -17,10 +17,8 @@ public class MainMenuController : InputReceiverDelegate {
 	public GameObject saveView;
 	
 	[Header("Current Data")]
-	public IntVariable currentChapterIndex;
+	public StringVariable currentChapterIndex;
 	public IntVariable currentPlayTime;
-	public ScrObjEntryReference currentMap;
-	public ScrObjEntryReference currentDialogue;
 
 	[Header("Menu")]
 	public MyButtonList mainButtons;
@@ -33,7 +31,9 @@ public class MainMenuController : InputReceiverDelegate {
 	public UnityEvent playBkgMusicEvent;
 
 	[Header("New Game Data")]
-	public SaveListVariable playerData;
+	public SaveController saveController;
+	public MapEntry firstMission;
+	public PlayerData playerData;
 	public PlayerPosition[] startingCharacters;
 	public ItemEntry[] startItems;
 	public UpgradeEntry[] startUpgrade;
@@ -46,7 +46,7 @@ public class MainMenuController : InputReceiverDelegate {
 
 	private void Awake() {
 		currentState = State.MAIN;
-		currentChapterIndex.value = 1;
+		currentChapterIndex.value = "";
 		lockControls.value = false;
 		startMenuView.SetActive(true);
 		saveView.SetActive(false);
@@ -89,11 +89,9 @@ public class MainMenuController : InputReceiverDelegate {
 	/// Called when starting a new game. Sets the starting values.
 	/// </summary>
 	public void NewGameClicked() {
-		currentChapterIndex.value = -1;
+		currentChapterIndex.value = firstMission.uuid;
 		currentPlayTime.value = 0;
-		currentMap.value = chapterList.values[0];
-		Debug.Log("Set Dialogue to:  " + currentDialogue.value.entryName);
-		playerData.ResetData();
+		saveController.ResetCurrentData();
 		for (int i = 0; i < startingCharacters.Length; i++) {
 			playerData.stats.Add(new StatsContainer(startingCharacters[i].stats, startingCharacters[i].stats.charClass, startingCharacters[i].level));
 			playerData.inventory.Add(new InventoryContainer(startingCharacters[i].inventory));
@@ -108,22 +106,18 @@ public class MainMenuController : InputReceiverDelegate {
 		for (int i = 0; i < startMissions.Length; i++) {
 			playerData.missions.Add(new MissionContainer(startMissions[i]));
 		}
-		//InputDelegateController.instance.TriggerSceneChange(MenuMode.NONE, "LoadingScreen");
-		InputDelegateController.instance.TriggerSceneChange(MenuMode.NONE, "BaseScene");
+		InputDelegateController.instance.TriggerSceneChange(MenuMode.NONE, "LoadingScreen");
 	}
 
 	/// <summary>
 	/// Called when starting a new game. Sets the starting values.
 	/// </summary>
 	public void LoadGameFinished() {
-		if (currentChapterIndex.value == -1) {
-			currentMap.value = null;
+		if (currentChapterIndex.value == "") {
 			Debug.Log("Set DialogueC to:  BASE");
 			InputDelegateController.instance.TriggerSceneChange(MenuMode.NONE, "BaseScene");
 		}
 		else {
-			currentMap.value = chapterList.values[currentChapterIndex.value];
-			Debug.Log("Set DialogueC to:  " + currentDialogue.value.entryName);
 			InputDelegateController.instance.TriggerSceneChange(MenuMode.NONE, "LoadingScreen");
 		}
 	}

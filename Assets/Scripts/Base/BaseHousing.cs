@@ -10,7 +10,7 @@ public class BaseHousing : InputReceiverDelegate {
 
 	[Header("Button menu")]
 	public MyButtonList buttons;
-    public SaveListVariable saveList;
+    public PlayerData saveList;
     public UnityEvent housingChangedEvent;
 
 	[Header("Canvases")]
@@ -60,6 +60,7 @@ public class BaseHousing : InputReceiverDelegate {
 				basicCanvas.SetActive(false);
 				houseCanvas.SetActive(true);
 				housingController.CreateHousing();
+				UpdateSelectedHouse();
 				menuAcceptEvent.Invoke();
 			}
 			else if (currentIndex == 1) {

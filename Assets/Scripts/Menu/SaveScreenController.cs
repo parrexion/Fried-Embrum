@@ -29,6 +29,7 @@ public class SaveScreenController : InputReceiverDelegate {
 	}
 
 	public void NextLevel() {
+		checked current map for next map
 		if (chapterIndex.value >= chapterList.values.Count) {
 			InputDelegateController.instance.TriggerSceneChange(MenuMode.MAIN_MENU, "MainMenu");
 		}
@@ -104,6 +105,7 @@ public class SaveScreenController : InputReceiverDelegate {
 		savePrompt.ShowSpinner("Saving...");
 		yield return new WaitForSeconds(1f);
 		savePrompt.ShowSpinner("Saved  :)");
+		saveFileController.UpdateFiles();
 		yield return new WaitForSeconds(1f);
 		savePrompt.Click(true);
 		

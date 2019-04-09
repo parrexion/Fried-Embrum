@@ -948,6 +948,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1697261231692124, guid: f32300c4ac5bcb847893cfc711aeaf01, type: 3}
+      propertyPath: m_Name
+      value: SaveController
+      objectReference: {fileID: 0}
     - target: {fileID: 4575758833937932, guid: f32300c4ac5bcb847893cfc711aeaf01, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -979,6 +983,18 @@ PrefabInstance:
     - target: {fileID: 4575758833937932, guid: f32300c4ac5bcb847893cfc711aeaf01, type: 3}
       propertyPath: m_RootOrder
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4575758833937932, guid: f32300c4ac5bcb847893cfc711aeaf01, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4575758833937932, guid: f32300c4ac5bcb847893cfc711aeaf01, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4575758833937932, guid: f32300c4ac5bcb847893cfc711aeaf01, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f32300c4ac5bcb847893cfc711aeaf01, type: 3}
@@ -3057,6 +3073,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1829959294 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114229465209009738, guid: f32300c4ac5bcb847893cfc711aeaf01,
+    type: 3}
+  m_PrefabInstance: {fileID: 445908797}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f90b197ba2e52f4491503deb11c4d8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1861314123
 GameObject:
   m_ObjectHideFlags: 0
@@ -3143,11 +3171,9 @@ MonoBehaviour:
   chapterList: {fileID: 11400000, guid: e0b362093008b934c9b0197a928f5e95, type: 2}
   lockControls: {fileID: 11400000, guid: b8d06aee0ad3bce4daa463a8433439f4, type: 2}
   saveView: {fileID: 160850941}
-  currentChapterIndex: {fileID: 11400000, guid: ffae086fb70763b44b8d1dd1c466a42e,
+  currentChapterIndex: {fileID: 11400000, guid: ea8e97ad79eaebf48a34de3a63caf61a,
     type: 2}
   currentPlayTime: {fileID: 11400000, guid: 1777461650df39a4cb5b7ff0b6dedf81, type: 2}
-  currentMap: {fileID: 11400000, guid: 188cfd11b445e1244a89510ca126c756, type: 2}
-  currentDialogue: {fileID: 11400000, guid: 4aca8b6ac3dbaa943963a062568cc6b4, type: 2}
   mainButtons: {fileID: 717149155}
   mainTheme: {fileID: 11400000, guid: 2a39475e6f53ba540a8786d6a36a8c2a, type: 2}
   mainMusic: {fileID: 11400000, guid: 40f826d9f1abd9e4f9f0972569193a0f, type: 2}
@@ -3169,6 +3195,8 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  saveController: {fileID: 1829959294}
+  firstMission: {fileID: 11400000, guid: a433301cc1f14f043ab12fbd97fedd44, type: 2}
   playerData: {fileID: 11400000, guid: cf29fce9ee9388e4290741fe2d10bab5, type: 2}
   startingCharacters:
   - x: 0
