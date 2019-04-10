@@ -31,12 +31,12 @@ public class HowToPlayController : MonoBehaviour {
 		topicEntryList = new EntryList<TopicEntry>(visibleSize);
 		topics.Sort((x,y) => string.Compare(x.topic, y.topic));
 		for (int i = 0; i < topics.Count; i++) {
-			if (topics[i].unlockChapter > currentDays.value)
+			if (topics[i].unlockDay > currentDays.value)
 				continue;
 			Transform t = Instantiate(topicPrefab, topicListParent);
 			TopicEntry entry = topicEntryList.CreateEntry(t);
-			bool enabled = (currentDays.value == topics[i].unlockChapter);
-			entry.FillData(i, topics[i].topic, enabled);
+			bool newTopic = (currentDays.value == topics[i].unlockDay);
+			entry.FillData(i, topics[i].topic, newTopic);
 		}
 		topicPrefab.gameObject.SetActive(false);
 		UpdateTopicList();

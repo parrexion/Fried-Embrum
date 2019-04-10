@@ -18,6 +18,7 @@ public class MainMenuController : InputReceiverDelegate {
 	
 	[Header("Current Data")]
 	public StringVariable currentChapterIndex;
+	public IntVariable currentTotalDays;
 	public IntVariable currentPlayTime;
 
 	[Header("Menu")]
@@ -47,6 +48,7 @@ public class MainMenuController : InputReceiverDelegate {
 	private void Awake() {
 		currentState = State.MAIN;
 		currentChapterIndex.value = "";
+		currentTotalDays.value = 0;
 		lockControls.value = false;
 		startMenuView.SetActive(true);
 		saveView.SetActive(false);

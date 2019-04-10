@@ -3,7 +3,7 @@
 [System.Serializable]
 public class HelpScreenTopic : MonoBehaviour {
 
-	public int unlockChapter;
+	public int unlockDay;
 	public string topic;
 	public GameObject screen;
 

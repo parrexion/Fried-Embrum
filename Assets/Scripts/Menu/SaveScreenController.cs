@@ -5,11 +5,11 @@ using UnityEngine.Events;
 
 public class SaveScreenController : InputReceiverDelegate {
 
-	public ScrObjEntryReference currentMap;
-	public ScrObjEntryReference currentDialogue;
 	public SaveFileController saveFileController;
-	public MapInfoListVariable chapterList;
-	public IntVariable chapterIndex;
+	public ScrObjEntryReference currentMap;
+	public ScrObjLibraryVariable chapterLibrary;
+	public StringVariable currentChapterId;
+	public IntVariable currentPlayDays;
 	public BoolVariable lockControls;
 
 	[Header("Save Popup")]
@@ -22,6 +22,14 @@ public class SaveScreenController : InputReceiverDelegate {
 	private void Start() {
 		MenuChangeDelay(MenuMode.SAVE);
 		stopMusicEvent.Invoke();
+		currentPlayDays.value += ((MapEntry)currentMap.value).mapDuration;
+		MapEntry nextEntry = ((MapEntry)currentMap.value).autoNextChapter;
+		if (nextEntry == null) {
+			currentChapterId.value = "";
+		}
+		else {
+			currentChapterId.value = nextEntry.uuid;
+		}
 	}
 
     public override void OnMenuModeChanged() {
@@ -29,14 +37,17 @@ public class SaveScreenController : InputReceiverDelegate {
 	}
 
 	public void NextLevel() {
-		checked current map for next map
-		if (chapterIndex.value >= chapterList.values.Count) {
+		MapEntry map = ((MapEntry)currentMap.value).autoNextChapter;
+		if (map == null) {
+			InputDelegateController.instance.TriggerSceneChange(MenuMode.NONE, "BaseScene");
+			return;
+		}
+		currentChapterId.value = map.uuid;
+		if (currentChapterId.value == SaveFileController.CLEAR_GAME_ID) {
 			InputDelegateController.instance.TriggerSceneChange(MenuMode.MAIN_MENU, "MainMenu");
 		}
 		else {
-			currentMap.value = chapterList.values[chapterIndex.value];
-			chapterIndex.value++;
-			currentDialogue.value = ((MapEntry)currentMap.value).preDialogue;
+			currentMap.value = map;
 			InputDelegateController.instance.TriggerSceneChange(MenuMode.NONE, "LoadingScreen");
 		}
 	}

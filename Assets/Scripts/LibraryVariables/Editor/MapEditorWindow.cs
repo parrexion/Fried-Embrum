@@ -195,7 +195,10 @@ public class MapEditorWindow {
 		GUILayout.Space(10);
 
 		GUILayout.Label("Dialogues", EditorStyles.boldLabel);
+		GUILayout.BeginHorizontal();
 		mapValues.skipBattlePrep = EditorGUILayout.Toggle("Skip battle preps?", mapValues.skipBattlePrep);
+		mapValues.mapDuration = EditorGUILayout.IntField("Map Duration", mapValues.mapDuration);
+		GUILayout.EndHorizontal();
 		mapValues.autoNextChapter = (MapEntry)EditorGUILayout.ObjectField("Auto Next Chapter", mapValues.autoNextChapter, typeof(MapEntry), false);
 
 		GUILayout.Label("Dialogues", EditorStyles.boldLabel);
@@ -308,30 +311,6 @@ public class MapEditorWindow {
 			}
 			EditorGUIUtility.labelWidth = 120;
 			GUILayout.EndHorizontal();
-			//mapValues.spawnPoints[i].stats = (CharData)EditorGUILayout.ObjectField("New character",mapValues.spawnPoints[i].stats, typeof(CharData),false);
-			//if (mapValues.spawnPoints[i].stats != null) {
-			//	mapValues.spawnPoints[i].level = EditorGUILayout.IntField("Level", mapValues.spawnPoints[i].level);
-
-			//	EditorGUIUtility.labelWidth = 70;
-			//	for (int j = 0; j < mapValues.spawnPoints[i].inventory.Count; j++) {
-			//		GUILayout.BeginHorizontal();
-			//		mapValues.spawnPoints[i].inventory[j].item = (ItemEntry)EditorGUILayout.ObjectField("Item",mapValues.spawnPoints[i].inventory[j].item, typeof(ItemEntry),false);
-			//		if (GUILayout.Button("X", GUILayout.Width(50))) {
-			//			GUI.FocusControl(null);
-			//			mapValues.spawnPoints[i].inventory.RemoveAt(j);
-			//			j--;
-			//		}
-			//		GUILayout.EndHorizontal();
-			//	}
-			//	EditorGUIUtility.labelWidth = 120;
-			//	GUILayout.BeginHorizontal();
-			//	GUILayout.Space(120);
-			//	if (GUILayout.Button("Add Item")) {
-			//		mapValues.spawnPoints[i].inventory.Add(new WeaponTuple());
-			//	}
-			//	GUILayout.EndHorizontal();
-			//}
-
 			LibraryEditorWindow.HorizontalLine(Color.black);
 		}
 		if (GUILayout.Button("+")) {

@@ -23,6 +23,7 @@ public class MapEntry : ScrObjLibraryEntry {
 	[Header("Chapter Linking")]
 	public bool skipBattlePrep;
 	public MapEntry autoNextChapter;
+	public int mapDuration = 1;
 
 	[Header("Dialogues")]
 	public DialogueEntry preDialogue;
@@ -63,6 +64,7 @@ public class MapEntry : ScrObjLibraryEntry {
 
 		skipBattlePrep = false;
 		autoNextChapter = null;
+		mapDuration = 1;
 
 		preDialogue = null;
 		introDialogue = null;
@@ -96,6 +98,7 @@ public class MapEntry : ScrObjLibraryEntry {
 
 		skipBattlePrep = map.skipBattlePrep;
 		autoNextChapter = map.autoNextChapter;
+		mapDuration = map.mapDuration;
 
 		preDialogue = map.preDialogue;
 		introDialogue = map.introDialogue;

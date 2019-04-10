@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
 
 public class SaveFileController : MonoBehaviour {
 	public const string CLEAR_GAME_ID = "Game Clear!";
 
 	public ScrObjLibraryVariable chapterLibrary;
-	public ScrObjEntryReference currenMap;
+	public StringVariable currenChapterID;
 
 	[Header("Popup")]
 	public bool usedForLoad;

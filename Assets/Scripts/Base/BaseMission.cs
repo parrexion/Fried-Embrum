@@ -29,7 +29,7 @@ public class BaseMission : InputReceiverDelegate {
 	private bool promptMode;
 
 	[Header("Selected Mission")]
-	public ScrObjEntryReference currentMap;
+	public StringVariable currentChapterId;
 
 
 	private void Start () {
@@ -131,8 +131,8 @@ public class BaseMission : InputReceiverDelegate {
     }
 
 	private void StartMission() {
-		currentMap.value = availableMaps[buttons.GetPosition()].map;
-		Debug.Log("Start mission:  " + currentMap.value.entryName);
+		currentChapterId.value = availableMaps[buttons.GetPosition()].map.uuid;
+		Debug.Log("Start mission:  " + currentChapterId.value);
 		startMissionEvent.Invoke();
 	}
 

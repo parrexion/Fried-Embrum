@@ -32,12 +32,12 @@ public class SaveController : MonoBehaviour {
 	public IntVariable saveIndex;
 
 	[Header("Simple Data")]
-	public StringVariable[] simpleChapterIndex;
+	public StringVariable[] simpleChapterId;
 	public IntVariable[] simpleTotalDays;
 	public IntVariable[] simplePlayTimes;
 
 	[Header("Current Data")]
-	public StringVariable currentChapterIndex;
+	public StringVariable currentChapterId;
 	public IntVariable currentTotalDays;
 	public IntVariable currentPlayTime;
 	public IntVariable currentMoney;
@@ -115,13 +115,13 @@ public class SaveController : MonoBehaviour {
 
 		if (!onlyOptions) {
 			// Update data
-			simpleChapterIndex[saveIndex.value].value = currentChapterIndex.value;
+			simpleChapterId[saveIndex.value].value = currentChapterId.value;
 			simpleTotalDays[saveIndex.value].value = currentTotalDays.value;
 			simplePlayTimes[saveIndex.value].value = currentPlayTime.value;
 
 			// Setup save data
 			SaveData data = new SaveData {
-				chapterIndex = simpleChapterIndex[saveIndex.value].value,
+				chapterIndex = simpleChapterId[saveIndex.value].value,
 				totalDays = simpleTotalDays[saveIndex.value].value,
 				playTime = simplePlayTimes[saveIndex.value].value,
 				money = currentMoney.value,
@@ -197,7 +197,7 @@ public class SaveController : MonoBehaviour {
 		for (int i = 0; i < saveFileData.saveFiles.Length; i++) {
 			if (saveFileData.saveFiles[i] == null)
 				continue;
-			simpleChapterIndex[i].value = saveFileData.saveFiles[i].chapterIndex;
+			simpleChapterId[i].value = saveFileData.saveFiles[i].chapterIndex;
 			simpleTotalDays[i].value = saveFileData.saveFiles[i].totalDays;
 			simplePlayTimes[i].value = saveFileData.saveFiles[i].playTime;
 		}
@@ -219,7 +219,7 @@ public class SaveController : MonoBehaviour {
 		}
 		
 		// Set basic data
-		currentChapterIndex.value = simpleChapterIndex[saveIndex.value].value;
+		currentChapterId.value = simpleChapterId[saveIndex.value].value;
 		currentTotalDays.value = simpleTotalDays[saveIndex.value].value;
 		currentPlayTime.value = simplePlayTimes[saveIndex.value].value;
 
