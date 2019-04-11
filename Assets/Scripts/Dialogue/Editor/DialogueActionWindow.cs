@@ -165,7 +165,7 @@ public class DialogueActionWindow: EditorWindow {
 			overrideActionNumber.value = true;
 			Scene currentScene = SceneManager.GetActiveScene();
 			if (currentScene.name != "DialogueScene")
-				EditorSceneManager.OpenScene("Assets/_Scenes/Dialogue.unity");
+				EditorSceneManager.OpenScene("Assets/_Scenes/DialogueScene.unity");
 			EditorApplication.isPlaying = true;
 		}
 		GUILayout.EndHorizontal();

@@ -228,7 +228,7 @@ public class DialogueListWindow : EditorWindow {
 		// Frame scroll
 		GUILayout.Label("Actions", EditorStyles.boldLabel);
 		frameScrollPos = GUILayout.BeginScrollView(frameScrollPos, GUILayout.Width(actionListRect.width), 
-					GUILayout.Height(actionListRect.height - 92));
+					GUILayout.Height(actionListRect.height - 116));
 		if (hub.selAction != -1) {
 			int oldFrame = hub.selAction;
 			hub.selAction = GUILayout.SelectionGrid(hub.selAction, hub.dialogueValues.GenerateActionRepresentation(), 1);
