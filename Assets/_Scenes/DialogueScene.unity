@@ -506,7 +506,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 50b718fd62f3e9146931ecd2135e7928, type: 3}
+  m_Sprite: {fileID: 21300000, guid: aa8a61ac86255d349aa10ba0ef51699f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1264,7 +1264,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1000, y: -250}
+  m_AnchoredPosition: {x: -1250, y: -250}
   m_SizeDelta: {x: 400, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &478785451
@@ -1326,7 +1326,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 478785449}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
@@ -1446,7 +1446,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 709763636}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
@@ -1459,7 +1459,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 178240c5552f0cb4ca6337e2c8dd04f2, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 507bda6374d038742b8dca055f1810b0, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1932,7 +1932,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 864268860}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
@@ -1945,7 +1945,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 178240c5552f0cb4ca6337e2c8dd04f2, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bad6f56d57286eb468be3e5bcbfb893b, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2463,8 +2463,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6caa9959b8b8bfb48955b54fb93f283b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  character: {fileID: 11400000, guid: 583d84b5fdd38ff448074f41f3b17e69, type: 2}
-  poseIndex: {fileID: 11400000, guid: e3b1a17e20d7c7749a79d703826f2aa8, type: 2}
+  character: {fileID: 11400000, guid: aa92150401e5d5b4b9c5d3235659b620, type: 2}
+  poseIndex: {fileID: 11400000, guid: 9a8233ab27b742e47a942020e24395e5, type: 2}
   characterSprite: {fileID: 959462075}
 --- !u!114 &959462075
 MonoBehaviour:
@@ -3113,7 +3113,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: And burn that last village to the west while you're at it!
+  m_Text: I agree. It's the duty of a knight to help the people in need.
 --- !u!222 &1253105048
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3233,7 +3233,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   emptyBackground: {fileID: 11400000, guid: 7a1bd7598c72fc94c9a8549263a2e0ba, type: 2}
-  background: {fileID: 11400000, guid: 33021f19ef3d298458c7b63996515608, type: 2}
   characters:
   - {fileID: 11400000, guid: 227387ed6a3a4114db140589a86b1a47, type: 2}
   - {fileID: 11400000, guid: 235b050acc33a23468cae5bdee884ba1, type: 2}
@@ -3243,6 +3242,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 49c775bf918b757438dc5565e1c2a04f, type: 2}
   - {fileID: 11400000, guid: 583d84b5fdd38ff448074f41f3b17e69, type: 2}
   - {fileID: 11400000, guid: aa92150401e5d5b4b9c5d3235659b620, type: 2}
+  background: {fileID: 11400000, guid: 33021f19ef3d298458c7b63996515608, type: 2}
+  villageVisitor1: {fileID: 11400000, guid: f33814a30f10cb046b8f794445b32da4, type: 2}
   poses:
   - {fileID: 11400000, guid: 450afa314e1a7f74c98cc752e0e54f2a, type: 2}
   - {fileID: 11400000, guid: f97975d2d9a61cc45afb067f4008f233, type: 2}
@@ -4043,7 +4044,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1530759660}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
@@ -4056,7 +4057,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 178240c5552f0cb4ca6337e2c8dd04f2, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2b51d098009a1974e859f18b293edcf3, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4101,7 +4102,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1250, y: -250}
+  m_AnchoredPosition: {x: -1000, y: -250}
   m_SizeDelta: {x: 400, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1534808033
@@ -4153,8 +4154,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6caa9959b8b8bfb48955b54fb93f283b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  character: {fileID: 11400000, guid: a88c9f6708e9799438bf89bbff587fc8, type: 2}
-  poseIndex: {fileID: 11400000, guid: 0205b3a4cff14b740b484dc2a663e0a7, type: 2}
+  character: {fileID: 11400000, guid: 49c775bf918b757438dc5565e1c2a04f, type: 2}
+  poseIndex: {fileID: 11400000, guid: a5c93771ed359674e952fd097456fadc, type: 2}
   characterSprite: {fileID: 1534808036}
 --- !u!114 &1534808036
 MonoBehaviour:
@@ -4512,7 +4513,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1664464761}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
@@ -4525,7 +4526,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: a8101bbdb4e24374da36b6cd09e64132, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 507bda6374d038742b8dca055f1810b0, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

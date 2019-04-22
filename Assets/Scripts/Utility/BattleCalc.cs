@@ -171,15 +171,16 @@ public static class BattleCalc {
 
 	// Experience calculations
 
-	public static int GetExperienceDamage(StatsContainer player, StatsContainer enemy, bool isKill) {
+	public static int GetExperienceDamage(StatsContainer player, StatsContainer enemy, bool isKill, bool isBoss) {
 		int ld = player.level - enemy.level;
+		int killExp = (isBoss) ? 50 : 20;
 		if (ld < 0) {
 			ld = Mathf.Min(0,ld+2);
 		}
 
 		int gainedExp = (int)((30 + ld) / 3.0f);
 		if (isKill) {
-			gainedExp += 20 + (ld * 3);
+			gainedExp += killExp + (ld * 3);
 		}
 		
 		return gainedExp;

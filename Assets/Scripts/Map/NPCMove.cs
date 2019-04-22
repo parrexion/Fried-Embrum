@@ -29,7 +29,17 @@ public class NPCMove : TacticsMove {
 
 
 	
-	///////////   MOVEMENT
+	///////////   MOVEMENT	
+
+
+	/// <summary>
+	/// Returns the current movement speed. Virtual so that other classes
+	/// can change the movement speed.
+	/// </summary>
+	/// <returns></returns>
+	protected override int GetMoveSpeed() {
+		return (aggroType == AggroType.BOSS || aggroType == AggroType.GUARD) ? 0 : stats.GetMovespeed();
+	}
 
 	/// <summary>
 	/// Generates possible moves and selects and moves the AI to the best one found.
@@ -82,7 +92,7 @@ public class NPCMove : TacticsMove {
 
 		BFS();
 
-		int moveSpeed = stats.GetMovespeed();
+		int moveSpeed = GetMoveSpeed();
 		MapTile bestTile = null; // Reachable this turn
 		MapTile goodTile = null; // Reachable in multiple turns
 
@@ -90,7 +100,7 @@ public class NPCMove : TacticsMove {
 		if (aggroType == AggroType.HUNT) {
 			tileBest = huntTile;
 			tileGood = null;
-			while(tileBest != null && tileBest.distance > moveSpeed) {
+			while(tileBest != null && (tileBest.distance > moveSpeed || !tileBest.selectable)) {
 				Debug.Log("EY!");
 				tileBest = tileBest.parent;
 			}
@@ -186,6 +196,7 @@ public class NPCMove : TacticsMove {
 		process.Enqueue(currentTile);
 		currentTile.distance = 0;
 		currentTile.parent = null;
+		currentTile.selectable = true;
 		
 		WeaponRange weapon = inventory.GetReach(ItemCategory.WEAPON);
 		WeaponRange staff = inventory.GetReach(ItemCategory.STAFF);

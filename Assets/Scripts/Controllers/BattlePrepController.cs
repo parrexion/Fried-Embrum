@@ -21,6 +21,7 @@ public class BattlePrepController : InputReceiverDelegate {
 	[Header("Handlers")]
 	public PrepCharacterSelect characterSelect;
 	public PrepInventorySelect inventorySelect;
+	public ObjectiveController objective; 
 
 	[Header("Views")]
 	public GameObject menuCollectionView;
@@ -37,7 +38,6 @@ public class BattlePrepController : InputReceiverDelegate {
 		mainMenuView.SetActive(false);
 		characterSelectView.SetActive(false);
 		inventoryView.SetActive(false);
-		objectiveView.SetActive(false);
 
 		mainButtons.ResetButtons();
 		mainButtons.AddButton("Select characters");
@@ -162,6 +162,7 @@ public class BattlePrepController : InputReceiverDelegate {
 			else if (mainIndex == 3) {
 				currentState = State.OBJECTIVE;
 				objectiveView.SetActive(true);
+				objective.UpdateState(true);
 			}
 			else if (mainIndex == 4) {
 				currentState = State.PROMPT;
@@ -171,13 +172,12 @@ public class BattlePrepController : InputReceiverDelegate {
 		else if (currentState == State.CHAR) {
 			characterSelect.SelectCharacter();
 		}
-		//else if (currentState == State.FORMATION) {
-
-		//}
+		//else if (currentState == State.FORMATION) { }
 		else if (currentState == State.INVENTORY) {
 			inventorySelect.SelectItem();
 		}
 		else if (currentState == State.OBJECTIVE) {
+			objective.UpdateState(false);
 			objectiveView.SetActive(false);
 			currentState = State.MAIN;
 		}
@@ -203,6 +203,7 @@ public class BattlePrepController : InputReceiverDelegate {
 			}
 		}
 		else if (currentState == State.OBJECTIVE) {
+			objective.UpdateState(false);
 			objectiveView.SetActive(false);
 			currentState = State.MAIN;
 		}

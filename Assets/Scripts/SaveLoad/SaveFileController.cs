@@ -32,6 +32,8 @@ public class SaveFileController : MonoBehaviour {
 
 	private void Start() {
 		SetupSaveFiles();
+		saveFiles.ForcePosition(0);
+		saveFileIndex.value = 0;
 	}
 
 	/// <summary>
@@ -130,7 +132,7 @@ public class SaveFileController : MonoBehaviour {
 			if (chapterIDs[i].value == CLEAR_GAME_ID) {
 				entry.FillData("All maps cleared!", totalDays[i].value, playTimes[i].value);
 			}
-			else if (chapterIDs[i].value == "") {
+			else if (string.IsNullOrEmpty(chapterIDs[i].value)) {
 				entry.FillData("BASE", totalDays[i].value, playTimes[i].value);
 			}
 			else {

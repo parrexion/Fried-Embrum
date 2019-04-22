@@ -13,6 +13,7 @@ public class ActionInputController : MonoBehaviour {
 	public ScrObjEntryReference currentMap;
 	public IntVariable currentMenuMode;
 	public ActionModeVariable currentActionMode;
+	public ScrObjEntryReference villageVisitor1;
 	public MapTileListVariable targetList;
 	public IntVariable inventoryIndex;
 	public BoolVariable triggeredWin;
@@ -83,6 +84,7 @@ public class ActionInputController : MonoBehaviour {
 				currentActionMode.value = ActionMode.NONE;
 				dialogueMode.value = (int)DialogueMode.VISIT;
 				dialogueEntry.value = selectedCharacter.value.currentTile.dialogue;
+				villageVisitor1.value = selectedCharacter.value.stats.charData.portraitSet;
 				startDialogue.Invoke();
 				break;
 			case ActionInputType.TRADE: // TRADE

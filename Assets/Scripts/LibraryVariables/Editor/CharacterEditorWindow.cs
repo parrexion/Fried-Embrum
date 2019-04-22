@@ -153,6 +153,7 @@ public class CharacterEditorWindow {
 		charValues.portrait = (Sprite)EditorGUILayout.ObjectField("",charValues.portrait, typeof(Sprite),false, GUILayout.Width(130));
 		charValues.battleSprite = (Sprite)EditorGUILayout.ObjectField("",charValues.battleSprite, typeof(Sprite),false, GUILayout.Width(130));
 		GUILayout.EndHorizontal();
+		charValues.portraitSet = (PortraitEntry)EditorGUILayout.ObjectField("Portrait set", charValues.portraitSet, typeof(PortraitEntry), false);
 		
 		GUILayout.Space(10);
 

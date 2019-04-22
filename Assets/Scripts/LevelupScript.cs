@@ -10,6 +10,7 @@ public class LevelupScript : MonoBehaviour {
 	public GameObject levelupCongrats;
 	public GameObject classChangeCongrats;
 	public GameObject levelupStats;
+	public GameObject levelupArrow;
 
 	[Header("Sound")]
 	public AudioQueueVariable sfxQueue;
@@ -45,6 +46,8 @@ public class LevelupScript : MonoBehaviour {
 	private int _def;
 	private int _res;
 
+	private bool waiting;
+
 	
 	// Update is called once per frame
 	private void Update () {
@@ -64,6 +67,7 @@ public class LevelupScript : MonoBehaviour {
 		levelupCongrats.SetActive(levelup);
 		classChangeCongrats.SetActive(!levelup);
 		levelupStats.SetActive(false);
+		levelupArrow.SetActive(false);
 
 		_level = characterStats.currentLevel;
 		_hp = characterStats.hp;
@@ -151,8 +155,18 @@ public class LevelupScript : MonoBehaviour {
 
 		yield return new WaitForSeconds(1f);
 
+		levelupArrow.SetActive(true);
+		waiting = true;
+		while (waiting)
+			yield return null;
+		
+		levelupArrow.SetActive(false);
 		levelupStats.SetActive(false);
 		if (blackout != null)
 			blackout.SetActive(false);
+	}
+
+	public void Continue() {
+		waiting = false;
 	}
 }

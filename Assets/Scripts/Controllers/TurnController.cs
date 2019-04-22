@@ -31,6 +31,12 @@ public class TurnController : MonoBehaviour {
 
 	public TurnState currentState;
 
+	[Header("Rewards")]
+	public PopupController popup;
+	public IntVariable totalMoney;
+	public IntVariable totalScrap;
+	public ItemListVariable itemConvoy;
+
 	[Header("UI")]
 	public GameObject turnChangeDisplay;
 	public Text turnChangeText;
@@ -93,7 +99,7 @@ public class TurnController : MonoBehaviour {
 				currentState = TurnState.INTRO;
 				TriggerNextStep();
 				break;
-			};		
+			};
 			currentState = TurnState.PREP;
 			InputDelegateController.instance.TriggerMenuChange(MenuMode.PREP);
 			break;
@@ -106,9 +112,8 @@ public class TurnController : MonoBehaviour {
 			break;
 		case TurnState.INTRO:
 			Debug.Log("Start game");
-			currentState = TurnState.ACTION;
+			currentState = TurnState.EVENTS;
 			StartGameSetup();
-			StartCoroutine(DisplayTurnChange(1.5f));
 			break;
 		case TurnState.ACTION:
 			Debug.Log("Check reinforcements");
@@ -150,6 +155,7 @@ public class TurnController : MonoBehaviour {
 		mainMusic.value = map.owMusic.clip;
 		subMusic.value = null;
 		playBkgMusicEvent.Invoke();
+		checkReinforcementsEvent.Invoke();
 	}
 
 	/// <summary>
@@ -212,6 +218,7 @@ public class TurnController : MonoBehaviour {
 		else {
 			Debug.LogError("Undefined lose condition:   " + map.loseCondition);
 		}
+
 		if (gameFinished) {
 			Debug.Log("GAME OVER");
 			StartCoroutine(EndGameLose());
@@ -348,8 +355,26 @@ public class TurnController : MonoBehaviour {
 		sfxQueue.Enqueue(victoryFanfare);
 		playSfxEvent.Invoke();
 		yield return new WaitForSeconds(4f);
+
 		gameFinishObject.SetActive(false);
 		gameFinishText.gameObject.SetActive(false);
+
+		// Award all the rewards
+		MapEntry map = (MapEntry)currentMap.value;
+		if (map.reward.money > 0) {
+			totalMoney.value += map.reward.money;
+			yield return StartCoroutine(popup.ShowPopup(null, "Gained " + map.reward.money + " Money", popup.droppedItemFanfare));
+		}
+		if (map.reward.scrap > 0) {
+			totalScrap.value += map.reward.scrap;
+			yield return StartCoroutine(popup.ShowPopup(null, "Gained " + map.reward.scrap + " Scrap", popup.droppedItemFanfare));
+		}
+		for (int i = 0; i < map.reward.items.Count; i++) {
+			itemConvoy.items.Add(map.reward.items[i]);
+			yield return StartCoroutine(popup.ShowPopup(map.reward.items[i].icon, "Gained " + map.reward.items[i].entryName, popup.droppedItemFanfare));
+		}
+
+		//Move to the ending dialogue
 		currentDialogueMode.value = (int)DialogueMode.ENDING;
 		currentDialogue.value = ((MapEntry)currentMap.value).endDialogue;
 		startDialogueEvent.Invoke();

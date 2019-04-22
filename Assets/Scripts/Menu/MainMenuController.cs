@@ -46,6 +46,14 @@ public class MainMenuController : InputReceiverDelegate {
 
 
 	private void Awake() {
+		StartCoroutine(WaitForInit());
+	}
+
+	private IEnumerator WaitForInit() {
+		while(InputDelegateController.instance == null) {
+			yield return null;
+		}
+
 		currentState = State.MAIN;
 		currentChapterIndex.value = "";
 		currentTotalDays.value = 0;
@@ -62,6 +70,7 @@ public class MainMenuController : InputReceiverDelegate {
 		mainMusic.value = mainTheme.clip;
 		subMusic.value = null;
 		playBkgMusicEvent.Invoke();
+		
 		InputDelegateController.instance.TriggerMenuChange(MenuMode.MAIN_MENU);
 	}
 
@@ -69,19 +78,19 @@ public class MainMenuController : InputReceiverDelegate {
 		UpdateState(MenuMode.MAIN_MENU);
 	}
 
-	public void ControlsClicked() {
+	private void ControlsClicked() {
 		currentState = State.CONTROLS;
 		startMenuView.SetActive(false);
 		howTo.UpdateState(true);
 	}
 
-	public void LoadClicked() {
+	private void LoadClicked() {
 		currentState = State.LOAD;
 		startMenuView.SetActive(false);
 		saveView.SetActive(true);
 	}
 
-	public void OptionsClicked() {
+	private void OptionsClicked() {
 		currentState = State.OPTIONS;
 		startMenuView.SetActive(false);
 		optionsController.UpdateState(true);
@@ -90,7 +99,7 @@ public class MainMenuController : InputReceiverDelegate {
 	/// <summary>
 	/// Called when starting a new game. Sets the starting values.
 	/// </summary>
-	public void NewGameClicked() {
+	private void NewGameClicked() {
 		currentChapterIndex.value = firstMission.uuid;
 		currentPlayTime.value = 0;
 		saveController.ResetCurrentData();
@@ -232,7 +241,11 @@ public class MainMenuController : InputReceiverDelegate {
 	}
 
     public override void OnStartButton() {
-		if (currentState == State.CONTROLS) {
+		if (currentState == State.MAIN) {
+			ControlsClicked();
+			menuAcceptEvent.Invoke();
+		}
+		else if (currentState == State.CONTROLS) {
 			NewGameClicked();
 			menuAcceptEvent.Invoke();
 		}

@@ -135,7 +135,7 @@ public class MapCreator : MonoBehaviour {
 					tempTile.interactType = InteractType.SEIZE;
 				}
 				else {
-					Debug.LogError("Unimplemented interact type");
+					Debug.LogError("Unimplemented interact type   " + interPos.interactType);
 				}
 				mappus.Add(tempTile);
 
@@ -318,7 +318,7 @@ public class MapCreator : MonoBehaviour {
 				}
 			}
 		}
-		Debug.Log("Check reinforcements - DONE");
+		Debug.Log("Check reinforcements - DONE   " + currentTurn.value);
 		nextTurnStateEvent.Invoke();
 		yield break;
 	}

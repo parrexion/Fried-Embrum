@@ -24,8 +24,18 @@ public class SceneOpener {
         EditorSceneManager.OpenScene("Assets/_Scenes/LoadingScreen.unity");
     }
 
+    [MenuItem("Scenes/Dialogue Scene")]
+    private static void OpenDialogueScene() {
+        EditorSceneManager.OpenScene("Assets/_Scenes/DialogueScene.unity");
+    }
+
     [MenuItem("Scenes/Save Menu")]
     private static void OpenSaveMenu() {
         EditorSceneManager.OpenScene("Assets/_Scenes/SaveScene.unity");
+    }
+
+    [MenuItem("Scenes/Startup Scene")]
+    private static void OpenStartupMenu() {
+        EditorSceneManager.OpenScene("Assets/_Scenes/StartupScene.unity");
     }
 }

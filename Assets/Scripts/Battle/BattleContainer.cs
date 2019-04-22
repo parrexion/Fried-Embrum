@@ -495,12 +495,15 @@ public class BattleContainer : InputReceiverDelegate {
 		yield break;
 	}
 
+	public override void OnOkButton() {
+		levelupScript.Continue();
+	}
+
 
 	public override void OnUpArrow() {}
 	public override void OnDownArrow() {}
 	public override void OnLeftArrow() {}
 	public override void OnRightArrow() {}
-	public override void OnOkButton() {}
 	public override void OnBackButton() {}
 	public override void OnLButton() {}
 	public override void OnRButton() {}

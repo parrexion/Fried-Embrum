@@ -8,10 +8,13 @@ enum DialogueMode { NONE, PRELUDE, INTRO, ENDING, EVENT, VISIT, QUOTE }
 [System.Serializable]
 public class DialogueScene : MonoBehaviour {
 
+	[Header("Statics")]
 	public BackgroundEntry emptyBackground;
-
-	public ScrObjEntryReference background;
 	public ScrObjEntryReference[] characters;
+
+	[Header("Values")]
+	public ScrObjEntryReference background;
+	public ScrObjEntryReference villageVisitor1;
 	public IntVariable[] poses;
 	public StringVariable talkingName;
 	public IntVariable talkingIndex;

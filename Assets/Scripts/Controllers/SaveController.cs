@@ -60,18 +60,17 @@ public class SaveController : MonoBehaviour {
 	public BoolVariable trueHit;
 	public BoolVariable autoEnd;
 
+	public UnityEvent preLoadFinishedEvent;
 	public UnityEvent loadFinishedEvent;
 	
 	private string _savePath = "";
-	private string _backupSavePath = "";
 	private SavePackage saveFileData;
 
 
 	private void Initialize() {
 		_savePath = Application.persistentDataPath+"/saveData2.xml";
-		_backupSavePath = Application.streamingAssetsPath+"/saveData2.xml";
 		PreLoad();
-		// EmptySave();
+		//EmptySave();
 	}
 
 	public void EmptySave() {
@@ -169,7 +168,6 @@ public class SaveController : MonoBehaviour {
 	public void PreLoad() {
 		string path = _savePath;
 		if (!File.Exists(_savePath)){
-			path = _backupSavePath;
 			Debug.LogWarning("No save file found: " + path);
 			EmptySave();
 		}
@@ -206,6 +204,9 @@ public class SaveController : MonoBehaviour {
 
 		if (SceneManager.GetActiveScene().name == "BattleScene" || SceneManager.GetActiveScene().name == "BaseScene") {
 			Load();
+		}
+		else {
+			preLoadFinishedEvent.Invoke();
 		}
 	}
 

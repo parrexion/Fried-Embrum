@@ -33,10 +33,12 @@ public class ShopBuyController : MonoBehaviour {
 
 	public void GenerateShopList(ItemListVariable currentShopList) {
 		shopList.SetupBuy(currentShopList);
+		SetupItemInfo();
 	}
 
 	public void GenerateSellList() {
 		shopList.SetupSell();
+		SetupItemInfo();
 	}
 
 	public void MoveVertical(int dir) {

@@ -17,6 +17,8 @@ public class DialogueActionWindow: EditorWindow {
 	public BackgroundEntry noCharacterSprite;
 	public IntVariable currentAction;
 	public BoolVariable overrideActionNumber;
+	public ScrObjEntryReference villageVisitor1;
+	public PortraitEntry defaultVisitor;
 	DialogueListWindow listWindow;
 	DialogueHub hub;
 
@@ -67,6 +69,8 @@ public class DialogueActionWindow: EditorWindow {
 		editBackground = new Texture2D(1, 1);
 		editBackground.SetPixel(0, 0, new Color(0.25f, 0.6f, 0.75f));
 		editBackground.Apply();
+
+		villageVisitor1.value = defaultVisitor;
 	}
 
 	void OnSelectionChanged() {
@@ -74,6 +78,9 @@ public class DialogueActionWindow: EditorWindow {
 	}
 
 	void OnGUI() {
+		if (actionBackground == null || editBackground == null)
+			InitTextures();
+
 		UpdateRects();
 		DrawBackgrounds();
 		if (hub.selDialogue == -1 || hub.selAction == -1)
@@ -261,7 +268,11 @@ public class DialogueActionWindow: EditorWindow {
 
 		//Speaker name
 		GUILayout.Label("Speaker's Name: ", EditorStyles.boldLabel);
-		GUILayout.Label(hub.dialogueValues.actions[hub.selAction].text[0], EditorStyles.boldLabel, GUILayout.Width(80));
+		GUILayout.Label((hub.dialogueValues.actions[hub.selAction].text[0] != "###") ? 
+			hub.dialogueValues.actions[hub.selAction].text[0] : 
+			hub.currentState.characters[hub.currentState.talkingIndex.value].value.entryName, 
+			EditorStyles.boldLabel, GUILayout.Width(80)
+		);
 
 		GUILayout.Space(65);
 
@@ -297,7 +308,7 @@ public class DialogueActionWindow: EditorWindow {
 			hub.dialogueValues.actions[hub.selAction].text[0] = talkName;
 		}
 		else if (hub.currentState.characters[talkingIndex].value != null) {
-			hub.dialogueValues.actions[hub.selAction].text[0] = hub.currentState.characters[talkingIndex].value.entryName;
+			hub.dialogueValues.actions[hub.selAction].text[0] = "###";
 		}
 		else {
 			talkingIndex = -1;

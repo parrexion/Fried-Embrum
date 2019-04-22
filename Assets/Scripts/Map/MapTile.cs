@@ -142,9 +142,8 @@ public class MapTile : MonoBehaviour {
 		if (checkTile == null)
 			return false;
 		
-		if (checkTile.currentCharacter != null) {
-			if (checkTile.currentCharacter.faction != faction)
-				return false;
+		if (checkTile.currentCharacter != null && checkTile.currentCharacter.faction != faction) {
+			return false;
 		}
 
 		if (checkTile.GetRoughness(classType) == -1)

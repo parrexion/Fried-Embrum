@@ -8,6 +8,7 @@ public class MapInputController : InputReceiverDelegate {
 	public ScrObjEntryReference currentMap;
 	public ActionModeVariable currentAction;
 	public IntVariable dialogueMode;
+	public FactionVariable currentFaction;
 
 	[Header("Controllers")]
 	public MapCursor cursor;
@@ -176,6 +177,9 @@ public class MapInputController : InputReceiverDelegate {
 	/// Triggered when battles end and updates the current menu mode.
 	/// </summary>
 	public void BattleEnd() {
+		if (currentFaction.value != Faction.PLAYER)
+			return;
+
 		actionController.selectedCharacter.value.End();
 		currentAction.value = ActionMode.NONE;
 		cursor.ResetTargets();

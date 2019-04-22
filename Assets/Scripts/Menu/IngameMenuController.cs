@@ -13,14 +13,10 @@ public class IngameMenuController : InputReceiverDelegate {
 	public MyButtonList ingameButtons;
 	private int state;
 
-	[Header("Objective")]
-	public CharacterListVariable enemyList;
-	public GameObject objectiveObject;
-	public Text enemyCount;
-
 	[Header("Other Menus")]
 	public HowToPlayController howTo;
 	public OptionsController options;
+	public ObjectiveController objective;
 
 	[Header("Events")]
 	public UnityEvent nextStateEvent;
@@ -28,7 +24,6 @@ public class IngameMenuController : InputReceiverDelegate {
 
 	private void Start() {
 		ingameMenu.SetActive(false);
-		objectiveObject.SetActive(false);
 		overlay.enabled = false;
 		ingameButtons.ResetButtons();
 		ingameButtons.AddButton("CONTROLS");
@@ -39,11 +34,10 @@ public class IngameMenuController : InputReceiverDelegate {
     public override void OnMenuModeChanged() {
 		bool active = UpdateState(MenuMode.INGAME);
 		ingameMenu.SetActive(active);
-		objectiveObject.SetActive(active);
 		overlay.enabled = active;
 		if (active) {
 			ingameButtons.ForcePosition(0);
-			ShowObjective();
+			objective.UpdateState(true);
 		}
     }
 
@@ -109,31 +103,23 @@ public class IngameMenuController : InputReceiverDelegate {
     public override void OnBackButton() {
 		if (state == 0) {
 			MenuChangeDelay(MenuMode.MAP);
+			objective.UpdateState(false);
 		}
 		else if (state == 1) {
 			state = 0;
 			ingameMenu.SetActive(true);
-			objectiveObject.SetActive(true);
+			objective.UpdateState(true);
 			overlay.enabled = true;
 			howTo.BackClicked();
 		}
 		else if (state == 2) {
 			state = 0;
 			ingameMenu.SetActive(true);
-			objectiveObject.SetActive(true);
+			objective.UpdateState(true);
 			options.BackClicked();
 		}
 		menuBackEvent.Invoke();
     }
-
-	private void ShowObjective() {
-		int enemies = 0;
-		for (int i = 0; i < enemyList.values.Count; i++) {
-			if (enemyList.values[i].IsAlive())
-				enemies++;
-		}
-		enemyCount.text = enemies.ToString();
-	}
 
 	/// <summary>
 	/// Ends the turn for the player.
@@ -145,7 +131,7 @@ public class IngameMenuController : InputReceiverDelegate {
 	private void Controls() {
 		state = 1;
 		ingameMenu.SetActive(false);
-		objectiveObject.SetActive(false);
+		objective.UpdateState(false);
 		overlay.enabled = false;
 		howTo.UpdateState(true);
 	}
@@ -153,7 +139,7 @@ public class IngameMenuController : InputReceiverDelegate {
 	private void Options() {
 		state = 2;
 		ingameMenu.SetActive(false);
-		objectiveObject.SetActive(false);
+		objective.UpdateState(false);
 		options.UpdateState(true);
 	}
 

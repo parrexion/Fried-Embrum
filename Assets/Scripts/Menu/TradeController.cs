@@ -114,6 +114,7 @@ public class TradeController : InputReceiverDelegate {
 			UpdateSelection();
 		}
 		else {
+
 			currentMode.value = ActionMode.ACTION;
 			selectedIndex = -1;
 			statsObject.SetActive(true);
@@ -163,6 +164,7 @@ public class TradeController : InputReceiverDelegate {
 		InventoryTuple tup2 = (menuPosition >= InventoryContainer.INVENTORY_SIZE) ? 
 				targetCharacter.inventory.GetTuple(menuPosition-InventoryContainer.INVENTORY_SIZE) : 
 				selectedCharacter.value.inventory.GetTuple(menuPosition);
+
 		InventoryTuple temp = new InventoryTuple();
 		temp.charge = tup1.charge;
 		temp.droppable = tup1.droppable;

@@ -5,10 +5,12 @@ using UnityEngine;
 [System.Serializable]
 public class DASetCharacters : DialogueAction {
 
-	public override bool Act (DialogueScene scene, DialogueActionData data)
-	{
+	public override bool Act (DialogueScene scene, DialogueActionData data) {
 		for (int i = 0; i < Utility.DIALOGUE_PLAYERS_COUNT+Utility.DIALOGUE_PLAYERS_OUTSIDE_COUNT; i++) {
 			scene.characters[i].value = data.entries[i];
+			if (data.entries[i] != null && ((PortraitEntry)data.entries[i]).customValue != 0) {
+				scene.characters[i].value = scene.villageVisitor1.value;
+			}
 			scene.poses[i].value = data.values[i];
 		}
 

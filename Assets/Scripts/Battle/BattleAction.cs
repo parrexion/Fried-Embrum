@@ -35,6 +35,8 @@ public class BattleAction {
 	/// </summary>
 	/// <returns></returns>
 	public int GetSpeedDifference() {
+		if (defender.faction == Faction.WORLD)
+			return 0;
 		ItemEntry wpn = (weaponDef != null) ? weaponDef.item : null;
 		return BattleCalc.GetAttackSpeed(weaponAtk.item, attacker.stats) - BattleCalc.GetAttackSpeed(wpn, defender.stats);
 	}
@@ -45,6 +47,8 @@ public class BattleAction {
 	/// </summary>
 	/// <returns></returns>
 	public int GetAdvantage() {
+		if (defender.faction == Faction.WORLD)
+			return 0;
 		ItemEntry wpn1 = (weaponAtk != null) ? weaponAtk.item : null;
 		ItemEntry wpn2 = (weaponDef != null) ? weaponDef.item : null;
 		return BattleCalc.GetWeaponAdvantage(wpn1, wpn2);
@@ -60,11 +64,15 @@ public class BattleAction {
 	}
 
 	public int GetHitRate() {
+		if (defender.faction == Faction.WORLD)
+			return 100;
 		ItemEntry wpn = (weaponDef != null) ? weaponDef.item : null;
 		return BattleCalc.GetHitRateBattle(weaponAtk.item, wpn, attacker.stats, defender.stats, terrainDef);
 	}
 
 	public int GetCritRate() {
+		if (defender.faction == Faction.WORLD)
+			return 0;
 		return BattleCalc.GetCritRateBattle(weaponAtk.item, attacker.stats, defender.stats);
 	}
 
@@ -74,6 +82,8 @@ public class BattleAction {
 	}
 
 	public int GetExperience() {
+		if (defender.faction == Faction.WORLD)
+			return 0;
 
 		//Exp for support skills
 		if (type != Type.DAMAGE) {
@@ -87,7 +97,8 @@ public class BattleAction {
 			return 0;
 
 		bool killed = (!enemy.IsAlive());
-		return BattleCalc.GetExperienceDamage(player.stats, enemy.stats, killed);
+		bool isBoss = (enemy is NPCMove && ((NPCMove)enemy).aggroType == AggroType.BOSS);
+		return BattleCalc.GetExperienceDamage(player.stats, enemy.stats, killed, isBoss);
 	}
 
 	/// <summary>

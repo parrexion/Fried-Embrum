@@ -9,6 +9,7 @@ public class CharData : ScrObjLibraryEntry {
 	public Sprite bigPortrait;
 	public Sprite portrait;
 	public Sprite battleSprite;
+	public PortraitEntry portraitSet;
 	public CharClass charClass;
 
 	[Header("Skills")]
@@ -47,6 +48,7 @@ public class CharData : ScrObjLibraryEntry {
 		bigPortrait = null;
 		portrait = null;
 		battleSprite = null;
+		portraitSet = null;
 		charClass = null;
 
 		personalSkill = null;
@@ -80,6 +82,7 @@ public class CharData : ScrObjLibraryEntry {
 		bigPortrait = cd.bigPortrait;
 		portrait = cd.portrait;
 		battleSprite = cd.battleSprite;
+		portraitSet = cd.portraitSet;
 		charClass = cd.charClass;
 
 		personalSkill = cd.personalSkill;

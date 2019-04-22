@@ -6,6 +6,7 @@ using UnityEngine;
 public class PortraitEntry : ScrObjLibraryEntry {
 
 	public Sprite[] poses = new Sprite[0];
+	public int customValue = 0;
 
 
 	public override void ResetValues() {

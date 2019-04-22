@@ -8,7 +8,7 @@ public class DASetText : DialogueAction {
 	public override bool Act(DialogueScene scene, DialogueActionData data) {
 
 		scene.talkingIndex.value = data.values[0];
-		scene.talkingName.value = data.text[0];
+		scene.talkingName.value = (data.text[0] != "###") ? data.text[0] : scene.characters[scene.talkingIndex.value].value.entryName;
 		scene.inputText.value = data.text[1];
 		if (data.boolValue)
 			scene.dialogueText.value = "";

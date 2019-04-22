@@ -26,7 +26,7 @@ public class ForecastUI : MonoBehaviour {
 	public GameObject backgroundInBattle;
 	
 	[Header("Attacker Stats")]
-//	public Image colorBackground;
+	public Image colorBackground;
 	public Image portrait;
 	public Text characterName;
 	public Image wpnAdvantage;
@@ -40,7 +40,7 @@ public class ForecastUI : MonoBehaviour {
 	public Text critText;
 	
 	[Header("Defender Stats")]
-//	public Image colorBackground;
+	public Image eColorBackground;
 	public Image ePortrait;
 	public Text eCharacterName;
 	public Image eWpnAdvantage;
@@ -54,7 +54,6 @@ public class ForecastUI : MonoBehaviour {
 	public Text eCritText;
 	
 	[Header("Healing Stats")]
-//	public Image colorBackground;
 	public Image hPortrait;
 	public Text hCharacterName;
 	public Image hWpnIcon;
@@ -162,8 +161,8 @@ public class ForecastUI : MonoBehaviour {
 	}
 	
 	private void ShowAttackerStats(TacticsMove tactics, InventoryTuple InvTup, int damage, int speed, int hit, int crit, int atkAdv, bool defWeak) {
-//		colorBackground.color = (tactics.faction == Faction.PLAYER) ? new Color(0.5f,0.8f,1f) : new Color(1f,0.5f,0.8f);
-		
+		colorBackground.color = (tactics.faction == Faction.PLAYER) ? new Color(0.7f, 0.7f, 1f) : new Color(1f, 0.7f, 0.7f);
+
 		characterName.text = tactics.stats.charData.entryName;
 		portrait.sprite = tactics.stats.charData.portrait;
 		wpnAdvantage.enabled = (atkAdv != 0);
@@ -182,8 +181,8 @@ public class ForecastUI : MonoBehaviour {
 	}
 	
 	private void ShowDefenderStats(TacticsMove tactics, InventoryTuple invTup, int damage, int speed, int hit, int crit, int defAdv, bool atkWeak) {
-//		colorBackground.color = (tactics.faction == Faction.PLAYER) ? new Color(0.5f,0.8f,1f) : new Color(1f,0.5f,0.8f);
-		
+		eColorBackground.color = (tactics.faction == Faction.PLAYER) ? new Color(0.7f, 0.7f, 1f) : new Color(1f, 0.7f, 0.7f);
+
 		eCharacterName.text = tactics.stats.charData.entryName;
 		ePortrait.sprite = tactics.stats.charData.portrait;
 		eWpnAdvantage.enabled = (defAdv != 0);
@@ -205,7 +204,9 @@ public class ForecastUI : MonoBehaviour {
 		if (inBattle)
 			backgroundInBattle.SetActive(false);
 		StatsContainer stats = healer.stats;
-		
+
+		colorBackground.color = new Color(0.8f, 0.8f, 0.8f);
+		eColorBackground.color = new Color(0.8f, 0.8f, 0.8f);
 		hCharacterName.text = stats.charData.entryName;
 		hPortrait.sprite = stats.charData.portrait;
 

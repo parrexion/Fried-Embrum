@@ -293,6 +293,8 @@ public class MapCursor : MonoBehaviour {
 		battleMap.ClearDangerous();
 		if (_dangerAreaActive) {
 			for (int i = 0; i < enemyCharacters.values.Count; i++) {
+				if (!enemyCharacters.values[i].IsAlive())
+					continue;
 				enemyCharacters.values[i].FindAllMoveTiles(true);
 			}
 		}
@@ -311,6 +313,8 @@ public class MapCursor : MonoBehaviour {
 		battleMap.ClearDangerous();
 		if (_dangerAreaActive) {
 			for (int i = 0; i < enemyCharacters.values.Count; i++) {
+				if (!enemyCharacters.values[i].IsAlive())
+					continue;
 				enemyCharacters.values[i].FindAllMoveTiles(true);
 			}
 		}

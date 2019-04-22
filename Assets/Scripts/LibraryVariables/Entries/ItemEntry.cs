@@ -115,6 +115,19 @@ public class ItemEntry : ScrObjLibraryEntry {
     }
 
     /// <summary>
+    /// Checks if an item can be used with the given skill value.
+    /// </summary>
+    /// <param name="skill"></param>
+    /// <returns></returns>
+    public bool CanEquip(int skill) {
+        if (itemCategory == ItemCategory.CONSUME) {
+			return false;
+        }
+
+        return (skill != 0 && skill >= skillReq);
+    }
+
+    /// <summary>
     /// Compares this weapon to the otherWeapon for weapon triangle advantage.
     /// Returns 1 if this weapon has advantage, -1 for otherWeapon and 0 for neutral.
     /// </summary>

@@ -14,9 +14,8 @@ public class CameraFlash : MonoBehaviour {
 	public FloatVariable flashBeforeTime;
 	public FloatVariable flashAfterTime;
 	
-
-	// Use this for initialization
-	void Start () {
+	
+	private void OnEnable () {
 		flashColor = Color.white;
 		flashColor.a = 0;
 		flashImage.sprite = (flashBackground.value != null) ? ((BackgroundEntry)flashBackground.value).sprite : null;

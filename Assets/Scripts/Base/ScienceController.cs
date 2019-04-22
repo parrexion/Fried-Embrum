@@ -104,6 +104,7 @@ public class ScienceController : MonoBehaviour {
 		}
 		else if (!promptMode) {
 			if (upgrade.affordable) {
+				promptMode = true;
 				buyPrompt.ShowWindow((isUpgrade) ? "Buy upgrade?" : "Develop item?", true);
 			}
 		}

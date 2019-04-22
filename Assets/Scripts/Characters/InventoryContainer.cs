@@ -153,7 +153,7 @@ public class InventoryContainer {
 			if (inventory[i].item == null)
 				continue;
 			int skill = player.GetWpnSkill(inventory[i].item);
-			if (inventory[i].item.itemCategory == category && inventory[i].item.CanUse(skill) && inventory[i].item.InRange(range)) {
+			if (inventory[i].item.itemCategory == category && inventory[i].item.CanEquip(skill) && inventory[i].item.InRange(range)) {
 				EquipItem(i);
 				return;
 			}
@@ -215,13 +215,13 @@ public class InventoryContainer {
 
 		if (inventory[0].item != null && stats != null) {
 			int skill = stats.GetWpnSkill(inventory[0].item);
-			if (!inventory[0].item.CanUse(skill) || inventory[0].charge <= 0) {
+			if (!inventory[0].item.CanEquip(skill) || inventory[0].charge <= 0) {
 				InventoryTuple tup = GetFirstUsableItemTuple(ItemCategory.WEAPON, stats);
 				if (tup.item != null) {
 					inventory.RemoveAt(tup.index);
 					inventory.Insert(0, tup);
 				}
-				else if (!inventory[0].item.CanUse(skill)) {
+				else if (!inventory[0].item.CanEquip(skill)) {
 					tup = GetFirstEmptyItemTuple();
 					if (tup != null) {
 						inventory.RemoveAt(tup.index);

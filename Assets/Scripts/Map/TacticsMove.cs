@@ -160,10 +160,10 @@ public abstract class TacticsMove : MonoBehaviour {
 
 		while(process.Count > 0) {
 			MapTile tile = process.Dequeue();
-			if (tile.distance >= (stats.GetMovespeed()))
+			if (tile.distance >= (GetMoveSpeed()))
 				continue;
 
-			tile.FindNeighbours(process, tile.distance, this, stats.GetMovespeed(), weapon, staff, true, isDanger, isBuff);
+			tile.FindNeighbours(process, tile.distance, this, GetMoveSpeed(), weapon, staff, true, isDanger, isBuff);
 		}
 	}
 
@@ -456,6 +456,15 @@ public abstract class TacticsMove : MonoBehaviour {
 		playSfxEvent.Invoke();
 		yield return new WaitForSeconds(1f);
 		gameObject.SetActive(false);
+	}
+
+	/// <summary>
+	/// Returns the current movement speed. Virtual so that other classes
+	/// can change the movement speed.
+	/// </summary>
+	/// <returns></returns>
+	protected virtual int GetMoveSpeed() {
+		return stats.GetMovespeed();
 	}
 
 	/// <summary>
