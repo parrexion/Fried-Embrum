@@ -438,7 +438,7 @@ public class BattleContainer : InputReceiverDelegate {
 					sfxQueue.Enqueue(levelupFanfare);
 					playSfxEvent.Invoke();
 					yield return StartCoroutine(levelupScript.RunLevelup(player.stats));
-					CharacterSkill skill = player.stats.classData.AwardSkills(player.stats.currentLevel);
+					CharacterSkill skill = player.stats.classData.AwardSkills(player.stats.level);
 					if (skill) {
 						player.skills.GainSkill(skill);
 						yield return StartCoroutine(popup.ShowPopup(skill.icon,  "gained: " + skill.entryName, popup.droppedItemFanfare));

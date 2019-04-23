@@ -121,13 +121,6 @@ public class IngameMenuController : InputReceiverDelegate {
 		menuBackEvent.Invoke();
     }
 
-	/// <summary>
-	/// Ends the turn for the player.
-	/// </summary>
-	private void EndTurn() {
-		nextStateEvent.Invoke();
-	}
-
 	private void Controls() {
 		state = 1;
 		ingameMenu.SetActive(false);
@@ -141,6 +134,14 @@ public class IngameMenuController : InputReceiverDelegate {
 		ingameMenu.SetActive(false);
 		objective.UpdateState(false);
 		options.UpdateState(true);
+	}
+
+	/// <summary>
+	/// Ends the turn for the player.
+	/// </summary>
+	private void EndTurn() {
+		objective.UpdateState(false);
+		nextStateEvent.Invoke();
 	}
 
     public override void OnLeftArrow() {

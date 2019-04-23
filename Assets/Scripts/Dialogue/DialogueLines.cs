@@ -12,7 +12,7 @@ public class DialogueLines : MonoBehaviour {
 	public ScrObjEntryReference currentDialogue;
 	public IntVariable currentAction;
 	public DialogueEntry wpEntry;
-    public BoolVariable skippableDialogue;
+	public BoolVariable skippableDialogue;
 	public IntVariable currentDialogueMode;
 	public DialogueScene scene;
 
@@ -48,7 +48,7 @@ public class DialogueLines : MonoBehaviour {
 		scene.dialogueTextChanged.Invoke();
 	}
 
-	public void NextFrame(){
+	public void NextFrame() {
 		if (isWaiting)
 			return;
 
@@ -57,12 +57,12 @@ public class DialogueLines : MonoBehaviour {
 
 	private IEnumerator RunNextFrame() {
 		isWaiting = true;
-		while(currentAction.value < dialogueEntry.actions.Count) {
+		while (currentAction.value < dialogueEntry.actions.Count) {
 			DialogueActionData data = dialogueEntry.actions[currentAction.value];
 			DialogueAction da = DialogueAction.CreateAction(data.type);
 			bool res = da.Act(scene, data);
 			if (data.type == DActionType.MOVEMENT) {
-				for (int i = 0; i < Utility.DIALOGUE_PLAYERS_COUNT+Utility.DIALOGUE_PLAYERS_OUTSIDE_COUNT; i++) {
+				for (int i = 0; i < Utility.DIALOGUE_PLAYERS_COUNT + Utility.DIALOGUE_PLAYERS_OUTSIDE_COUNT; i++) {
 					float speed = data.values[0] * 0.001f;
 					scene.characterTransforms[i].MoveCharacter(speed);
 				}
@@ -93,29 +93,34 @@ public class DialogueLines : MonoBehaviour {
 	}
 
 	private void RunEvents(DActionType type, bool res) {
-		switch (type)
-		{
+		switch (type) {
 			case DActionType.START_SCENE:
 				scene.backgroundChanged.Invoke();
 				scene.bkgMusicChanged.Invoke();
 				scene.characterChanged.Invoke();
 				break;
-			case DActionType.END_SCENE: scene.dialogueEndEvent.Invoke(); break;
+			case DActionType.END_SCENE:
+				scene.backgroundChanged.Invoke();
+				scene.characterChanged.Invoke();
+				scene.dialogueTextChanged.Invoke();
+				scene.screenFlashEvent.Invoke();
+				scene.dialogueEndEvent.Invoke();
+				break;
 			case DActionType.SET_TEXT: scene.dialogueTextChanged.Invoke(); break;
 			case DActionType.SET_CHARS: scene.characterChanged.Invoke(); break;
 			case DActionType.SET_BKG: scene.backgroundChanged.Invoke(); break;
-			case DActionType.SET_MUSIC: if (res) scene.bkgMusicChanged.Invoke();break;
+			case DActionType.SET_MUSIC: if (res) scene.bkgMusicChanged.Invoke(); break;
 			case DActionType.PLAY_SFX: scene.playSfx.Invoke(); break;
 			case DActionType.MOVEMENT: scene.characterChanged.Invoke(); break;
 			case DActionType.FLASH: scene.screenFlashEvent.Invoke(); break;
 			case DActionType.SHAKE: scene.screenShakeEvent.Invoke(); break;
-		}	
+		}
 	}
 
 	public void SkipDialogue() {
-        if (skippableDialogue.value && currentDialogueMode.value != (int)DialogueMode.NONE){
-            scene.dialogueEndEvent.Invoke();
-        }
+		if (skippableDialogue.value && currentDialogueMode.value != (int)DialogueMode.NONE) {
+			scene.dialogueEndEvent.Invoke();
+		}
 	}
 
 }

@@ -7,7 +7,6 @@ public class CharacterSaveData {
 	public string id;
 	public string classID;
 	public int level;
-	public int currentLevel;
 	public int currentExp;
 
 	[Header("Inventory and skills")]
@@ -33,7 +32,6 @@ public class CharacterSaveData {
 	public CharacterSaveData() {
 		id = "";
 		level = -1;
-		currentLevel = -1;
 	}
 
 	public void StoreData(StatsContainer stats, InventoryContainer invCont, SkillsContainer skillCont) {
@@ -41,7 +39,6 @@ public class CharacterSaveData {
 		classID = stats.classData.uuid;
 		
 		level = stats.level;
-		currentLevel = stats.currentLevel;
 		currentExp = stats.currentExp;
 
 		wpnSkills = new int[StatsContainer.WPN_SKILLS];

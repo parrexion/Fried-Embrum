@@ -17,7 +17,7 @@ public class TrainingListEntry : ListEntry {
 	public void FillData(StatsContainer stats) {
 		icon.sprite = stats.charData.portrait;
 		entryName.text = stats.charData.entryName;
-		level.text = stats.currentLevel.ToString();
+		level.text = stats.level.ToString();
 		exp.text = stats.currentExp.ToString();
 		currentClass.text = stats.classData.entryName;
 	}

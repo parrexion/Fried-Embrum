@@ -20,7 +20,7 @@ public class PrepCharacterEntry : ListEntry {
 		icon.sprite = stats.charData.portrait;
 		entryName.text = stats.charData.entryName;
 		className.text = stats.charData.entryName;
-		level.text = stats.currentLevel.ToString();
+		level.text = stats.level.ToString();
 		exp.text = stats.currentExp.ToString();
 		hp.text = stats.hp.ToString();
 

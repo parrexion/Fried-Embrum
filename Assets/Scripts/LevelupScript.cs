@@ -69,7 +69,7 @@ public class LevelupScript : MonoBehaviour {
 		levelupStats.SetActive(false);
 		levelupArrow.SetActive(false);
 
-		_level = characterStats.currentLevel;
+		_level = characterStats.level;
 		_hp = characterStats.hp;
 		_atk = characterStats.atk;
 		_spd = characterStats.spd;
@@ -97,8 +97,8 @@ public class LevelupScript : MonoBehaviour {
 	
 		yield return new WaitForSeconds(1.5f);
 
-		levelLevel.text = (stats.currentLevel - _level > 0) ? "+1" : "New";
-		_level = stats.currentLevel;
+		levelLevel.text = (stats.level - _level > 0) ? "+1" : "New";
+		_level = stats.level;
 		sfxQueue.Enqueue(levelupPing);
 		playSfxEvent.Invoke();
 		yield return new WaitForSeconds(0.2f);

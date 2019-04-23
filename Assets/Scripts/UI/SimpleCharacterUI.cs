@@ -235,7 +235,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 			weighDownSklValue.text = "";
 		}
 
-		levelText.text = stats.currentLevel.ToString();
+		levelText.text = stats.level.ToString();
 		expText.text = stats.currentExp.ToString();
 		hpText.text = stats.hp.ToString();
 		atkText.text = stats.atk.ToString();

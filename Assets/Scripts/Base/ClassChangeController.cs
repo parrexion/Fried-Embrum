@@ -145,7 +145,7 @@ public class ClassChangeController : MonoBehaviour {
 		characterName.text = stats.charData.entryName;
 		portrait.sprite = stats.charData.portrait;
 		className.text = stats.classData.entryName;
-		level.text = "Level: " + stats.currentLevel;
+		level.text = "Level: " + stats.level;
 		exp.text = "EXP: " + stats.currentExp;
 
 		hpText.text  = "HP:  " + stats.hp;

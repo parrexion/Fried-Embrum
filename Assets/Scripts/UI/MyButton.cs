@@ -14,7 +14,6 @@ public class MyButton : MonoBehaviour {
 
 
 	public void SetSelected(bool selected) {
-		buttonImage.enabled = !selected;
 		highlight.enabled = selected;
 	}
 

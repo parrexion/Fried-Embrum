@@ -13,7 +13,6 @@ public class StatsContainer {
 	
 	[Header("Player stuff")]
 	public int level;
-	public int currentLevel;
 	public int currentExp;
 	public int[] wpnSkills = new int[WPN_SKILLS];
 
@@ -58,7 +57,6 @@ public class StatsContainer {
 
 	public StatsContainer(CharData cStats, CharClass cClass, int level) {
 		this.level = level;
-		currentLevel = level % 20;
 		charData = cStats;
 		classData = cClass;
 		GenerateStartingStats();
@@ -74,7 +72,6 @@ public class StatsContainer {
 		}
 // Fixa level och current level överallt
 		level = saveData.level;
-		currentLevel = saveData.currentLevel;
 		if (level == -1)
 			return;
 		currentExp = saveData.currentExp;
@@ -158,7 +155,6 @@ public class StatsContainer {
 
 	public void GainLevel() {
 		level++;
-		currentLevel++;
 		eHp += (int)(0.01f * (classData.gHp+charData.gHp + Random.Range(0,100)));
 		eAtk += (int)(0.01f * (classData.gAtk+charData.gAtk + Random.Range(0,100)));
 		eSpd += (int)(0.01f * (classData.gSpd+charData.gSpd + Random.Range(0,100)));
@@ -171,11 +167,6 @@ public class StatsContainer {
 	}
 
 	public void ChangeClass(CharClass newClass) {
-		while(currentLevel <= 20) {
-			level++;
-			currentLevel++;
-		}
-		currentLevel = 1;
 		eHp += newClass.hp - classData.hp;
 		eAtk += newClass.atk - classData.atk;
 		eSpd += newClass.spd - classData.spd;

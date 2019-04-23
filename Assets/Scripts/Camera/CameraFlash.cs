@@ -16,16 +16,21 @@ public class CameraFlash : MonoBehaviour {
 	
 	
 	private void OnEnable () {
+		Reset();
+	}
+
+	private void Reset() {
 		flashColor = Color.white;
 		flashColor.a = 0;
-		flashImage.sprite = (flashBackground.value != null) ? ((BackgroundEntry)flashBackground.value).sprite : null;
+		flashImage.sprite = null;
 		flashImage.color = flashColor;
 	}
 
-
 	public void StartScreenFlash() {
 		flashImage.sprite = (flashBackground.value != null) ? ((BackgroundEntry)flashBackground.value).sprite : null;
-		if (flashBeforeTime.value > 0 && flashAfterTime.value > 0)
+		if (flashBackground.value == null && flashBeforeTime.value == 0 && flashAfterTime.value == 0)
+			Reset();
+		else if (flashBeforeTime.value > 0 && flashAfterTime.value > 0)
 			StartCoroutine(ScreenFlash());
 		else if (flashBeforeTime.value > 0)
 			StartCoroutine(ScreenFadeOut());

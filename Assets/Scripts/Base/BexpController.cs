@@ -110,7 +110,7 @@ public class BexpController : MonoBehaviour {
 		bonusExp.text = "Available EXP:  " + (totalBonusExp.value - awardExp);
 		bonusExp.color = (awardExp > 0) ? Color.green : Color.black;
 		spendExp.text = awardExp.ToString();
-		currentLevel.text = "Current level:  " + ((stats.currentExp + awardExp >= 100) ? stats.currentLevel+1 : stats.currentLevel);
+		currentLevel.text = "Current level:  " + ((stats.currentExp + awardExp >= 100) ? stats.level+1 : stats.level);
 		currentLevel.color = (stats.currentExp + awardExp >= 100) ? Color.green : Color.black;
 		currentExp.text = "Current EXP:   " + ((stats.currentExp + awardExp) % 100);
 		currentExp.color = (awardExp > 0) ? Color.green : Color.black;
@@ -122,7 +122,7 @@ public class BexpController : MonoBehaviour {
 		characterName.text = stats.charData.entryName;
 		portrait.sprite = stats.charData.portrait;
 		className.text = stats.classData.entryName;
-		level.text = "Level: " + stats.currentLevel.ToString();
+		level.text = "Level: " + stats.level.ToString();
 		exp.text = "EXP: " + stats.currentExp.ToString();
 
 		hpText.text  = "HP:  " + stats.hp.ToString();

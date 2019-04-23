@@ -17,6 +17,20 @@ public class DAEndDialogue : DialogueAction {
 	*/
 
 	public override bool Act(DialogueScene scene, DialogueActionData data) {
+		scene.background.value = null;
+
+		for (int i = 0; i < Utility.DIALOGUE_PLAYERS_COUNT+Utility.DIALOGUE_PLAYERS_OUTSIDE_COUNT; i++) {
+			scene.characters[i].value = null;
+		}
+
+		scene.talkingIndex.value = -1;
+		scene.talkingName.value = "";
+		scene.inputText.value = "";
+		scene.dialogueText.value = "";
+
+		scene.flashBackground.value = null;
+		scene.effectStartDuration.value = 0;
+		scene.effectEndDuration.value = 0;
 		return false;
 	}
 

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PrepInventorySelect : MonoBehaviour {
 
-	private enum State { CHAR, MENU, TAKE, STORE, PROMPT }
+	private enum State { CHAR, MENU, TAKE, STORE }
 
 	public PlayerData playerData;
 	public PrepListVariable prepList;
@@ -164,8 +164,9 @@ public class PrepInventorySelect : MonoBehaviour {
 			ShowCharInfo();
 			return false;
 		}
-		else if (currentMode == State.PROMPT) {
+		else if (currentMode == State.MENU) {
 			prompt.Click(false);
+			currentMode = State.CHAR;
 			return false;
 		}
 
@@ -224,7 +225,7 @@ public class PrepInventorySelect : MonoBehaviour {
 		InventoryContainer invCon = charList.GetEntry().invCon;
 		if (!invCon.HasRoom()) {
 			prompt.ShowPopup("Inventory is full!");
-			currentMode = State.PROMPT;
+			currentMode = State.MENU;
 			return;
 		}
 		invCon.AddItem(playerData.items[item.index]);

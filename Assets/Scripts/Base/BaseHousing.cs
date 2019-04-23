@@ -157,7 +157,7 @@ public class BaseHousing : InputReceiverDelegate {
 		roomNumber.text = housingController.GetRoomName();
 		characterName.text = (data != null) ? data.charData.entryName : "";
 		characterClass.text = (data != null) ? data.classData.entryName : "";
-		characterLevel.text = (data != null) ? "Level  " + data.currentLevel : "";
+		characterLevel.text = (data != null) ? "Level  " + data.level : "";
 		portrait.sprite = (data != null) ? data.charData.bigPortrait : null;
 
 		List<Room> neighbours = currentRoom.house.GetNeighbours(currentRoom);
