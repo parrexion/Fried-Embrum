@@ -3,7 +3,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public enum FilterType { DEFAULT, PRELUDE, INTRO, ENDING, QUOTE, VILLAGE, DEATH }
+public enum FilterType { DEFAULT, PRELUDE, INTRO, ENDING, QUOTE, VILLAGE, DEATH, EVENT }
 
 public class DialogueListWindow : EditorWindow {
 

@@ -57,7 +57,7 @@ public class PopupController : MonoBehaviour {
 	/// <param name="text"></param>
 	/// <param name="sfx"></param>
 	/// <returns></returns>
-	public IEnumerator ShowPopup(Sprite icon, string text, SfxEntry sfx) {
+	public IEnumerator ShowPopup(Sprite icon, string text, SfxEntry sfx = null) {
 		popupIcon.sprite = icon;
 		popupText.text = text;
 		popupObject.SetActive(true);

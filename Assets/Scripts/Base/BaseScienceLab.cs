@@ -34,7 +34,6 @@ public class BaseScienceLab : InputReceiverDelegate {
 		buttons.ResetButtons();
 		buttons.AddButton("UPGRADE ITEM");
 		buttons.AddButton("INVENT ITEM");
-		buttons.AddButton("ITEM LIST");
 	}
 
     public override void OnMenuModeChanged() {

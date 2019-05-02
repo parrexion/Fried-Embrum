@@ -18,8 +18,11 @@ public class PrepCharacterSelect : MonoBehaviour {
 	[Header("SelectCharacterInfo")]
 	public TMPro.TextMeshProUGUI playerCapText;
 
+	private bool changed;
+
 
 	public void GenerateList() {
+		changed = false;
 		if (entryList == null)
 			entryList = new EntryList<PrepCharacterEntry>(visibleSize);
 		entryList.ResetList();
@@ -50,18 +53,24 @@ public class PrepCharacterSelect : MonoBehaviour {
 		PrepCharacter pc = prepList.values[entryList.GetPosition()];
 		int sum = CountSelected();
 		if (pc.selected) {
-			if (sum > 1 && !pc.forced)
+			if (sum > 1 && !pc.forced) {
 				pc.selected = false;
+				changed = true;
+				Debug.Log("Changed");
+			}
 		}
 		else if (sum < playerCap && !pc.locked) {
 			pc.selected = true;
+			changed = true;
+			Debug.Log("Changed");
 		}
 		entryList.GetEntry().SetDark(!pc.selected || pc.locked);
 		ShowInfo();
 	}
 
-	public void LeaveMenu() {
+	public bool LeaveMenu() {
 		prepList.SortListPicked();
+		return changed;
 	}
 
 	private int CountSelected() {

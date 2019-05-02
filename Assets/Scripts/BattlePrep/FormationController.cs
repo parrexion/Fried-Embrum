@@ -120,13 +120,5 @@ public class FormationController : InputReceiverDelegate {
 		MenuChangeDelay(MenuMode.TOOLTIP);
 	}
 
-
-	/// <summary>
-	/// Shows the in-game menu with end turn and options.
-	/// </summary>
-	public void ShowIngameMenu() {
-		MenuChangeDelay(MenuMode.PREP);
-	}
-
     public override void OnYButton() { }
 }

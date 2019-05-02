@@ -25,7 +25,8 @@ MonoBehaviour:
   reward:
     money: 2500
     scrap: 20
-    items: []
+    items:
+    - {fileID: 11400000, guid: 2860285af1dceca4eb16bbdc9c69b96b, type: 2}
   skipBattlePrep: 1
   autoNextChapter: {fileID: 0}
   mapDuration: 2
@@ -134,7 +135,37 @@ MonoBehaviour:
       activated: 0
     huntX: 0
     huntY: 0
-  reinforcements: []
+  reinforcements:
+  - spawnTurn: 4
+    faction: 1
+    x: 2
+    y: 7
+    level: 2
+    stats: {fileID: 11400000, guid: 3c62e59d0a22e10499d7722b228fdf6c, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 5d5e0c27d71f7334582f303ff4483c8a, type: 2}
+      droppable: 0
+    skills: []
+    aggroType: 0
+    hasQuotes: 0
+    quotes: []
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 4
+    faction: 1
+    x: 3
+    y: 7
+    level: 2
+    stats: {fileID: 11400000, guid: 3c62e59d0a22e10499d7722b228fdf6c, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 5d5e0c27d71f7334582f303ff4483c8a, type: 2}
+      droppable: 0
+    skills: []
+    aggroType: 0
+    hasQuotes: 0
+    quotes: []
+    huntX: 0
+    huntY: 0
   interactions:
   - x: 8
     y: 6
@@ -201,4 +232,11 @@ MonoBehaviour:
       stats: {fileID: 0}
       inventory: []
       skills: []
-  turnEvents: []
+  turnEvents:
+  - turn: 4
+    factionTurn: 1
+    type: 1
+    dialogue: {fileID: 11400000, guid: c2e2fcd44b0a5ce49ac0e8fc5cb62d37, type: 2}
+    x: 0
+    y: 0
+    changeTerrain: {fileID: 0}

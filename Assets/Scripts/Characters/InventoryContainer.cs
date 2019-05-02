@@ -80,24 +80,6 @@ public class InventoryContainer {
 	}
 
 	/// <summary>
-	/// Returns the first item in the inventory the player can use matching the item category.
-	/// Returns null if there is not item that can be used.
-	/// </summary>
-	/// <param name="category"></param>
-	/// <param name="player"></param>
-	/// <returns></returns>
-	public ItemEntry GetFirstUsableItem(ItemCategory category, StatsContainer player) {
-		for (int i = 0; i < inventory.Count; i++) {
-			if (inventory[i].item == null)
-				continue;
-			int skill = player.GetWpnSkill(inventory[i].item);
-			if (inventory[i].item.itemCategory == category && inventory[i].item.CanUse(skill))
-				return inventory[i].item;
-		}
-		return null;
-	}
-
-	/// <summary>
 	/// Returns the first item in the inventory the player can use matching the item type.
 	/// Returns null if there is not item that can be used.
 	/// </summary>
@@ -106,10 +88,10 @@ public class InventoryContainer {
 	/// <returns></returns>
 	public ItemEntry GetFirstUsableItem(ItemType type, StatsContainer player) {
 		for (int i = 0; i < inventory.Count; i++) {
-			if (inventory[i].item == null)
+			if (inventory[i].item == null || inventory[i].item.itemType != type)
 				continue;
 			int skill = player.GetWpnSkill(inventory[i].item);
-			if (inventory[i].item.itemType == type && inventory[i].item.CanUse(skill))
+			if (inventory[i].item.CanUse(skill))
 				return inventory[i].item;
 		}
 		return null;
@@ -117,10 +99,10 @@ public class InventoryContainer {
 
 	public InventoryTuple GetFirstUsableItemTuple(ItemCategory category, StatsContainer player) {
 		for (int i = 0; i < inventory.Count; i++) {
-			if (inventory[i].item == null)
+			if (inventory[i].item == null || inventory[i].item.itemCategory != category)
 				continue;
 			int skill = player.GetWpnSkill(inventory[i].item);
-			if (inventory[i].item.itemCategory == category && inventory[i].item.CanUse(skill) && inventory[i].charge > 0)
+			if (inventory[i].item.CanUse(skill) && inventory[i].charge > 0)
 				return inventory[i];
 		}
 		return new InventoryTuple();
@@ -249,14 +231,14 @@ public class InventoryContainer {
 	/// </summary>
 	/// <param name="index"></param>
 	public void EquipItem(int index) {
-		if (index == 0)
+		if (index == 0 || inventory[index].item == null)
 			return;
 
 		InventoryTuple equip = inventory[index];
-		for (int i = 0; i < index+1; i++) {
-			InventoryTuple temp = inventory[i];
-			inventory[i] = equip;
-			equip = temp;
+		inventory.RemoveAt(index);
+		inventory.Insert(0,equip);
+		for (int i = 0; i < INVENTORY_SIZE; i++) {
+			inventory[i].index = i;
 		}
 		Debug.Log("Equipped item index " + index);
 	}

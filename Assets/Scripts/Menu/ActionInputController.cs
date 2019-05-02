@@ -9,6 +9,7 @@ public enum ActionInputType { SEIZE, ATTACK, HEAL, VISIT, TRADE, ITEM, WAIT }
 public class ActionInputController : MonoBehaviour {
 
 	[Header("References")]
+	public PlayerData playerData;
 	public TacticsMoveVariable selectedCharacter;
 	public ScrObjEntryReference currentMap;
 	public IntVariable currentMenuMode;
@@ -127,8 +128,14 @@ public class ActionInputController : MonoBehaviour {
 	}
 
 	private IEnumerator WaitForItemGain() {
-		ItemEntry item = selectedCharacter.value.currentTile.gift;
-		yield return StartCoroutine(popup.ShowPopup(item.icon, item.entryName, gainItemSfx, 2f, 0f));
+		InventoryItem item = selectedCharacter.value.currentTile.gift;
+		string message = "Received " + item.item.entryName;
+		yield return StartCoroutine(popup.ShowPopup(item.item.icon, message, gainItemSfx));
+
+		bool res = selectedCharacter.value.inventory.AddItem(item);
+		if (!res) {
+			playerData.items.Add(item);
+		}
 		selectedCharacter.value.End();
 	}
 

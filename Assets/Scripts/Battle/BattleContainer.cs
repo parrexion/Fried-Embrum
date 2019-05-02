@@ -17,8 +17,6 @@ public class BattleContainer : InputReceiverDelegate {
 	public FloatVariable cameraPosX;
 	public FloatVariable cameraPosY;
 	public PopupController popup;
-	public IntVariable slowGameSpeed;
-	public IntVariable currentGameSpeed;
 
 	[Header("Dialogue")]
 	public IntVariable dialogueMode;
@@ -26,6 +24,8 @@ public class BattleContainer : InputReceiverDelegate {
 	private DialogueEntry dialogue;
 
 	[Header("Settings")]
+	public IntVariable slowGameSpeed;
+	public IntVariable currentGameSpeed;
 	public BoolVariable useTrueHit;
 	public IntVariable doublingSpeed;
 
@@ -199,6 +199,11 @@ public class BattleContainer : InputReceiverDelegate {
 		_defenderDealtDamage = false;
 
 		forecastUI.UpdateUI(true);
+
+		if (showBattleAnim) {
+			leftHealth.fillAmount = actions[0].attacker.GetHealthPercent();
+			rightHealth.fillAmount = actions[0].defender.GetHealthPercent();
+		}
 
 		battleAnimationObject.transform.localPosition = new Vector3(
 			cameraPosX.value, 

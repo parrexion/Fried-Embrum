@@ -96,6 +96,9 @@ public class NPCMove : TacticsMove {
 		MapTile bestTile = null; // Reachable this turn
 		MapTile goodTile = null; // Reachable in multiple turns
 
+		if (aggroType == AggroType.HUNT && huntTile.interacted)
+			aggroType = AggroType.CHARGE;
+
 		//Hunting AI
 		if (aggroType == AggroType.HUNT) {
 			tileBest = huntTile;

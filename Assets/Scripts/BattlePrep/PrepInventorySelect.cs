@@ -15,6 +15,7 @@ public class PrepInventorySelect : MonoBehaviour {
 
 	[Header("Views")]
 	public GameObject charListView;
+	public GameObject inventoryView;
 	public GameObject convoyView;
 	public GameObject storeView;
 
@@ -23,8 +24,12 @@ public class PrepInventorySelect : MonoBehaviour {
 	public Transform charEntryPrefab;
 	public int visibleSize;
 	private EntryList<PrepCharacterEntry> charList;
+	
+	[Header("Inventory box take")]
+	public Text tCharName;
+	public Text[] tInventory;
 
-	[Header("Inventory List")]
+	[Header("Store List")]
     public Transform listParentRestock;
 	public Transform restockPrefab;
 	public int itemListSize;
@@ -33,7 +38,7 @@ public class PrepInventorySelect : MonoBehaviour {
 	[Header("Stock List")]
     public StorageList convoy;
 
-	[Header("Inventory box")]
+	[Header("Inventory box overview")]
 	public TMPro.TextMeshProUGUI charName;
 	public Image portrait;
 	public TMPro.TextMeshProUGUI[] inventory;
@@ -54,6 +59,7 @@ public class PrepInventorySelect : MonoBehaviour {
 	public void GenerateList() {
 		currentMode = State.CHAR;
 		charListView.SetActive(true);
+		inventoryView.SetActive(false);
 		storeView.SetActive(false);
 		convoyView.SetActive(false);
 		if (charList == null)
@@ -71,6 +77,7 @@ public class PrepInventorySelect : MonoBehaviour {
 	}
 
     private void GenerateInventoryList() {
+		inventoryView.SetActive(true);
 		charListView.SetActive(false);
 		storeView.SetActive(true);
 		convoyView.SetActive(false);
@@ -98,7 +105,6 @@ public class PrepInventorySelect : MonoBehaviour {
 			entry.FillDataSimple(i, tuple.item, chargeStr, costStr);
         }
         restockPrefab.gameObject.SetActive(false);
-		ShowItemInfo();
     }
 
 	public void MoveSelection(int dir) {
@@ -137,11 +143,14 @@ public class PrepInventorySelect : MonoBehaviour {
 				currentMode = State.TAKE;
 				convoy.SetupStorage();
 				convoyView.SetActive(true);
+				inventoryView.SetActive(true);
 				charListView.SetActive(false);
+				ShowItemInfo();
 			}
 			else if (res == MyPrompt.Result.OK2) {
 				currentMode = State.STORE;
 				GenerateInventoryList();
+				ShowItemInfo();
 			}
 			else {
 				currentMode = State.CHAR;
@@ -159,6 +168,7 @@ public class PrepInventorySelect : MonoBehaviour {
 		if (currentMode == State.TAKE || currentMode == State.STORE) {
 			currentMode = State.CHAR;
 			charListView.SetActive(true);
+			inventoryView.SetActive(false);
 			storeView.SetActive(false);
 			convoyView.SetActive(false);
 			ShowCharInfo();
@@ -181,6 +191,16 @@ public class PrepInventorySelect : MonoBehaviour {
 		for (int i = 0; i < InventoryContainer.INVENTORY_SIZE; i++) {
 			ItemEntry item = entry.invCon.GetTuple(i).item;
 			inventory[i].text = (item) ? item.entryName : "-NONE-";
+		}
+	}
+
+	private void ShowCharInfoTake() {
+		PrepCharacterEntry entry = charList.GetEntry();
+		tCharName.text = entry.entryName.text;
+		//portrait.sprite = entry.icon.sprite;
+		for (int i = 0; i < InventoryContainer.INVENTORY_SIZE; i++) {
+			ItemEntry item = entry.invCon.GetTuple(i).item;
+			tInventory[i].text = (item) ? item.entryName : "-NONE-";
 		}
 	}
 
@@ -214,6 +234,9 @@ public class PrepInventorySelect : MonoBehaviour {
 		critText.text = "Crit:  " + item.critRate.ToString();
 		reqText.text = "Req:  " + item.skillReq.ToString();
 		weightText.text = "Weight:  " + item.weight.ToString();
+
+		if (currentMode == State.TAKE)
+			ShowCharInfoTake();
 	}
 
 	private void TakeItem() {
@@ -233,6 +256,8 @@ public class PrepInventorySelect : MonoBehaviour {
 		playerData.items.RemoveAt(item.index);
 
 		ShowCharInfo();
+		ShowCharInfoTake();
+		ShowItemInfo();
 	}
 	
 	private void StoreItem() {

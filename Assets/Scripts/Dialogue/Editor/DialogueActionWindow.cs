@@ -267,10 +267,10 @@ public class DialogueActionWindow: EditorWindow {
 		GUILayout.EndHorizontal();
 
 		//Speaker name
-		GUILayout.Label("Speaker's Name: ", EditorStyles.boldLabel);
+		GUILayout.Label("Speaker's Name: " + hub.dialogueValues.actions[hub.selAction].values[0], EditorStyles.boldLabel);
 		GUILayout.Label((hub.dialogueValues.actions[hub.selAction].text[0] != "###") ? 
 			hub.dialogueValues.actions[hub.selAction].text[0] : 
-			hub.currentState.characters[hub.currentState.talkingIndex.value].value.entryName, 
+			hub.currentState.characters[hub.dialogueValues.actions[hub.selAction].values[0]].value.entryName, 
 			EditorStyles.boldLabel, GUILayout.Width(80)
 		);
 

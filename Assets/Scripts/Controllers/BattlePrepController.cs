@@ -192,9 +192,10 @@ public class BattlePrepController : InputReceiverDelegate {
 	public override void OnBackButton() {
 		if (currentState == State.CHAR) {
 			currentState = State.MAIN;
-			characterSelect.LeaveMenu();
+			bool res = characterSelect.LeaveMenu();
 			characterSelectView.SetActive(false);
-			respawnCharactersEvent.Invoke();
+			if (res)
+				respawnCharactersEvent.Invoke();
 		}
 		else if (currentState == State.INVENTORY) {
 			if (inventorySelect.DeselectItem()) {
@@ -214,7 +215,10 @@ public class BattlePrepController : InputReceiverDelegate {
 	}
 
 	public override void OnStartButton() {
-		StartMission();
+		if (currentState != State.MAIN)
+			return;
+		currentState = State.PROMPT;
+		startPrompt.ShowWindow("Start mission?", false);
 	}
 
 	public void ReturnToMain() {

@@ -263,14 +263,17 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// </summary>
 	/// <returns></returns>
 	public List<MapTile> FindSupportablesInRange() {
-		ItemEntry staff = inventory.GetFirstUsableItem(ItemCategory.STAFF, stats);
+		InventoryTuple staff = inventory.GetFirstUsableItemTuple(ItemCategory.STAFF, stats);
+		if (staff.item == null)
+			return new List<MapTile>();
+
 		List<MapTile> supportables = new List<MapTile>();
 		for (int i = 0; i < playerList.values.Count; i++) {
 			if (this == playerList.values[i] || !playerList.values[i].IsInjured() || !playerList.values[i].IsAlive())
 				continue;
 
 			int tempDist = BattleMap.DistanceTo(this, playerList.values[i]);
-			if (staff.InRange(tempDist) && faction == playerList.values[i].faction)
+			if (staff.item.InRange(tempDist) && faction == playerList.values[i].faction)
 				supportables.Add(playerList.values[i].currentTile);
 		}
 		return supportables;
@@ -309,6 +312,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// <param name="target"></param>
 	public void Attack(MapTile target) {
 		lockControls.value = true;
+		Debug.Log("Fighting with weapon no. " + battleWeaponIndex.value);
 		inventory.EquipItem(battleWeaponIndex.value);
 		battleWeaponIndex.value = 0;
 		characterClicked.Invoke();
@@ -563,7 +567,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// </summary>
 	/// <returns></returns>
 	public bool CanVisit() {
-		return (currentTile.interactType == InteractType.VILLAGE);
+		return (currentTile.interactType == InteractType.VILLAGE && !currentTile.interacted);
 	}
 
 	/// <summary>

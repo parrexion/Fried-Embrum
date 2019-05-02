@@ -28,17 +28,18 @@ public class SimpleCharacterUI : MonoBehaviour {
 	[Header("Basic Stats")]
 	public GameObject basicObject;
 	public Image colorBackground;
-	public Image portrait;
 	public Text characterName;
-	public Text currentHpText;
-	public Image healthBar;
+	public Image portrait;
+	public Text levelClass;
+	public MyBar healthBar;
+	public MyBar expBar;
 	public Image weakIcon1;
 	public Image weakIcon2;
 	public Image wpnIcon;
 	public Text wpnName;
 	public Image[] skillImages;
-	public Text hitText;
 	public Text pwrText;
+	public Text hitText;
 	public Text critText;
 	public Text avoidText;
 	public Image boostAvoid;
@@ -164,8 +165,10 @@ public class SimpleCharacterUI : MonoBehaviour {
 		characterName.text = stats.charData.entryName;
 		portrait.enabled = true;
 		portrait.sprite = stats.charData.portrait;
-		currentHpText.text = tactics.currentHealth + " / " + stats.hp;
-		healthBar.fillAmount = tactics.GetHealthPercent();
+		levelClass.text = string.Format("Level {0}  {1}", stats.level, stats.charData.charClass.entryName);
+		healthBar.SetAmount(tactics.currentHealth, tactics.stats.hp);
+		expBar.SetAmount(tactics.stats.currentExp, 100);
+		expBar.gameObject.SetActive(tactics.faction == Faction.PLAYER);
 		weakIcon1.sprite = weaknessImages[(int)stats.classData.classType];
 		weakIcon1.enabled = (weakIcon1.sprite != null);
 
@@ -182,10 +185,10 @@ public class SimpleCharacterUI : MonoBehaviour {
 			}
 		}
 
-		int hitrate = BattleCalc.GetHitRate(weapon, stats);
-		pwrText.text = (hitrate != -1) ? "Hit:  " + hitrate : "Hit:  --";
 		int pwer = BattleCalc.CalculateDamage(weapon, stats);
-		hitText.text = (pwer != -1) ? "Pwr:  " + pwer : "Pwr:  --";
+		pwrText.text = (pwer != -1) ? "Pwr:  " + pwer : "Pwr:  --";
+		int hitrate = BattleCalc.GetHitRate(weapon, stats);
+		hitText.text = (hitrate != -1) ? "Hit:  " + hitrate : "Hit:  --";
 		int critrate = BattleCalc.GetCritRate(weapon, stats);
 		critText.text = (critrate != -1) ? "Crit:   " + critrate : "Crit:   --";
 		avoidText.text = "Avo:  " + BattleCalc.GetAvoid(stats);
@@ -323,17 +326,19 @@ public class SimpleCharacterUI : MonoBehaviour {
 			characterName.text = stats.charData.entryName;
 			portrait.enabled = true;
 			portrait.sprite = stats.charData.portrait;
-			currentHpText.text = tile.blockMove.currentHealth + " / " + stats.hp;
-			healthBar.fillAmount = tile.blockMove.GetHealthPercent();
+			healthBar.SetAmount(tile.blockMove.currentHealth, stats.hp);
 		}
 		else if (tile.interactType == InteractType.VILLAGE) {
 			characterName.text = "Village";
 			portrait.enabled = true;
 			portrait.sprite = tile.terrain.sprite;
-			currentHpText.text = (tile.interacted) ? "Visited" : "Not Visited";
-			healthBar.fillAmount = (tile.interacted) ? 1 : 0;
+			string text = (tile.interacted) ? "Visited" : "Not Visited";
+			float fill = (tile.interacted) ? 1 : 0;
+			healthBar.SetCustomText(fill, text);
 		}
 
+		levelClass.text = "";
+		expBar.gameObject.SetActive(false);
 		weakIcon1.sprite = null;
 		weakIcon1.enabled = false;
 		wpnIcon.sprite = null;

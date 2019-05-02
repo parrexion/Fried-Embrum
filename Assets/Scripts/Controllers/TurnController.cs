@@ -35,7 +35,7 @@ public class TurnController : MonoBehaviour {
 	public PopupController popup;
 	public IntVariable totalMoney;
 	public IntVariable totalScrap;
-	public ItemListVariable itemConvoy;
+	public PlayerData playerData;
 
 	[Header("UI")]
 	public GameObject turnChangeDisplay;
@@ -116,8 +116,13 @@ public class TurnController : MonoBehaviour {
 			StartGameSetup();
 			break;
 		case TurnState.ACTION:
-			Debug.Log("Check reinforcements");
 			EndChangeTurn();
+			Debug.Log("Check dialogue");
+			currentState = TurnState.DIALOGUE;
+			checkDialoguesEvent.Invoke();
+			break;
+		case TurnState.DIALOGUE:
+			Debug.Log("Check reinforcements");
 			currentState = TurnState.REINFORCE;
 			if (currentFactionTurn.value == Faction.ENEMY) {
 				checkReinforcementsEvent.Invoke();
@@ -127,11 +132,6 @@ public class TurnController : MonoBehaviour {
 			}
 			break;
 		case TurnState.REINFORCE:
-			Debug.Log("Check dialogue");
-			currentState = TurnState.DIALOGUE;
-			checkDialoguesEvent.Invoke();
-			break;
-		case TurnState.DIALOGUE:
 			Debug.Log("Check events");
 			currentState = TurnState.EVENTS;
 			checkMapChangeEvent.Invoke();
@@ -370,7 +370,7 @@ public class TurnController : MonoBehaviour {
 			yield return StartCoroutine(popup.ShowPopup(null, "Gained " + map.reward.scrap + " Scrap", popup.droppedItemFanfare));
 		}
 		for (int i = 0; i < map.reward.items.Count; i++) {
-			itemConvoy.items.Add(map.reward.items[i]);
+			playerData.items.Add(new InventoryItem(map.reward.items[i]));
 			yield return StartCoroutine(popup.ShowPopup(map.reward.items[i].icon, "Gained " + map.reward.items[i].entryName, popup.droppedItemFanfare));
 		}
 

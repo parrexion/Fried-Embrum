@@ -25,8 +25,7 @@ MonoBehaviour:
   reward:
     money: 0
     scrap: 0
-    items:
-    - {fileID: 11400000, guid: 2860285af1dceca4eb16bbdc9c69b96b, type: 2}
+    items: []
   skipBattlePrep: 0
   autoNextChapter: {fileID: 11400000, guid: 0f56603fc1210214b8765fb795b877b6, type: 2}
   mapDuration: 3
@@ -57,8 +56,14 @@ MonoBehaviour:
       droppable: 0
     skills: []
     aggroType: 3
-    hasQuotes: 0
-    quotes: []
+    hasQuotes: 1
+    quotes:
+    - triggerer: {fileID: 11400000, guid: ebe64c7e451dc494fbc8211be6f10d6a, type: 2}
+      quote: {fileID: 11400000, guid: 4d5a4ca8854ca954cafc3b199721578e, type: 2}
+      activated: 0
+    - triggerer: {fileID: 0}
+      quote: {fileID: 11400000, guid: 3cfdcf5a9f89cc140a667777fae3c056, type: 2}
+      activated: 0
     huntX: 0
     huntY: 0
   - spawnTurn: 0
@@ -211,7 +216,7 @@ MonoBehaviour:
     y: 7
     interactType: 3
     health: 0
-    dialogue: {fileID: 0}
+    dialogue: {fileID: 11400000, guid: 7918fe2f9a8dea048b735ccf45fad099, type: 2}
     gift: {fileID: 11400000, guid: 5cfe55ac3336e614fa5dd18b43fd5a73, type: 2}
     ally:
       x: 0

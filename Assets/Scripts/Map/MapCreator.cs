@@ -122,7 +122,7 @@ public class MapCreator : MonoBehaviour {
 					tempTile.SetTerrain(tileHouse);
 					tempTile.alternativeTerrain = GetTerrainFromPixel(colorData[pos]);
 					tempTile.dialogue = interPos.dialogue;
-					tempTile.gift = interPos.gift;
+					tempTile.gift = (interPos.gift != null) ? new InventoryItem(interPos.gift) : null;
 					if (interPos.ally.stats != null) {
 						StatsContainer stats = new StatsContainer(interPos.ally.stats, interPos.ally.stats.charClass, interPos.ally.level);
 						InventoryContainer inventory = new InventoryContainer(interPos.ally.inventory);

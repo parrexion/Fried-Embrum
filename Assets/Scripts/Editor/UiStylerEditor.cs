@@ -52,7 +52,7 @@ public class UiStylerEditor : Editor {
 					texts[t].SetStyle(styler.menuTitleText, styler.font);
 					break;
 				}
-				if(texts[t].gameObject.scene.name == null) {
+				if(texts[t].gameObject.scene.name != null) {
 					EditorUtility.SetDirty(texts[t]);
 				}
 			}
