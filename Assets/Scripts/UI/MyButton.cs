@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class MyButton : MonoBehaviour {
 
-	public enum ButtonType { NONE, MAIN, BASE, ACTION }
+	public enum ButtonType { NONE, MAIN, BASE, ACTION, NOSELECT }
 
 	public ButtonType style;
 	public Image buttonImage;

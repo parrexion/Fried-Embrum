@@ -23,8 +23,14 @@ public class UiStylerEditor : Editor {
 				case MyButton.ButtonType.BASE:
 					buttons[b].SetStyle(styler.baseStyle, styler.font);
 					break;
+				case MyButton.ButtonType.ACTION:
+					buttons[b].SetStyle(styler.actionStyle, styler.font);
+					break;
+				case MyButton.ButtonType.NOSELECT:
+					buttons[b].SetStyle(styler.noSelectStyle, styler.font);
+					break;
 				}
-				if (buttons[b].gameObject.scene.name == null) {
+				if (buttons[b].gameObject.scene.name != null) {
 					EditorUtility.SetDirty(buttons[b]);
 				}
 			}
@@ -51,24 +57,39 @@ public class UiStylerEditor : Editor {
 				case MyText.TextType.MENU_TITLE:
 					texts[t].SetStyle(styler.menuTitleText, styler.font);
 					break;
+				case MyText.TextType.STATS_BIG:
+					texts[t].SetStyle(styler.statsBigText, styler.font);
+					break;
+				case MyText.TextType.STATS_MID:
+					texts[t].SetStyle(styler.statsMediumText, styler.font);
+					break;
+				case MyText.TextType.STATS_SMALL:
+					texts[t].SetStyle(styler.statsSmallText, styler.font);
+					break;
+				case MyText.TextType.STATS_PENALTY:
+					texts[t].SetStyle(styler.statsPenaltyText, styler.font);
+					break;
 				}
 				if(texts[t].gameObject.scene.name != null) {
 					EditorUtility.SetDirty(texts[t]);
 				}
 			}
 
-			MyPrompt[] prompts = Resources.FindObjectsOfTypeAll<MyPrompt>();
-			for(int p = 0; p < prompts.Length; p++) {
-				switch(prompts[p].style) {
-					case MyPrompt.PromptType.BIG:
-						prompts[p].SetStyle(styler.selectPopup, styler.font);
+			MyBar[] bars = Resources.FindObjectsOfTypeAll<MyBar>();
+			for(int p = 0; p < bars.Length; p++) {
+				switch(bars[p].style) {
+					case MyBar.StyleType.HEALTH:
+						bars[p].SetStyle(styler.healthBar, styler.font);
 						break;
-					case MyPrompt.PromptType.SMALL:
-						prompts[p].SetStyle(styler.smallPopup, styler.font);
+					case MyBar.StyleType.EXP:
+						bars[p].SetStyle(styler.expBar, styler.font);
+						break;
+					case MyBar.StyleType.FULFILL:
+						bars[p].SetStyle(styler.fulfillBar, styler.font);
 						break;
 				}
-				if(prompts[p].gameObject.scene.name == null) {
-					EditorUtility.SetDirty(prompts[p]);
+				if(bars[p].gameObject.scene.name != null) {
+					EditorUtility.SetDirty(bars[p].gameObject);
 				}
 			}
 
@@ -84,6 +105,21 @@ public class UiStylerEditor : Editor {
 				}
 				if(lists[l].gameObject.scene.name == null) {
 					EditorUtility.SetDirty(lists[l]);
+				}
+			}
+
+			MyPrompt[] prompts = Resources.FindObjectsOfTypeAll<MyPrompt>();
+			for(int p = 0; p < prompts.Length; p++) {
+				switch(prompts[p].style) {
+					case MyPrompt.PromptType.BIG:
+						prompts[p].SetStyle(styler.selectPopup, styler.font);
+						break;
+					case MyPrompt.PromptType.SMALL:
+						prompts[p].SetStyle(styler.smallPopup, styler.font);
+						break;
+				}
+				if(prompts[p].gameObject.scene.name == null) {
+					EditorUtility.SetDirty(prompts[p]);
 				}
 			}
 

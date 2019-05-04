@@ -45,12 +45,11 @@ public class BexpController : MonoBehaviour {
 	public Text exp;
 
 	public Text hpText;
-	public Text atkText;
+	public Text dmgText;
+	public Text mndText;
 	public Text sklText;
 	public Text spdText;
-	public Text lckText;
 	public Text defText;
-	public Text resText;
 	public Text conText;
 	public Text movText;
 
@@ -126,12 +125,11 @@ public class BexpController : MonoBehaviour {
 		exp.text = "EXP: " + stats.currentExp.ToString();
 
 		hpText.text  = "HP:  " + stats.hp.ToString();
-		atkText.text = "Atk:  " + stats.atk.ToString();
+		dmgText.text = "Atk:  " + stats.dmg.ToString();
+		mndText.text = "Res:  " + stats.mnd.ToString();
 		sklText.text = "Skl:  " + stats.skl.ToString();
 		spdText.text = "Spd:  " + stats.spd.ToString();
-		lckText.text = "Lck:  " + stats.lck.ToString();
 		defText.text = "Def:  " + stats.def.ToString();
-		resText.text = "Res:  " + stats.res.ToString();
 		conText.text = "Con:  " + stats.GetConstitution().ToString();
 		movText.text = "Mov:  " + stats.GetMovespeed().ToString();
 	}

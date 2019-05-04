@@ -22,8 +22,8 @@ public class SimpleCharacterUI : MonoBehaviour {
 	
 	[Header("Icons")]
 	public Sprite noSkillImage;
-	public Sprite[] weaknessImages;
-	public Sprite[] weaponSkillImages;
+	public IconLibrary weaknessIcons;
+	public IconLibrary weaponTypeIcons;
 
 	[Header("Basic Stats")]
 	public GameObject basicObject;
@@ -49,12 +49,11 @@ public class SimpleCharacterUI : MonoBehaviour {
 	public Text levelText;
 	public Text expText;
 	public Text hpText;
-	public Text atkText;
+	public Text dmgText;
+	public Text mndText;
 	public Text spdText;
 	public Text sklText;
-	public Text lckText;
 	public Text defText;
-	public Text resText;
 	public Text movText;
 	public Image weighDownSpdIcon;
 	public Text weighDownSpdValue;
@@ -169,7 +168,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 		healthBar.SetAmount(tactics.currentHealth, tactics.stats.hp);
 		expBar.SetAmount(tactics.stats.currentExp, 100);
 		expBar.gameObject.SetActive(tactics.faction == Faction.PLAYER);
-		weakIcon1.sprite = weaknessImages[(int)stats.classData.classType];
+		weakIcon1.sprite = weaknessIcons.icons[(int)stats.classData.classType];
 		weakIcon1.enabled = (weakIcon1.sprite != null);
 
 		ItemEntry weapon = tactics.GetEquippedWeapon(ItemCategory.WEAPON).item;
@@ -211,13 +210,12 @@ public class SimpleCharacterUI : MonoBehaviour {
 		inventoryObject.SetActive(false);
 		characterName.text = stats.charData.entryName;
 
-		hpText.color = (stats.bHp != 0) ? Color.green : Color.black;
-		atkText.color = (stats.bAtk != 0) ? Color.green : Color.black;
-		spdText.color = (stats.bSpd != 0) ? Color.green : Color.black;
-		sklText.color = (stats.bSkl != 0) ? Color.green : Color.black;
-		lckText.color = (stats.bLck != 0) ? Color.green : Color.black;
-		defText.color = (stats.bDef != 0) ? Color.green : Color.black;
-		resText.color = (stats.bRes != 0) ? Color.green : Color.black;
+		//hpText.color = (stats.bHp != 0) ? Color.green : Color.black;
+		//dmgText.color = (stats.bDmg != 0) ? Color.green : Color.black;
+		//mndText.color = (stats.bMnd != 0) ? Color.green : Color.black;
+		//spdText.color = (stats.bSpd != 0) ? Color.green : Color.black;
+		//sklText.color = (stats.bSkl != 0) ? Color.green : Color.black;
+		//defText.color = (stats.bDef != 0) ? Color.green : Color.black;
 		
 		ItemEntry weapon = tactics.GetEquippedWeapon(ItemCategory.WEAPON).item;
 		int penalty = stats.GetConPenalty(weapon);
@@ -241,10 +239,9 @@ public class SimpleCharacterUI : MonoBehaviour {
 		levelText.text = stats.level.ToString();
 		expText.text = stats.currentExp.ToString();
 		hpText.text = stats.hp.ToString();
-		atkText.text = stats.atk.ToString();
-		lckText.text = stats.lck.ToString();
+		dmgText.text = stats.dmg.ToString();
+		mndText.text = stats.mnd.ToString();
 		defText.text = stats.def.ToString();
-		resText.text = stats.res.ToString();
 		movText.text = stats.GetMovespeed().ToString();
 	}
 
@@ -281,7 +278,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 			}
 			else {
 				weaponSkillIcons[i].transform.parent.gameObject.SetActive(true);
-				weaponSkillIcons[i].sprite = weaponSkillImages[(int)stats.classData.weaponSkills[i]];
+				weaponSkillIcons[i].sprite = weaponTypeIcons.icons[(int)stats.classData.weaponSkills[i]];
 				weaponSkillRating[i].text = ItemEntry.GetRankLetter(stats.wpnSkills[(int)stats.classData.weaponSkills[i]]);
 			}
 		}

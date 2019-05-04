@@ -73,7 +73,7 @@ public class BattleAction {
 	public int GetCritRate() {
 		if (defender.faction == Faction.WORLD)
 			return 0;
-		return BattleCalc.GetCritRateBattle(weaponAtk.item, attacker.stats, defender.stats);
+		return BattleCalc.GetCritRateBattle(weaponAtk.item, weaponDef.item, attacker.stats, defender.stats);
 	}
 
 	public bool CheckWeaponWeakness() {

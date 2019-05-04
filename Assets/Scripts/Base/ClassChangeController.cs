@@ -43,23 +43,21 @@ public class ClassChangeController : MonoBehaviour {
 
 	[Header("Value texts")]
 	public Text hpText;
-	public Text atkText;
+	public Text dmgText;
+	public Text mndText;
 	public Text sklText;
 	public Text spdText;
-	public Text lckText;
 	public Text defText;
-	public Text resText;
 	public Text conText;
 	public Text movText;
 
 	[Header("Diff texts")]
 	public Text hpDiffText;
-	public Text atkDiffText;
+	public Text dmgDiffText;
+	public Text mndDiffText;
 	public Text sklDiffText;
 	public Text spdDiffText;
-	public Text lckDiffText;
 	public Text defDiffText;
-	public Text resDiffText;
 	public Text conDiffText;
 	public Text movDiffText;
 
@@ -149,12 +147,11 @@ public class ClassChangeController : MonoBehaviour {
 		exp.text = "EXP: " + stats.currentExp;
 
 		hpText.text  = "HP:  " + stats.hp;
-		atkText.text = "Atk:  " + stats.atk;
+		dmgText.text = "Atk:  " + stats.dmg;
+		mndText.text = "Res:  " + stats.mnd;
 		sklText.text = "Skl:  " + stats.skl;
 		spdText.text = "Spd:  " + stats.spd;
-		lckText.text = "Lck:  " + stats.lck;
 		defText.text = "Def:  " + stats.def;
-		resText.text = "Res:  " + stats.res;
 		conText.text = "Con:  " + stats.GetConstitution();
 		movText.text = "Mov:  " + stats.GetMovespeed();
 	}
@@ -162,12 +159,11 @@ public class ClassChangeController : MonoBehaviour {
 	private void SetupClassDiff() {
 		CharClass next = selectedClass.nextClass[classList.GetPosition()];
 		hpDiffText.text  = (next.hp - selectedClass.hp).ToString();
-		atkDiffText.text = (next.atk - selectedClass.atk).ToString();
+		dmgDiffText.text = (next.atk - selectedClass.atk).ToString();
+		mndDiffText.text = (next.res - selectedClass.res).ToString();
 		sklDiffText.text = (next.skl - selectedClass.skl).ToString();
 		spdDiffText.text = (next.spd - selectedClass.spd).ToString();
-		lckDiffText.text = (next.lck - selectedClass.lck).ToString();
 		defDiffText.text = (next.def - selectedClass.def).ToString();
-		resDiffText.text = (next.res - selectedClass.res).ToString();
 		conDiffText.text = (next.con - selectedClass.con).ToString();
 		movDiffText.text = (next.movespeed - selectedClass.movespeed).ToString();
 	}

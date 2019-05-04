@@ -17,12 +17,11 @@ public class CharacterSaveData {
 
 	[Header("EV values")]
 	public int eHp;
-	public int eAtk;
+	public int eDmg;
+	public int eMnd;
 	public int eSpd;
 	public int eSkl;
-	public int eLck;
 	public int eDef;
-	public int eRes;
 
 	[Header("Supports")]
 	public int roomNo;
@@ -65,12 +64,11 @@ public class CharacterSaveData {
 		stats.GenerateStartingStats();
 
 		eHp = stats.eHp;
-		eAtk = stats.eAtk;
+		eDmg = stats.eDmg;
+		eMnd = stats.eMnd;
 		eSpd = stats.eSpd;
 		eSkl = stats.eSkl;
-		eLck = stats.eLck;
 		eDef = stats.eDef;
-		eRes = stats.eRes;
 
 		roomNo = stats.roomNo;
 		supports = new List<SupportValue>();

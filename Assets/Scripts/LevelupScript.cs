@@ -20,31 +20,28 @@ public class LevelupScript : MonoBehaviour {
 	[Header("Text objects")]
 	public Text levelText;
 	public Text hpText;
-	public Text atkText;
+	public Text dmgText;
+	public Text mndText;
 	public Text spdText;
 	public Text sklText;
-	public Text lckText;
 	public Text defText;
-	public Text resText;
 
 	[Header("Levelup objects")]
 	public Text levelLevel;
 	public Text levelHp;
-	public Text levelAtk;
+	public Text levelDmg;
+	public Text levelMnd;
 	public Text levelSpd;
 	public Text levelSkl;
-	public Text levelLck;
 	public Text levelDef;
-	public Text levelRes;
 
 	private int _level;
 	private int _hp;
-	private int _atk;
+	private int _dmg;
+	private int _mnd;
 	private int _spd;
 	private int _skl;
-	private int _lck;
 	private int _def;
-	private int _res;
 
 	private bool waiting;
 
@@ -53,12 +50,11 @@ public class LevelupScript : MonoBehaviour {
 	private void Update () {
 		levelText.text = _level.ToString();
 		hpText.text = _hp.ToString();
-		atkText.text = _atk.ToString();
+		dmgText.text = _dmg.ToString();
+		mndText.text = _mnd.ToString();
 		spdText.text = _spd.ToString();
 		sklText.text = _skl.ToString();
-		lckText.text = _lck.ToString();
 		defText.text = _def.ToString();
-		resText.text = _res.ToString();
 	}
 
 	public void SetupStats(StatsContainer characterStats, bool levelup) {
@@ -71,21 +67,19 @@ public class LevelupScript : MonoBehaviour {
 
 		_level = characterStats.level;
 		_hp = characterStats.hp;
-		_atk = characterStats.atk;
+		_dmg = characterStats.dmg;
+		_mnd = characterStats.mnd;
 		_spd = characterStats.spd;
 		_skl = characterStats.skl;
-		_lck = characterStats.lck;
 		_def = characterStats.def;
-		_res = characterStats.res;
 
 		levelLevel.text = "";
 		levelHp.text = "";
-		levelAtk.text = "";
+		levelDmg.text = "";
+		levelMnd.text = "";
 		levelSpd.text = "";
 		levelSkl.text = "";
-		levelLck.text = "";
 		levelDef.text = "";
-		levelRes.text = "";
 	}
 
 	public IEnumerator RunLevelup(StatsContainer stats) {
@@ -110,9 +104,16 @@ public class LevelupScript : MonoBehaviour {
 			playSfxEvent.Invoke();
 			yield return new WaitForSeconds(0.2f);
 		}
-		if (stats.atk != _atk) {
-			levelAtk.text = (stats.atk - _atk > 0) ? "+"+(stats.atk - _atk) : (stats.atk - _atk).ToString();
-			_atk = stats.atk;
+		if (stats.dmg != _dmg) {
+			levelDmg.text = (stats.dmg - _dmg > 0) ? "+"+(stats.dmg - _dmg) : (stats.dmg - _dmg).ToString();
+			_dmg = stats.dmg;
+			sfxQueue.Enqueue(levelupPing);
+			playSfxEvent.Invoke();
+			yield return new WaitForSeconds(0.2f);
+		}
+		if (stats.mnd != _mnd) {
+			levelMnd.text = (stats.mnd - _mnd > 0) ? "+"+(stats.mnd - _mnd) : (stats.mnd - _mnd).ToString();
+			_mnd = stats.mnd;
 			sfxQueue.Enqueue(levelupPing);
 			playSfxEvent.Invoke();
 			yield return new WaitForSeconds(0.2f);
@@ -131,23 +132,9 @@ public class LevelupScript : MonoBehaviour {
 			playSfxEvent.Invoke();
 			yield return new WaitForSeconds(0.2f);
 		}
-		if (stats.lck != _lck) {
-			levelLck.text = (stats.lck - _lck > 0) ? "+"+(stats.lck - _lck) : (stats.lck - _lck).ToString();
-			_lck = stats.lck;
-			sfxQueue.Enqueue(levelupPing);
-			playSfxEvent.Invoke();
-			yield return new WaitForSeconds(0.2f);
-		}
 		if (stats.def != _def) {
 			levelDef.text = (stats.def - _def > 0) ? "+"+(stats.def - _def) : (stats.def - _def).ToString();
 			_def = stats.def;
-			sfxQueue.Enqueue(levelupPing);
-			playSfxEvent.Invoke();
-			yield return new WaitForSeconds(0.2f);
-		}
-		if (stats.res != _res) {
-			levelRes.text = (stats.res - _res > 0) ? "+"+(stats.res - _res) : (stats.res - _res).ToString();
-			_res = stats.res;
 			sfxQueue.Enqueue(levelupPing);
 			playSfxEvent.Invoke();
 			yield return new WaitForSeconds(0.2f);

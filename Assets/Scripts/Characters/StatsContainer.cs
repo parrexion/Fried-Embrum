@@ -18,30 +18,27 @@ public class StatsContainer {
 
 	[Header("Current Stats")]
 	public int hp;
-	public int atk;
+	public int dmg;
+	public int mnd;
 	public int spd;
 	public int skl;
-	public int lck;
 	public int def;
-	public int res;
 
 	[Header("EV values")]
 	public int eHp;
-	public int eAtk;
+	public int eDmg;
+	public int eMnd;
 	public int eSpd;
 	public int eSkl;
-	public int eLck;
 	public int eDef;
-	public int eRes;
 
 	[Header("Boost values")]
 	public int bHp;
-	public int bAtk;
+	public int bDmg;
+	public int bMnd;
 	public int bSpd;
 	public int bSkl;
-	public int bLck;
 	public int bDef;
-	public int bRes;
 
 	[SerializeField]
 	public List<Boost> boosts = new List<Boost>();
@@ -82,12 +79,11 @@ public class StatsContainer {
 		}
 	
 		eHp = saveData.eHp;
-		eAtk = saveData.eAtk;
+		eDmg = saveData.eDmg;
+		eMnd = saveData.eMnd;
 		eSpd = saveData.eSpd;
 		eSkl = saveData.eSkl;
-		eLck = saveData.eLck;
 		eDef = saveData.eDef;
-		eRes = saveData.eRes;
 
 		roomNo = saveData.roomNo;
 		supportValues = new List<SupportValue>();
@@ -104,12 +100,11 @@ public class StatsContainer {
 
 	public void GenerateStartingStats() {
 		eHp = charData.hp + classData.hp;
-		eAtk = charData.atk + classData.atk;
+		eDmg = charData.atk + classData.atk;
+		eMnd = charData.res + classData.res;
 		eSpd = charData.spd + classData.spd;
 		eSkl = charData.skl + classData.skl;
-		eLck = charData.lck + classData.lck;
 		eDef = charData.def + classData.def;
-		eRes = charData.res + classData.res;
 
 		for (int i = 1; i < level; i++) {
 			GainLevel();
@@ -122,21 +117,19 @@ public class StatsContainer {
 	/// </summary>
 	private void GenerateBoosts() {
 		bHp = 0;
-		bAtk = 0;
+		bDmg = 0;
+		bMnd = 0;
 		bSpd = 0;
 		bSkl = 0;
-		bLck = 0;
 		bDef = 0;
-		bRes = 0;
 
 		for (int i = 0; i < boosts.Count; i++) {
 			bHp += boosts[i].hp;
-			bAtk += boosts[i].atk;
+			bDmg += boosts[i].atk;
+			bMnd += boosts[i].res;
 			bSpd += boosts[i].spd;
 			bSkl += boosts[i].skl;
-			bLck += boosts[i].lck;
 			bDef += boosts[i].def;
-			bRes += boosts[i].res;
 		}
 	}
 
@@ -145,35 +138,32 @@ public class StatsContainer {
 			return;
 		GenerateBoosts();
 		hp = bHp + eHp;
-		atk = bAtk + eAtk;
+		dmg = bDmg + eDmg;
+		mnd = bMnd + eMnd;
 		spd = bSpd + eSpd;
 		skl = bSkl + eSkl;
-		lck = bLck + eLck;
 		def = bDef + eDef;
-		res = bRes + eRes;
 	}
 
 	public void GainLevel() {
 		level++;
 		eHp += (int)(0.01f * (classData.gHp+charData.gHp + Random.Range(0,100)));
-		eAtk += (int)(0.01f * (classData.gAtk+charData.gAtk + Random.Range(0,100)));
+		eDmg += (int)(0.01f * (classData.gAtk+charData.gAtk + Random.Range(0,100)));
+		eMnd += (int)(0.01f * (classData.gRes+charData.gRes + Random.Range(0,100)));
 		eSpd += (int)(0.01f * (classData.gSpd+charData.gSpd + Random.Range(0,100)));
 		eSkl += (int)(0.01f * (classData.gSkl+charData.gSkl + Random.Range(0,100)));
-		eLck += (int)(0.01f * (classData.gLck+charData.gLck + Random.Range(0,100)));
 		eDef += (int)(0.01f * (classData.gDef+charData.gDef + Random.Range(0,100)));
-		eRes += (int)(0.01f * (classData.gRes+charData.gRes + Random.Range(0,100)));
 
 		CalculateStats();
 	}
 
 	public void ChangeClass(CharClass newClass) {
 		eHp += newClass.hp - classData.hp;
-		eAtk += newClass.atk - classData.atk;
+		eDmg += newClass.atk - classData.atk;
+		eMnd += newClass.res - classData.res;
 		eSpd += newClass.spd - classData.spd;
 		eSkl += newClass.skl - classData.skl;
-		eLck += newClass.lck - classData.lck;
 		eDef += newClass.def - classData.def;
-		eRes += newClass.res - classData.res;
 		classData = newClass;
 		CalculateStats();
 	}
@@ -217,12 +207,11 @@ public class StatsContainer {
 
 	public void BoostBaseStats(Boost boost) {
 		eHp += boost.hp;
-		eAtk += boost.atk;
+		eDmg += boost.atk;
+		eMnd += boost.res;
 		eSpd += boost.spd;
 		eSkl += boost.skl;
-		eLck += boost.lck;
 		eDef += boost.def;
-		eRes += boost.res;
 		CalculateStats();
 	}
 

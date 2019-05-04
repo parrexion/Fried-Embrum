@@ -31,6 +31,18 @@ MonoBehaviour:
   menuTitleText:
     color: {r: 1, g: 1, b: 0, a: 1}
     fontMaxSize: 90
+  statsBigText:
+    color: {r: 1, g: 1, b: 0, a: 1}
+    fontMaxSize: 36
+  statsMediumText:
+    color: {r: 1, g: 1, b: 0, a: 1}
+    fontMaxSize: 30
+  statsSmallText:
+    color: {r: 1, g: 1, b: 0, a: 1}
+    fontMaxSize: 24
+  statsPenaltyText:
+    color: {r: 1, g: 0.3467337, b: 0, a: 1}
+    fontMaxSize: 30
   mainStyle:
     baseImage: {fileID: 21300000, guid: 1ab50788544ce5a4f9cbfe085c71fc4f, type: 3}
     baseColor: {r: 1, g: 1, b: 1, a: 1}
@@ -46,11 +58,36 @@ MonoBehaviour:
     fontColor: {r: 0, g: 0, b: 0, a: 1}
     fontMaxSize: 60
   actionStyle:
-    baseImage: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+    baseImage: {fileID: 21300000, guid: 1ab50788544ce5a4f9cbfe085c71fc4f, type: 3}
     baseColor: {r: 1, g: 1, b: 1, a: 1}
-    highImage: {fileID: 0}
-    highColor: {r: 0.32298875, g: 0.75735295, b: 0.54166865, a: 1}
+    highImage: {fileID: 21300000, guid: 59f2dec48b8d3ab4eb0f0fecda10f218, type: 3}
+    highColor: {r: 0.97885394, g: 1, b: 0, a: 1}
     fontColor: {r: 0, g: 0, b: 0, a: 1}
+    fontMaxSize: 40
+  noSelectStyle:
+    baseImage: {fileID: 21300000, guid: 1ab50788544ce5a4f9cbfe085c71fc4f, type: 3}
+    baseColor: {r: 0.97885394, g: 1, b: 0, a: 1}
+    highImage: {fileID: 0}
+    highColor: {r: 1, g: 1, b: 1, a: 1}
+    fontColor: {r: 0, g: 0, b: 0, a: 1}
+    fontMaxSize: 40
+  healthBar:
+    backgroundImage: {fileID: 21300000, guid: c0992fb8966702b4c8d507f7a17417fc, type: 3}
+    fillImage: {fileID: 21300000, guid: 6c1db158ce5848f40a05ffb24c4823d6, type: 3}
+    fillColor: {r: 0, g: 1, b: 0, a: 1}
+    textColor: {r: 0.1792453, g: 0.1792453, b: 0.1792453, a: 1}
+    fontMaxSize: 40
+  expBar:
+    backgroundImage: {fileID: 21300000, guid: c0992fb8966702b4c8d507f7a17417fc, type: 3}
+    fillImage: {fileID: 21300000, guid: 6c1db158ce5848f40a05ffb24c4823d6, type: 3}
+    fillColor: {r: 0.20024922, g: 0.8192162, b: 0.9433962, a: 1}
+    textColor: {r: 0.1792453, g: 0.1792453, b: 0.1792453, a: 1}
+    fontMaxSize: 40
+  fulfillBar:
+    backgroundImage: {fileID: 0}
+    fillImage: {fileID: 0}
+    fillColor: {r: 1, g: 1, b: 1, a: 1}
+    textColor: {r: 1, g: 1, b: 1, a: 1}
     fontMaxSize: 40
   normalList:
     baseImage: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}

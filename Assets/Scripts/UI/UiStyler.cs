@@ -14,11 +14,21 @@ public class UiStyler : ScriptableObject {
 	public TextStyle breadText;
 	public TextStyle listTitleText;
 	public TextStyle menuTitleText;
+	public TextStyle statsBigText;
+	public TextStyle statsMediumText;
+	public TextStyle statsSmallText;
+	public TextStyle statsPenaltyText;
 
 	[Header("Button Styles")]
 	public UIStyle mainStyle;
 	public UIStyle baseStyle;
 	public UIStyle actionStyle;
+	public UIStyle noSelectStyle;
+
+	[Header("Bar Styles")]
+	public BarStyle healthBar;
+	public BarStyle expBar;
+	public BarStyle fulfillBar;
 
 	[Header("List Styles")]
 	public UIStyle normalList;
@@ -51,5 +61,20 @@ public class PromptStyle {
 	public Sprite backgroundImage;
 	public Color backgroundColor = Color.white;
 	public UIStyle buttonStyle;
+}
+
+[System.Serializable]
+public class UISingleImage {
+	public Sprite image;
+	public Color color = Color.white;
+}
+
+[System.Serializable]
+public class BarStyle {
+	public Sprite backgroundImage;
+	public Sprite fillImage;
+	public Color fillColor = Color.white;
+	public Color textColor = Color.white;
+	public int fontMaxSize = 40;
 }
 
