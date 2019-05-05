@@ -21,8 +21,7 @@ public class ActionInputController : MonoBehaviour {
 
 	[Header("Unit Action Menu")]
 	public GameObject actionMenu;
-	private int menuPosition;
-	private Image[] actionButtons = new Image[0];
+	public MyButtonList actionButtons;
 
 	[Header("Dialogues")]
 	public IntVariable dialogueMode;
@@ -32,37 +31,30 @@ public class ActionInputController : MonoBehaviour {
 	public UnityEvent startDialogue;
 
 
-	private void Start() {
-		actionButtons = actionMenu.GetComponentsInChildren<Image>(true);
-	}
-
     public void ShowMenu(bool active, bool reset) {
 		actionMenu.SetActive(active);
 		if (active) {
-			if (reset)
-				menuPosition = 0;
+			int previousPosition = (reset) ? 0 : actionButtons.GetPosition();
 			ButtonSetup();
+			actionButtons.ForcePosition(previousPosition);
 		}
     }
 
     public bool MoveVertical(int dir) {
-		int startPos = menuPosition;
-		do {
-			menuPosition = OPMath.FullLoop(0,actionButtons.Length, menuPosition + dir);
-		} while (!actionButtons[menuPosition].gameObject.activeSelf);
-		UpdateHighlight();
-		return (startPos != menuPosition);
+		int startPos = actionButtons.GetPosition();
+		int endPos = actionButtons.Move(dir);
+		return (startPos != endPos);
     }
 
     public bool BackButton() {
 		if (selectedCharacter.value.canUndoMove) {
-			menuPosition = 0;
+			actionButtons.ForcePosition(0);
 		}
 		return (selectedCharacter.value.canUndoMove);
     }
 
     public void OkButton() {
-		switch ((ActionInputType)menuPosition) {
+		switch ((ActionInputType)actionButtons.GetValue()) {
 			case ActionInputType.SEIZE:
 				triggeredWin.value = true;
 				currentActionMode.value = ActionMode.NONE;
@@ -140,26 +132,21 @@ public class ActionInputController : MonoBehaviour {
 	}
 
 	private void ButtonSetup() {
+		actionButtons.ResetButtons();
 		bool seizeWin = ((MapEntry)currentMap.value).winCondition == WinCondition.SEIZE;
-		actionButtons[(int)ActionInputType.SEIZE].gameObject.SetActive(seizeWin && selectedCharacter.value.CanSeize());
-		actionButtons[(int)ActionInputType.ATTACK].gameObject.SetActive(selectedCharacter.value.CanAttack());
-		actionButtons[(int)ActionInputType.HEAL].gameObject.SetActive(selectedCharacter.value.CanSupport());
-		actionButtons[(int)ActionInputType.VISIT].gameObject.SetActive(selectedCharacter.value.CanVisit());
-		actionButtons[(int)ActionInputType.TRADE].gameObject.SetActive(selectedCharacter.value.CanTrade());
-		if (menuPosition == -1 || !actionButtons[menuPosition].IsActive()) {
-			menuPosition = -1;
-			MoveVertical(1);
-		}
-		UpdateHighlight();
-	}
+		if (seizeWin && selectedCharacter.value.CanSeize())
+			actionButtons.AddButton("SEIZE", (int)ActionInputType.SEIZE);
+		if (selectedCharacter.value.CanAttack())
+			actionButtons.AddButton("ATTACK", (int)ActionInputType.ATTACK);
+		if (selectedCharacter.value.CanSupport())
+			actionButtons.AddButton("HEAL", (int)ActionInputType.HEAL);
+		if (selectedCharacter.value.CanVisit())
+			actionButtons.AddButton("VISIT", (int)ActionInputType.VISIT);
+		if (selectedCharacter.value.CanTrade())
+			actionButtons.AddButton("TRADE", (int)ActionInputType.TRADE);
 
-	/// <summary>
-	/// Colors the selected button to show the current selection.
-	/// </summary>
-	private void UpdateHighlight() {
-		for (int i = 0; i < actionButtons.Length; i++) {
-			actionButtons[i].color = (menuPosition == i) ? Color.cyan : Color.white;
-		}
+		actionButtons.AddButton("ITEM", (int)ActionInputType.ITEM);
+		actionButtons.AddButton("WAIT", (int)ActionInputType.WAIT);
 	}
 
 }

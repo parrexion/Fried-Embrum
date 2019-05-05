@@ -174,7 +174,7 @@ public class ForecastUI : MonoBehaviour {
 
 		hpText.text = tactics.currentHealth.ToString();
 		dmgText.text = (damage != -1) ? damage.ToString() : "--";
-		dmgText.color = (damage != -1 && defWeak) ? Color.green : Color.black;
+		//dmgText.color = (damage != -1 && defWeak) ? Color.green : Color.black;
 		doubleDamage.SetActive(speed >= doublingSpeed.value);
 		hitText.text = (hit != -1) ? hit.ToString() : "--";
 		critText.text = (crit != -1) ? crit.ToString() : "--";
@@ -194,7 +194,7 @@ public class ForecastUI : MonoBehaviour {
 
 		eHpText.text = tactics.currentHealth.ToString();
 		eDmgText.text = (damage != -1) ? damage.ToString() : "--";
-		eDmgText.color = (damage != -1 && atkWeak) ? Color.green : Color.black;
+		//eDmgText.color = (damage != -1 && atkWeak) ? Color.green : Color.black;
 		eDoubleDamage.SetActive(speed <= - doublingSpeed.value);
 		eHitText.text = (hit != -1) ? hit.ToString() : "--";
 		eCritText.text = (crit != -1) ? crit.ToString() : "--";

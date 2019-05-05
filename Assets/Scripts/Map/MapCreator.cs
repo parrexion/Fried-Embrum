@@ -43,6 +43,7 @@ public class MapCreator : MonoBehaviour {
 	public TerrainTile tileBridge;
 	public TerrainTile tileLedge;
 	public TerrainTile tileHouse;
+	public TerrainTile tileHouseReward;
 	public TerrainTile tileFort;
 	public TerrainTile tileRiver;
 	public TerrainTile tileBreakable;
@@ -119,7 +120,6 @@ public class MapCreator : MonoBehaviour {
 				}
 				else if (interPos.interactType == InteractType.VILLAGE) {
 					tempTile.interactType = InteractType.VILLAGE;
-					tempTile.SetTerrain(tileHouse);
 					tempTile.alternativeTerrain = GetTerrainFromPixel(colorData[pos]);
 					tempTile.dialogue = interPos.dialogue;
 					tempTile.gift = (interPos.gift != null) ? new InventoryItem(interPos.gift) : null;
@@ -129,6 +129,8 @@ public class MapCreator : MonoBehaviour {
 						SkillsContainer skills = new SkillsContainer(interPos.ally.skills);
 						tempTile.ally = SpawnPlayerCharacter(interPos.x, interPos.y, stats, inventory, skills, false);
 					}
+					TerrainTile terrain = (interPos.gift == null && interPos.ally == null) ? tileHouse : tileHouseReward;
+					tempTile.SetTerrain(terrain);
 				}
 				else if (interPos.interactType == InteractType.SEIZE) {
 					tempTile.SetTerrain(GetTerrainFromPixel(colorData[pos]));
