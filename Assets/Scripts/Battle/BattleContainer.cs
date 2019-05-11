@@ -16,7 +16,7 @@ public class BattleContainer : InputReceiverDelegate {
 	public BoolVariable lockControls;
 	public FloatVariable cameraPosX;
 	public FloatVariable cameraPosY;
-	public PopupController popup;
+	public MySpinner spinner;
 
 	[Header("Dialogue")]
 	public IntVariable dialogueMode;
@@ -66,6 +66,8 @@ public class BattleContainer : InputReceiverDelegate {
 	public SfxEntry critAttackSfx;
 	public SfxEntry enemyDiedSfx;
 	public SfxEntry healSfx;
+	public SfxEntry badStuffSfx;
+	public SfxEntry rewardSfx;
 	
 	[Header("Events")]
 	public UnityEvent updateHealthEvent;
@@ -446,7 +448,7 @@ public class BattleContainer : InputReceiverDelegate {
 					CharacterSkill skill = player.stats.classData.AwardSkills(player.stats.level);
 					if (skill) {
 						player.skills.GainSkill(skill);
-						yield return StartCoroutine(popup.ShowPopup(skill.icon,  "gained: " + skill.entryName, popup.droppedItemFanfare));
+						yield return StartCoroutine(spinner.ShowSpinner(skill.icon,  "gained: " + skill.entryName, rewardSfx));
 					}
 					expMeter.gameObject.SetActive(true);
 					sfxQueue.Enqueue(levelupFill);
@@ -467,19 +469,19 @@ public class BattleContainer : InputReceiverDelegate {
 		if (actions[0].type == BattleAction.Type.DAMAGE) {
 			InventoryTuple invTup = actions[0].weaponAtk;
 			if (invTup.item != null && invTup.charge <= 0) {
-				yield return StartCoroutine(popup.ShowPopup(invTup.item.icon, invTup.item.entryName + " is out of ammo!", popup.brokenItemFanfare));
+				yield return StartCoroutine(spinner.ShowSpinner(invTup.item.icon, invTup.item.entryName + " is out of ammo!", badStuffSfx));
 				actions[0].attacker.inventory.CleanupInventory(actions[0].attacker.stats);
 			}
 			invTup = actions[0].weaponDef;
 			if (invTup.item != null && invTup.charge <= 0) {
-				yield return StartCoroutine(popup.ShowPopup(invTup.item.icon, invTup.item.entryName + " is out of ammo!", popup.brokenItemFanfare));
+				yield return StartCoroutine(spinner.ShowSpinner(invTup.item.icon, invTup.item.entryName + " is out of ammo!", badStuffSfx));
 				actions[0].defender.inventory.CleanupInventory(actions[0].defender.stats);
 			}
 		}
 		else {
 			InventoryTuple invTup = actions[0].staffAtk;
 			if (invTup.item != null && invTup.charge <= 0) {
-				yield return StartCoroutine(popup.ShowPopup(invTup.item.icon, invTup.item.entryName + " is out of ammo!", popup.brokenItemFanfare));
+				yield return StartCoroutine(spinner.ShowSpinner(invTup.item.icon, invTup.item.entryName + " is out of ammo!", badStuffSfx));
 				actions[0].attacker.inventory.CleanupInventory(actions[0].attacker.stats);
 			}
 		}
@@ -495,7 +497,7 @@ public class BattleContainer : InputReceiverDelegate {
 			itemTup.droppable = false;
 			receiver.inventory.AddItem(itemTup);
 
-			yield return StartCoroutine(popup.ShowPopup(itemTup.item.icon, "Gained " + itemTup.item.entryName, popup.droppedItemFanfare));
+			yield return StartCoroutine(spinner.ShowSpinner(itemTup.item.icon, "Gained " + itemTup.item.entryName, rewardSfx));
 		}
 		yield break;
 	}

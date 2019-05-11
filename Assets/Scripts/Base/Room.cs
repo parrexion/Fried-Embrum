@@ -30,13 +30,10 @@ public class Room : MonoBehaviour {
 
 	private void UpdateCursor() {
 		cursor.enabled = hovering || selected;
-		cursor.color = (hovering) ? Color.white : Color.grey;
+		cursor.color = (hovering) ? Color.yellow : Color.red;
 	}
 
 	public static void SwapRoom(Room r1, Room r2) {
-
-
-
 		StatsContainer temp = r1.resident;
 		r1.resident = r2.resident;
 		r2.resident = temp;

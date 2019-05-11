@@ -12,31 +12,45 @@ public class UiStyler : ScriptableObject {
 	public TextStyle titleText;
 	public TextStyle subTitleText;
 	public TextStyle breadText;
-	public TextStyle listTitleText;
+	public TextStyle objectiveText;
 	public TextStyle menuTitleText;
 	public TextStyle statsBigText;
 	public TextStyle statsMediumText;
 	public TextStyle statsSmallText;
 	public TextStyle statsPenaltyText;
+	public TextStyle baseTitleText;
+	public TextStyle baseBigText;
+	public TextStyle baseMediumText;
+	public TextStyle baseSmallText;
+	public TextStyle levelBonusText;
 
 	[Header("Button Styles")]
 	public UIStyle mainStyle;
 	public UIStyle baseStyle;
 	public UIStyle actionStyle;
 	public UIStyle noSelectStyle;
+	public UIStyle iconStyle;
+	public UIStyle optionsStyle;
 
 	[Header("Bar Styles")]
 	public BarStyle healthBar;
 	public BarStyle expBar;
 	public BarStyle fulfillBar;
+	public BarStyle bigExpBar;
 
 	[Header("List Styles")]
-	public UIStyle normalList;
+	public UIStyle optionsList;
 	public UIStyle thinList;
+	public UIStyle saveList;
+	public UIStyle tradeList;
 
 	[Header("Prompt Styles")]
 	public PromptStyle selectPopup;
 	public PromptStyle smallPopup;
+
+	[Header("Spinner Styles")]
+	public SpinnerStyle bigSpinner;
+	public SpinnerStyle smallSpinner;
 
 }
 
@@ -61,6 +75,14 @@ public class PromptStyle {
 	public Sprite backgroundImage;
 	public Color backgroundColor = Color.white;
 	public UIStyle buttonStyle;
+}
+
+[System.Serializable]
+public class SpinnerStyle {
+	public Sprite backgroundImage;
+	public Color backgroundColor = Color.white;
+	public Color fontColor = Color.black;
+	public int fontMaxSize = 40;
 }
 
 [System.Serializable]

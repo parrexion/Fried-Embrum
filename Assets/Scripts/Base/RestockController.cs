@@ -13,8 +13,6 @@ public class RestockController : MonoBehaviour {
 	public GameObject charListView;
 	public GameObject convoyView;
 	public GameObject restockView;
-	public GameObject normalButtonMenu;
-	public GameObject secondButtonMenu;
 
 	[Header("Character List")]
     public Transform listParentCharacter;
@@ -26,7 +24,7 @@ public class RestockController : MonoBehaviour {
     public StorageList convoy;
 
 	[Header("Restock List")]
-    public MyButtonList restockMenuButtons;
+	public Text buttonTitle;
     public Transform listParentRestock;
 	public Transform restockPrefab;
 	public int itemListSize;
@@ -58,21 +56,14 @@ public class RestockController : MonoBehaviour {
 		restockView.SetActive(false);
 		charListView.SetActive(false);
 		convoyView.SetActive(false);
-		normalButtonMenu.SetActive(true);
-		secondButtonMenu.SetActive(false);
 
 		characters = new EntryList<RestockListEntry>(characterListSize);
 		itemList = new EntryList<ItemListEntry>(itemListSize);
-		restockMenuButtons.ResetButtons();
-		restockMenuButtons.AddButton("RESTOCK");
-		restockMenuButtons.AddButton("TAKE");
-		restockMenuButtons.AddButton("STORE");
 		convoy.Setup();
 	}
 
 	public void ShowRestock() {
 		charListView.SetActive(true);
-		normalButtonMenu.SetActive(false);
 		GenerateCharacterList();
 		MoveSelection(0);
 	}
@@ -155,7 +146,7 @@ public class RestockController : MonoBehaviour {
             ShowCharInfo();
         }
 		else if (currentMode == MenuState.MENU) {
-			restockMenuButtons.Move(dir);
+			//restockMenuButtons.Move(dir);
 		}
 		else if (currentMode == MenuState.RECHARGE) {
 			itemList.Move(dir);
@@ -191,26 +182,26 @@ public class RestockController : MonoBehaviour {
 		}
 		else if (currentMode == MenuState.CHARACTER) {
 			currentMode = MenuState.MENU;
-			secondButtonMenu.SetActive(true);
-			restockMenuButtons.ForcePosition(0);
+			promptMode = true;
+			//restockPrompt.Show3Options("Select action", "Restock", "Take", "Store", "Cancel", true);
 		}
 		else if (currentMode == MenuState.MENU) {
-			int buttonPos = restockMenuButtons.GetPosition();
-			if (buttonPos == 0) {
-				currentMode = MenuState.RECHARGE;
-				GenerateInventoryList();
-				restockView.SetActive(true);
-			}
-			else if (buttonPos == 1) {
-				currentMode = MenuState.TAKE;
-				convoy.SetupStorage();
-				convoyView.SetActive(true);
-			}
-			else if (buttonPos == 2) {
-				currentMode = MenuState.STORE;
-				GenerateInventoryList();
-				restockView.SetActive(true);
-			}
+			//int buttonPos = restockMenuButtons.GetPosition();
+			//if (buttonPos == 0) {
+			//	currentMode = MenuState.RECHARGE;
+			//	GenerateInventoryList();
+			//	restockView.SetActive(true);
+			//}
+			//else if (buttonPos == 1) {
+			//	currentMode = MenuState.TAKE;
+			//	convoy.SetupStorage();
+			//	convoyView.SetActive(true);
+			//}
+			//else if (buttonPos == 2) {
+			//	currentMode = MenuState.STORE;
+			//	GenerateInventoryList();
+			//	restockView.SetActive(true);
+			//}
 		}
 		else if (currentMode == MenuState.RECHARGE) {
 			promptMode = true;
@@ -237,7 +228,6 @@ public class RestockController : MonoBehaviour {
 			return false;
 		}
 		else if (currentMode == MenuState.MENU) {
-			secondButtonMenu.SetActive(false);
 			currentMode =  MenuState.CHARACTER;
 			return false;
 		}
@@ -259,7 +249,6 @@ public class RestockController : MonoBehaviour {
 			restockView.SetActive(false);
 			return false;
 		}
-		normalButtonMenu.SetActive(true);
 		charListView.SetActive(false);
 		return true;
 	}

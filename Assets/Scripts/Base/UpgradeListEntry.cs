@@ -15,11 +15,18 @@ public class UpgradeListEntry : ListEntry, IComparer<UpgradeListEntry> {
 	public bool done;
 
 
-    /// <summary>
-    /// Fills the entry with the data of the character.
-    /// </summary>
-    /// <param name="statsCon"></param>
-    public void FillData(int index, UpgradeEntry upgrade, bool done, int totalScrap, int totalMoney) {
+	public override void SetStyle(UIStyle style, Font font) {
+		base.SetStyle(style, font);
+		upgradeType.color = style.fontColor;
+		upgradeType.font = font;
+		upgradeType.resizeTextMaxSize = style.fontMaxSize;
+	}
+
+	/// <summary>
+	/// Fills the entry with the data of the character.
+	/// </summary>
+	/// <param name="statsCon"></param>
+	public void FillData(int index, UpgradeEntry upgrade, bool done, int totalScrap, int totalMoney) {
 		entryName.text = upgrade.entryName;
 		icon.color = upgrade.repColor;
 		upgradeType.text = upgrade.item.itemType.ToString();

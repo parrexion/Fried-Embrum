@@ -20,10 +20,7 @@ public class TradeController : InputReceiverDelegate {
 	public Color cursorColor;
 
 	[Header("Lists")]
-	public List<Image> slots = new List<Image>();
-	// public List<Image> itemIcons = new List<Image>();
-	public List<Text> itemNames = new List<Text>();
-	public List<Text> itemCharges = new List<Text>();
+	public List<InventoryListEntry> slots = new List<InventoryListEntry>();
 
 	private int menuPosition = 0;
 	private int selectedIndex = -1;
@@ -101,7 +98,7 @@ public class TradeController : InputReceiverDelegate {
 			SwapItems();
 			menuAcceptEvent.Invoke();
 		}
-		else if (itemNames[menuPosition].text != "--") {
+		else if (slots[menuPosition].entryName.text != "--") {
 			selectedIndex = menuPosition;
 			UpdateSelection();
 			menuAcceptEvent.Invoke();
@@ -132,13 +129,15 @@ public class TradeController : InputReceiverDelegate {
 		portraitRight.sprite = targetCharacter.stats.charData.bigPortrait;
 
 		for (int i = 0, j = InventoryContainer.INVENTORY_SIZE; i < InventoryContainer.INVENTORY_SIZE; i++, j++) {
-			InventoryTuple tup = selectedCharacter.value.inventory.GetTuple(i);
-			itemNames[i].text = (tup.item != null) ? tup.item.entryName : "--";
-			itemCharges[i].text = (tup.item != null) ? tup.charge.ToString() : "";
+			//InventoryTuple tup = selectedCharacter.value.inventory.GetTuple(i);
+			//itemNames[i].text = (tup.item != null) ? tup.item.entryName : "--";
+			//itemCharges[i].text = (tup.item != null) ? tup.charge.ToString() : "";
 			
-			tup = targetCharacter.inventory.GetTuple(i);
-			itemNames[j].text = (tup.item != null) ? tup.item.entryName : "--";
-			itemCharges[j].text = (tup.item != null && tup.item.maxCharge != 1) ? tup.charge.ToString() : "";
+			//tup = targetCharacter.inventory.GetTuple(i);
+			//itemNames[j].text = (tup.item != null) ? tup.item.entryName : "--";
+			//itemCharges[j].text = (tup.item != null && tup.item.maxCharge != 1) ? tup.charge.ToString() : "";
+			slots[i].FillData(i, selectedCharacter.value.inventory.GetTuple(i));
+			slots[j].FillData(j, targetCharacter.inventory.GetTuple(i));
 		}
 	}
 
@@ -147,8 +146,8 @@ public class TradeController : InputReceiverDelegate {
 	/// </summary>
 	private void UpdateSelection() {
 		for (int i = 0; i < slots.Count; i++) {
-			slots[i].enabled = (i == menuPosition || i == selectedIndex);
-			slots[i].color = (i == selectedIndex) ? selectedColor : cursorColor;
+			slots[i].SetHighlight(i == menuPosition || i == selectedIndex);
+			slots[i].highlight.color = (i == selectedIndex) ? selectedColor : cursorColor;
 		}
 	}
 

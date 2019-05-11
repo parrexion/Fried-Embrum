@@ -150,21 +150,19 @@ public class ClassEditorWindow {
 
 		GUILayout.Label("Base stats", EditorStyles.boldLabel);
 		classValues.hp = EditorGUILayout.IntField("HP", classValues.hp);
-		classValues.atk = EditorGUILayout.IntField("ATK", classValues.atk);
+		classValues.dmg = EditorGUILayout.IntField("ATK", classValues.dmg);
+		classValues.mnd = EditorGUILayout.IntField("MND", classValues.mnd);
 		classValues.skl = EditorGUILayout.IntField("SKL", classValues.skl);
 		classValues.spd = EditorGUILayout.IntField("SPD", classValues.spd);
-		classValues.lck = EditorGUILayout.IntField("LCK", classValues.lck);
 		classValues.def = EditorGUILayout.IntField("DEF", classValues.def);
-		classValues.res = EditorGUILayout.IntField("RES", classValues.res);
 
 		GUILayout.Label("Growth rates", EditorStyles.boldLabel);
 		classValues.gHp = 5 * (EditorGUILayout.IntSlider("HP", classValues.gHp, 0, 100)/5);
-		classValues.gAtk = 5 * (EditorGUILayout.IntSlider("ATK", classValues.gAtk, 0, 100)/5);
+		classValues.gDmg = 5 * (EditorGUILayout.IntSlider("DMG", classValues.gDmg, 0, 100)/5);
+		classValues.gMnd = 5 * (EditorGUILayout.IntSlider("MND", classValues.gMnd, 0, 100)/5);
 		classValues.gSkl = 5 * (EditorGUILayout.IntSlider("SKL", classValues.gSkl, 0, 100)/5);
 		classValues.gSpd = 5 * (EditorGUILayout.IntSlider("SPD", classValues.gSpd, 0, 100)/5);
-		classValues.gLck = 5 * (EditorGUILayout.IntSlider("LCK", classValues.gLck, 0, 100)/5);
 		classValues.gDef = 5 * (EditorGUILayout.IntSlider("DEF", classValues.gDef, 0, 100)/5);
-		classValues.gRes = 5 * (EditorGUILayout.IntSlider("RES", classValues.gRes, 0, 100)/5);
 
 		GUILayout.Space(10);
 

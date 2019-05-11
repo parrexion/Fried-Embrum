@@ -15,6 +15,16 @@ public class SupportListEntry : ListEntry {
 	[HideInInspector] public int index;
 
 
+	public override void SetStyle(UIStyle style, Font font) {
+		base.SetStyle(style, font);
+		Text[] texts = new Text[] { supportA, supportB, supportC, supportS };
+		for (int i = 0; i < texts.Length; i++) {
+			texts[i].color = style.fontColor;
+			texts[i].font = font;
+			texts[i].resizeTextMaxSize = style.fontMaxSize;
+		}
+	}
+
 	/// <summary>
 	/// Fills the entry with the data of the character.
 	/// </summary>

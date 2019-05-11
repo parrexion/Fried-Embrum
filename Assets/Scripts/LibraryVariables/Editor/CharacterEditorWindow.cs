@@ -190,9 +190,14 @@ public class CharacterEditorWindow {
 		GUILayout.Label("Tot: " + (charValues.charClass.hp + charValues.hp));
 		GUILayout.EndHorizontal();
 		GUILayout.BeginHorizontal();
-		GUILayout.Label("ATK  " + charValues.charClass.atk);
-		charValues.atk = EditorGUILayout.IntSlider(charValues.atk,-10,10);
-		GUILayout.Label("Tot: " + (charValues.charClass.atk + charValues.atk));
+		GUILayout.Label("DMG  " + charValues.charClass.dmg);
+		charValues.dmg = EditorGUILayout.IntSlider(charValues.dmg,-10,10);
+		GUILayout.Label("Tot: " + (charValues.charClass.dmg + charValues.dmg));
+		GUILayout.EndHorizontal();
+		GUILayout.BeginHorizontal();
+		GUILayout.Label("MND  " + charValues.charClass.mnd);
+		charValues.mnd = EditorGUILayout.IntSlider(charValues.mnd,-10,10);
+		GUILayout.Label("Tot: " + (charValues.charClass.mnd + charValues.mnd));
 		GUILayout.EndHorizontal();
 		GUILayout.BeginHorizontal();
 		GUILayout.Label("SKL  " + charValues.charClass.skl);
@@ -205,19 +210,9 @@ public class CharacterEditorWindow {
 		GUILayout.Label("Tot: " + (charValues.charClass.spd + charValues.spd));
 		GUILayout.EndHorizontal();
 		GUILayout.BeginHorizontal();
-		GUILayout.Label("LCK  " + charValues.charClass.lck);
-		charValues.lck = EditorGUILayout.IntSlider(charValues.lck,-10,10);
-		GUILayout.Label("Tot: " + (charValues.charClass.lck + charValues.lck));
-		GUILayout.EndHorizontal();
-		GUILayout.BeginHorizontal();
 		GUILayout.Label("DEF  " + charValues.charClass.def);
 		charValues.def = EditorGUILayout.IntSlider(charValues.def,-10,10);
 		GUILayout.Label("Tot: " + (charValues.charClass.def + charValues.def));
-		GUILayout.EndHorizontal();
-		GUILayout.BeginHorizontal();
-		GUILayout.Label("RES  " + charValues.charClass.res);
-		charValues.res = EditorGUILayout.IntSlider(charValues.res,-10,10);
-		GUILayout.Label("Tot: " + (charValues.charClass.res + charValues.res));
 		GUILayout.EndHorizontal();
 	}
 	
@@ -229,9 +224,14 @@ public class CharacterEditorWindow {
 		GUILayout.Label("Tot: " + (charValues.charClass.gHp + charValues.gHp));
 		GUILayout.EndHorizontal();
 		GUILayout.BeginHorizontal();
-		GUILayout.Label("ATK  " + charValues.charClass.gAtk);
-		charValues.gAtk = 5 * (EditorGUILayout.IntSlider(charValues.gAtk,-50,50) / 5);
-		GUILayout.Label("Tot: " + (charValues.charClass.gAtk + charValues.gAtk));
+		GUILayout.Label("DMG  " + charValues.charClass.gDmg);
+		charValues.gDmg = 5 * (EditorGUILayout.IntSlider(charValues.gDmg,-50,50) / 5);
+		GUILayout.Label("Tot: " + (charValues.charClass.gDmg + charValues.gDmg));
+		GUILayout.EndHorizontal();
+		GUILayout.BeginHorizontal();
+		GUILayout.Label("RES  " + charValues.charClass.gMnd);
+		charValues.gMnd = 5 * (EditorGUILayout.IntSlider(charValues.gMnd,-50,50) / 5);
+		GUILayout.Label("Tot: " + (charValues.charClass.gMnd + charValues.gMnd));
 		GUILayout.EndHorizontal();
 		GUILayout.BeginHorizontal();
 		GUILayout.Label("SKL  " + charValues.charClass.gSkl);
@@ -244,19 +244,9 @@ public class CharacterEditorWindow {
 		GUILayout.Label("Tot: " + (charValues.charClass.gSpd + charValues.gSpd));
 		GUILayout.EndHorizontal();
 		GUILayout.BeginHorizontal();
-		GUILayout.Label("LCK  " + charValues.charClass.gLck);
-		charValues.gLck = 5 * (EditorGUILayout.IntSlider(charValues.gLck,-50,50) / 5);
-		GUILayout.Label("Tot: " + (charValues.charClass.gLck + charValues.gLck));
-		GUILayout.EndHorizontal();
-		GUILayout.BeginHorizontal();
 		GUILayout.Label("DEF  " + charValues.charClass.gDef);
 		charValues.gDef = 5 * (EditorGUILayout.IntSlider(charValues.gDef,-50,50) / 5);
 		GUILayout.Label("Tot: " + (charValues.charClass.gDef + charValues.gDef));
-		GUILayout.EndHorizontal();
-		GUILayout.BeginHorizontal();
-		GUILayout.Label("RES  " + charValues.charClass.gRes);
-		charValues.gRes = 5 * (EditorGUILayout.IntSlider(charValues.gRes,-50,50) / 5);
-		GUILayout.Label("Tot: " + (charValues.charClass.gRes + charValues.gRes));
 		GUILayout.EndHorizontal();
 	}
 	

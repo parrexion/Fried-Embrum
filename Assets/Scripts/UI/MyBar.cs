@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class MyBar : MonoBehaviour {
 
-	public enum StyleType { NONE, HEALTH, EXP, FULFILL }
+	public enum StyleType { NONE, HEALTH, EXP, FULFILL, BIG_EXP }
 	public StyleType style;
 
 	public Image background;
@@ -30,6 +30,7 @@ public class MyBar : MonoBehaviour {
 	public void SetCustomText(float amount, string text) {
 		fill.fillAmount = amount;
 		valueText.text = text;
+		valueTextInverted.text = text;
 	}
 
 	

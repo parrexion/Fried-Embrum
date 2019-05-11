@@ -12,6 +12,7 @@ public class MyButtonList : MonoBehaviour {
 	public MyButton[] buttons;
 
 	private List<string> buttonNames = new List<string>();
+	private List<Sprite> buttonIcons = new List<Sprite>();
 	private List<int> buttonValues = new List<int>();
 	private int size;
 	private int position;
@@ -26,10 +27,26 @@ public class MyButtonList : MonoBehaviour {
 	public void ResetButtons() {
 		size = buttons.Length;
 		buttonNames.Clear();
+		buttonIcons.Clear();
 		buttonValues.Clear();
 		bot = 0;
 		top = 0;
 		position = 0;
+		UpdateButtons();
+	}
+
+	/// <summary>
+	/// Adds a new button to the end of the list and updates the list.
+	/// </summary>
+	/// <param name="buttonText"></param>
+	public void AddButton(Sprite buttonIcon, int buttonValue = -1) {
+		if (size == 0)
+			Debug.LogError("MyButtonList is not initialized");
+
+		buttonNames.Add("");
+		buttonIcons.Add(buttonIcon);
+		buttonValues.Add(buttonValue);
+		top = Mathf.Min(bot + size, buttonNames.Count);
 		UpdateButtons();
 	}
 
@@ -42,6 +59,7 @@ public class MyButtonList : MonoBehaviour {
 			Debug.LogError("MyButtonList is not initialized");
 
 		buttonNames.Add(buttonText);
+		buttonIcons.Add(null);
 		buttonValues.Add(buttonValue);
 		top = Mathf.Min(bot + size, buttonNames.Count);
 		UpdateButtons();
@@ -83,8 +101,11 @@ public class MyButtonList : MonoBehaviour {
 		for(int i = 0; i < size; i++) {
 			buttons[i].SetSelected(bot + i == (position));
 			buttons[i].gameObject.SetActive(bot + i < top);
-			if (bot + i < top)
+			if (bot + i < top) {
 				buttons[i].buttonText.text = buttonNames[bot + i];
+				if (buttons[i].buttonIcon != null)
+					buttons[i].buttonIcon.sprite = buttonIcons[bot + i];
+			}
 		}
 	}
 

@@ -6,8 +6,8 @@ using UnityEngine.UI;
 [System.Serializable]
 public abstract class ListEntry : MonoBehaviour {
 
-	public enum ListType { NONE, NORMAL, THIN }
-	public ListType style;
+	public enum StyleType { NONE, OPTIONS, THIN, SAVE, TRADE }
+	public StyleType style;
 
 	public Image background;
 	public Image highlight;
@@ -34,11 +34,18 @@ public abstract class ListEntry : MonoBehaviour {
 		icon.color = (state) ? Color.grey : Color.white;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="style"></param>
+	/// <param name="font"></param>
 	public virtual void SetStyle(UIStyle style, Font font) {
 		background.sprite = style.baseImage;
 		background.color = style.baseColor;
+		background.type = Image.Type.Sliced;
 		highlight.sprite = style.highImage;
 		highlight.color = style.highColor;
+		highlight.type = Image.Type.Sliced;
 
 		entryName.font = font;
 		entryName.color = style.fontColor;

@@ -10,6 +10,19 @@ public class TrainingListEntry : ListEntry {
 	public Text currentClass;
 
 
+	public override void SetStyle(UIStyle style, Font font) {
+		base.SetStyle(style, font);
+		level.color = style.fontColor;
+		level.font = font;
+		level.resizeTextMaxSize = style.fontMaxSize;
+		exp.color = style.fontColor;
+		exp.font = font;
+		exp.resizeTextMaxSize = style.fontMaxSize;
+		currentClass.color = style.fontColor;
+		currentClass.font = font;
+		currentClass.resizeTextMaxSize = style.fontMaxSize;
+	}
+
 	/// <summary>
 	/// Fills the entry with the data of the character.
 	/// </summary>

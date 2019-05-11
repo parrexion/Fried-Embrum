@@ -26,10 +26,14 @@ public class BaseShop : InputReceiverDelegate {
 
 
 	private void Start () {
-		menuTitle.text = "SHOP";
 		menuMode = 0;
 		basicView.SetActive(true);
 		shopView.SetActive(false);
+		SetupButtons();
+	}
+
+	private void SetupButtons() {
+		menuTitle.text = "SHOP";
 		buttons.ResetButtons();
 		buttons.AddButton("BUY");
 		buttons.AddButton("SELL");
@@ -113,8 +117,9 @@ public class BaseShop : InputReceiverDelegate {
 		else if (menuMode == 3) {
 			if (restockController.DeselectItem()) {
 				menuMode = 0;
-				menuTitle.text = "SHOP";
 				basicView.SetActive(true);
+				SetupButtons();
+				buttons.ForcePosition(2);
 			}
 		}
     }

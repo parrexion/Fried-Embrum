@@ -159,8 +159,8 @@ public class ClassChangeController : MonoBehaviour {
 	private void SetupClassDiff() {
 		CharClass next = selectedClass.nextClass[classList.GetPosition()];
 		hpDiffText.text  = (next.hp - selectedClass.hp).ToString();
-		dmgDiffText.text = (next.atk - selectedClass.atk).ToString();
-		mndDiffText.text = (next.res - selectedClass.res).ToString();
+		dmgDiffText.text = (next.dmg - selectedClass.dmg).ToString();
+		mndDiffText.text = (next.mnd - selectedClass.mnd).ToString();
 		sklDiffText.text = (next.skl - selectedClass.skl).ToString();
 		spdDiffText.text = (next.spd - selectedClass.spd).ToString();
 		defDiffText.text = (next.def - selectedClass.def).ToString();

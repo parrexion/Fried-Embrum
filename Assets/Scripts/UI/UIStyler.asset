@@ -25,9 +25,9 @@ MonoBehaviour:
   breadText:
     color: {r: 0.30411178, g: 0.9622642, b: 0.67519104, a: 1}
     fontMaxSize: 40
-  listTitleText:
+  objectiveText:
     color: {r: 0, g: 0, b: 0, a: 1}
-    fontMaxSize: 50
+    fontMaxSize: 40
   menuTitleText:
     color: {r: 1, g: 1, b: 0, a: 1}
     fontMaxSize: 90
@@ -43,6 +43,21 @@ MonoBehaviour:
   statsPenaltyText:
     color: {r: 1, g: 0.3467337, b: 0, a: 1}
     fontMaxSize: 30
+  baseTitleText:
+    color: {r: 1, g: 1, b: 0, a: 1}
+    fontMaxSize: 70
+  baseBigText:
+    color: {r: 1, g: 1, b: 0, a: 1}
+    fontMaxSize: 55
+  baseMediumText:
+    color: {r: 1, g: 1, b: 0, a: 1}
+    fontMaxSize: 40
+  baseSmallText:
+    color: {r: 1, g: 1, b: 0, a: 1}
+    fontMaxSize: 30
+  levelBonusText:
+    color: {r: 1, g: 1, b: 1, a: 1}
+    fontMaxSize: 30
   mainStyle:
     baseImage: {fileID: 21300000, guid: 1ab50788544ce5a4f9cbfe085c71fc4f, type: 3}
     baseColor: {r: 1, g: 1, b: 1, a: 1}
@@ -51,11 +66,11 @@ MonoBehaviour:
     fontColor: {r: 1, g: 1, b: 0, a: 1}
     fontMaxSize: 60
   baseStyle:
-    baseImage: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+    baseImage: {fileID: 21300000, guid: 1ab50788544ce5a4f9cbfe085c71fc4f, type: 3}
     baseColor: {r: 1, g: 1, b: 1, a: 1}
-    highImage: {fileID: 0}
-    highColor: {r: 0.32298875, g: 0.75735295, b: 0.54166865, a: 1}
-    fontColor: {r: 0, g: 0, b: 0, a: 1}
+    highImage: {fileID: 21300000, guid: 59f2dec48b8d3ab4eb0f0fecda10f218, type: 3}
+    highColor: {r: 0.97885394, g: 1, b: 0, a: 1}
+    fontColor: {r: 0.97885394, g: 1, b: 0, a: 1}
     fontMaxSize: 60
   actionStyle:
     baseImage: {fileID: 21300000, guid: 1ab50788544ce5a4f9cbfe085c71fc4f, type: 3}
@@ -71,6 +86,20 @@ MonoBehaviour:
     highColor: {r: 1, g: 1, b: 1, a: 1}
     fontColor: {r: 0, g: 0, b: 0, a: 1}
     fontMaxSize: 40
+  iconStyle:
+    baseImage: {fileID: 21300000, guid: 1ab50788544ce5a4f9cbfe085c71fc4f, type: 3}
+    baseColor: {r: 1, g: 1, b: 1, a: 1}
+    highImage: {fileID: 21300000, guid: 59f2dec48b8d3ab4eb0f0fecda10f218, type: 3}
+    highColor: {r: 1, g: 1, b: 0, a: 1}
+    fontColor: {r: 1, g: 1, b: 0, a: 1}
+    fontMaxSize: 40
+  optionsStyle:
+    baseImage: {fileID: 21300000, guid: 1ab50788544ce5a4f9cbfe085c71fc4f, type: 3}
+    baseColor: {r: 1, g: 1, b: 1, a: 1}
+    highImage: {fileID: 21300000, guid: 59f2dec48b8d3ab4eb0f0fecda10f218, type: 3}
+    highColor: {r: 0.97885394, g: 1, b: 0, a: 1}
+    fontColor: {r: 0.97885394, g: 1, b: 0, a: 1}
+    fontMaxSize: 60
   healthBar:
     backgroundImage: {fileID: 21300000, guid: c0992fb8966702b4c8d507f7a17417fc, type: 3}
     fillImage: {fileID: 21300000, guid: 6c1db158ce5848f40a05ffb24c4823d6, type: 3}
@@ -89,32 +118,52 @@ MonoBehaviour:
     fillColor: {r: 1, g: 1, b: 1, a: 1}
     textColor: {r: 1, g: 1, b: 1, a: 1}
     fontMaxSize: 40
-  normalList:
+  bigExpBar:
+    backgroundImage: {fileID: 21300000, guid: c0992fb8966702b4c8d507f7a17417fc, type: 3}
+    fillImage: {fileID: 21300000, guid: 6c1db158ce5848f40a05ffb24c4823d6, type: 3}
+    fillColor: {r: 0.20024922, g: 0.8192162, b: 0.9433962, a: 1}
+    textColor: {r: 0.1792453, g: 0.1792453, b: 0.1792453, a: 1}
+    fontMaxSize: 60
+  optionsList:
+    baseImage: {fileID: 21300000, guid: 59f2dec48b8d3ab4eb0f0fecda10f218, type: 3}
+    baseColor: {r: 0.4071225, g: 0.41509432, b: 0.30348876, a: 1}
+    highImage: {fileID: 21300000, guid: 59f2dec48b8d3ab4eb0f0fecda10f218, type: 3}
+    highColor: {r: 0.8773585, g: 0.8773585, b: 0.09518514, a: 1}
+    fontColor: {r: 1, g: 1, b: 1, a: 1}
+    fontMaxSize: 40
+  thinList:
+    baseImage: {fileID: 21300000, guid: 59f2dec48b8d3ab4eb0f0fecda10f218, type: 3}
+    baseColor: {r: 0.4071225, g: 0.41509432, b: 0.30348876, a: 1}
+    highImage: {fileID: 21300000, guid: 59f2dec48b8d3ab4eb0f0fecda10f218, type: 3}
+    highColor: {r: 0.8773585, g: 0.8773585, b: 0.09518514, a: 1}
+    fontColor: {r: 0, g: 0, b: 0, a: 1}
+    fontMaxSize: 40
+  saveList:
     baseImage: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
     baseColor: {r: 1, g: 1, b: 1, a: 1}
     highImage: {fileID: 0}
     highColor: {r: 0.44705886, g: 0.74509805, b: 0.95294124, a: 1}
     fontColor: {r: 0, g: 0, b: 0, a: 1}
     fontMaxSize: 40
-  thinList:
-    baseImage: {fileID: 0}
-    baseColor: {r: 0.6611945, g: 0.6698113, b: 0.55922925, a: 1}
-    highImage: {fileID: 0}
-    highColor: {r: 0.7735849, g: 0.7735849, b: 0.13501246, a: 1}
+  tradeList:
+    baseImage: {fileID: 21300000, guid: 59f2dec48b8d3ab4eb0f0fecda10f218, type: 3}
+    baseColor: {r: 1, g: 1, b: 1, a: 1}
+    highImage: {fileID: 21300000, guid: 59f2dec48b8d3ab4eb0f0fecda10f218, type: 3}
+    highColor: {r: 0.8773585, g: 0.8773585, b: 0.09518514, a: 1}
     fontColor: {r: 0, g: 0, b: 0, a: 1}
     fontMaxSize: 40
   selectPopup:
-    backgroundImage: {fileID: 0}
-    backgroundColor: {r: 0.21542364, g: 0.28758043, b: 0.4433962, a: 1}
+    backgroundImage: {fileID: 21300000, guid: ecf2399f27b6a37458e8b1c7e220a76e, type: 3}
+    backgroundColor: {r: 0.23028658, g: 0.3608354, b: 0.6509434, a: 1}
     buttonStyle:
-      baseImage: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-      baseColor: {r: 1, g: 1, b: 1, a: 1}
-      highImage: {fileID: 0}
+      baseImage: {fileID: 21300000, guid: 1ab50788544ce5a4f9cbfe085c71fc4f, type: 3}
+      baseColor: {r: 1, g: 1, b: 0, a: 1}
+      highImage: {fileID: 21300000, guid: 59f2dec48b8d3ab4eb0f0fecda10f218, type: 3}
       highColor: {r: 1, g: 1, b: 0, a: 1}
       fontColor: {r: 0, g: 0, b: 0, a: 1}
       fontMaxSize: 60
   smallPopup:
-    backgroundImage: {fileID: 0}
+    backgroundImage: {fileID: 21300000, guid: ecf2399f27b6a37458e8b1c7e220a76e, type: 3}
     backgroundColor: {r: 0.5377358, g: 0.2967693, b: 0.50167066, a: 1}
     buttonStyle:
       baseImage: {fileID: 0}
@@ -123,3 +172,13 @@ MonoBehaviour:
       highColor: {r: 0.32298875, g: 0.75735295, b: 0.54166865, a: 1}
       fontColor: {r: 0, g: 0, b: 0, a: 1}
       fontMaxSize: 40
+  bigSpinner:
+    backgroundImage: {fileID: 0}
+    backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+    fontColor: {r: 0, g: 0, b: 0, a: 1}
+    fontMaxSize: 40
+  smallSpinner:
+    backgroundImage: {fileID: 21300000, guid: ed129367bdbad3c4c9e18f1d22956b90, type: 3}
+    backgroundColor: {r: 1, g: 1, b: 0, a: 1}
+    fontColor: {r: 1, g: 1, b: 0, a: 1}
+    fontMaxSize: 40

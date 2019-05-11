@@ -8,13 +8,13 @@ using UnityEngine.UI;
 /// </summary>
 public class MyPrompt : MonoBehaviour {
 
-	public enum PromptType { NONE, BIG, SMALL }
+	public enum StyleType { NONE, BIG, SMALL }
 	public enum Result { OK1, OK2, CANCEL, LOCKED }
 	const string YES_NAME = "YES";
 	const string NO_NAME = "NO";
 	const string OK_NAME = "OK";
 	
-	public PromptType style;
+	public StyleType style;
 
 	[Header("Objects")]
 	public Image backgroundImage;
@@ -156,6 +156,11 @@ public class MyPrompt : MonoBehaviour {
 		yes2Button.SetSelected(position == 2);
 	}
 
+	/// <summary>
+	/// Updates the style to the one in the UIStyler.
+	/// </summary>
+	/// <param name="style"></param>
+	/// <param name="font"></param>
 	public void SetStyle(PromptStyle style, Font font) {
 		backgroundImage.sprite = style.backgroundImage;
 		backgroundImage.color = style.backgroundColor;

@@ -10,6 +10,7 @@ public class StorageList : MonoBehaviour {
 	public IntVariable totalMoney;
 	public FloatVariable sellRatio;
 	private ItemListVariable shopList;
+	public IconLibrary weaponIcons;
 
 	[Header("Header")]
 	public Text costHeader;
@@ -27,14 +28,17 @@ public class StorageList : MonoBehaviour {
 		entryList = new EntryList<ItemListEntry>(visibleSize);
 
 		categories.ResetButtons();
-		categories.AddButton(ItemType.SWORD.ToString());
-		categories.AddButton(ItemType.LANCE.ToString());
-		categories.AddButton(ItemType.AXE.ToString());
-		categories.AddButton(ItemType.MAGIC.ToString());
-		categories.AddButton(ItemType.THROW.ToString());
-		categories.AddButton(ItemType.BOW.ToString());
-		categories.AddButton(ItemType.HEAL.ToString());
-		categories.AddButton(ItemType.CHEAL.ToString());
+		//categories.AddButton(ItemType.SWORD.ToString());
+		//categories.AddButton(ItemType.LANCE.ToString());
+		//categories.AddButton(ItemType.AXE.ToString());
+		//categories.AddButton(ItemType.MAGIC.ToString());
+		//categories.AddButton(ItemType.THROW.ToString());
+		//categories.AddButton(ItemType.BOW.ToString());
+		//categories.AddButton(ItemType.HEAL.ToString());
+		//categories.AddButton(ItemType.CHEAL.ToString());
+		for (int i = 1; i < weaponIcons.icons.Length; i++) {
+			categories.AddButton(weaponIcons.icons[i]);
+		}
         categories.ForcePosition(0);
     }
 

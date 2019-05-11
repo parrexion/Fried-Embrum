@@ -17,17 +17,23 @@ public class UiStylerEditor : Editor {
 			for (int b = 0; b < buttons.Length; b++) {
 				switch (buttons[b].style)
 				{
-				case MyButton.ButtonType.MAIN:
+				case MyButton.StyleType.MAIN:
 					buttons[b].SetStyle(styler.mainStyle, styler.font);
 					break;
-				case MyButton.ButtonType.BASE:
+				case MyButton.StyleType.BASE:
 					buttons[b].SetStyle(styler.baseStyle, styler.font);
 					break;
-				case MyButton.ButtonType.ACTION:
+				case MyButton.StyleType.ACTION:
 					buttons[b].SetStyle(styler.actionStyle, styler.font);
 					break;
-				case MyButton.ButtonType.NOSELECT:
+				case MyButton.StyleType.NOSELECT:
 					buttons[b].SetStyle(styler.noSelectStyle, styler.font);
+					break;
+				case MyButton.StyleType.ICON:
+					buttons[b].SetStyle(styler.iconStyle, styler.font);
+					break;
+				case MyButton.StyleType.OPTIONS:
+					buttons[b].SetStyle(styler.optionsStyle, styler.font);
 					break;
 				}
 				if (buttons[b].gameObject.scene.name != null) {
@@ -39,35 +45,50 @@ public class UiStylerEditor : Editor {
 			for (int t = 0; t < texts.Length; t++) {
 				switch (texts[t].style)
 				{
-				case MyText.TextType.HUGE:
+				case MyText.StyleType.HUGE:
 					texts[t].SetStyle(styler.hugeText, styler.font);
 					break;
-				case MyText.TextType.TITLE:
+				case MyText.StyleType.TITLE:
 					texts[t].SetStyle(styler.titleText, styler.font);
 					break;
-				case MyText.TextType.SUBTITLE:
+				case MyText.StyleType.SUBTITLE:
 					texts[t].SetStyle(styler.subTitleText, styler.font);
 					break;
-				case MyText.TextType.BREAD:
+				case MyText.StyleType.BREAD:
 					texts[t].SetStyle(styler.breadText, styler.font);
 					break;
-				case MyText.TextType.LIST_TITLE:
-					texts[t].SetStyle(styler.listTitleText, styler.font);
+				case MyText.StyleType.OBJECTIVE:
+					texts[t].SetStyle(styler.objectiveText, styler.font);
 					break;
-				case MyText.TextType.MENU_TITLE:
+				case MyText.StyleType.MENU_TITLE:
 					texts[t].SetStyle(styler.menuTitleText, styler.font);
 					break;
-				case MyText.TextType.STATS_BIG:
+				case MyText.StyleType.STATS_BIG:
 					texts[t].SetStyle(styler.statsBigText, styler.font);
 					break;
-				case MyText.TextType.STATS_MID:
+				case MyText.StyleType.STATS_MID:
 					texts[t].SetStyle(styler.statsMediumText, styler.font);
 					break;
-				case MyText.TextType.STATS_SMALL:
+				case MyText.StyleType.STATS_SMALL:
 					texts[t].SetStyle(styler.statsSmallText, styler.font);
 					break;
-				case MyText.TextType.STATS_PENALTY:
+				case MyText.StyleType.STATS_PENALTY:
 					texts[t].SetStyle(styler.statsPenaltyText, styler.font);
+					break;
+				case MyText.StyleType.BASE_TITLE:
+					texts[t].SetStyle(styler.baseTitleText, styler.font);
+					break;
+				case MyText.StyleType.BASE_HUGE:
+					texts[t].SetStyle(styler.baseBigText, styler.font);
+					break;
+				case MyText.StyleType.BASE_MID:
+					texts[t].SetStyle(styler.baseMediumText, styler.font);
+					break;
+				case MyText.StyleType.BASE_SMALL:
+					texts[t].SetStyle(styler.baseSmallText, styler.font);
+					break;
+				case MyText.StyleType.LEVEL_BONUS:
+					texts[t].SetStyle(styler.levelBonusText, styler.font);
 					break;
 				}
 				if(texts[t].gameObject.scene.name != null) {
@@ -87,6 +108,9 @@ public class UiStylerEditor : Editor {
 					case MyBar.StyleType.FULFILL:
 						bars[p].SetStyle(styler.fulfillBar, styler.font);
 						break;
+					case MyBar.StyleType.BIG_EXP:
+						bars[p].SetStyle(styler.bigExpBar, styler.font);
+						break;
 				}
 				if(bars[p].gameObject.scene.name != null) {
 					EditorUtility.SetDirty(bars[p].gameObject);
@@ -96,11 +120,17 @@ public class UiStylerEditor : Editor {
 			ListEntry[] lists = Resources.FindObjectsOfTypeAll<ListEntry>();
 			for(int l = 0; l < lists.Length; l++) {
 				switch(lists[l].style) {
-					case ListEntry.ListType.NORMAL:
-						lists[l].SetStyle(styler.normalList, styler.font);
+					case ListEntry.StyleType.OPTIONS:
+						lists[l].SetStyle(styler.optionsList, styler.font);
 						break;
-					case ListEntry.ListType.THIN:
+					case ListEntry.StyleType.THIN:
 						lists[l].SetStyle(styler.thinList, styler.font);
+						break;
+					case ListEntry.StyleType.SAVE:
+						lists[l].SetStyle(styler.saveList, styler.font);
+						break;
+					case ListEntry.StyleType.TRADE:
+						lists[l].SetStyle(styler.tradeList, styler.font);
 						break;
 				}
 				if(lists[l].gameObject.scene.name == null) {
@@ -111,15 +141,30 @@ public class UiStylerEditor : Editor {
 			MyPrompt[] prompts = Resources.FindObjectsOfTypeAll<MyPrompt>();
 			for(int p = 0; p < prompts.Length; p++) {
 				switch(prompts[p].style) {
-					case MyPrompt.PromptType.BIG:
+					case MyPrompt.StyleType.BIG:
 						prompts[p].SetStyle(styler.selectPopup, styler.font);
 						break;
-					case MyPrompt.PromptType.SMALL:
+					case MyPrompt.StyleType.SMALL:
 						prompts[p].SetStyle(styler.smallPopup, styler.font);
 						break;
 				}
 				if(prompts[p].gameObject.scene.name == null) {
 					EditorUtility.SetDirty(prompts[p]);
+				}
+			}
+
+			MySpinner[] spinners = Resources.FindObjectsOfTypeAll<MySpinner>();
+			for(int s = 0; s < spinners.Length; s++) {
+				switch(spinners[s].style) {
+					case MySpinner.StyleType.BIG:
+						spinners[s].SetStyle(styler.bigSpinner, styler.font);
+						break;
+					case MySpinner.StyleType.SMALL:
+						spinners[s].SetStyle(styler.smallSpinner, styler.font);
+						break;
+				}
+				if(spinners[s].gameObject.scene.name == null) {
+					EditorUtility.SetDirty(spinners[s]);
 				}
 			}
 

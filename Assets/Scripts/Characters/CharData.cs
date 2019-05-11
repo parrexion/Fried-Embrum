@@ -17,22 +17,20 @@ public class CharData : ScrObjLibraryEntry {
 
 	[Header("Personal Base Stats")]
 	public int hp;
-	public int atk;
+	public int dmg;
 	public int skl;
 	public int spd;
-	public int lck;
 	public int def;
-	public int res;
+	public int mnd;
 	public int con;
 
 	[Header("Personal Growths")]
 	public int gHp;
-	public int gAtk;
+	public int gDmg;
+	public int gMnd;
 	public int gSkl;
 	public int gSpd;
-	public int gLck;
 	public int gDef;
-	public int gRes;
 
 	[Header("Supports")]
 	public List<SupportTuple> supports = new List<SupportTuple>();
@@ -54,20 +52,18 @@ public class CharData : ScrObjLibraryEntry {
 		personalSkill = null;
 
 		hp = 0;
-		atk = 0;
+		dmg = 0;
+		mnd = 0;
 		skl = 0;
 		spd = 0;
-		lck = 0;
 		def = 0;
-		res = 0;
 
 		gHp = 0;
-		gAtk = 0;
+		gDmg = 0;
+		gMnd = 0;
 		gSkl = 0;
 		gSpd = 0;
-		gLck = 0;
 		gDef = 0;
-		gRes = 0;
 
 		supports = new List<SupportTuple>();
 
@@ -88,20 +84,18 @@ public class CharData : ScrObjLibraryEntry {
 		personalSkill = cd.personalSkill;
 
 		hp = cd.hp;
-		atk = cd.atk;
+		dmg = cd.dmg;
+		mnd = cd.mnd;
 		skl = cd.skl;
 		spd = cd.spd;
-		lck = cd.lck;
 		def = cd.def;
-		res = cd.res;
 
 		gHp = cd.gHp;
-		gAtk = cd.gAtk;
+		gDmg = cd.gDmg;
+		gMnd = cd.gMnd;
 		gSkl = cd.gSkl;
 		gSpd = cd.gSpd;
-		gLck = cd.gLck;
 		gDef = cd.gDef;
-		gRes = cd.gRes;
 
 		supports = new List<SupportTuple>();
 		for (int i = 0; i < cd.supports.Count; i++) {

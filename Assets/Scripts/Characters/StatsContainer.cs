@@ -100,8 +100,8 @@ public class StatsContainer {
 
 	public void GenerateStartingStats() {
 		eHp = charData.hp + classData.hp;
-		eDmg = charData.atk + classData.atk;
-		eMnd = charData.res + classData.res;
+		eDmg = charData.dmg + classData.dmg;
+		eMnd = charData.mnd + classData.mnd;
 		eSpd = charData.spd + classData.spd;
 		eSkl = charData.skl + classData.skl;
 		eDef = charData.def + classData.def;
@@ -148,8 +148,8 @@ public class StatsContainer {
 	public void GainLevel() {
 		level++;
 		eHp += (int)(0.01f * (classData.gHp+charData.gHp + Random.Range(0,100)));
-		eDmg += (int)(0.01f * (classData.gAtk+charData.gAtk + Random.Range(0,100)));
-		eMnd += (int)(0.01f * (classData.gRes+charData.gRes + Random.Range(0,100)));
+		eDmg += (int)(0.01f * (classData.gDmg+charData.gDmg + Random.Range(0,100)));
+		eMnd += (int)(0.01f * (classData.gMnd+charData.gMnd + Random.Range(0,100)));
 		eSpd += (int)(0.01f * (classData.gSpd+charData.gSpd + Random.Range(0,100)));
 		eSkl += (int)(0.01f * (classData.gSkl+charData.gSkl + Random.Range(0,100)));
 		eDef += (int)(0.01f * (classData.gDef+charData.gDef + Random.Range(0,100)));
@@ -159,8 +159,8 @@ public class StatsContainer {
 
 	public void ChangeClass(CharClass newClass) {
 		eHp += newClass.hp - classData.hp;
-		eDmg += newClass.atk - classData.atk;
-		eMnd += newClass.res - classData.res;
+		eDmg += newClass.dmg - classData.dmg;
+		eMnd += newClass.mnd - classData.mnd;
 		eSpd += newClass.spd - classData.spd;
 		eSkl += newClass.skl - classData.skl;
 		eDef += newClass.def - classData.def;

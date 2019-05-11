@@ -38,8 +38,8 @@ public class TurnController : MonoBehaviour {
 	public PlayerData playerData;
 
 	[Header("UI")]
-	public GameObject turnChangeDisplay;
-	public Text turnChangeText;
+	public GameObject notificationObject;
+	public Text notificationText;
 
 	[Header("Sound")]
 	public AudioVariable mainMusic;
@@ -49,10 +49,6 @@ public class TurnController : MonoBehaviour {
 	public SfxEntry victoryFanfare;
 	public SfxEntry gameOverFanfare;
 	public SfxEntry turnChangeFanfare;
-
-	[Header("Game Finished")]
-	public GameObject gameFinishObject;
-	public Text gameFinishText;
 
 	[Header("Events")]
 	public UnityEvent resetSelections;
@@ -279,18 +275,18 @@ public class TurnController : MonoBehaviour {
 
 		currentAction.value = ActionMode.LOCK;
 		InputDelegateController.instance.TriggerMenuChange(MenuMode.NONE);
-		turnChangeText.text = currentFactionTurn.value + " TURN";
+		notificationText.text = currentFactionTurn.value + " TURN";
 
 		yield return null;
 
-		turnChangeDisplay.SetActive(true);
+		notificationObject.SetActive(true);
 		resetSelections.Invoke();
 		sfxQueue.Enqueue(turnChangeFanfare);
 		playSfxEvent.Invoke();
 
 		yield return new WaitForSeconds(duration);
 		
-		turnChangeDisplay.SetActive(false);
+		notificationObject.SetActive(false);
 		StartTurn();
 	}
 
@@ -349,15 +345,14 @@ public class TurnController : MonoBehaviour {
 	/// <returns></returns>
 	private IEnumerator EndGameWin() {
 		currentState = TurnState.FINISHED;
-		gameFinishText.text = "BATTLE WON";
-		gameFinishText.gameObject.SetActive(true);
-		gameFinishObject.SetActive(true);
+		notificationText.text = "BATTLE WON";
+		notificationObject.SetActive(true);
 		sfxQueue.Enqueue(victoryFanfare);
 		playSfxEvent.Invoke();
 		yield return new WaitForSeconds(4f);
 
-		gameFinishObject.SetActive(false);
-		gameFinishText.gameObject.SetActive(false);
+		notificationObject.SetActive(false);
+		notificationText.gameObject.SetActive(false);
 
 		// Award all the rewards
 		MapEntry map = (MapEntry)currentMap.value;
@@ -386,9 +381,8 @@ public class TurnController : MonoBehaviour {
 	/// <returns></returns>
 	private IEnumerator EndGameLose() {
 		currentState = TurnState.FINISHED;
-		gameFinishText.text = "GAME OVER";
-		gameFinishText.gameObject.SetActive(true);
-		gameFinishObject.SetActive(true);
+		notificationText.text = "GAME OVER";
+		notificationObject.SetActive(true);
 		sfxQueue.Enqueue(gameOverFanfare);
 		playSfxEvent.Invoke();
 		yield return new WaitForSeconds(2f);

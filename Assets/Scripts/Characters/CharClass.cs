@@ -13,21 +13,19 @@ public class CharClass : ScrObjLibraryEntry {
 
 	[Header("Bases")]
 	public int hp;
-	public int atk;
+	public int dmg;
+	public int mnd;
 	public int skl;
 	public int spd;
-	public int lck;
 	public int def;
-	public int res;
 
 	[Header("Growths")]
 	public int gHp;
-	public int gAtk;
+	public int gDmg;
+	public int gMnd;
 	public int gSkl;
 	public int gSpd;
-	public int gLck;
 	public int gDef;
-	public int gRes;
 
 	[Header("Skills")]
 	public List<ItemType> weaponSkills = new List<ItemType>();
@@ -45,20 +43,18 @@ public class CharClass : ScrObjLibraryEntry {
 		con = 0;
 
 		hp = 1;
-		atk = 0;
+		dmg = 0;
+		mnd = 0;
 		skl = 0;
 		spd = 0;
-		lck = 0;
 		def = 0;
-		res = 0;
 
 		gHp = 0;
-		gAtk = 0;
+		gDmg = 0;
+		gMnd = 0;
 		gSkl = 0;
 		gSpd = 0;
-		gLck = 0;
 		gDef = 0;
-		gRes = 0;
 
 		weaponSkills = new List<ItemType>();
 		weaponLevels = new List<int>();
@@ -76,20 +72,18 @@ public class CharClass : ScrObjLibraryEntry {
 		con = cc.con;
 
 		hp = cc.hp;
-		atk = cc.atk;
+		dmg = cc.dmg;
+		mnd = cc.mnd;
 		skl = cc.skl;
 		spd = cc.spd;
-		lck = cc.lck;
 		def = cc.def;
-		res = cc.res;
 
 		gHp = cc.gHp;
-		gAtk = cc.gAtk;
+		gDmg = cc.gDmg;
+		gMnd = cc.gMnd;
 		gSkl = cc.gSkl;
 		gSpd = cc.gSpd;
-		gLck = cc.gLck;
 		gDef = cc.gDef;
-		gRes = cc.gRes;
 
 		weaponSkills = new List<ItemType>();
 		weaponLevels = new List<int>();
