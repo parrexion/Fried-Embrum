@@ -26,6 +26,7 @@ public class BattlePrepController : InputReceiverDelegate {
 	[Header("Views")]
 	public GameObject menuCollectionView;
 	public GameObject mainMenuView;
+	public GameObject buttonMenuView;
 	public GameObject characterSelectView;
 	public GameObject inventoryView;
 	public GameObject objectiveView;
@@ -36,6 +37,7 @@ public class BattlePrepController : InputReceiverDelegate {
 
 	private void Start() {
 		mainMenuView.SetActive(false);
+		buttonMenuView.SetActive(false);
 		characterSelectView.SetActive(false);
 		inventoryView.SetActive(false);
 
@@ -55,6 +57,7 @@ public class BattlePrepController : InputReceiverDelegate {
 		mainMenuView.SetActive(active);
 		if (active) {
 			menuCollectionView.SetActive(!active);
+			buttonMenuView.SetActive(true);
 			currentState = State.MAIN;
 		}
 	}
@@ -101,42 +104,52 @@ public class BattlePrepController : InputReceiverDelegate {
 	public override void OnUpArrow() {
 		if (currentState == State.MAIN) {
 			mainButtons.Move(-1);
+			menuMoveEvent.Invoke();
         }
         else if (currentState == State.CHAR) {
 			characterSelect.MoveSelection(-1);
+			menuMoveEvent.Invoke();
 		}
         else if (currentState == State.INVENTORY) {
 			inventorySelect.MoveSelection(-1);
+			menuMoveEvent.Invoke();
 		}
 	}
 
 	public override void OnDownArrow() {
 		if (currentState == State.MAIN) {
 			mainButtons.Move(1);
+			menuMoveEvent.Invoke();
         }
         else if (currentState == State.CHAR) {
             characterSelect.MoveSelection(1);
+			menuMoveEvent.Invoke();
         }
         else if (currentState == State.INVENTORY) {
 			inventorySelect.MoveSelection(1);
+			menuMoveEvent.Invoke();
 		}
 	}
 
 	public override void OnLeftArrow() {
 		if (currentState == State.INVENTORY) {
 			inventorySelect.MoveHorizontal(-1);
+			menuMoveEvent.Invoke();
 		}
 		else if (currentState == State.PROMPT) {
 			startPrompt.Move(-1);
+			menuMoveEvent.Invoke();
 		}
 	}
 
 	public override void OnRightArrow() {
 		if (currentState == State.INVENTORY) {
 			inventorySelect.MoveHorizontal(1);
+			menuMoveEvent.Invoke();
 		}
 		else if(currentState == State.PROMPT) {
 			startPrompt.Move(1);
+			menuMoveEvent.Invoke();
 		}
 	}
 
@@ -145,45 +158,58 @@ public class BattlePrepController : InputReceiverDelegate {
 			int mainIndex = mainButtons.GetPosition();
 			if (mainIndex == 0) {
 				currentState = State.CHAR;
+				buttonMenuView.SetActive(false);
 				characterSelectView.SetActive(true);
 				characterSelect.GenerateList();
+				menuAcceptEvent.Invoke();
 			}
 			else if (mainIndex == 1) {
 				currentState = State.FORMATION;
 				InputDelegateController.instance.TriggerMenuChange(MenuMode.FORMATION);
 				mainMenuView.SetActive(false);
 				menuCollectionView.SetActive(true);
+				menuAcceptEvent.Invoke();
 			}
 			else if (mainIndex == 2) {
 				currentState = State.INVENTORY;
+				buttonMenuView.SetActive(false);
 				inventoryView.SetActive(true);
 				inventorySelect.GenerateList();
+				menuAcceptEvent.Invoke();
 			}
 			else if (mainIndex == 3) {
 				currentState = State.OBJECTIVE;
+				buttonMenuView.SetActive(false);
 				objectiveView.SetActive(true);
 				objective.UpdateState(true);
+				menuAcceptEvent.Invoke();
 			}
 			else if (mainIndex == 4) {
 				currentState = State.PROMPT;
 				startPrompt.ShowWindow("Start mission?", false);
+				menuAcceptEvent.Invoke();
 			}
 		}
 		else if (currentState == State.CHAR) {
 			characterSelect.SelectCharacter();
+			menuAcceptEvent.Invoke();
 		}
 		//else if (currentState == State.FORMATION) { }
 		else if (currentState == State.INVENTORY) {
 			inventorySelect.SelectItem();
+			menuAcceptEvent.Invoke();
 		}
 		else if (currentState == State.OBJECTIVE) {
 			objective.UpdateState(false);
 			objectiveView.SetActive(false);
+			buttonMenuView.SetActive(true);
 			currentState = State.MAIN;
+			menuAcceptEvent.Invoke();
 		}
 		else if (currentState == State.PROMPT) {
 			if (startPrompt.Click(true) == MyPrompt.Result.OK1) {
 				StartMission();
+				menuAcceptEvent.Invoke();
 			}
 			currentState = State.MAIN;
 		}
@@ -193,24 +219,33 @@ public class BattlePrepController : InputReceiverDelegate {
 		if (currentState == State.CHAR) {
 			currentState = State.MAIN;
 			bool res = characterSelect.LeaveMenu();
+			buttonMenuView.SetActive(true);
 			characterSelectView.SetActive(false);
-			if (res)
+			if (res) {
 				respawnCharactersEvent.Invoke();
+				menuBackEvent.Invoke();
+			}
 		}
 		else if (currentState == State.INVENTORY) {
 			if (inventorySelect.DeselectItem()) {
+				buttonMenuView.SetActive(true);
 				inventoryView.SetActive(false);
 				currentState = State.MAIN;
+				menuBackEvent.Invoke();
 			}
 		}
 		else if (currentState == State.OBJECTIVE) {
 			objective.UpdateState(false);
 			objectiveView.SetActive(false);
+			buttonMenuView.SetActive(true);
 			currentState = State.MAIN;
+			menuBackEvent.Invoke();
 		}
 		else if (currentState == State.PROMPT) {
 			startPrompt.Click(false);
+			buttonMenuView.SetActive(true);
 			currentState = State.MAIN;
+			menuBackEvent.Invoke();
 		}
 	}
 
@@ -219,11 +254,11 @@ public class BattlePrepController : InputReceiverDelegate {
 			return;
 		currentState = State.PROMPT;
 		startPrompt.ShowWindow("Start mission?", false);
+		menuAcceptEvent.Invoke();
 	}
 
 	public void ReturnToMain() {
 		currentState = State.MAIN;
-
 	}
 	
 

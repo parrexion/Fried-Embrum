@@ -90,7 +90,6 @@ public class IngameMenuController : InputReceiverDelegate {
 		else if (state == 1) {
 			if (howTo.CheckOk()) {
 				OnBackButton();
-				menuBackEvent.Invoke();
 			}
 		}
 		else if (state == 2) {

@@ -90,6 +90,9 @@ public class UiStylerEditor : Editor {
 				case MyText.StyleType.LEVEL_BONUS:
 					texts[t].SetStyle(styler.levelBonusText, styler.font);
 					break;
+				case MyText.StyleType.DAMAGE:
+					texts[t].SetStyle(styler.damageText, styler.font);
+					break;
 				}
 				if(texts[t].gameObject.scene.name != null) {
 					EditorUtility.SetDirty(texts[t]);
@@ -132,8 +135,11 @@ public class UiStylerEditor : Editor {
 					case ListEntry.StyleType.TRADE:
 						lists[l].SetStyle(styler.tradeList, styler.font);
 						break;
+					case ListEntry.StyleType.PREP:
+						lists[l].SetStyle(styler.prepList, styler.font);
+						break;
 				}
-				if(lists[l].gameObject.scene.name == null) {
+				if(lists[l].gameObject.scene.name != null) {
 					EditorUtility.SetDirty(lists[l]);
 				}
 			}
@@ -148,7 +154,7 @@ public class UiStylerEditor : Editor {
 						prompts[p].SetStyle(styler.smallPopup, styler.font);
 						break;
 				}
-				if(prompts[p].gameObject.scene.name == null) {
+				if(prompts[p].gameObject.scene.name != null) {
 					EditorUtility.SetDirty(prompts[p]);
 				}
 			}
@@ -163,7 +169,7 @@ public class UiStylerEditor : Editor {
 						spinners[s].SetStyle(styler.smallSpinner, styler.font);
 						break;
 				}
-				if(spinners[s].gameObject.scene.name == null) {
+				if(spinners[s].gameObject.scene.name != null) {
 					EditorUtility.SetDirty(spinners[s]);
 				}
 			}

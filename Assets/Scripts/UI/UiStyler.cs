@@ -23,6 +23,7 @@ public class UiStyler : ScriptableObject {
 	public TextStyle baseMediumText;
 	public TextStyle baseSmallText;
 	public TextStyle levelBonusText;
+	public TextStyle damageText;
 
 	[Header("Button Styles")]
 	public UIStyle mainStyle;
@@ -43,6 +44,7 @@ public class UiStyler : ScriptableObject {
 	public UIStyle thinList;
 	public UIStyle saveList;
 	public UIStyle tradeList;
+	public UIStyle prepList;
 
 	[Header("Prompt Styles")]
 	public PromptStyle selectPopup;

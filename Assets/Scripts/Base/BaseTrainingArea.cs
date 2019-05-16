@@ -18,12 +18,9 @@ public class BaseTrainingArea : InputReceiverDelegate {
 	public BexpController bexpController;
 	public ClassChangeController changeController;
 
-	private int menuMode;
-
 
 	private void Start () {
 		menuTitle.text = "TRAINING";
-		menuMode = 0;
 		basicView.SetActive(true);
 		bexpView.SetActive(false);
 		classView.SetActive(false);
@@ -38,30 +35,39 @@ public class BaseTrainingArea : InputReceiverDelegate {
 	}
 
     public override void OnUpArrow() {
+		int menuMode = buttons.GetPosition();
 		if (menuMode == 0) {
 			buttons.Move(-1);
+			menuMoveEvent.Invoke();
 		}
 		else if (menuMode == 1) {
 			bexpController.MoveSelection(-1);
+			menuMoveEvent.Invoke();
 		}
 		else if (menuMode == 2) {
 			changeController.MoveSelection(-1);
+			menuMoveEvent.Invoke();
 		}
 	}
 
     public override void OnDownArrow() {
+		int menuMode = buttons.GetPosition();
 		if (menuMode == 0) {
 			buttons.Move(1);
+			menuMoveEvent.Invoke();
 		}
 		else if (menuMode == 1) {
 			bexpController.MoveSelection(1);
+			menuMoveEvent.Invoke();
 		}
 		else if (menuMode == 2) {
 			changeController.MoveSelection(1);
+			menuMoveEvent.Invoke();
 		}
 	}
 
     public override void OnOkButton() {
+		int menuMode = buttons.GetPosition();
 		if (menuMode == 0) {
 			int currentIndex = buttons.GetPosition();
 			if (currentIndex == 0) {
@@ -70,33 +76,35 @@ public class BaseTrainingArea : InputReceiverDelegate {
 				bexpController.GenerateList();
 				bexpView.SetActive(true);
 				basicView.SetActive(false);
-				// bexpList.
+				menuAcceptEvent.Invoke();
 			}
 			else if (currentIndex == 1) {
 				menuMode = 2;
 				menuTitle.text = "CLASS";
 				classView.SetActive(true);
 				basicView.SetActive(false);
+				menuAcceptEvent.Invoke();
 			}
 		}
 		else if (menuMode == 1) {
 			bexpController.SelectCharacter();
+			menuAcceptEvent.Invoke();
 		}
 		else if (menuMode == 2) {
 			changeController.SelectCharacter();
+			menuAcceptEvent.Invoke();
 		}
 	}
 
     public override void OnBackButton() {
-		if (menuMode == 0) {
-
-		}
-		else if (menuMode == 1) {
+		int menuMode = buttons.GetPosition();
+		if (menuMode == 1) {
 			if (bexpController.DeselectCharacter()) {
 				menuMode = 0;
 				menuTitle.text = "TRAINING";
 				basicView.SetActive(true);
 				bexpView.SetActive(false);
+				menuBackEvent.Invoke();
 			}
 		}
 		else if (menuMode == 2) {
@@ -105,18 +113,23 @@ public class BaseTrainingArea : InputReceiverDelegate {
 				menuTitle.text = "TRAINING";
 				basicView.SetActive(true);
 				classView.SetActive(false);
+				menuBackEvent.Invoke();
 			}
 		}
 	}
 
     public override void OnLeftArrow() {
+		int menuMode = buttons.GetPosition();
 		if (menuMode == 1) {
 			bexpController.UpdateAwardExp(-1);
+			menuMoveEvent.Invoke();
 		}
 	}
     public override void OnRightArrow() {
+		int menuMode = buttons.GetPosition();
 		if (menuMode == 1) {
 			bexpController.UpdateAwardExp(1);
+			menuMoveEvent.Invoke();
 		}
 	}
 

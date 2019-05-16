@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class ForecastUI : MonoBehaviour {
-	
+
 	private static TacticsMove _attackerTactics;
 	private static TacticsMove _defenderTactics;
 
@@ -24,7 +24,7 @@ public class ForecastUI : MonoBehaviour {
 	public GameObject backgroundFight;
 	public GameObject backgroundHeal;
 	public GameObject backgroundInBattle;
-	
+
 	[Header("Attacker Stats")]
 	public Image colorBackground;
 	public Image portrait;
@@ -33,12 +33,13 @@ public class ForecastUI : MonoBehaviour {
 	public Image wpnIcon;
 	public Text wpnName;
 	public Text wpnCharge;
+	public MyBar hpBar;
 	public Text hpText;
 	public Text dmgText;
 	public GameObject doubleDamage;
 	public Text hitText;
 	public Text critText;
-	
+
 	[Header("Defender Stats")]
 	public Image eColorBackground;
 	public Image ePortrait;
@@ -47,12 +48,13 @@ public class ForecastUI : MonoBehaviour {
 	public Image eWpnIcon;
 	public Text eWpnName;
 	public Text eWpnCharge;
+	public MyBar eHpBar;
 	public Text eHpText;
 	public Text eDmgText;
 	public GameObject eDoubleDamage;
 	public Text eHitText;
 	public Text eCritText;
-	
+
 	[Header("Healing Stats")]
 	public Image hPortrait;
 	public Text hCharacterName;
@@ -79,15 +81,21 @@ public class ForecastUI : MonoBehaviour {
 	}
 
 	public void UpdateHealthUI() {
-		hpText.text = _attackerTactics.currentHealth.ToString();
-		eHpText.text = _defenderTactics.currentHealth.ToString();
+		if (hpBar != null) {
+			hpBar.SetAmount(_attackerTactics.currentHealth, _attackerTactics.stats.hp);
+			eHpBar.SetAmount(_defenderTactics.currentHealth, _defenderTactics.stats.hp);
+		}
+		else {
+			hpText.text = _attackerTactics.currentHealth.ToString();
+			eHpText.text = _defenderTactics.currentHealth.ToString();
+		}
 	}
 
 	private void CalculateShowForecast(TacticsMove attacker, MapTile target) {
 		if (target.currentCharacter == null) {
 			// BLOCK FIGHT
 			TacticsMove defender = target.blockMove;
-			BattleAction.Type battleMode = (currentMode.value == ActionMode.ATTACK) ? BattleAction.Type.DAMAGE : BattleAction.Type.HEAL; 
+			BattleAction.Type battleMode = (currentMode.value == ActionMode.ATTACK) ? BattleAction.Type.DAMAGE : BattleAction.Type.HEAL;
 			BattleAction act1 = new BattleAction(true, battleMode, attacker, defender);
 			_attackerTactics = attacker;
 			_defenderTactics = defender;
@@ -109,6 +117,7 @@ public class ForecastUI : MonoBehaviour {
 				bool defWeak = false;
 				int atkAdv = 0;
 				int defAdv = 0;
+				UpdateHealthUI();
 				ShowAttackerStats(attacker, act1.weaponAtk, atk, spd, hit, crit, atkAdv, atkWeak);
 				ShowDefenderStats(defender, new InventoryTuple(), ret, spd, hit2, crit2, defAdv, defWeak);
 				if (!inBattle) {
@@ -119,7 +128,7 @@ public class ForecastUI : MonoBehaviour {
 		}
 		else {
 			TacticsMove defender = target.currentCharacter;
-			BattleAction.Type battlemode = (currentMode.value == ActionMode.ATTACK) ? BattleAction.Type.DAMAGE : BattleAction.Type.HEAL; 
+			BattleAction.Type battlemode = (currentMode.value == ActionMode.ATTACK) ? BattleAction.Type.DAMAGE : BattleAction.Type.HEAL;
 			BattleAction act1 = new BattleAction(true, battlemode, attacker, defender);
 			_attackerTactics = attacker;
 			_defenderTactics = defender;
@@ -143,6 +152,7 @@ public class ForecastUI : MonoBehaviour {
 				bool defWeak = act2.CheckWeaponWeakness();
 				int atkAdv = act1.GetAdvantage();
 				int defAdv = act2.GetAdvantage();
+				UpdateHealthUI();
 				ShowAttackerStats(attacker, act1.weaponAtk, atk, spd, hit, crit, atkAdv, atkWeak);
 				ShowDefenderStats(defender, act2.weaponAtk, ret, spd, hit2, crit2, defAdv, defWeak);
 				if (!inBattle) {
@@ -159,7 +169,7 @@ public class ForecastUI : MonoBehaviour {
 			}
 		}
 	}
-	
+
 	private void ShowAttackerStats(TacticsMove tactics, InventoryTuple InvTup, int damage, int speed, int hit, int crit, int atkAdv, bool defWeak) {
 		colorBackground.color = (tactics.faction == Faction.PLAYER) ? new Color(0.7f, 0.7f, 1f) : new Color(1f, 0.7f, 0.7f);
 
@@ -172,14 +182,13 @@ public class ForecastUI : MonoBehaviour {
 		if (wpnCharge)
 			wpnCharge.text = (InvTup.item != null) ? InvTup.charge.ToString() : "";
 
-		hpText.text = tactics.currentHealth.ToString();
 		dmgText.text = (damage != -1) ? damage.ToString() : "--";
 		//dmgText.color = (damage != -1 && defWeak) ? Color.green : Color.black;
 		doubleDamage.SetActive(speed >= doublingSpeed.value);
 		hitText.text = (hit != -1) ? hit.ToString() : "--";
 		critText.text = (crit != -1) ? crit.ToString() : "--";
 	}
-	
+
 	private void ShowDefenderStats(TacticsMove tactics, InventoryTuple invTup, int damage, int speed, int hit, int crit, int defAdv, bool atkWeak) {
 		eColorBackground.color = (tactics.faction == Faction.PLAYER) ? new Color(0.7f, 0.7f, 1f) : new Color(1f, 0.7f, 0.7f);
 
@@ -192,14 +201,13 @@ public class ForecastUI : MonoBehaviour {
 		if (eWpnCharge)
 			eWpnCharge.text = (invTup.item != null) ? invTup.charge.ToString() : "";
 
-		eHpText.text = tactics.currentHealth.ToString();
 		eDmgText.text = (damage != -1) ? damage.ToString() : "--";
 		//eDmgText.color = (damage != -1 && atkWeak) ? Color.green : Color.black;
-		eDoubleDamage.SetActive(speed <= - doublingSpeed.value);
+		eDoubleDamage.SetActive(speed <= -doublingSpeed.value);
 		eHitText.text = (hit != -1) ? hit.ToString() : "--";
 		eCritText.text = (crit != -1) ? crit.ToString() : "--";
 	}
-	
+
 	private void ShowHealForecast(TacticsMove healer, TacticsMove receiver, InventoryTuple staff) {
 		if (inBattle)
 			backgroundInBattle.SetActive(false);
@@ -214,8 +222,8 @@ public class ForecastUI : MonoBehaviour {
 		hCharacterName2.text = stats.charData.entryName;
 		hPortrait2.sprite = stats.charData.portrait;
 		if (inBattle) {
-			hpText.text = healer.currentHealth.ToString();
-			eHpText.text = receiver.currentHealth.ToString();
+			hpBar.SetAmount(healer.currentHealth, healer.stats.hp);
+			hpBar.SetAmount(receiver.currentHealth, receiver.stats.hp);
 
 			eWpnIcon.sprite = null;
 			eWpnName.text = "--";

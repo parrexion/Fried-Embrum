@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
 
 public class InventoryMenuController : InputReceiverDelegate {
 
@@ -59,6 +58,7 @@ public class InventoryMenuController : InputReceiverDelegate {
 		if (!selectMode) {
 			inventoryIndex.value = OPMath.FullLoop(0, InventoryContainer.INVENTORY_SIZE, inventoryIndex.value -1);
 			inventoryChangedEvent.Invoke();
+			menuMoveEvent.Invoke();
 		}
 		else {
 			itemMenuPosition.value = inventoryButtons.Move(-1);
@@ -70,6 +70,7 @@ public class InventoryMenuController : InputReceiverDelegate {
 		if (!selectMode) {
 			inventoryIndex.value = OPMath.FullLoop(0, InventoryContainer.INVENTORY_SIZE, inventoryIndex.value +1);
 			inventoryChangedEvent.Invoke();
+			menuMoveEvent.Invoke();
 		}
 		else {
 			itemMenuPosition.value = inventoryButtons.Move(1);
@@ -105,7 +106,6 @@ public class InventoryMenuController : InputReceiverDelegate {
 
     public override void OnBackButton() {
 		if (!selectMode) {
-			menuBackEvent.Invoke();
 			InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
 			inventoryIndex.value = -1;
 		}
@@ -113,6 +113,7 @@ public class InventoryMenuController : InputReceiverDelegate {
 			selectMode = false;
 			inventoryButtons.ResetButtons();
 		}
+		menuBackEvent.Invoke();
     }
 
 	/// <summary>

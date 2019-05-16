@@ -69,6 +69,7 @@ public class SaveScreenController : InputReceiverDelegate {
 	public override void OnLeftArrow() {
 		if (isPrompt) {
 			savePrompt.Move(-1);
+			menuMoveEvent.Invoke();
 		}
 		else {
 			saveFileController.MoveHorizontal(-1);
@@ -106,7 +107,7 @@ public class SaveScreenController : InputReceiverDelegate {
 		else if (saveFileController.BackClicked()) {
 			isPrompt = true;
 			savePrompt.ShowWindow("Continue without saving?", false);
-			menuAcceptEvent.Invoke();
+			menuBackEvent.Invoke();
 		}
 	}
 

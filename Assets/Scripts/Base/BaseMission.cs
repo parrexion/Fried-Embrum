@@ -50,6 +50,7 @@ public class BaseMission : InputReceiverDelegate {
 		buttons.Move(-1);
 		ShowMissionInfo();
 		missionChangedEvent.Invoke();
+		menuMoveEvent.Invoke();
 	}
 
     public override void OnDownArrow() {
@@ -59,6 +60,7 @@ public class BaseMission : InputReceiverDelegate {
 		buttons.Move(1);
 		ShowMissionInfo();
 		missionChangedEvent.Invoke();
+		menuMoveEvent.Invoke();
 	}
 
     public override void OnOkButton() {
@@ -66,9 +68,11 @@ public class BaseMission : InputReceiverDelegate {
 			promptMode = true;
 			ChangePrompt(0);
 			startPrompt.ShowWindow("Start mission?", false);
+			menuAcceptEvent.Invoke();
 		}
 		else if (startPrompt.Click(true) == MyPrompt.Result.OK1) {
 			StartMission();
+			menuAcceptEvent.Invoke();
 		}
 		else {
 			OnBackButton();
@@ -86,12 +90,14 @@ public class BaseMission : InputReceiverDelegate {
 		if (!promptMode)
 			return;
 		ChangePrompt(-1);
+		menuMoveEvent.Invoke();
 	}
 
     public override void OnRightArrow() {
 		if (!promptMode)
 			return;
 		ChangePrompt(1);
+		menuMoveEvent.Invoke();
 	}
 
 	private void SetupButtons() {

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PrepCharacterSelect : MonoBehaviour {
 
@@ -16,7 +17,7 @@ public class PrepCharacterSelect : MonoBehaviour {
 	private int playerCap;
 
 	[Header("SelectCharacterInfo")]
-	public TMPro.TextMeshProUGUI playerCapText;
+	public Text playerCapText;
 
 	private bool changed;
 

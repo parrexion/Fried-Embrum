@@ -22,7 +22,6 @@ public class MapInputController : InputReceiverDelegate {
 	private bool IsTargetMode() {
 		return (currentAction.value == ActionMode.ATTACK || currentAction.value == ActionMode.HEAL || currentAction.value == ActionMode.TRADE);
 	}
-	
 
     public override void OnMenuModeChanged() {
 		bool active = UpdateState(MenuMode.MAP);
@@ -140,10 +139,12 @@ public class MapInputController : InputReceiverDelegate {
 
     public override void OnXButton() {
 		cursor.DangerAreaToggle(true);
+		menuAcceptEvent.Invoke();
 	}
 
     public override void OnYButton() {
 		changeStatsEvent.Invoke();
+		menuMoveEvent.Invoke();
 	}
 
     public override void OnRButton() {
@@ -166,6 +167,7 @@ public class MapInputController : InputReceiverDelegate {
 			return;
 		
 		InputDelegateController.instance.TriggerMenuChange(MenuMode.TOOLTIP);
+		menuMoveEvent.Invoke();
 	}
 
 	public void FinishedMove() {

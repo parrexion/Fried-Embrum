@@ -58,8 +58,8 @@ public class TradeController : InputReceiverDelegate {
 			if (menuPosition >= 2 * InventoryContainer.INVENTORY_SIZE)
 				menuPosition -= InventoryContainer.INVENTORY_SIZE;
 		}
-		menuMoveEvent.Invoke();
 		UpdateSelection();
+		menuMoveEvent.Invoke();
     }
 
     public override void OnUpArrow() {
@@ -73,23 +73,23 @@ public class TradeController : InputReceiverDelegate {
 			if (menuPosition < InventoryContainer.INVENTORY_SIZE)
 				menuPosition += InventoryContainer.INVENTORY_SIZE;
 		}
-		menuMoveEvent.Invoke();
 		UpdateSelection();
+		menuMoveEvent.Invoke();
     }
 
     public override void OnLeftArrow() {
         if (menuPosition >= InventoryContainer.INVENTORY_SIZE) {
 			menuPosition -= InventoryContainer.INVENTORY_SIZE;
-			menuMoveEvent.Invoke();
 			UpdateSelection();
+			menuMoveEvent.Invoke();
 		}
     }
 
     public override void OnRightArrow() {
         if (menuPosition < InventoryContainer.INVENTORY_SIZE) {
 			menuPosition += InventoryContainer.INVENTORY_SIZE;
-			menuMoveEvent.Invoke();
 			UpdateSelection();
+			menuMoveEvent.Invoke();
 		}
     }
 
@@ -111,7 +111,6 @@ public class TradeController : InputReceiverDelegate {
 			UpdateSelection();
 		}
 		else {
-
 			currentMode.value = ActionMode.ACTION;
 			selectedIndex = -1;
 			statsObject.SetActive(true);

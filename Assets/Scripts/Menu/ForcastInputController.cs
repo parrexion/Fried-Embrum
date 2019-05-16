@@ -40,10 +40,12 @@ public class ForcastInputController : InputReceiverDelegate {
 
 	public override void OnLeftArrow() {
 		ChangeWeapon(-1);
+		menuMoveEvent.Invoke();
 	}
 
 	public override void OnRightArrow() {
 		ChangeWeapon(1);
+		menuMoveEvent.Invoke();
 	}
 
 	public override void OnOkButton() {
@@ -61,8 +63,8 @@ public class ForcastInputController : InputReceiverDelegate {
 
 	public override void OnBackButton() {
 		battleWeaponIndex.value = attackerWeapons[0].index;
-		menuBackEvent.Invoke();
 		MenuChangeDelay(MenuMode.MAP);
+		menuBackEvent.Invoke();
 	}
 
 	/// <summary>

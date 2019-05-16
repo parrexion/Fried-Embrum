@@ -52,6 +52,7 @@ public class FormationController : InputReceiverDelegate {
 			menuMoveEvent.Invoke();
 
 		cursorMovedEvent.Invoke();
+		menuMoveEvent.Invoke();
 	}
 
 	public override void OnDownArrow() {
@@ -61,6 +62,7 @@ public class FormationController : InputReceiverDelegate {
 			menuMoveEvent.Invoke();
 
 		cursorMovedEvent.Invoke();
+		menuMoveEvent.Invoke();
 	}
 
 	public override void OnLeftArrow() {
@@ -70,6 +72,7 @@ public class FormationController : InputReceiverDelegate {
 			menuMoveEvent.Invoke();
 
 		cursorMovedEvent.Invoke();
+		menuMoveEvent.Invoke();
 	}
 
 	public override void OnRightArrow() {
@@ -79,6 +82,7 @@ public class FormationController : InputReceiverDelegate {
 			menuMoveEvent.Invoke();
 
 		cursorMovedEvent.Invoke();
+		menuMoveEvent.Invoke();
 	}
 
 	public override void OnOkButton() {
@@ -94,21 +98,24 @@ public class FormationController : InputReceiverDelegate {
 	public override void OnBackButton() {
 		if (currentMode.value == ActionMode.MOVE) {
 			clicker.CursorBack();
+			menuBackEvent.Invoke();
 		}
 		else {
 			InputDelegateController.instance.TriggerMenuChange(MenuMode.PREP);
+			menuBackEvent.Invoke();
 		}
 	}
 
     public override void OnXButton() {
 		clicker.DangerAreaToggle(true);
+		menuAcceptEvent.Invoke();
 	}
 
     public override void OnRButton() {
 		clicker.JumpCursor();
-		menuMoveEvent.Invoke();
 
 		cursorMovedEvent.Invoke();
+		menuMoveEvent.Invoke();
 	}
 
     public override void OnStartButton() {}
@@ -118,6 +125,7 @@ public class FormationController : InputReceiverDelegate {
 			return;
 		
 		MenuChangeDelay(MenuMode.TOOLTIP);
+		menuAcceptEvent.Invoke();
 	}
 
     public override void OnYButton() { }

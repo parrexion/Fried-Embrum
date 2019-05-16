@@ -32,16 +32,16 @@ public abstract class TacticsMove : MonoBehaviour {
 
 	[Header("Stats")]
 	public Faction faction;
+	public int currentHealth;
 	public StatsContainer stats;
 	public InventoryContainer inventory;
 	public SkillsContainer skills;
-	public int currentHealth;
 
 	[Header("Dialogue")]
 	public List<FightQuote> fightQuotes = new List<FightQuote>();
 
 	[Header("Health")]
-	public Image healthImage;
+	public MyBar healthBar;
 	public GameObject damageObject;
 	public Image damageNumberBkg;
 	public Text damageNumber;
@@ -99,9 +99,8 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// Update loop.
 	/// Updates the healthbar if they are visible.
 	/// </summary>
-	private void Update() {
-		if (healthImage != null)
-			healthImage.fillAmount = GetHealthPercent();
+	private void UpdateHealth() {
+		healthBar.SetAmount(currentHealth, stats.hp);
 	}
 
 	/// <summary>
@@ -361,6 +360,7 @@ public abstract class TacticsMove : MonoBehaviour {
 			damageNumberBkg.color = Color.white;
 			damageNumber.color = Color.black;
 		}
+		UpdateHealth();
 		StartCoroutine(DamageDisplay());
 		if (currentHealth == 0)
 			StartCoroutine(OnDeath());
@@ -374,6 +374,7 @@ public abstract class TacticsMove : MonoBehaviour {
 		currentHealth = Mathf.Min(stats.hp, currentHealth + health);
 		damageNumber.text = health.ToString();
 		damageNumber.color = new Color(0,0.5f,0);
+		UpdateHealth();
 		StartCoroutine(DamageDisplay());
 	}
 
@@ -422,14 +423,6 @@ public abstract class TacticsMove : MonoBehaviour {
 			yield return new WaitForSeconds(0.65f);
 			debuffObject.gameObject.SetActive(false);
 		}
-	}
-
-	/// <summary>
-	/// Returns how many percent health are left for UI purposes.
-	/// </summary>
-	/// <returns></returns>
-	public float GetHealthPercent() {
-		return Mathf.Clamp01(currentHealth / (float)stats.hp);
 	}
 
 	/// <summary>

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 [System.Serializable]
 public abstract class ListEntry : MonoBehaviour {
 
-	public enum StyleType { NONE, OPTIONS, THIN, SAVE, TRADE }
+	public enum StyleType { NONE, OPTIONS, THIN, SAVE, TRADE, PREP }
 	public StyleType style;
 
 	public Image background;

@@ -220,23 +220,23 @@ public class MainMenuController : InputReceiverDelegate {
 		if (currentState == State.CONTROLS) {
 			currentState = State.MAIN;
 			howTo.BackClicked();
-			menuBackEvent.Invoke();
 			startMenuView.SetActive(true);
+			menuBackEvent.Invoke();
 		}
 		else if (currentState == State.LOAD) {
 			if (saveFileController.BackClicked()) {
 				currentState = State.MAIN;
 				startMenuView.SetActive(true);
 				saveView.SetActive(false);
+				menuBackEvent.Invoke();
 			}
-			menuBackEvent.Invoke();
 		}
 		else if (currentState == State.OPTIONS) {
 			currentState = State.MAIN;
 			optionsController.BackClicked();
-			menuBackEvent.Invoke();
 			startMenuView.SetActive(true);
 			saveGameEvent.Invoke();
+			menuBackEvent.Invoke();
 		}
 	}
 

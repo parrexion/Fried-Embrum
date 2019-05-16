@@ -45,12 +45,10 @@ public class BattleContainer : InputReceiverDelegate {
 	public ForecastUI forecastUI;
 	[Space(5)]
 	public Transform leftTransform;
-	public Image leftHealth;
 	public GameObject leftDamageObject;
 	public Text leftDamageText;
 	[Space(5)]
 	public Transform rightTransform;
-	public Image rightHealth;
 	public GameObject rightDamageObject;
 	public Text rightDamageText;
 
@@ -202,11 +200,6 @@ public class BattleContainer : InputReceiverDelegate {
 
 		forecastUI.UpdateUI(true);
 
-		if (showBattleAnim) {
-			leftHealth.fillAmount = actions[0].attacker.GetHealthPercent();
-			rightHealth.fillAmount = actions[0].defender.GetHealthPercent();
-		}
-
 		battleAnimationObject.transform.localPosition = new Vector3(
 			cameraPosX.value, 
 			cameraPosY.value, 
@@ -242,10 +235,6 @@ public class BattleContainer : InputReceiverDelegate {
 			Vector3 enemyPos = defenseTransform.position;
 			enemyPos = startPos + (enemyPos - startPos).normalized;
 			forecastUI.UpdateUI(true);
-			if (showBattleAnim) {
-				leftHealth.fillAmount = actions[0].attacker.GetHealthPercent();
-				rightHealth.fillAmount = actions[0].defender.GetHealthPercent();
-			}
 			
 			yield return new WaitForSeconds(1f * slowGameSpeed.value / currentGameSpeed.value);
 			
@@ -308,8 +297,7 @@ public class BattleContainer : InputReceiverDelegate {
 				_attackerDealtDamage = true;
 			}
 			//Update health
-			leftHealth.fillAmount = (act.leftSide) ? act.attacker.GetHealthPercent() : act.defender.GetHealthPercent();
-			rightHealth.fillAmount = (act.leftSide) ? act.defender.GetHealthPercent() : act.attacker.GetHealthPercent();
+			forecastUI.UpdateHealthUI();
 			updateHealthEvent.Invoke();
 			
 			//Extra crit animation
@@ -504,6 +492,7 @@ public class BattleContainer : InputReceiverDelegate {
 
 	public override void OnOkButton() {
 		levelupScript.Continue();
+		menuAcceptEvent.Invoke();
 	}
 
 

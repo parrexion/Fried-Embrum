@@ -107,13 +107,16 @@ public class BaseHousing : InputReceiverDelegate {
 		if (menuMode == State.MAIN) {
 			buttons.Move(-1);
 			housingChangedEvent.Invoke();
+			menuMoveEvent.Invoke();
 		}
 		else if (menuMode == State.HOUSE) {
 			housingController.MoveVertical(-1);
 			UpdateSelectedHouse();
+			menuMoveEvent.Invoke();
 		}
 		else if (menuMode == State.SUPPORT) {
 			supportList.MoveVertical(-1);
+			menuMoveEvent.Invoke();
 		}
 	}
 
@@ -121,13 +124,16 @@ public class BaseHousing : InputReceiverDelegate {
 		if (menuMode == State.MAIN) {
 			buttons.Move(1);
 			housingChangedEvent.Invoke();
+			menuMoveEvent.Invoke();
 		}
 		else if (menuMode == State.HOUSE) {
 			housingController.MoveVertical(1);
 			UpdateSelectedHouse();
+			menuMoveEvent.Invoke();
 		}
 		else if (menuMode == State.SUPPORT) {
 			supportList.MoveVertical(1);
+			menuMoveEvent.Invoke();
 		}
 	}
 
@@ -135,9 +141,11 @@ public class BaseHousing : InputReceiverDelegate {
 		if (menuMode == State.HOUSE) {
 			housingController.MoveHorizontal(-1);
 			UpdateSelectedHouse();
+			menuMoveEvent.Invoke();
 		}
 		else if (menuMode == State.SUPPORT) {
 			supportList.MoveHorizontal(-1);
+			menuMoveEvent.Invoke();
 		}
 	}
     
@@ -145,9 +153,11 @@ public class BaseHousing : InputReceiverDelegate {
 		if (menuMode == State.HOUSE) {
 			housingController.MoveHorizontal(1);
 			UpdateSelectedHouse();
+			menuMoveEvent.Invoke();
 		}
 		else if (menuMode == State.SUPPORT) {
 			supportList.MoveHorizontal(1);
+			menuMoveEvent.Invoke();
 		}
 	}
 

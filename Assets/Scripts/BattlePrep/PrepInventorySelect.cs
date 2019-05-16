@@ -39,9 +39,9 @@ public class PrepInventorySelect : MonoBehaviour {
     public StorageList convoy;
 
 	[Header("Inventory box overview")]
-	public TMPro.TextMeshProUGUI charName;
+	public Text charName;
 	public Image portrait;
-	public TMPro.TextMeshProUGUI[] inventory;
+	public Text[] inventory;
 
 	[Header("Information box")]
 	public Text TotalMoneyText;

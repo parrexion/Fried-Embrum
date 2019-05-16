@@ -44,30 +44,36 @@ public class BaseScienceLab : InputReceiverDelegate {
 	public override void OnUpArrow() {
 		if (menuMode == 0) {
 			buttons.Move(-1);
+			menuMoveEvent.Invoke();
 		}
 		else if (menuMode == 1 || menuMode == 2) {
 			scienceController.MoveSelection(-1);
+			menuMoveEvent.Invoke();
 		}
 	}
 
 	public override void OnDownArrow() {
 		if (menuMode == 0) {
 			buttons.Move(1);
+			menuMoveEvent.Invoke();
 		}
 		else if (menuMode == 1 || menuMode == 2) {
 			scienceController.MoveSelection(1);
+			menuMoveEvent.Invoke();
 		}
 	}
 
 	public override void OnLeftArrow() {
 		if (menuMode == 1 || menuMode == 2) {
 			scienceController.MovePromt(-1);
+			menuMoveEvent.Invoke();
 		}
 	}
 
 	public override void OnRightArrow() {
 		if (menuMode == 1 || menuMode == 2) {
 			scienceController.MovePromt(1);
+			menuMoveEvent.Invoke();
 		}
 	}
 
@@ -80,6 +86,7 @@ public class BaseScienceLab : InputReceiverDelegate {
 				scienceController.GenerateLists(true);
 				developView.SetActive(true);
 				basicView.SetActive(false);
+				menuAcceptEvent.Invoke();
 			}
 			else if (currentIndex == 1) {
 				menuMode = 2;
@@ -87,23 +94,23 @@ public class BaseScienceLab : InputReceiverDelegate {
 				scienceController.GenerateLists(false);
 				developView.SetActive(true);
 				basicView.SetActive(false);
+				menuAcceptEvent.Invoke();
 			}
 		}
 		else if (menuMode == 1 || menuMode == 2) {
 			scienceController.SelectItem(false);
+			menuAcceptEvent.Invoke();
 		}
 	}
 
 	public override void OnBackButton() {
-		if (menuMode == 0) {
-
-		}
-		else if (menuMode == 1 || menuMode == 2) {
+		if (menuMode == 1 || menuMode == 2) {
 			if (scienceController.DeselectItem()) {
 				menuMode = 0;
 				menuTitle.text = "LAB";
 				basicView.SetActive(true);
 				developView.SetActive(false);
+				menuAcceptEvent.Invoke();
 			}
 		}
 	}

@@ -56,37 +56,44 @@ public class ExplanationController : InputReceiverDelegate {
     public override void OnDownArrow() {
         if (page == StatsPage.BASIC) {
             baseStats.Move(1);
+			menuMoveEvent.Invoke();
         }
         else if (page == StatsPage.STATS) {
             statsStats.Move(1);
+			menuMoveEvent.Invoke();
         }
         else if (page == StatsPage.INVENTORY) {
             inventoryStats.Move(1);
+			menuMoveEvent.Invoke();
         }
     }
 
     public override void OnUpArrow() {
         if (page == StatsPage.BASIC) {
             baseStats.Move(-1);
+			menuMoveEvent.Invoke();
         }
         else if (page == StatsPage.STATS) {
             statsStats.Move(-1);
+			menuMoveEvent.Invoke();
         }
         else if (page == StatsPage.INVENTORY) {
             inventoryStats.Move(-1);
+			menuMoveEvent.Invoke();
         }
     }
 
     public override void OnLButton() {
         OnBackButton();
+		menuBackEvent.Invoke();
     }
 
     public override void OnBackButton() {
-		menuBackEvent.Invoke();
 		baseStats.UpdateSelection(false);
 		statsStats.UpdateSelection(false);
 		inventoryStats.UpdateSelection(false);
 		MenuChangeDelay(MenuMode.MAP);
+		menuBackEvent.Invoke();
     }
 
     public override void OnYButton() {
@@ -95,6 +102,7 @@ public class ExplanationController : InputReceiverDelegate {
 
 		changing = true;
         StartCoroutine(ChangeStatsScreen());
+		menuAcceptEvent.Invoke();
     }
 
     /// <summary>

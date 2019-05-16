@@ -7,7 +7,7 @@ public class MyText : MonoBehaviour {
 
 	public enum StyleType { NONE, HUGE, TITLE, SUBTITLE, BREAD, OBJECTIVE, MENU_TITLE,
 		STATS_BIG, STATS_MID, STATS_SMALL, STATS_PENALTY, BASE_TITLE, BASE_HUGE, BASE_MID, BASE_SMALL,
-		LEVEL_BONUS }
+		LEVEL_BONUS, DAMAGE }
 	public StyleType style;
     
 	public void SetStyle(TextStyle style, Font font) {

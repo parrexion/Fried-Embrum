@@ -21,12 +21,8 @@ public class BaseShop : InputReceiverDelegate {
 	public ItemListVariable shopList;
 	public PlayerData playerData;
 
-	private int menuMode;
-	private int itemIndex;
-
 
 	private void Start () {
-		menuMode = 0;
 		basicView.SetActive(true);
 		shopView.SetActive(false);
 		SetupButtons();
@@ -46,30 +42,39 @@ public class BaseShop : InputReceiverDelegate {
 	}
 
     public override void OnUpArrow() {
+		int menuMode = buttons.GetPosition();
 		if (menuMode == 0) {
 			buttons.Move(-1);
+			menuMoveEvent.Invoke();
         }
         else if (menuMode == 1 || menuMode == 2) {
             shopController.MoveVertical(-1);
+			menuMoveEvent.Invoke();
         }
         else if (menuMode == 3) {
             restockController.MoveSelection(-1);
+			menuMoveEvent.Invoke();
         }
     }
 
     public override void OnDownArrow() {
+		int menuMode = buttons.GetPosition();
 		if (menuMode == 0) {
 			buttons.Move(1);
+			menuMoveEvent.Invoke();
         }
         else if (menuMode == 1 || menuMode == 2) {
             shopController.MoveVertical(1);
+			menuMoveEvent.Invoke();
         }
         else if (menuMode == 3) {
             restockController.MoveSelection(1);
+			menuMoveEvent.Invoke();
         }
     }
 
     public override void OnOkButton() {
+		int menuMode = buttons.GetPosition();
 		if (menuMode == 0) {
 			int currentIndex = buttons.GetPosition();
             if (currentIndex == 0) {
@@ -78,6 +83,7 @@ public class BaseShop : InputReceiverDelegate {
 				shopController.GenerateShopList(shopList);
                 shopView.SetActive(true);
 				basicView.SetActive(false);
+				menuAcceptEvent.Invoke();
             }
             else if (currentIndex == 1) {
                 menuMode = 2;
@@ -85,6 +91,7 @@ public class BaseShop : InputReceiverDelegate {
 				shopController.GenerateSellList();
                 shopView.SetActive(true);
 				basicView.SetActive(false);
+				menuAcceptEvent.Invoke();
             }
 			else if (currentIndex == 2) {
 				menuMode = 3;
@@ -92,26 +99,28 @@ public class BaseShop : InputReceiverDelegate {
 				restockController.ShowRestock();
 				shopView.SetActive(false);
 				basicView.SetActive(false);
+				menuAcceptEvent.Invoke();
 			}
 		}
 		else if (menuMode == 1 || menuMode == 2) {
 			shopController.SelectItem();
+			menuAcceptEvent.Invoke();
 		}
 		else if (menuMode == 3) {
 			restockController.SelectItem();
+			menuAcceptEvent.Invoke();
 		}
 	}
 
     public override void OnBackButton() {
-		if (menuMode == 0) {
-
-        }
-        else if (menuMode == 1 || menuMode == 2) {
+		int menuMode = buttons.GetPosition();
+		if (menuMode == 1 || menuMode == 2) {
             if (shopController.DeselectItem()) {
                 menuMode = 0;
                 menuTitle.text = "SHOP";
                 basicView.SetActive(true);
                 shopView.SetActive(false);
+				menuBackEvent.Invoke();
             }
         }
 		else if (menuMode == 3) {
@@ -120,25 +129,32 @@ public class BaseShop : InputReceiverDelegate {
 				basicView.SetActive(true);
 				SetupButtons();
 				buttons.ForcePosition(2);
+				menuBackEvent.Invoke();
 			}
 		}
     }
 
     public override void OnLeftArrow() {
+		int menuMode = buttons.GetPosition();
 		if (menuMode == 1 || menuMode == 2) {
             shopController.MoveHorizontal(-1);
+			menuMoveEvent.Invoke();
         }
 		else if (menuMode == 3) {
 			restockController.MoveSide(-1);
+			menuMoveEvent.Invoke();
 		}
     }
 
     public override void OnRightArrow() {
+		int menuMode = buttons.GetPosition();
 		if (menuMode == 1 || menuMode == 2) {
             shopController.MoveHorizontal(1);
+			menuMoveEvent.Invoke();
         }
 		else if (menuMode == 3) {
 			restockController.MoveSide(1);
+			menuMoveEvent.Invoke();
 		}
     }
 
