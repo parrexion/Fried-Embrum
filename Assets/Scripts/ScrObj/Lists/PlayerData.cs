@@ -9,6 +9,7 @@ public class PlayerData : ScriptableObject {
 	public List<StatsContainer> stats = new List<StatsContainer>();
 	public List<InventoryContainer> inventory = new List<InventoryContainer>();
 	public List<SkillsContainer> skills = new List<SkillsContainer>();
+	public List<SupportContainer> baseInfo = new List<SupportContainer>();
 
 	// Item storage
 	public List<InventoryItem> items = new List<InventoryItem>();
@@ -24,6 +25,7 @@ public class PlayerData : ScriptableObject {
 		stats = new List<StatsContainer>();
 		inventory = new List<InventoryContainer>();
 		skills = new List<SkillsContainer>();
+		baseInfo = new List<SupportContainer>();
 		
 		items = new List<InventoryItem>();
 

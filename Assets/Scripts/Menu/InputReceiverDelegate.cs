@@ -32,10 +32,14 @@ public abstract class InputReceiverDelegate : MonoBehaviour {
 	public abstract void OnXButton();
 	public abstract void OnYButton();
 	public abstract void OnStartButton();
-
+	
 
 	protected void MenuChangeDelay(MenuMode newMode) {
 		InputDelegateController.instance.TriggerMenuChange(newMode);
+	}
+
+	protected void SceneChangeDelay(MenuMode newMode, string scene) {
+		InputDelegateController.instance.TriggerSceneChange(newMode, scene);
 	}
 
 	protected void OnEnable() {

@@ -140,11 +140,11 @@ public class ClassEditorWindow {
 
 		EditorGUILayout.SelectableLabel("Selected Class:   " + classValues.uuid, EditorStyles.boldLabel);
 		classValues.entryName = EditorGUILayout.TextField("Class Name", classValues.entryName);
+		classValues.className = (PlayerClassName)EditorGUILayout.EnumPopup("Class Type Name", classValues.className);
 
 		GUILayout.Label("Movement", EditorStyles.boldLabel);
-		classValues.classType = (ClassType)EditorGUILayout.EnumPopup("Class type", classValues.classType);
+		classValues.classType = (MovementType)EditorGUILayout.EnumPopup("Class type", classValues.classType);
 		classValues.movespeed = EditorGUILayout.IntField("Move speed", classValues.movespeed);
-		classValues.con = EditorGUILayout.IntField("Constitution", classValues.con);
 
 		GUILayout.Space(10);
 
@@ -155,6 +155,7 @@ public class ClassEditorWindow {
 		classValues.skl = EditorGUILayout.IntField("SKL", classValues.skl);
 		classValues.spd = EditorGUILayout.IntField("SPD", classValues.spd);
 		classValues.def = EditorGUILayout.IntField("DEF", classValues.def);
+		GUILayout.Label("Total bases:  " + (classValues.hp + classValues.dmg + classValues.mnd + classValues.skl + classValues.spd + classValues.def));
 
 		GUILayout.Label("Growth rates", EditorStyles.boldLabel);
 		classValues.gHp = 5 * (EditorGUILayout.IntSlider("HP", classValues.gHp, 0, 100)/5);
@@ -163,61 +164,48 @@ public class ClassEditorWindow {
 		classValues.gSkl = 5 * (EditorGUILayout.IntSlider("SKL", classValues.gSkl, 0, 100)/5);
 		classValues.gSpd = 5 * (EditorGUILayout.IntSlider("SPD", classValues.gSpd, 0, 100)/5);
 		classValues.gDef = 5 * (EditorGUILayout.IntSlider("DEF", classValues.gDef, 0, 100)/5);
+		GUILayout.Label("Total growths:  " + (classValues.gHp + classValues.gDmg + classValues.gMnd + classValues.gSkl + classValues.gSpd + classValues.gDef));
 
 		GUILayout.Space(10);
 
 		GUILayout.Label("Usable weapons", EditorStyles.boldLabel);
 		for (int i = 0; i < classValues.weaponSkills.Count; i++) {
 			GUILayout.BeginHorizontal();
-			classValues.weaponSkills[i] = (ItemType)EditorGUILayout.EnumPopup("Weapon and rank", classValues.weaponSkills[i]);
-			classValues.weaponLevels[i] = EditorGUILayout.IntField("", classValues.weaponLevels[i], GUILayout.Width(50));
+			classValues.weaponSkills[i] = (WeaponType)EditorGUILayout.EnumPopup("Weapon " + i, classValues.weaponSkills[i]);
 			if (GUILayout.Button("X", GUILayout.Width(50))){
 				classValues.weaponSkills.RemoveAt(i);
-				classValues.weaponLevels.RemoveAt(i);
 				i--;
 			}
 			GUILayout.EndHorizontal();
 		}
 		if (GUILayout.Button("+")) {
-			classValues.weaponSkills.Add(new ItemType());
-			classValues.weaponLevels.Add(0);
+			classValues.weaponSkills.Add(WeaponType.NONE);
 		}
 		GUILayout.Space(10);
 
 		GUILayout.Label("Skill Gains", EditorStyles.boldLabel);
-		for (int i = 0; i < classValues.skillGains.Count; i++) {
+		for (int i = 0; i < classValues.skills.Count; i++) {
 			GUILayout.BeginHorizontal();
-			classValues.skillGains[i].level = EditorGUILayout.IntField("Level", classValues.skillGains[i].level);
+			classValues.skills[i] = (CharacterSkill)EditorGUILayout.ObjectField("Skill",classValues.skills[i], typeof(CharacterSkill),false);
 			if (GUILayout.Button("X", GUILayout.Width(50))){
-				classValues.skillGains.RemoveAt(i);
+				classValues.skills.RemoveAt(i);
 				i--;
 				continue;
 			}
 			GUILayout.EndHorizontal();
-			classValues.skillGains[i].skill = (CharacterSkill)EditorGUILayout.ObjectField("Skill",classValues.skillGains[i].skill, typeof(CharacterSkill),false);
 			LibraryEditorWindow.HorizontalLine(Color.black);
 		}
 		if (GUILayout.Button("+")) {
-			classValues.skillGains.Add(new SkillTuple());
+			classValues.skills.Add(null);
 		}
-		
-		GUILayout.Space(10);
 
-		GUILayout.Label("Class changes", EditorStyles.boldLabel);
-		for (int i = 0; i < classValues.nextClass.Count; i++) {
-			GUILayout.BeginHorizontal();
-			classValues.nextClass[i] = (CharClass)EditorGUILayout.ObjectField("Class",classValues.nextClass[i], typeof(CharClass),false);
-			if (GUILayout.Button("X", GUILayout.Width(50))){
-				classValues.nextClass.RemoveAt(i);
-				i--;
-				continue;
-			}
-			GUILayout.EndHorizontal();
-			LibraryEditorWindow.HorizontalLine(Color.black);
-		}
-		if (GUILayout.Button("+")) {
-			classValues.nextClass.Add(null);
-		}
+		GUILayout.Label("Promotion gains", EditorStyles.boldLabel);
+		classValues.bonusHp = EditorGUILayout.IntField("HP", classValues.bonusHp);
+		classValues.bonusDmg = EditorGUILayout.IntField("ATK", classValues.bonusDmg);
+		classValues.bonusMnd = EditorGUILayout.IntField("MND", classValues.bonusMnd);
+		classValues.bonusSkl = EditorGUILayout.IntField("SKL", classValues.bonusSkl);
+		classValues.bonusSpd = EditorGUILayout.IntField("SPD", classValues.bonusSpd);
+		classValues.bonusDef = EditorGUILayout.IntField("DEF", classValues.bonusDef);
 
 		GUILayout.EndScrollView();
 		GUILayout.EndArea();

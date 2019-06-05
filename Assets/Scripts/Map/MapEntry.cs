@@ -176,9 +176,8 @@ public class PlayerPosition {
 	public int x;
 	public int y;
 	public int level = 1;
-	public CharData stats;
+	public CharData charData;
 	public List<WeaponTuple> inventory = new List<WeaponTuple>();
-	public CharacterSkill[] skills;
 }
 
 [System.Serializable]
@@ -193,9 +192,8 @@ public class EnemyPosition {
 	public int x;
 	public int y;
 	public int level;
-	public CharData stats;
+	public CharData charData;
 	public List<WeaponTuple> inventory = new List<WeaponTuple>();
-	public CharacterSkill[] skills;
 	public AggroType aggroType;
 	public bool hasQuotes;
 	public List<FightQuote> quotes = new List<FightQuote>();
@@ -209,9 +207,8 @@ public class ReinforcementPosition {
 	public int x;
 	public int y;
 	public int level;
-	public CharData stats;
+	public CharData charData;
 	public List<WeaponTuple> inventory = new List<WeaponTuple>();
-	public CharacterSkill[] skills;
 	// Enemy only
 	public AggroType aggroType;
 	public bool hasQuotes;

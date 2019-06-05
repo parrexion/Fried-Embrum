@@ -7,6 +7,8 @@ public class MapCreator : MonoBehaviour {
 
 	public ScrObjEntryReference currentMap;
 	public PlayerData availableCharacters;
+	public ClassWheel playerClassWheel;
+	public ClassWheel enemyClassWheel;
 	public CharacterListVariable playerList;
 	public PrepListVariable prepList;
 	public BattleMap battleMap;
@@ -123,10 +125,10 @@ public class MapCreator : MonoBehaviour {
 					tempTile.alternativeTerrain = GetTerrainFromPixel(colorData[pos]);
 					tempTile.dialogue = interPos.dialogue;
 					tempTile.gift = (interPos.gift != null) ? new InventoryItem(interPos.gift) : null;
-					if (interPos.ally.stats != null) {
-						StatsContainer stats = new StatsContainer(interPos.ally.stats, interPos.ally.stats.charClass, interPos.ally.level);
-						InventoryContainer inventory = new InventoryContainer(interPos.ally.inventory);
-						SkillsContainer skills = new SkillsContainer(interPos.ally.skills);
+					if (interPos.ally.charData != null) {
+						StatsContainer stats = new StatsContainer(interPos.ally);
+						InventoryContainer inventory = new InventoryContainer(playerClassWheel.GetWpnSkillFromLevel(interPos.ally.charData.startClassLevels), interPos.ally.inventory);
+						SkillsContainer skills = new SkillsContainer(playerClassWheel.GetSkillsFromLevel(interPos.ally.charData.startClassLevels, interPos.ally.charData.startClass, interPos.ally.level));
 						tempTile.ally = SpawnPlayerCharacter(interPos.x, interPos.y, stats, inventory, skills, false);
 					}
 					TerrainTile terrain = (interPos.gift == null && interPos.ally == null) ? tileHouse : tileHouseReward;
@@ -201,9 +203,9 @@ public class MapCreator : MonoBehaviour {
 		for (int i = 0; i < map.enemies.Count; i++) {
 			EnemyPosition pos = map.enemies[i];
 
-			StatsContainer stats = new StatsContainer(pos.stats, pos.stats.charClass, pos.level);
-			InventoryContainer inventory = new InventoryContainer(pos.inventory);
-			SkillsContainer skills = new SkillsContainer(pos.skills);
+			StatsContainer stats = new StatsContainer(pos);
+			InventoryContainer inventory = new InventoryContainer(enemyClassWheel.GetWpnSkillFromLevel(pos.charData.startClassLevels), pos.inventory);
+			SkillsContainer skills = new SkillsContainer(new List<CharacterSkill>());
 			List<FightQuote> quotes = new List<FightQuote>();
 			for (int q = 0; q < pos.quotes.Count; q++) {
 				FightQuote fight = new FightQuote();
@@ -300,9 +302,10 @@ public class MapCreator : MonoBehaviour {
 			if (currentTurn.value == pos.spawnTurn) {
 				MapTile tile = battleMap.GetTile(pos.x, pos.y);
 				if (tile.currentCharacter == null) {
-					StatsContainer stats = new StatsContainer(pos.stats, pos.stats.charClass, pos.level);
-					InventoryContainer inventory = new InventoryContainer(pos.inventory);
-					SkillsContainer skills = new SkillsContainer(pos.skills);
+					StatsContainer stats = new StatsContainer(pos);
+					ClassWheel wheel = (stats.charData.faction == Faction.PLAYER) ? playerClassWheel : enemyClassWheel;
+					InventoryContainer inventory = new InventoryContainer(wheel.GetWpnSkillFromLevel(pos.charData.startClassLevels), pos.inventory);
+					SkillsContainer skills = new SkillsContainer(wheel.GetSkillsFromLevel(pos.charData.startClassLevels, pos.charData.startClass, pos.level));
 					if (pos.faction == Faction.PLAYER) {
 						SpawnPlayerCharacter(pos.x, pos.y, stats, inventory, skills, true);
 					}

@@ -35,6 +35,7 @@ public class MainMenuController : InputReceiverDelegate {
 	public SaveController saveController;
 	public MapEntry firstMission;
 	public PlayerData playerData;
+	public ClassWheel classWheel;
 	public PlayerPosition[] startingCharacters;
 	public ItemEntry[] startItems;
 	public UpgradeEntry[] startUpgrade;
@@ -104,9 +105,10 @@ public class MainMenuController : InputReceiverDelegate {
 		currentPlayTime.value = 0;
 		saveController.ResetCurrentData();
 		for (int i = 0; i < startingCharacters.Length; i++) {
-			playerData.stats.Add(new StatsContainer(startingCharacters[i].stats, startingCharacters[i].stats.charClass, startingCharacters[i].level));
-			playerData.inventory.Add(new InventoryContainer(startingCharacters[i].inventory));
-			playerData.skills.Add(new SkillsContainer(startingCharacters[i].skills));
+			playerData.stats.Add(new StatsContainer(startingCharacters[i]));
+			playerData.inventory.Add(new InventoryContainer(classWheel.GetWpnSkillFromLevel(startingCharacters[i].charData.startClassLevels), startingCharacters[i].inventory));
+			playerData.skills.Add(new SkillsContainer(classWheel.GetSkillsFromLevel(startingCharacters[i].charData.startClassLevels, startingCharacters[i].charData.startClass, startingCharacters[i].level)));
+			playerData.baseInfo.Add(new SupportContainer(null));
 		}
 		for (int i = 0; i < startItems.Length; i++) {
 			playerData.items.Add(new InventoryItem(startItems[i]));

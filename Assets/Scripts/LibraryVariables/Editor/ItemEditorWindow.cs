@@ -25,7 +25,7 @@ public class ItemEditorWindow {
 
 	//Creation
 	string uuid = "";
-	Color repColor = new Color(0,0,0,1f);
+	Color repColor = new Color(0, 0, 0, 1f);
 
 
 	/// <summary>
@@ -33,7 +33,7 @@ public class ItemEditorWindow {
 	/// </summary>
 	/// <param name="entries"></param>
 	/// <param name="container"></param>
-	public ItemEditorWindow(ScrObjLibraryVariable entries, ItemEntry container){
+	public ItemEditorWindow(ScrObjLibraryVariable entries, ItemEntry container) {
 		itemLibrary = entries;
 		itemValues = container;
 		LoadLibrary();
@@ -62,7 +62,7 @@ public class ItemEditorWindow {
 		dispOffset.right = 10;
 
 		itemValues.ResetValues();
-		currentEntryList = itemLibrary.GetRepresentations("","");
+		currentEntryList = itemLibrary.GetRepresentations("", "");
 		filterStr = "";
 	}
 
@@ -71,7 +71,7 @@ public class ItemEditorWindow {
 		GUILayout.BeginHorizontal();
 		GUILayout.Label("Item Equip Editor", EditorStyles.boldLabel);
 		if (selItem != -1) {
-			if (GUILayout.Button("Save Item")){
+			if (GUILayout.Button("Save Item")) {
 				SaveSelectedItem();
 			}
 		}
@@ -109,13 +109,13 @@ public class ItemEditorWindow {
 		string oldFilter = filterStr;
 		filterStr = EditorGUILayout.TextField("Filter", filterStr);
 		if (filterStr != oldFilter)
-			currentEntryList = itemLibrary.GetRepresentations("",filterStr);
+			currentEntryList = itemLibrary.GetRepresentations("", filterStr);
 
-		scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(selectRect.width), 
-						GUILayout.Height(selectRect.height-130));
+		scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(selectRect.width),
+						GUILayout.Height(selectRect.height - 130));
 
 		int oldSelected = selItem;
-		selItem = GUILayout.SelectionGrid(selItem, currentEntryList,1);
+		selItem = GUILayout.SelectionGrid(selItem, currentEntryList, 1);
 		EditorGUILayout.EndScrollView();
 
 		if (oldSelected != selItem)
@@ -137,8 +137,8 @@ public class ItemEditorWindow {
 
 	void DrawDisplayWindow() {
 		GUILayout.BeginArea(dispRect);
-		dispScrollPos = GUILayout.BeginScrollView(dispScrollPos, GUILayout.Width(dispRect.width), 
-							GUILayout.Height(dispRect.height-25));
+		dispScrollPos = GUILayout.BeginScrollView(dispScrollPos, GUILayout.Width(dispRect.width),
+							GUILayout.Height(dispRect.height - 25));
 
 		GUI.skin.textField.margin.right = 20;
 
@@ -149,14 +149,15 @@ public class ItemEditorWindow {
 		GUILayout.BeginHorizontal();
 		GUILayout.BeginVertical();
 		itemValues.entryName = EditorGUILayout.TextField("Name", itemValues.entryName);
-		itemValues.itemCategory = (ItemCategory)EditorGUILayout.EnumPopup("Item Category",itemValues.itemCategory);
-		itemValues.itemType = (ItemType)EditorGUILayout.EnumPopup("Item Type",itemValues.itemType);
+		itemValues.itemCategory = (ItemCategory)EditorGUILayout.EnumPopup("Item Category", itemValues.itemCategory);
+		itemValues.weaponType = (WeaponType)EditorGUILayout.EnumPopup("Weapon Type", itemValues.weaponType);
+		itemValues.attackType = (AttackType)EditorGUILayout.EnumPopup("Attack Type", itemValues.attackType);
 		itemValues.repColor = EditorGUILayout.ColorField("Rep Color", itemValues.repColor);
 		GUILayout.EndVertical();
 		itemValues.icon = (Sprite)EditorGUILayout.ObjectField("Icon", itemValues.icon, typeof(Sprite), false);
 		GUILayout.EndHorizontal();
 		itemValues.description = EditorGUILayout.TextField("Description", itemValues.description);
-		
+
 		GUILayout.Space(10);
 
 		GUILayout.Label("Basic Values", EditorStyles.boldLabel);
@@ -168,8 +169,8 @@ public class ItemEditorWindow {
 
 		GUILayout.Space(10);
 
-		if (itemValues.itemCategory != ItemCategory.CONSUME) {
-			GUILayout.Label("Weapon Power", EditorStyles.boldLabel);
+		if (itemValues.attackType == AttackType.PHYSICAL || itemValues.attackType == AttackType.MENTAL) {
+			GUILayout.Label("Weapon Stats", EditorStyles.boldLabel);
 			itemValues.power = EditorGUILayout.IntField("Weapon Power", itemValues.power);
 			itemValues.hitRate = EditorGUILayout.IntField("Hit Rate", itemValues.hitRate);
 			itemValues.critRate = EditorGUILayout.IntField("Crit Rate", itemValues.critRate);
@@ -177,19 +178,13 @@ public class ItemEditorWindow {
 			itemValues.range.min = EditorGUILayout.IntField("Min Range", itemValues.range.min);
 			itemValues.range.max = EditorGUILayout.IntField("Max Range", itemValues.range.max);
 			GUILayout.EndHorizontal();
-			
-			GUILayout.Space(10);
 
-			GUILayout.Label("Requirements", EditorStyles.boldLabel);
-			itemValues.skillReq = EditorGUILayout.IntField("Skill Requirement", itemValues.skillReq);
-			itemValues.weight = EditorGUILayout.IntField("Item Weight", itemValues.weight);
-			
 			GUILayout.Space(10);
 
 			GUILayout.Label("Advantage Types", EditorStyles.boldLabel);
 			for (int i = 0; i < itemValues.advantageType.Count; i++) {
 				GUILayout.BeginHorizontal();
-				itemValues.advantageType[i] = (ClassType)EditorGUILayout.EnumPopup("",itemValues.advantageType[i]);
+				itemValues.advantageType[i] = (MovementType)EditorGUILayout.EnumPopup("", itemValues.advantageType[i]);
 				if (GUILayout.Button("X", GUILayout.Width(50))) {
 					itemValues.advantageType.RemoveAt(i);
 					i--;
@@ -197,18 +192,32 @@ public class ItemEditorWindow {
 				GUILayout.EndHorizontal();
 			}
 			if (GUILayout.Button("+")) {
-				itemValues.advantageType.Add(ClassType.NONE);
+				itemValues.advantageType.Add(MovementType.NONE);
 			}
 		}
+		else if (itemValues.attackType == AttackType.HEAL) {
+			GUILayout.Label("Heal Stats", EditorStyles.boldLabel);
+			itemValues.power = EditorGUILayout.IntField("Heal Power", itemValues.power);
+			GUILayout.BeginHorizontal();
+			itemValues.range.min = EditorGUILayout.IntField("Min Range", itemValues.range.min);
+			itemValues.range.max = EditorGUILayout.IntField("Max Range", itemValues.range.max);
+			GUILayout.EndHorizontal();
+		}
+
+		GUILayout.Space(10);
+
+		GUILayout.Label("Requirements", EditorStyles.boldLabel);
+		itemValues.skillReq = (WeaponRank)EditorGUILayout.EnumPopup("Skill Requirement", itemValues.skillReq);
+
+		GUILayout.Space(10);
 
 		GUILayout.Label("Boost", EditorStyles.boldLabel);
 		itemValues.boost.hp = EditorGUILayout.IntField("Boost HP", itemValues.boost.hp);
-		itemValues.boost.atk = EditorGUILayout.IntField("Boost Atk", itemValues.boost.atk);
+		itemValues.boost.dmg = EditorGUILayout.IntField("Boost Atk", itemValues.boost.dmg);
+		itemValues.boost.mnd = EditorGUILayout.IntField("Boost Mnd", itemValues.boost.mnd);
 		itemValues.boost.spd = EditorGUILayout.IntField("Boost Spd", itemValues.boost.spd);
 		itemValues.boost.skl = EditorGUILayout.IntField("Boost Skl", itemValues.boost.skl);
-		itemValues.boost.lck = EditorGUILayout.IntField("Boost Lck", itemValues.boost.lck);
 		itemValues.boost.def = EditorGUILayout.IntField("Boost Def", itemValues.boost.def);
-		itemValues.boost.res = EditorGUILayout.IntField("Boost Res", itemValues.boost.res);
 
 		GUILayout.EndScrollView();
 		GUILayout.EndArea();
@@ -254,7 +263,7 @@ public class ItemEditorWindow {
 		AssetDatabase.SaveAssets();
 		AssetDatabase.Refresh();
 
-		currentEntryList = itemLibrary.GetRepresentations("",filterStr);
+		currentEntryList = itemLibrary.GetRepresentations("", filterStr);
 		uuid = "";
 		selItem = 0;
 		SelectItem();
@@ -272,7 +281,7 @@ public class ItemEditorWindow {
 		AssetDatabase.SaveAssets();
 		AssetDatabase.Refresh();
 
-		currentEntryList = itemLibrary.GetRepresentations("",filterStr);
+		currentEntryList = itemLibrary.GetRepresentations("", filterStr);
 
 		if (res) {
 			Debug.Log("Removed item: " + c.uuid);

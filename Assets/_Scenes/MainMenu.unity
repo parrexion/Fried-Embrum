@@ -2705,14 +2705,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: LoadGame Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 1708912850470516, guid: 54b7ce48319d74544940f54420359663, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 114459560469236114, guid: 54b7ce48319d74544940f54420359663,
         type: 3}
       propertyPath: usedForLoad
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1708912850470516, guid: 54b7ce48319d74544940f54420359663, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224740703705661992, guid: 54b7ce48319d74544940f54420359663,
         type: 3}
@@ -3192,43 +3192,40 @@ MonoBehaviour:
   saveController: {fileID: 1829959294}
   firstMission: {fileID: 11400000, guid: a433301cc1f14f043ab12fbd97fedd44, type: 2}
   playerData: {fileID: 11400000, guid: cf29fce9ee9388e4290741fe2d10bab5, type: 2}
+  classWheel: {fileID: 11400000, guid: d29c1242cf6052c43bfa5c9fb5fdb98b, type: 2}
   startingCharacters:
   - x: 0
     y: 0
     level: 1
-    stats: {fileID: 11400000, guid: ebe64c7e451dc494fbc8211be6f10d6a, type: 2}
+    charData: {fileID: 11400000, guid: ebe64c7e451dc494fbc8211be6f10d6a, type: 2}
     inventory:
-    - item: {fileID: 11400000, guid: 21e0cdf65dcd3c64f99de572c0526714, type: 2}
+    - item: {fileID: 11400000, guid: 3929fbf692e73f44f8e7b6847af34c2c, type: 2}
       droppable: 0
-    - item: {fileID: 11400000, guid: a2e37062da4ad09429243928a67e726e, type: 2}
+    - item: {fileID: 11400000, guid: 2c6481630a321de4f97f98e24d095e8e, type: 2}
       droppable: 0
-    - item: {fileID: 11400000, guid: a2e37062da4ad09429243928a67e726e, type: 2}
+    - item: {fileID: 11400000, guid: 2c6481630a321de4f97f98e24d095e8e, type: 2}
       droppable: 0
-    skills: []
   - x: 0
     y: 0
     level: 1
-    stats: {fileID: 11400000, guid: cf951a3da37e1794b9cd29749c715911, type: 2}
+    charData: {fileID: 11400000, guid: cf951a3da37e1794b9cd29749c715911, type: 2}
     inventory:
-    - item: {fileID: 11400000, guid: 21e0cdf65dcd3c64f99de572c0526714, type: 2}
+    - item: {fileID: 11400000, guid: a2de7015579e1f14ab703abbdd88c510, type: 2}
       droppable: 0
-    - item: {fileID: 11400000, guid: 0f3a39b4943c3394d894979e1c3bea9d, type: 2}
+    - item: {fileID: 11400000, guid: 77017b3b7bf0cc5418c9f5200dff282f, type: 2}
       droppable: 0
-    - item: {fileID: 11400000, guid: 21e0cdf65dcd3c64f99de572c0526714, type: 2}
+    - item: {fileID: 11400000, guid: 2c6481630a321de4f97f98e24d095e8e, type: 2}
       droppable: 0
-    skills: []
   - x: 0
     y: 0
     level: 1
-    stats: {fileID: 11400000, guid: 0bf81bfd9c0d55f49a76297d05c3a788, type: 2}
+    charData: {fileID: 11400000, guid: 0bf81bfd9c0d55f49a76297d05c3a788, type: 2}
     inventory:
-    - item: {fileID: 11400000, guid: 0f3a39b4943c3394d894979e1c3bea9d, type: 2}
+    - item: {fileID: 11400000, guid: 2c6481630a321de4f97f98e24d095e8e, type: 2}
       droppable: 0
-    - item: {fileID: 11400000, guid: a2e37062da4ad09429243928a67e726e, type: 2}
-      droppable: 0
-    skills: []
   startItems:
-  - {fileID: 11400000, guid: a2e37062da4ad09429243928a67e726e, type: 2}
+  - {fileID: 11400000, guid: 2c6481630a321de4f97f98e24d095e8e, type: 2}
+  - {fileID: 11400000, guid: b3e6f4c923b5f004695709a2dadf3762, type: 2}
   startUpgrade:
   - {fileID: 11400000, guid: 4035965c954be614e8ec78461529e883, type: 2}
   - {fileID: 11400000, guid: f3394d16d0d3fab42a82ea1e02f8194c, type: 2}

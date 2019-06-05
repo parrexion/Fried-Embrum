@@ -376,11 +376,11 @@ public class MapEditorWindow {
 			GUILayout.EndHorizontal();
 
 			GUILayout.BeginHorizontal();
-			mapValues.enemies[i].stats = (CharData)EditorGUILayout.ObjectField("Character",mapValues.enemies[i].stats, typeof(CharData),false);
+			mapValues.enemies[i].charData = (CharData)EditorGUILayout.ObjectField("Character",mapValues.enemies[i].charData, typeof(CharData),false);
 			mapValues.enemies[i].hasQuotes = EditorGUILayout.Toggle("Quotes", mapValues.enemies[i].hasQuotes, GUILayout.Width(80));
 			GUILayout.EndHorizontal();
 			
-			if (mapValues.enemies[i].stats != null) {
+			if (mapValues.enemies[i].charData != null) {
 				GUILayout.BeginHorizontal();
 				mapValues.enemies[i].level = EditorGUILayout.IntField("Level", mapValues.enemies[i].level);
 				mapValues.enemies[i].aggroType = (AggroType)EditorGUILayout.EnumPopup("Aggro", mapValues.enemies[i].aggroType);
@@ -473,9 +473,9 @@ public class MapEditorWindow {
 			GUILayout.EndHorizontal();
 
 			GUILayout.BeginHorizontal();
-			pos.stats = (CharData)EditorGUILayout.ObjectField("Character",pos.stats, typeof(CharData),false);
+			pos.charData = (CharData)EditorGUILayout.ObjectField("Character",pos.charData, typeof(CharData),false);
 			
-			if (pos.stats != null) {
+			if (pos.charData != null) {
 				EditorGUIUtility.labelWidth = 50;
 				pos.level = EditorGUILayout.IntField("Level", pos.level, GUILayout.Width(80));
 				GUILayout.EndHorizontal();
@@ -566,8 +566,8 @@ public class MapEditorWindow {
 				case InteractType.VILLAGE:
 					pos.dialogue = (DialogueEntry)EditorGUILayout.ObjectField("Dialogue",pos.dialogue, typeof(DialogueEntry),false);
 					pos.gift = (ItemEntry)EditorGUILayout.ObjectField("Gift",pos.gift, typeof(ItemEntry),false);
-					pos.ally.stats = (CharData)EditorGUILayout.ObjectField("New ally",pos.ally.stats, typeof(CharData),false);
-					if (pos.ally.stats != null) {
+					pos.ally.charData = (CharData)EditorGUILayout.ObjectField("New ally",pos.ally.charData, typeof(CharData),false);
+					if (pos.ally.charData != null) {
 						pos.ally.level = EditorGUILayout.IntField("Level", pos.ally.level);
 
 						EditorGUIUtility.labelWidth = 70;

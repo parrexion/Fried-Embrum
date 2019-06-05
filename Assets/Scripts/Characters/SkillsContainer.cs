@@ -14,9 +14,9 @@ public class SkillsContainer {
 		SetupValues(iLib, saveData);
 	}
 
-	public SkillsContainer(CharacterSkill[] presetSkills) {
+	public SkillsContainer(List<CharacterSkill> presetSkills) {
 		skills = new CharacterSkill[SKILL_SIZE];
-		for (int i = 0; i < presetSkills.Length; i++) {
+		for (int i = 0; i < presetSkills.Count; i++) {
 			skills[i] = presetSkills[i];
 		}
 	}
@@ -44,7 +44,7 @@ public class SkillsContainer {
 
 	//Skill activations
 
-	public void ActivateSkills(Activation activation, TacticsMove user, TacticsMove enemy) {
+	public void ActivateSkills(SkillActivation activation, TacticsMove user, TacticsMove enemy) {
 		for (int i = 0; i < skills.Length; i++) {
 			if (!skills[i])
 				continue;
@@ -52,7 +52,7 @@ public class SkillsContainer {
 		}
 	}
 
-	public void EndSkills(Activation activation, TacticsMove user, TacticsMove enemy) {
+	public void EndSkills(SkillActivation activation, TacticsMove user, TacticsMove enemy) {
 		for (int i = 0; i < skills.Length; i++) {
 			if (!skills[i])
 				continue;
@@ -60,7 +60,7 @@ public class SkillsContainer {
 		}
 	}
 
-	public int EditValueSkills(Activation activation, TacticsMove user, int value) {
+	public int EditValueSkills(SkillActivation activation, TacticsMove user, int value) {
 		for (int i = 0; i < skills.Length; i++) {
 			if (!skills[i])
 				continue;
@@ -69,7 +69,7 @@ public class SkillsContainer {
 		return value;
 	}
 
-	public void ForEachSkills(Activation activation, TacticsMove user, CharacterListVariable list) {
+	public void ForEachSkills(SkillActivation activation, TacticsMove user, CharacterListVariable list) {
 		for (int i = 0; i < skills.Length; i++) {
 			if (!skills[i])
 				continue;

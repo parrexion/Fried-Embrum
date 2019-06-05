@@ -108,15 +108,12 @@ public class StorageList : MonoBehaviour {
     }
 
 	private void UpdateFilter() {
-		ItemType currentCategory = (ItemType)(categories.GetPosition()+1);
-		if (currentCategory == ItemType.CHEAL) {
-			entryList.FilterShow(x => { return x.item.itemType == currentCategory || x.item.itemType == ItemType.CSTATS; });
-		}
-		else if (currentCategory == ItemType.HEAL) {
-			entryList.FilterShow(x => { return x.item.itemType == currentCategory || x.item.itemType == ItemType.BUFF; });
+		WeaponType currentCategory = (WeaponType)(categories.GetPosition()+1);
+		if (currentCategory == WeaponType.NONE) {
+			entryList.FilterShow(x => { return x.item.weaponType == WeaponType.C_HEAL || x.item.weaponType == WeaponType.C_BOOST; });
 		}
 		else {
-			entryList.FilterShow(x => { return x.item.itemType == currentCategory; });
+			entryList.FilterShow(x => { return x.item.weaponType == currentCategory; });
 		}
 		entryList.ForcePosition(0);
 	}

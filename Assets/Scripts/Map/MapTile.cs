@@ -100,7 +100,7 @@ public class MapTile : MonoBehaviour {
 		spr.color = terrainData.tint;
 	}
 
-	public int GetRoughness(ClassType type) {
+	public int GetRoughness(MovementType type) {
 		for (int i = 0; i < terrain.canMoveTypes.Length; i++) {
 			if (terrain.canMoveTypes[i].type == type) {
 //				Debug.Log("Movespeed:  " + terrain.canMoveTypes[i].roughness);
@@ -125,20 +125,20 @@ public class MapTile : MonoBehaviour {
 
 	public void FindNeighbours(Queue<MapTile> progress, int currentDistance, TacticsMove tactics, int moveSpeed, WeaponRange weapon, WeaponRange staff, bool showAttack, bool isDanger, bool isBuff) {
 		MapTile tile = battlemap.GetTile(posx-1, posy);
-		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.classData.classType, weapon, staff, showAttack, isDanger, isBuff))
+		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.currentClass.classType, weapon, staff, showAttack, isDanger, isBuff))
 			progress.Enqueue(tile);
 		tile = battlemap.GetTile(posx+1, posy);
-		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.classData.classType, weapon, staff, showAttack, isDanger, isBuff))
+		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.currentClass.classType, weapon, staff, showAttack, isDanger, isBuff))
 			progress.Enqueue(tile);
 		tile = battlemap.GetTile(posx, posy-1);
-		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.classData.classType, weapon, staff, showAttack, isDanger, isBuff))
+		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.currentClass.classType, weapon, staff, showAttack, isDanger, isBuff))
 			progress.Enqueue(tile);
 		tile = battlemap.GetTile(posx, posy+1);
-		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.classData.classType, weapon, staff, showAttack, isDanger, isBuff))
+		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.currentClass.classType, weapon, staff, showAttack, isDanger, isBuff))
 			progress.Enqueue(tile);
 	}
 
-	public bool CheckTile(MapTile checkTile, int currentDistance, int moveSpeed, Faction faction, ClassType classType, WeaponRange weapon, WeaponRange support, bool showAttack, bool isDanger, bool isBuff) {
+	public bool CheckTile(MapTile checkTile, int currentDistance, int moveSpeed, Faction faction, MovementType classType, WeaponRange weapon, WeaponRange support, bool showAttack, bool isDanger, bool isBuff) {
 		if (checkTile == null)
 			return false;
 		

@@ -4,7 +4,7 @@ using UnityEngine;
 
 [System.Serializable]
 public class RoughnessTuple {
-	public ClassType type;
+	public MovementType type;
 	public int roughness;
 }
 

@@ -8,14 +8,14 @@ public class Room : MonoBehaviour {
 	public House house;
 	public Image occupied;
 	public Image cursor;
-	public StatsContainer resident;
+	public int residentIndex = -1;
 
 	private bool hovering;
 	private bool selected;
 
 
 	public void UpdateAvailablity() {
-		occupied.color = (resident != null) ? new Color(0.8f,0.6f,0) : Color.white;
+		occupied.color = (residentIndex != -1) ? new Color(0.8f,0.6f,0) : Color.white;
 	}
 
 	public void SetHover(bool hover) {
@@ -34,8 +34,8 @@ public class Room : MonoBehaviour {
 	}
 
 	public static void SwapRoom(Room r1, Room r2) {
-		StatsContainer temp = r1.resident;
-		r1.resident = r2.resident;
-		r2.resident = temp;
+		int temp = r1.residentIndex;
+		r1.residentIndex = r2.residentIndex;
+		r2.residentIndex = temp;
 	}
 }

@@ -46,8 +46,8 @@ public class NPCMove : TacticsMove {
 	/// </summary>
 	public MapTile CalculateMovement() {
 		MapTile tileBestWpn = null, tileGoodWpn = null, tileBestStf = null, tileGoodStf = null;
-		List<InventoryTuple> weapon = inventory.GetAllUsableItemTuple(ItemCategory.WEAPON, stats);
-		List<InventoryTuple> staff = inventory.GetAllUsableItemTuple(ItemCategory.STAFF, stats);
+		List<InventoryTuple> weapon = inventory.GetAllUsableItemTuple(ItemCategory.WEAPON);
+		List<InventoryTuple> staff = inventory.GetAllUsableItemTuple(ItemCategory.SUPPORT);
 		if (weapon.Count > 0) {
 			FindBestTile(weapon, out tileBestWpn, out tileGoodWpn);
 		}
@@ -179,11 +179,11 @@ public class NPCMove : TacticsMove {
 			}
 		}
 		else {
-			WeaponRange reach = inventory.GetReach(ItemCategory.STAFF);
+			WeaponRange reach = inventory.GetReach(ItemCategory.SUPPORT);
 			for (int i = 0; i < enemyList.values.Count; i++) {
 				if (this == enemyList.values[i])
 					continue;
-				bool isBuff = (weapons[0].item.itemType == ItemType.BUFF);
+				bool isBuff = (weapons[0].item.weaponType == WeaponType.BARRIER);
 				if (isBuff || enemyList.values[i].IsInjured())
 					((NPCMove)enemyList.values[i]).ShowSupportTiles(reach);
 			}
@@ -202,11 +202,11 @@ public class NPCMove : TacticsMove {
 		currentTile.selectable = true;
 		
 		WeaponRange weapon = inventory.GetReach(ItemCategory.WEAPON);
-		WeaponRange staff = inventory.GetReach(ItemCategory.STAFF);
+		WeaponRange staff = inventory.GetReach(ItemCategory.SUPPORT);
 		
 		bool isBuff = false;
 		if (staff.max > 0)
-			isBuff = (inventory.GetFirstUsableItem(ItemType.BUFF, stats) != null);
+			isBuff = (inventory.GetFirstUsableItemTuple(WeaponType.BARRIER) != null);
 
 		while(process.Count > 0) {
 			MapTile tile = process.Dequeue();
@@ -258,13 +258,13 @@ public class NPCMove : TacticsMove {
 		if (currentMode.value == ActionMode.ATTACK) {
 			targetTile.value = FindRandomTarget(playerList, ItemCategory.WEAPON, false);
 			int distance = BattleMap.DistanceTo(this, targetTile.value);
-			inventory.EquipFirstInRangeItem(ItemCategory.WEAPON, stats, distance);
+			inventory.EquipFirstInRangeItem(ItemCategory.WEAPON, distance);
             Attack(targetTile.value);
 		}
 		else {
-			targetTile.value = FindRandomTarget(enemyList, ItemCategory.STAFF, true);
+			targetTile.value = FindRandomTarget(enemyList, ItemCategory.SUPPORT, true);
 			int distance = BattleMap.DistanceTo(this, targetTile.value);
-			inventory.EquipFirstInRangeItem(ItemCategory.STAFF, stats, distance);
+			inventory.EquipFirstInRangeItem(ItemCategory.SUPPORT, distance);
             Heal(targetTile.value);
 		}
 		InputDelegateController.instance.TriggerMenuChange(MenuMode.BATTLE);

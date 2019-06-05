@@ -53,7 +53,6 @@ public class PrepInventorySelect : MonoBehaviour {
 	public Text hitText;
 	public Text critText;
 	public Text reqText;
-	public Text weightText;
 
 
 	public void GenerateList() {
@@ -221,7 +220,6 @@ public class PrepInventorySelect : MonoBehaviour {
 			hitText.text = "Hit:  ";
 			critText.text = "Crit:  ";
 			reqText.text = "Req:  ";
-			weightText.text = "Weight:  ";
 			return;
 		}
 
@@ -233,7 +231,6 @@ public class PrepInventorySelect : MonoBehaviour {
 		hitText.text = "Hit:  " + item.hitRate.ToString();
 		critText.text = "Crit:  " + item.critRate.ToString();
 		reqText.text = "Req:  " + item.skillReq.ToString();
-		weightText.text = "Weight:  " + item.weight.ToString();
 
 		if (currentMode == State.TAKE)
 			ShowCharInfoTake();
@@ -269,7 +266,7 @@ public class PrepInventorySelect : MonoBehaviour {
 		InventoryItem item = new InventoryItem(tuple);
 		playerData.items.Add(item);
 		tuple.item = null;
-		charList.GetEntry().invCon.CleanupInventory(null);
+		charList.GetEntry().invCon.CleanupInventory();
 
 		itemList.RemoveEntry();
 		Transform t2 = Instantiate(restockPrefab, listParentRestock);

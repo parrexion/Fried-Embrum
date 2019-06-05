@@ -1,7 +1,5 @@
 using UnityEngine;
 using UnityEditor;
-using UnityEditor.SceneManagement;
-using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
 public class CharacterEditorWindow {
@@ -26,10 +24,10 @@ public class CharacterEditorWindow {
 
 	//Creation
 	string charUuid;
-	Color repColor = new Color(0,0,0,1f);
+	Color repColor = new Color(0, 0, 0, 1f);
 
 
-	public CharacterEditorWindow(ScrObjLibraryVariable entries, CharData container){
+	public CharacterEditorWindow(ScrObjLibraryVariable entries, CharData container) {
 		characterLibrary = entries;
 		charValues = container;
 		LoadLibrary();
@@ -56,7 +54,7 @@ public class CharacterEditorWindow {
 		selectTex.Apply();
 
 		charValues.ResetValues();
-		currentEntryList = characterLibrary.GetRepresentations("","");
+		currentEntryList = characterLibrary.GetRepresentations("", "");
 		filterStr = "";
 	}
 
@@ -65,7 +63,7 @@ public class CharacterEditorWindow {
 		GUILayout.BeginHorizontal();
 		GUILayout.Label("Character Editor", EditorStyles.boldLabel);
 		if (selEntry != -1) {
-			if (GUILayout.Button("Save Character")){
+			if (GUILayout.Button("Save Character")) {
 				SaveSelectedEntry();
 			}
 		}
@@ -103,15 +101,15 @@ public class CharacterEditorWindow {
 		string oldFilter = filterStr;
 		filterStr = EditorGUILayout.TextField("Filter", filterStr);
 		if (filterStr != oldFilter)
-			currentEntryList = characterLibrary.GetRepresentations("",filterStr);
+			currentEntryList = characterLibrary.GetRepresentations("", filterStr);
 
-		scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(selectRect.width), 
-						GUILayout.Height(selectRect.height-130));
+		scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(selectRect.width),
+						GUILayout.Height(selectRect.height - 130));
 
 		int oldSelected = selEntry;
-		selEntry = GUILayout.SelectionGrid(selEntry, currentEntryList,1);
+		selEntry = GUILayout.SelectionGrid(selEntry, currentEntryList, 1);
 		EditorGUILayout.EndScrollView();
-		
+
 		if (oldSelected != selEntry)
 			SelectEntry();
 
@@ -133,12 +131,15 @@ public class CharacterEditorWindow {
 	void DrawDisplayWindow() {
 		EditorGUIUtility.labelWidth = 110;
 		GUILayout.BeginArea(dispRect);
-		dispScrollPos = GUILayout.BeginScrollView(dispScrollPos, GUILayout.Width(dispRect.width), 
-					GUILayout.Height(dispRect.height-25));
+		dispScrollPos = GUILayout.BeginScrollView(dispScrollPos, GUILayout.Width(dispRect.width),
+					GUILayout.Height(dispRect.height - 25));
 
 		EditorGUILayout.SelectableLabel("Selected Character UUID: " + charValues.uuid, EditorStyles.boldLabel);
-		charValues.repColor = EditorGUILayout.ColorField("List color", charValues.repColor);
 		charValues.entryName = EditorGUILayout.TextField("Name", charValues.entryName);
+		GUILayout.BeginHorizontal();
+		charValues.repColor = EditorGUILayout.ColorField("List color", charValues.repColor);
+		charValues.faction = (Faction)EditorGUILayout.EnumPopup("Class faction", charValues.faction);
+		GUILayout.EndHorizontal();
 
 		GUILayout.Space(10);
 
@@ -149,27 +150,42 @@ public class CharacterEditorWindow {
 		GUILayout.Label("Battle sprite", GUILayout.Width(130));
 		GUILayout.EndHorizontal();
 		GUILayout.BeginHorizontal();
-		charValues.bigPortrait = (Sprite)EditorGUILayout.ObjectField("",charValues.bigPortrait, typeof(Sprite),false, GUILayout.Width(130));
-		charValues.portrait = (Sprite)EditorGUILayout.ObjectField("",charValues.portrait, typeof(Sprite),false, GUILayout.Width(130));
-		charValues.battleSprite = (Sprite)EditorGUILayout.ObjectField("",charValues.battleSprite, typeof(Sprite),false, GUILayout.Width(130));
+		charValues.bigPortrait = (Sprite)EditorGUILayout.ObjectField("", charValues.bigPortrait, typeof(Sprite), false, GUILayout.Width(130));
+		charValues.portrait = (Sprite)EditorGUILayout.ObjectField("", charValues.portrait, typeof(Sprite), false, GUILayout.Width(130));
+		charValues.battleSprite = (Sprite)EditorGUILayout.ObjectField("", charValues.battleSprite, typeof(Sprite), false, GUILayout.Width(130));
 		GUILayout.EndHorizontal();
 		charValues.portraitSet = (PortraitEntry)EditorGUILayout.ObjectField("Portrait set", charValues.portraitSet, typeof(PortraitEntry), false);
-		
+
 		GUILayout.Space(10);
 
 		GUILayout.Label("Other values", EditorStyles.boldLabel);
-		charValues.deathQuote = (DialogueEntry)EditorGUILayout.ObjectField("Death Quote", charValues.deathQuote, typeof(DialogueEntry),false);
+		charValues.deathQuote = (DialogueEntry)EditorGUILayout.ObjectField("Death Quote", charValues.deathQuote, typeof(DialogueEntry), false);
 		charValues.mustSurvive = EditorGUILayout.Toggle("Must survive", charValues.mustSurvive);
 
 		GUILayout.Space(10);
 
 		GUILayout.Label("Class", EditorStyles.boldLabel);
-		charValues.charClass = (CharClass)EditorGUILayout.ObjectField("Class", charValues.charClass, typeof(CharClass),false);
-		charValues.personalSkill = (CharacterSkill)EditorGUILayout.ObjectField("Personal skill", charValues.personalSkill, typeof(CharacterSkill),false);
+		charValues.startClass = (CharClass)EditorGUILayout.ObjectField("Class", charValues.startClass, typeof(CharClass), false);
+		GUILayout.Label("Class levels");
+		if (charValues.startClassLevels.Length != ClassWheel.CLASS_COUNT)
+			charValues.startClassLevels = new int[ClassWheel.CLASS_COUNT];
+		if (charValues.faction == Faction.PLAYER) {
+			for (int i = 0; i < ClassWheel.CLASS_COUNT; i++) {
+				charValues.startClassLevels[i] = EditorGUILayout.IntField(((PlayerClassName)i).ToString(), charValues.startClassLevels[i]);
+			}
+		}
+		if (charValues.faction == Faction.ENEMY) {
+			for (int i = 0; i < ClassWheel.ENEMY_CLASS_COUNT; i++) {
+				charValues.startClassLevels[i] = EditorGUILayout.IntField(((EnemyClassName)i).ToString(), charValues.startClassLevels[i]);
+			}
+		}
+		if (charValues.faction == Faction.ALLY) {
+			GUILayout.Label("Not implemented!");
+		}
 
 		GUILayout.Space(30);
 
-		if (charValues.charClass != null) {
+		if (charValues.startClass != null && charValues.faction == Faction.PLAYER) {
 			showStats = EditorGUILayout.Toggle("Show stats", showStats);
 			if (showStats) {
 				ShowBaseStats();
@@ -185,85 +201,87 @@ public class CharacterEditorWindow {
 	private void ShowBaseStats() {
 		GUILayout.Label("Base stats", EditorStyles.boldLabel);
 		GUILayout.BeginHorizontal();
-		GUILayout.Label("HP  " + charValues.charClass.hp);
-		charValues.hp = EditorGUILayout.IntSlider(charValues.hp,-10,10);
-		GUILayout.Label("Tot: " + (charValues.charClass.hp + charValues.hp));
+		GUILayout.Label("HP  " + charValues.startClass.hp);
+		charValues.hp = EditorGUILayout.IntSlider(charValues.hp, -10, 10);
+		GUILayout.Label("Tot: " + (charValues.startClass.hp + charValues.hp));
 		GUILayout.EndHorizontal();
 		GUILayout.BeginHorizontal();
-		GUILayout.Label("DMG  " + charValues.charClass.dmg);
-		charValues.dmg = EditorGUILayout.IntSlider(charValues.dmg,-10,10);
-		GUILayout.Label("Tot: " + (charValues.charClass.dmg + charValues.dmg));
+		GUILayout.Label("DMG  " + charValues.startClass.dmg);
+		charValues.dmg = EditorGUILayout.IntSlider(charValues.dmg, -10, 10);
+		GUILayout.Label("Tot: " + (charValues.startClass.dmg + charValues.dmg));
 		GUILayout.EndHorizontal();
 		GUILayout.BeginHorizontal();
-		GUILayout.Label("MND  " + charValues.charClass.mnd);
-		charValues.mnd = EditorGUILayout.IntSlider(charValues.mnd,-10,10);
-		GUILayout.Label("Tot: " + (charValues.charClass.mnd + charValues.mnd));
+		GUILayout.Label("MND  " + charValues.startClass.mnd);
+		charValues.mnd = EditorGUILayout.IntSlider(charValues.mnd, -10, 10);
+		GUILayout.Label("Tot: " + (charValues.startClass.mnd + charValues.mnd));
 		GUILayout.EndHorizontal();
 		GUILayout.BeginHorizontal();
-		GUILayout.Label("SKL  " + charValues.charClass.skl);
-		charValues.skl = EditorGUILayout.IntSlider(charValues.skl,-10,10);
-		GUILayout.Label("Tot: " + (charValues.charClass.skl + charValues.skl));
+		GUILayout.Label("SKL  " + charValues.startClass.skl);
+		charValues.skl = EditorGUILayout.IntSlider(charValues.skl, -10, 10);
+		GUILayout.Label("Tot: " + (charValues.startClass.skl + charValues.skl));
 		GUILayout.EndHorizontal();
 		GUILayout.BeginHorizontal();
-		GUILayout.Label("SPD  " + charValues.charClass.spd);
-		charValues.spd = EditorGUILayout.IntSlider(charValues.spd,-10,10);
-		GUILayout.Label("Tot: " + (charValues.charClass.spd + charValues.spd));
+		GUILayout.Label("SPD  " + charValues.startClass.spd);
+		charValues.spd = EditorGUILayout.IntSlider(charValues.spd, -10, 10);
+		GUILayout.Label("Tot: " + (charValues.startClass.spd + charValues.spd));
 		GUILayout.EndHorizontal();
 		GUILayout.BeginHorizontal();
-		GUILayout.Label("DEF  " + charValues.charClass.def);
-		charValues.def = EditorGUILayout.IntSlider(charValues.def,-10,10);
-		GUILayout.Label("Tot: " + (charValues.charClass.def + charValues.def));
+		GUILayout.Label("DEF  " + charValues.startClass.def);
+		charValues.def = EditorGUILayout.IntSlider(charValues.def, -10, 10);
+		GUILayout.Label("Tot: " + (charValues.startClass.def + charValues.def));
 		GUILayout.EndHorizontal();
+		GUILayout.Label("Total base diff:  " + (charValues.hp + charValues.dmg + charValues.mnd + charValues.skl + charValues.spd + charValues.def));
 	}
-	
+
 	private void ShowGrowths() {
 		GUILayout.Label("Stat growths", EditorStyles.boldLabel);
 		GUILayout.BeginHorizontal();
-		GUILayout.Label("HP  " + charValues.charClass.gHp);
-		charValues.gHp = 5 * (EditorGUILayout.IntSlider(charValues.gHp,-50,50) / 5);
-		GUILayout.Label("Tot: " + (charValues.charClass.gHp + charValues.gHp));
+		GUILayout.Label("HP  " + charValues.startClass.gHp);
+		charValues.gHp = 5 * (EditorGUILayout.IntSlider(charValues.gHp, -30, 30) / 5);
+		GUILayout.Label("Tot: " + (charValues.startClass.gHp + charValues.gHp));
 		GUILayout.EndHorizontal();
 		GUILayout.BeginHorizontal();
-		GUILayout.Label("DMG  " + charValues.charClass.gDmg);
-		charValues.gDmg = 5 * (EditorGUILayout.IntSlider(charValues.gDmg,-50,50) / 5);
-		GUILayout.Label("Tot: " + (charValues.charClass.gDmg + charValues.gDmg));
+		GUILayout.Label("DMG  " + charValues.startClass.gDmg);
+		charValues.gDmg = 5 * (EditorGUILayout.IntSlider(charValues.gDmg, -30, 30) / 5);
+		GUILayout.Label("Tot: " + (charValues.startClass.gDmg + charValues.gDmg));
 		GUILayout.EndHorizontal();
 		GUILayout.BeginHorizontal();
-		GUILayout.Label("RES  " + charValues.charClass.gMnd);
-		charValues.gMnd = 5 * (EditorGUILayout.IntSlider(charValues.gMnd,-50,50) / 5);
-		GUILayout.Label("Tot: " + (charValues.charClass.gMnd + charValues.gMnd));
+		GUILayout.Label("MND  " + charValues.startClass.gMnd);
+		charValues.gMnd = 5 * (EditorGUILayout.IntSlider(charValues.gMnd, -30, 30) / 5);
+		GUILayout.Label("Tot: " + (charValues.startClass.gMnd + charValues.gMnd));
 		GUILayout.EndHorizontal();
 		GUILayout.BeginHorizontal();
-		GUILayout.Label("SKL  " + charValues.charClass.gSkl);
-		charValues.gSkl = 5 * (EditorGUILayout.IntSlider(charValues.gSkl,-50,50) / 5);
-		GUILayout.Label("Tot: " + (charValues.charClass.gSkl + charValues.gSkl));
+		GUILayout.Label("SKL  " + charValues.startClass.gSkl);
+		charValues.gSkl = 5 * (EditorGUILayout.IntSlider(charValues.gSkl, -30, 30) / 5);
+		GUILayout.Label("Tot: " + (charValues.startClass.gSkl + charValues.gSkl));
 		GUILayout.EndHorizontal();
 		GUILayout.BeginHorizontal();
-		GUILayout.Label("SPD  " + charValues.charClass.gSpd);
-		charValues.gSpd = 5 * (EditorGUILayout.IntSlider(charValues.gSpd,-50,50) / 5);
-		GUILayout.Label("Tot: " + (charValues.charClass.gSpd + charValues.gSpd));
+		GUILayout.Label("SPD  " + charValues.startClass.gSpd);
+		charValues.gSpd = 5 * (EditorGUILayout.IntSlider(charValues.gSpd, -30, 30) / 5);
+		GUILayout.Label("Tot: " + (charValues.startClass.gSpd + charValues.gSpd));
 		GUILayout.EndHorizontal();
 		GUILayout.BeginHorizontal();
-		GUILayout.Label("DEF  " + charValues.charClass.gDef);
-		charValues.gDef = 5 * (EditorGUILayout.IntSlider(charValues.gDef,-50,50) / 5);
-		GUILayout.Label("Tot: " + (charValues.charClass.gDef + charValues.gDef));
+		GUILayout.Label("DEF  " + charValues.startClass.gDef);
+		charValues.gDef = 5 * (EditorGUILayout.IntSlider(charValues.gDef, -30, 30) / 5);
+		GUILayout.Label("Tot: " + (charValues.startClass.gDef + charValues.gDef));
 		GUILayout.EndHorizontal();
+		GUILayout.Label("Total growth diff:  " + (charValues.gHp + charValues.gDmg + charValues.gMnd + charValues.gSkl + charValues.gSpd + charValues.gDef));
 	}
-	
+
 	private void ShowSupports() {
 		GUILayout.Label("Supports", EditorStyles.boldLabel);
 		GUILayout.Space(5);
 		for (int i = 0; i < charValues.supports.Count; i++) {
-			GUILayout.Label("Support " + (i+1));
+			GUILayout.Label("Support " + (i + 1));
 			GUILayout.BeginHorizontal();
-			charValues.supports[i].partner = (CharData)EditorGUILayout.ObjectField("Partner",charValues.supports[i].partner, typeof(CharData),false);
+			charValues.supports[i].partner = (CharData)EditorGUILayout.ObjectField("Partner", charValues.supports[i].partner, typeof(CharData), false);
 			if (GUILayout.Button("X", GUILayout.Width(50))) {
 				GUI.FocusControl(null);
 				charValues.supports.RemoveAt(i);
 				i--;
 			}
 			GUILayout.EndHorizontal();
-			
+
 			if (charValues.supports[i].partner != null) {
 				GUILayout.BeginHorizontal();
 				EditorGUIUtility.labelWidth = 70;
@@ -313,14 +331,14 @@ public class CharacterEditorWindow {
 		cd.repColor = repColor;
 		string path = "Assets/LibraryData/Characters/" + charUuid + ".asset";
 
-		characterLibrary.InsertEntry(cd,0);
+		characterLibrary.InsertEntry(cd, 0);
 		Undo.RecordObject(characterLibrary, "Added entry");
 		EditorUtility.SetDirty(characterLibrary);
 		AssetDatabase.CreateAsset(cd, path);
 		AssetDatabase.SaveAssets();
 		AssetDatabase.Refresh();
 
-		currentEntryList = characterLibrary.GetRepresentations("",filterStr);
+		currentEntryList = characterLibrary.GetRepresentations("", filterStr);
 		charUuid = "";
 		selEntry = 0;
 		SelectEntry();
@@ -338,7 +356,7 @@ public class CharacterEditorWindow {
 		AssetDatabase.SaveAssets();
 		AssetDatabase.Refresh();
 
-		currentEntryList = characterLibrary.GetRepresentations("",filterStr);
+		currentEntryList = characterLibrary.GetRepresentations("", filterStr);
 
 		if (res) {
 			Debug.Log("Removed entry: " + cd.uuid);

@@ -10,7 +10,7 @@ public class BaseHousing : InputReceiverDelegate {
 
 	[Header("Button menu")]
 	public MyButtonList buttons;
-    public PlayerData saveList;
+    public PlayerData playerData;
     public UnityEvent housingChangedEvent;
 
 	[Header("Canvases")]
@@ -33,11 +33,11 @@ public class BaseHousing : InputReceiverDelegate {
 	[Header("Supports")]
 	public SupportList supportList;
 	
-	private State menuMode;
+	private State currentMenu;
 
 
 	private void Start() {
-		menuMode = State.MAIN;
+		currentMenu = State.MAIN;
 		basicCanvas.SetActive(true);
 		houseCanvas.SetActive(false);
 		supportCanvas.SetActive(false);
@@ -53,10 +53,10 @@ public class BaseHousing : InputReceiverDelegate {
 	}
 
 	public override void OnOkButton() {
-		if (menuMode == State.MAIN) {
+		if (currentMenu == State.MAIN) {
 			int currentIndex = buttons.GetPosition();
 			if (currentIndex == 0) {
-				menuMode = State.HOUSE;
+				currentMenu = State.HOUSE;
 				basicCanvas.SetActive(false);
 				houseCanvas.SetActive(true);
 				housingController.CreateHousing();
@@ -64,38 +64,41 @@ public class BaseHousing : InputReceiverDelegate {
 				menuAcceptEvent.Invoke();
 			}
 			else if (currentIndex == 1) {
-				menuMode = State.SUPPORT;
+				currentMenu = State.SUPPORT;
 				basicCanvas.SetActive(false);
 				supportCanvas.SetActive(true);
 				supportList.CreateList();
 				menuAcceptEvent.Invoke();
 			}
 		}
-		else if (menuMode == State.HOUSE) {
+		else if (currentMenu == State.HOUSE) {
 			housingController.SelectClick();
 			UpdateSelectedHouse();
 			menuAcceptEvent.Invoke();
 		}
-		else if (menuMode == State.SUPPORT) {
+		else if (currentMenu == State.SUPPORT) {
 			supportList.SelectCharacter();
 			menuAcceptEvent.Invoke();
 		}
 	}
 
 	public override void OnBackButton() {
-		if (menuMode == State.HOUSE) {
+		if (currentMenu == State.MAIN) {
+			MenuChangeDelay(MenuMode.BASE_MAIN);
+		}
+		else if (currentMenu == State.HOUSE) {
 			bool res = housingController.BackClicked();
 			if (res) {
-				menuMode = State.MAIN;
+				currentMenu = State.MAIN;
 				basicCanvas.SetActive(true);
 				houseCanvas.SetActive(false);
 			}
 			menuBackEvent.Invoke();
 		}
-		else if (menuMode == State.SUPPORT) {
+		else if (currentMenu == State.SUPPORT) {
 			bool res = supportList.DeselectCharacter();
 			if (res) {
-				menuMode = State.MAIN;
+				currentMenu = State.MAIN;
 				basicCanvas.SetActive(true);
 				supportCanvas.SetActive(false);
 			}
@@ -104,58 +107,58 @@ public class BaseHousing : InputReceiverDelegate {
 	}
 
     public override void OnUpArrow() {
-		if (menuMode == State.MAIN) {
+		if (currentMenu == State.MAIN) {
 			buttons.Move(-1);
 			housingChangedEvent.Invoke();
 			menuMoveEvent.Invoke();
 		}
-		else if (menuMode == State.HOUSE) {
+		else if (currentMenu == State.HOUSE) {
 			housingController.MoveVertical(-1);
 			UpdateSelectedHouse();
 			menuMoveEvent.Invoke();
 		}
-		else if (menuMode == State.SUPPORT) {
+		else if (currentMenu == State.SUPPORT) {
 			supportList.MoveVertical(-1);
 			menuMoveEvent.Invoke();
 		}
 	}
 
     public override void OnDownArrow() {
-		if (menuMode == State.MAIN) {
+		if (currentMenu == State.MAIN) {
 			buttons.Move(1);
 			housingChangedEvent.Invoke();
 			menuMoveEvent.Invoke();
 		}
-		else if (menuMode == State.HOUSE) {
+		else if (currentMenu == State.HOUSE) {
 			housingController.MoveVertical(1);
 			UpdateSelectedHouse();
 			menuMoveEvent.Invoke();
 		}
-		else if (menuMode == State.SUPPORT) {
+		else if (currentMenu == State.SUPPORT) {
 			supportList.MoveVertical(1);
 			menuMoveEvent.Invoke();
 		}
 	}
 
     public override void OnLeftArrow() {
-		if (menuMode == State.HOUSE) {
+		if (currentMenu == State.HOUSE) {
 			housingController.MoveHorizontal(-1);
 			UpdateSelectedHouse();
 			menuMoveEvent.Invoke();
 		}
-		else if (menuMode == State.SUPPORT) {
+		else if (currentMenu == State.SUPPORT) {
 			supportList.MoveHorizontal(-1);
 			menuMoveEvent.Invoke();
 		}
 	}
     
     public override void OnRightArrow() {
-		if (menuMode == State.HOUSE) {
+		if (currentMenu == State.HOUSE) {
 			housingController.MoveHorizontal(1);
 			UpdateSelectedHouse();
 			menuMoveEvent.Invoke();
 		}
-		else if (menuMode == State.SUPPORT) {
+		else if (currentMenu == State.SUPPORT) {
 			supportList.MoveHorizontal(1);
 			menuMoveEvent.Invoke();
 		}
@@ -163,21 +166,23 @@ public class BaseHousing : InputReceiverDelegate {
 
 	private void UpdateSelectedHouse() {
 		Room currentRoom = housingController.GetCurrentRoom();
-		StatsContainer data = currentRoom.resident;
+		StatsContainer stats = playerData.stats[currentRoom.residentIndex];
 		roomNumber.text = housingController.GetRoomName();
-		characterName.text = (data != null) ? data.charData.entryName : "";
-		characterClass.text = (data != null) ? data.classData.entryName : "";
-		characterLevel.text = (data != null) ? "Level  " + data.level : "";
-		portrait.sprite = (data != null) ? data.charData.bigPortrait : null;
+		characterName.text = (stats != null) ? stats.charData.entryName : "";
+		characterClass.text = (stats != null) ? stats.currentClass.entryName : "";
+		characterLevel.text = (stats != null) ? "Level  " + stats.level : "";
+		portrait.sprite = (stats != null) ? stats.charData.bigPortrait : null;
 
 		List<Room> neighbours = currentRoom.house.GetNeighbours(currentRoom);
 		string nr1 = "", nr2 = "";
-		if (data != null) {
+		if (stats != null) {
 			if (neighbours.Count > 0) {
-				nr1 += neighbours[0].resident.charData.entryName;
-				SupportTuple support = neighbours[0].resident.charData.GetSupport(data.charData);
+				StatsContainer neigh1 = playerData.stats[neighbours[0].residentIndex];
+				SupportContainer supportCon1 = playerData.baseInfo[neighbours[0].residentIndex];
+				nr1 += neigh1.charData.entryName;
+				SupportTuple support = neigh1.charData.GetSupport(stats.charData);
 				if (support != null) {
-					int supportValue = data.GetSupportValue(neighbours[0].resident.charData).value;
+					int supportValue = supportCon1.GetSupportValue(neigh1.charData).value;
 					nr1 += "\nRank " + support.CalculateLevel(supportValue) + "  " + support.GetSpeedString();
 				}
 				else {
@@ -189,10 +194,12 @@ public class BaseHousing : InputReceiverDelegate {
 			}
 
 			if (neighbours.Count > 1) {
-				nr2 += neighbours[1].resident.charData.entryName;
-				SupportTuple support = neighbours[1].resident.charData.GetSupport(data.charData);
+				StatsContainer neigh2 = playerData.stats[neighbours[1].residentIndex];
+				SupportContainer supportCon2 = playerData.baseInfo[neighbours[1].residentIndex];
+				nr2 += neigh2.charData.entryName;
+				SupportTuple support = neigh2.charData.GetSupport(stats.charData);
 				if (support != null) {
-					int supportValue = data.GetSupportValue(neighbours[1].resident.charData).value;
+					int supportValue = supportCon2.GetSupportValue(neigh2.charData).value;
 					nr2 += "\nRank " + support.CalculateLevel(supportValue) + "  " + support.GetSpeedString();
 				}
 				else {

@@ -10,19 +10,16 @@ public class CharData : ScrObjLibraryEntry {
 	public Sprite portrait;
 	public Sprite battleSprite;
 	public PortraitEntry portraitSet;
-	public CharClass charClass;
-
-	[Header("Skills")]
-	public CharacterSkill personalSkill;
+	public CharClass startClass;
+	public int[] startClassLevels = new int[ClassWheel.CLASS_COUNT];
 
 	[Header("Personal Base Stats")]
 	public int hp;
 	public int dmg;
+	public int mnd;
 	public int skl;
 	public int spd;
 	public int def;
-	public int mnd;
-	public int con;
 
 	[Header("Personal Growths")]
 	public int gHp;
@@ -36,6 +33,7 @@ public class CharData : ScrObjLibraryEntry {
 	public List<SupportTuple> supports = new List<SupportTuple>();
 
 	[Header("Other Data")]
+	public Faction faction;
 	public bool mustSurvive;
 	public DialogueEntry deathQuote;
 
@@ -47,9 +45,8 @@ public class CharData : ScrObjLibraryEntry {
 		portrait = null;
 		battleSprite = null;
 		portraitSet = null;
-		charClass = null;
-
-		personalSkill = null;
+		startClass = null;
+		startClassLevels = new int[ClassWheel.CLASS_COUNT];
 
 		hp = 0;
 		dmg = 0;
@@ -67,6 +64,7 @@ public class CharData : ScrObjLibraryEntry {
 
 		supports = new List<SupportTuple>();
 
+		faction = Faction.NONE;
 		mustSurvive = false;
 		deathQuote = null;
 	}
@@ -79,9 +77,8 @@ public class CharData : ScrObjLibraryEntry {
 		portrait = cd.portrait;
 		battleSprite = cd.battleSprite;
 		portraitSet = cd.portraitSet;
-		charClass = cd.charClass;
-
-		personalSkill = cd.personalSkill;
+		startClass = cd.startClass;
+		startClassLevels = cd.startClassLevels;
 
 		hp = cd.hp;
 		dmg = cd.dmg;
@@ -102,6 +99,7 @@ public class CharData : ScrObjLibraryEntry {
 			supports.Add(cd.supports[i]);
 		}
 
+		faction = cd.faction;
 		mustSurvive = cd.mustSurvive;
 		deathQuote = cd.deathQuote;
 	}

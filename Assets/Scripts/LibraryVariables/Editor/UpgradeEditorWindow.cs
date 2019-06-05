@@ -1,7 +1,5 @@
 using UnityEngine;
 using UnityEditor;
-using UnityEditor.SceneManagement;
-using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
 public class UpgradeEditorWindow {
@@ -160,7 +158,6 @@ public class UpgradeEditorWindow {
 			entryValues.level = EditorGUILayout.IntField("Level", entryValues.level);
 			entryValues.hit = EditorGUILayout.IntField("Hit Rate", entryValues.hit);
 			entryValues.power = EditorGUILayout.IntField("Power", entryValues.power);
-			entryValues.weight = EditorGUILayout.IntField("Weight", entryValues.weight);
 			GUILayout.Label("Range modification");
 			GUILayout.BeginHorizontal();
 			entryValues.minRange = EditorGUILayout.IntField("Min", entryValues.minRange);

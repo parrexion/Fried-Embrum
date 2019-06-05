@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class HousingController : MonoBehaviour {
 
-	public PlayerData saveList;
+	public PlayerData playerData;
+	public ScrObjLibraryVariable charLibrary;
+	public ScrObjLibraryVariable classLibrary;
 
 	[Header("Housing")]
 	public IntVariable houseCount;
@@ -34,15 +36,15 @@ public class HousingController : MonoBehaviour {
 			houses[i].ResetRooms(i+1);
 		}
 		
-		List<StatsContainer> noRoomers = new List<StatsContainer>();
-		for (int i = 0; i < saveList.stats.Count; i++) {
-			int roomNo = saveList.stats[i].roomNo;
+		List<int> noRoomers = new List<int>();
+		for (int i = 0; i < playerData.stats.Count; i++) {
+			int roomNo = playerData.baseInfo[i].roomNo;
 			if (roomNo != -1) {
 				Room room = GetRoom(roomNo);
-				room.resident = saveList.stats[i];
+				room.residentIndex = i;
 			}
 			else {
-				noRoomers.Add(saveList.stats[i]);
+				noRoomers.Add(i);
 			}
 		}
 		int index = 0;
@@ -50,9 +52,9 @@ public class HousingController : MonoBehaviour {
 			for (int j = 0; j < roomCount.value; j++) {
 				if (index >= noRoomers.Count)
 					break;
-				if (houses[i].rooms[j].resident == null) {
-					noRoomers[index].roomNo = i * roomCount.value + j;
-					houses[i].rooms[j].resident = noRoomers[index];
+				if (houses[i].rooms[j].residentIndex == -1) {
+					playerData.baseInfo[noRoomers[index]].roomNo = i * roomCount.value + j;
+					houses[i].rooms[j].residentIndex = noRoomers[index];
 					index++;
 				}
 			}
@@ -76,13 +78,14 @@ public class HousingController : MonoBehaviour {
 			selectPosition = position;
 		}
 		else {
+			//Time to swap the rooms!
 			Room firstRoom = GetRoom(selectPosition);
 			Room secondRoom = GetRoom(position);
 			
-			if (firstRoom.resident != null)
-				firstRoom.resident.roomNo = position;
-			if (secondRoom.resident != null)
-				secondRoom.resident.roomNo = selectPosition;
+			if (firstRoom.residentIndex != -1)
+				playerData.baseInfo[firstRoom.residentIndex].roomNo = position;
+			if (secondRoom.residentIndex != -1)
+				playerData.baseInfo[secondRoom.residentIndex].roomNo = selectPosition;
 
 			Room.SwapRoom(firstRoom, secondRoom);
 			selectPosition = -1;

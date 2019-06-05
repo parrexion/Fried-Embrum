@@ -192,10 +192,10 @@ MonoBehaviour:
   currentHealth: 0
   stats:
     charData: {fileID: 0}
-    classData: {fileID: 0}
+    currentClass: {fileID: 0}
+    classLevels: 
     level: 0
     currentExp: 0
-    wpnSkills: 
     hp: 0
     dmg: 0
     mnd: 0
@@ -208,24 +208,25 @@ MonoBehaviour:
     eSpd: 0
     eSkl: 0
     eDef: 0
-    bHp: 0
-    bDmg: 0
-    bMnd: 0
-    bSpd: 0
-    bSkl: 0
-    bDef: 0
     boosts: []
-    roomNo: 0
-    supportValues: []
+    supportBoost:
+      boostType: 0
+      hp: 0
+      dmg: 0
+      mnd: 0
+      spd: 0
+      skl: 0
+      def: 0
   inventory:
+    wpnSkills: 
     inventory: []
   skills:
     skills: []
   fightQuotes: []
   healthBar: {fileID: 5650094046830515550}
-  damageObject: {fileID: 0}
-  damageNumberBkg: {fileID: 0}
-  damageNumber: {fileID: 0}
+  damageObject: {fileID: 6797947528728645709}
+  damageNumberBkg: {fileID: 5973694388285761238}
+  damageNumber: {fileID: 7387613566058814280}
   critEffect: {fileID: 198074058879709554}
   boostObject: {fileID: 1183706432262236}
   debuffObject: {fileID: 1435233549491284}
@@ -5390,7 +5391,7 @@ GameObject:
   - component: {fileID: 5334659783303129659}
   - component: {fileID: 5973694388285761238}
   m_Layer: 0
-  m_Name: LeftDamageNumber
+  m_Name: DamageNumber
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

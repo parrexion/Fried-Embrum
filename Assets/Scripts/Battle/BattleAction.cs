@@ -22,9 +22,9 @@ public class BattleAction {
 		this.type = type;
 		attacker = atk;
 		defender = def;
-		weaponAtk = attacker.inventory.GetFirstUsableItemTuple(ItemCategory.WEAPON, attacker.stats);
-		weaponDef = defender.inventory.GetFirstUsableItemTuple(ItemCategory.WEAPON, defender.stats);
-		staffAtk = attacker.inventory.GetFirstUsableItemTuple(ItemCategory.STAFF, attacker.stats);
+		weaponAtk = attacker.inventory.GetFirstUsableItemTuple(ItemCategory.WEAPON);
+		weaponDef = defender.inventory.GetFirstUsableItemTuple(ItemCategory.WEAPON);
+		staffAtk = attacker.inventory.GetFirstUsableItemTuple(ItemCategory.SUPPORT);
 		if (defender.currentTile)
 			terrainDef = defender.currentTile.terrain;
 	}
@@ -39,19 +39,6 @@ public class BattleAction {
 			return 0;
 		ItemEntry wpn = (weaponDef != null) ? weaponDef.item : null;
 		return BattleCalc.GetAttackSpeed(weaponAtk.item, attacker.stats) - BattleCalc.GetAttackSpeed(wpn, defender.stats);
-	}
-
-	/// <summary>
-	/// Returns the weapon advatage for the battle.
-	/// 1 means advatage for the attacker, -1 for the defender, and 0 is neutral.
-	/// </summary>
-	/// <returns></returns>
-	public int GetAdvantage() {
-		if (defender.faction == Faction.WORLD)
-			return 0;
-		ItemEntry wpn1 = (weaponAtk != null) ? weaponAtk.item : null;
-		ItemEntry wpn2 = (weaponDef != null) ? weaponDef.item : null;
-		return BattleCalc.GetWeaponAdvantage(wpn1, wpn2);
 	}
 
 	public int GetDamage() {

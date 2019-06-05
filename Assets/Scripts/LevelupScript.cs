@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class LevelupScript : MonoBehaviour {
 
+	public BoolVariable lockControls;
 	public GameObject blackout;
 	public GameObject levelupCongrats;
 	public GameObject classChangeCongrats;
@@ -143,10 +144,12 @@ public class LevelupScript : MonoBehaviour {
 		yield return new WaitForSeconds(1f);
 
 		levelupArrow.SetActive(true);
+		lockControls.value = false;
 		waiting = true;
 		while (waiting)
 			yield return null;
 		
+		lockControls.value = true;
 		levelupArrow.SetActive(false);
 		levelupStats.SetActive(false);
 		if (blackout != null)

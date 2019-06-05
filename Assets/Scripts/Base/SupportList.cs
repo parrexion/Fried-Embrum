@@ -96,11 +96,10 @@ public class SupportList : MonoBehaviour {
 	private void CreateSupportEntry() {
 		oldIndex = supportList.GetPosition();
 		supportList.FilterShow((x) => x.index != selectedIndex);
-		StatsContainer thisChar = playerData.stats[selectedIndex];
 		for (int i = 0; i < supportList.Size; i++) {
 			CharData other = playerData.stats[supportList.GetEntry(i).index].charData;
-			SupportTuple tuple = thisChar.charData.GetSupport(other);
-			SupportValue value = thisChar.GetSupportValue(other);
+			SupportTuple tuple = playerData.stats[selectedIndex].charData.GetSupport(other);
+			SupportValue value = playerData.baseInfo[selectedIndex].GetSupportValue(other);
 
 			supportList.GetEntry(i).SetDark(tuple == null);
 			supportList.GetEntry(i).SetSupportValue(tuple, value);

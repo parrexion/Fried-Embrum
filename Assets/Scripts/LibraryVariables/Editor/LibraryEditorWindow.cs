@@ -35,7 +35,7 @@ public class LibraryEditorWindow : EditorWindow {
 	public ScrObjLibraryVariable upgradeLibrary;
 	public UpgradeEntry upgradeContainer;
 
-	public ItemEditorWindow skillEditor;
+	public SkillEditorWindow skillEditor;
 	public ScrObjLibraryVariable skillLibrary;
 	public CharacterSkill skillContainer;
 
@@ -90,7 +90,7 @@ public class LibraryEditorWindow : EditorWindow {
 				upgradeEditor.DrawWindow(width, height);
 				break;
 			case State.SKILLS:
-				// skillEditor.DrawWindow(width, height);
+				skillEditor.DrawWindow(width, height);
 				break;
 			case State.BACKGROUND:
 				backgroundEditor.DrawWindow(width, height);
@@ -121,7 +121,7 @@ public class LibraryEditorWindow : EditorWindow {
 		classEditor = new ClassEditorWindow(classLibrary, classContainer);
 		itemEditor = new ItemEditorWindow(itemLibrary, itemContainer);
 		upgradeEditor = new UpgradeEditorWindow(upgradeLibrary, upgradeContainer);
-		// skillEditor = new ItemEditorWindow(entryLibrary, skillContainer);
+		skillEditor = new SkillEditorWindow(skillLibrary, skillContainer);
 		backgroundEditor = new BackgroundEditorWindow(backgroundLibrary, backgroundContainer);
 		portraitEditor = new PortraitEditorWindow(portraitLibrary, portraitContainer, poseList);
 
@@ -147,6 +147,7 @@ public class LibraryEditorWindow : EditorWindow {
 		classEditor.InitializeWindow();
 		itemEditor.InitializeWindow();
 		upgradeEditor.InitializeWindow();
+		skillEditor.InitializeWindow();
 		backgroundEditor.InitializeWindow();
 		portraitEditor.InitializeWindow();
 	}
@@ -155,6 +156,9 @@ public class LibraryEditorWindow : EditorWindow {
 	/// Draws the header for the editor.
 	/// </summary>
 	void DrawHeader() {
+		if (headerTex == null) {
+			InitializeWindow();
+		}
 		headerRect.x = 0;
 		headerRect.y = 0;
 		headerRect.width = Screen.width;

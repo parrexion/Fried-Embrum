@@ -116,9 +116,9 @@ public class BattleContainer : InputReceiverDelegate {
 		else {
 			showBattleAnim = useBattleAnimations.value;
 			// Add battle init boosts
-			attacker.ActivateSkills(Activation.INITCOMBAT, defender);
-			attacker.ActivateSkills(Activation.PRECOMBAT, defender);
-			defender.ActivateSkills(Activation.PRECOMBAT, attacker);
+			attacker.ActivateSkills(SkillActivation.INITCOMBAT, defender);
+			attacker.ActivateSkills(SkillActivation.PRECOMBAT, defender);
+			defender.ActivateSkills(SkillActivation.PRECOMBAT, attacker);
 			
 			_currentCharacter = attacker;
 			InventoryTuple atkTup = attacker.GetEquippedWeapon(ItemCategory.WEAPON);
@@ -222,10 +222,10 @@ public class BattleContainer : InputReceiverDelegate {
 		for (int i = 0; i < actions.Count; i++) {
 			Debug.Log("Next action");
 			BattleAction act = actions[i];
-			if (act.type == BattleAction.Type.DAMAGE && act.attacker.inventory.GetFirstUsableItemTuple(ItemCategory.WEAPON, act.attacker.stats).charge <= 0) {
+			if (act.type == BattleAction.Type.DAMAGE && act.attacker.inventory.GetFirstUsableItemTuple(ItemCategory.WEAPON).charge <= 0) {
 				continue; //Broken weapon
 			}
-			if (act.type != BattleAction.Type.DAMAGE && act.attacker.inventory.GetFirstUsableItemTuple(ItemCategory.STAFF, act.attacker.stats).charge <= 0) {
+			if (act.type != BattleAction.Type.DAMAGE && act.attacker.inventory.GetFirstUsableItemTuple(ItemCategory.SUPPORT).charge <= 0) {
 				continue; //Broken staff
 			}
 			
@@ -281,19 +281,17 @@ public class BattleContainer : InputReceiverDelegate {
 						leftTransform.GetComponent<SpriteRenderer>().color = new Color(0.4f,0.4f,0.4f);
 				}
 				act.attacker.inventory.ReduceItemCharge(ItemCategory.WEAPON);
-				act.attacker.stats.GiveWpnExp(act.attacker.GetEquippedWeapon(ItemCategory.WEAPON).item);
 			}
 			else {
-				if (act.staffAtk.item.itemType == ItemType.HEAL) {
+				if (act.staffAtk.item.weaponType == WeaponType.MEDKIT) {
 					int health = act.GetHeals();
 					act.defender.TakeHeals(health);
 					StartCoroutine(DamageDisplay(act.leftSide, health, false, false));
 				}
-				else if (act.staffAtk.item.itemType == ItemType.BUFF) {
-					act.defender.ReceiveBuff(act.attacker.GetEquippedWeapon(ItemCategory.STAFF).item.boost, true, true);
+				else if (act.staffAtk.item.weaponType == WeaponType.BARRIER) {
+					act.defender.ReceiveBuff(act.attacker.GetEquippedWeapon(ItemCategory.SUPPORT).item.boost, true, true);
 				}
-				act.attacker.inventory.ReduceItemCharge(ItemCategory.STAFF);
-				act.attacker.stats.GiveWpnExp(act.attacker.GetEquippedWeapon(ItemCategory.STAFF).item);
+				act.attacker.inventory.ReduceItemCharge(ItemCategory.SUPPORT);
 				_attackerDealtDamage = true;
 			}
 			//Update health
@@ -350,8 +348,8 @@ public class BattleContainer : InputReceiverDelegate {
 
 		//Give debuffs
 		if (actions[0].type == BattleAction.Type.DAMAGE) {
-			actions[0].attacker.ActivateSkills(Activation.POSTCOMBAT, actions[0].defender);
-			actions[0].defender.ActivateSkills(Activation.POSTCOMBAT, actions[0].attacker);
+			actions[0].attacker.ActivateSkills(SkillActivation.POSTCOMBAT, actions[0].defender);
+			actions[0].defender.ActivateSkills(SkillActivation.POSTCOMBAT, actions[0].attacker);
 		}
 
 		//Clean up
@@ -361,9 +359,9 @@ public class BattleContainer : InputReceiverDelegate {
 		uiCanvas.SetActive(true);
 		leftDamageObject.SetActive(false);
 		rightDamageObject.SetActive(false);
-		actions[0].attacker.EndSkills(Activation.INITCOMBAT, actions[0].defender);
-		actions[0].attacker.EndSkills(Activation.PRECOMBAT, actions[0].defender);
-		actions[0].defender.EndSkills(Activation.PRECOMBAT, actions[0].attacker);
+		actions[0].attacker.EndSkills(SkillActivation.INITCOMBAT, actions[0].defender);
+		actions[0].attacker.EndSkills(SkillActivation.PRECOMBAT, actions[0].defender);
+		actions[0].defender.EndSkills(SkillActivation.PRECOMBAT, actions[0].attacker);
 		actions.Clear();
 		if (currentTurn.value == Faction.PLAYER)
 			lockControls.value = false;
@@ -411,7 +409,7 @@ public class BattleContainer : InputReceiverDelegate {
 		}
 
 		int exp = actions[0].GetExperience();
-		exp = player.EditValueSkills(Activation.EXP, exp);
+		exp = player.EditValueSkills(SkillActivation.EXP, exp);
 		if (exp > 0) {
 			expMeter.gameObject.SetActive(true);
 			expMeter.currentExp = player.stats.currentExp;
@@ -433,11 +431,6 @@ public class BattleContainer : InputReceiverDelegate {
 					sfxQueue.Enqueue(levelupFanfare);
 					playSfxEvent.Invoke();
 					yield return StartCoroutine(levelupScript.RunLevelup(player.stats));
-					CharacterSkill skill = player.stats.classData.AwardSkills(player.stats.level);
-					if (skill) {
-						player.skills.GainSkill(skill);
-						yield return StartCoroutine(spinner.ShowSpinner(skill.icon,  "gained: " + skill.entryName, rewardSfx));
-					}
 					expMeter.gameObject.SetActive(true);
 					sfxQueue.Enqueue(levelupFill);
 					playSfxEvent.Invoke();
@@ -458,19 +451,19 @@ public class BattleContainer : InputReceiverDelegate {
 			InventoryTuple invTup = actions[0].weaponAtk;
 			if (invTup.item != null && invTup.charge <= 0) {
 				yield return StartCoroutine(spinner.ShowSpinner(invTup.item.icon, invTup.item.entryName + " is out of ammo!", badStuffSfx));
-				actions[0].attacker.inventory.CleanupInventory(actions[0].attacker.stats);
+				actions[0].attacker.inventory.CleanupInventory();
 			}
 			invTup = actions[0].weaponDef;
 			if (invTup.item != null && invTup.charge <= 0) {
 				yield return StartCoroutine(spinner.ShowSpinner(invTup.item.icon, invTup.item.entryName + " is out of ammo!", badStuffSfx));
-				actions[0].defender.inventory.CleanupInventory(actions[0].defender.stats);
+				actions[0].defender.inventory.CleanupInventory();
 			}
 		}
 		else {
 			InventoryTuple invTup = actions[0].staffAtk;
 			if (invTup.item != null && invTup.charge <= 0) {
 				yield return StartCoroutine(spinner.ShowSpinner(invTup.item.icon, invTup.item.entryName + " is out of ammo!", badStuffSfx));
-				actions[0].attacker.inventory.CleanupInventory(actions[0].attacker.stats);
+				actions[0].attacker.inventory.CleanupInventory();
 			}
 		}
 	}

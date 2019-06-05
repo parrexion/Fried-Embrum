@@ -10,9 +10,9 @@ public class House : MonoBehaviour {
 
 	public void ResetRooms(int index) {
 		number = index;
-		rooms[0].resident = null;
-		rooms[1].resident = null;
-		rooms[2].resident = null;
+		rooms[0].residentIndex = -1;
+		rooms[1].residentIndex = -1;
+		rooms[2].residentIndex = -1;
 	}
 
 	public List<Room> GetNeighbours(Room main) {
@@ -22,7 +22,7 @@ public class House : MonoBehaviour {
 			if (rooms[i] == main) {
 				found = true;
 			}
-			else if (rooms[i].resident != null) {
+			else if (rooms[i].residentIndex != -1) {
 				neighbours.Add(rooms[i]);
 			}
 		}

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public enum StatsPage { BASIC, STATS, INVENTORY }
 
 public class SimpleCharacterUI : MonoBehaviour {
-	
+
 	[Header("General")]
 	public GameObject menuView;
 	public GameObject flipButton;
@@ -14,12 +14,14 @@ public class SimpleCharacterUI : MonoBehaviour {
 	[Header("References")]
 	public IntVariable currentMenuMode;
 	public ActionModeVariable actionMode;
+	public ClassWheel playerClassWheel;
+	public ClassWheel enemyClassWheel;
 	public TacticsMoveVariable selectedCharacter;
 	public MapTileVariable selectedTile;
 	public MapTileVariable targetTile;
 	public IntVariable currentPage;
 	public IntVariable inventoryIndex;
-	
+
 	[Header("Icons")]
 	public Sprite noSkillImage;
 	public IconLibrary weaknessIcons;
@@ -62,8 +64,6 @@ public class SimpleCharacterUI : MonoBehaviour {
 
 	[Header("Inventory Stats")]
 	public GameObject inventoryObject;
-	public Text conText;
-	public Text weighDownValue2;
 	public Image[] weaponSkillIcons;
 	public Text[] weaponSkillRating;
 	public Image[] inventoryHighlight;
@@ -96,7 +96,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 		}
 
 		if (currentMenuMode.value != (int)MenuMode.MAP && currentMenuMode.value != (int)MenuMode.PREP &&
-			currentMenuMode.value != (int)MenuMode.INV && currentMenuMode.value != (int)MenuMode.FORMATION && 
+			currentMenuMode.value != (int)MenuMode.INV && currentMenuMode.value != (int)MenuMode.FORMATION &&
 			currentMenuMode.value != (int)MenuMode.TOOLTIP) {
 			HideStats();
 			active = false;
@@ -120,16 +120,16 @@ public class SimpleCharacterUI : MonoBehaviour {
 		ShowTerrainInfo(active);
 		flipButton.SetActive(currentMenuMode.value != (int)MenuMode.INV);
 	}
-	
+
 	/// <summary>
 	/// Changes the stats screen to the next one.
 	/// </summary>
 	/// <param name="dir"></param>
 	public void ChangeStatsScreen() {
 		switch ((StatsPage)currentPage.value) {
-		case StatsPage.BASIC:		currentPage.value = (int)StatsPage.STATS; break;
-		case StatsPage.STATS:		currentPage.value = (int)StatsPage.INVENTORY; break;
-		case StatsPage.INVENTORY:	currentPage.value = (int)StatsPage.BASIC; break;
+			case StatsPage.BASIC: currentPage.value = (int)StatsPage.STATS; break;
+			case StatsPage.STATS: currentPage.value = (int)StatsPage.INVENTORY; break;
+			case StatsPage.INVENTORY: currentPage.value = (int)StatsPage.BASIC; break;
 		}
 		UpdateUI();
 	}
@@ -143,7 +143,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 		basicObject.SetActive(false);
 		inventoryObject.SetActive(false);
 	}
-	
+
 	/// <summary>
 	/// Shows a basic overview of the character with some stats and combat stats.
 	/// </summary>
@@ -158,23 +158,23 @@ public class SimpleCharacterUI : MonoBehaviour {
 		basicObject.SetActive(true);
 		inventoryObject.SetActive(false);
 
-//		colorBackground.color = (tactics.faction == Faction.PLAYER) ? 
-//			new Color(0.2f,0.2f,0.5f) : new Color(0.5f,0.2f,0.2f);
-		
+		//		colorBackground.color = (tactics.faction == Faction.PLAYER) ? 
+		//			new Color(0.2f,0.2f,0.5f) : new Color(0.5f,0.2f,0.2f);
+
 		characterName.text = stats.charData.entryName;
 		portrait.enabled = true;
 		portrait.sprite = stats.charData.portrait;
-		levelClass.text = string.Format("Level {0}  {1}", stats.level, stats.charData.charClass.entryName);
+		levelClass.text = string.Format("Level {0}  {1}", stats.level, stats.currentClass.entryName);
 		healthBar.SetAmount(tactics.currentHealth, tactics.stats.hp);
 		expBar.SetAmount(tactics.stats.currentExp, 100);
 		expBar.gameObject.SetActive(tactics.faction == Faction.PLAYER);
-		weakIcon1.sprite = weaknessIcons.icons[(int)stats.classData.classType];
+		weakIcon1.sprite = weaknessIcons.icons[(int)stats.currentClass.classType];
 		weakIcon1.enabled = (weakIcon1.sprite != null);
 
 		ItemEntry weapon = tactics.GetEquippedWeapon(ItemCategory.WEAPON).item;
 		wpnIcon.sprite = (weapon != null) ? weapon.icon : null;
 		wpnName.text = (weapon != null) ? weapon.entryName : "";
-		
+
 		for (int i = 0; i < skillImages.Length; i++) {
 			if (i >= skills.skills.Length || skills.skills[i] == null) {
 				skillImages[i].sprite = noSkillImage;
@@ -216,25 +216,14 @@ public class SimpleCharacterUI : MonoBehaviour {
 		//spdText.color = (stats.bSpd != 0) ? Color.green : Color.black;
 		//sklText.color = (stats.bSkl != 0) ? Color.green : Color.black;
 		//defText.color = (stats.bDef != 0) ? Color.green : Color.black;
-		
+
 		ItemEntry weapon = tactics.GetEquippedWeapon(ItemCategory.WEAPON).item;
-		int penalty = stats.GetConPenalty(weapon);
-		if (penalty > 0) {
-			spdText.text = BattleCalc.GetAttackSpeed(weapon, stats).ToString();
-			weighDownSpdIcon.enabled = true;
-			weighDownSpdValue.text = (-penalty).ToString();
-			sklText.text = (stats.skl - penalty).ToString();
-			weighDownSklIcon.enabled = true;
-			weighDownSklValue.text = (-penalty).ToString();
-		}
-		else {
-			spdText.text = stats.spd.ToString();
-			sklText.text = stats.skl.ToString();
-			weighDownSpdIcon.enabled = false;
-			weighDownSpdValue.text = "";
-			weighDownSklIcon.enabled = false;
-			weighDownSklValue.text = "";
-		}
+		spdText.text = stats.spd.ToString();
+		sklText.text = stats.skl.ToString();
+		weighDownSpdIcon.enabled = false;
+		weighDownSpdValue.text = "";
+		weighDownSklIcon.enabled = false;
+		weighDownSklValue.text = "";
 
 		levelText.text = stats.level.ToString();
 		expText.text = stats.currentExp.ToString();
@@ -259,28 +248,23 @@ public class SimpleCharacterUI : MonoBehaviour {
 		basicObject.SetActive(false);
 		inventoryObject.SetActive(true);
 		characterName.text = stats.charData.entryName;
-
-		ItemEntry weapon = tactics.GetEquippedWeapon(ItemCategory.WEAPON).item;
-		conText.text = stats.GetConstitution().ToString();
-		int atkSpeed = BattleCalc.GetAttackSpeed(weapon, stats);
-		if (atkSpeed < stats.spd) {
-			weighDownValue2.color = new Color(0.5f,0.2f,0.2f);
-			weighDownValue2.text = "Penalty:  " + (atkSpeed - stats.spd).ToString();
-		}
-		else {
-			weighDownValue2.color = Color.grey;
-			weighDownValue2.text = "No penalty";
-		}
-
+		
+		ClassWheel wheel = (stats.charData.faction == Faction.ENEMY) ? enemyClassWheel : playerClassWheel;
+		WeaponRank[] ranks = wheel.GetWpnSkillFromLevel(stats.classLevels);
+		int pos = 0;
 		for (int i = 0; i < weaponSkillIcons.Length; i++) {
-			if (i >= stats.classData.weaponSkills.Count){
+			while (pos < ranks.Length && ranks[pos] == WeaponRank.NONE) {
+				pos++;
+			}
+			if (pos >= ranks.Length) {
 				weaponSkillIcons[i].transform.parent.gameObject.SetActive(false);
 			}
 			else {
 				weaponSkillIcons[i].transform.parent.gameObject.SetActive(true);
-				weaponSkillIcons[i].sprite = weaponTypeIcons.icons[(int)stats.classData.weaponSkills[i]];
-				weaponSkillRating[i].text = ItemEntry.GetRankLetter(stats.wpnSkills[(int)stats.classData.weaponSkills[i]]);
+				weaponSkillIcons[i].sprite = weaponTypeIcons.icons[pos];
+				weaponSkillRating[i].text = ranks[pos].ToString();
 			}
+			pos++;
 		}
 
 		// Set up inventory list
@@ -292,8 +276,8 @@ public class SimpleCharacterUI : MonoBehaviour {
 			}
 			else {
 				InventoryTuple tuple = inventory.GetTuple(i);
-				int skill = stats.GetWpnSkill(tuple.item);
-				inventoryFields[i].color = (tuple.droppable) ? Color.green : 
+				WeaponRank skill = inventory.GetWpnSkill(tuple.item);
+				inventoryFields[i].color = (tuple.droppable) ? Color.green :
 							(tuple.item.CanUse(skill)) ? Color.black : Color.grey;
 				inventoryFields[i].text = tuple.item.entryName;
 				inventoryValues[i].text = (tuple.item.maxCharge >= 0) ? tuple.charge.ToString() : " ";
@@ -304,7 +288,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 
 		UpdateSelection();
 	}
-	
+
 	/// <summary>
 	/// Shows the stats for a non character tile.
 	/// </summary>
@@ -317,9 +301,9 @@ public class SimpleCharacterUI : MonoBehaviour {
 
 		if (tile.interactType == InteractType.BLOCK) {
 			StatsContainer stats = tile.blockMove.stats;
-	//		colorBackground.color = (tactics.faction == Faction.PLAYER) ? 
-	//			new Color(0.2f,0.2f,0.5f) : new Color(0.5f,0.2f,0.2f);
-			
+			//		colorBackground.color = (tactics.faction == Faction.PLAYER) ? 
+			//			new Color(0.2f,0.2f,0.5f) : new Color(0.5f,0.2f,0.2f);
+
 			characterName.text = stats.charData.entryName;
 			portrait.enabled = true;
 			portrait.sprite = stats.charData.portrait;
@@ -369,7 +353,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 	public void UpdateSelection() {
 		for (int i = 0; i < 5; i++) {
 			inventoryHighlight[i].enabled = (i == inventoryIndex.value);
-			inventoryHighlight[i].color = (currentMenuMode.value == (int)MenuMode.INV) ? new Color(0.35f,0.7f,1f,0.6f) : new Color(0.35f,1f,1f,0.75f);
+			inventoryHighlight[i].color = (currentMenuMode.value == (int)MenuMode.INV) ? new Color(0.35f, 0.7f, 1f, 0.6f) : new Color(0.35f, 1f, 1f, 0.75f);
 		}
 	}
 

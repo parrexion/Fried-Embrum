@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class BaseTrainingArea : InputReceiverDelegate {
 
+	private enum State { MAIN, EXP, CLASS }
+
 	[Header("Button menu")]
 	public MyButtonList buttons;
 	public Text menuTitle;
@@ -13,6 +15,7 @@ public class BaseTrainingArea : InputReceiverDelegate {
 	public GameObject basicView;
 	public GameObject bexpView;
 	public GameObject classView;
+	private State currentMenu;
 
 	[Header("Handlers")]
 	public BexpController bexpController;
@@ -27,51 +30,50 @@ public class BaseTrainingArea : InputReceiverDelegate {
 		buttons.ResetButtons();
 		buttons.AddButton("BATTLE EXP");
 		buttons.AddButton("CLASS CHANGE");
+		currentMenu = State.MAIN;
 	}
 
     public override void OnMenuModeChanged() {
 		UpdateState(MenuMode.BASE_TRAIN);
 		buttons.ForcePosition(0);
+		currentMenu = State.MAIN;
 	}
 
     public override void OnUpArrow() {
-		int menuMode = buttons.GetPosition();
-		if (menuMode == 0) {
+		if (currentMenu == State.MAIN) {
 			buttons.Move(-1);
 			menuMoveEvent.Invoke();
 		}
-		else if (menuMode == 1) {
+		else if (currentMenu == State.EXP) {
 			bexpController.MoveSelection(-1);
 			menuMoveEvent.Invoke();
 		}
-		else if (menuMode == 2) {
+		else if (currentMenu == State.CLASS) {
 			changeController.MoveSelection(-1);
 			menuMoveEvent.Invoke();
 		}
 	}
 
     public override void OnDownArrow() {
-		int menuMode = buttons.GetPosition();
-		if (menuMode == 0) {
+		if (currentMenu == State.MAIN) {
 			buttons.Move(1);
 			menuMoveEvent.Invoke();
 		}
-		else if (menuMode == 1) {
+		else if (currentMenu == State.EXP) {
 			bexpController.MoveSelection(1);
 			menuMoveEvent.Invoke();
 		}
-		else if (menuMode == 2) {
+		else if (currentMenu == State.CLASS) {
 			changeController.MoveSelection(1);
 			menuMoveEvent.Invoke();
 		}
 	}
 
     public override void OnOkButton() {
-		int menuMode = buttons.GetPosition();
-		if (menuMode == 0) {
+		if (currentMenu == State.MAIN) {
 			int currentIndex = buttons.GetPosition();
 			if (currentIndex == 0) {
-				menuMode = 1;
+				currentMenu = State.EXP;
 				menuTitle.text = "BEXP";
 				bexpController.GenerateList();
 				bexpView.SetActive(true);
@@ -79,37 +81,40 @@ public class BaseTrainingArea : InputReceiverDelegate {
 				menuAcceptEvent.Invoke();
 			}
 			else if (currentIndex == 1) {
-				menuMode = 2;
+				currentMenu = State.CLASS;
 				menuTitle.text = "CLASS";
 				classView.SetActive(true);
 				basicView.SetActive(false);
 				menuAcceptEvent.Invoke();
 			}
 		}
-		else if (menuMode == 1) {
+		else if (currentMenu == State.EXP) {
 			bexpController.SelectCharacter();
 			menuAcceptEvent.Invoke();
 		}
-		else if (menuMode == 2) {
+		else if (currentMenu == State.CLASS) {
 			changeController.SelectCharacter();
 			menuAcceptEvent.Invoke();
 		}
 	}
 
     public override void OnBackButton() {
-		int menuMode = buttons.GetPosition();
-		if (menuMode == 1) {
+
+		if (currentMenu == State.MAIN) {
+			MenuChangeDelay(MenuMode.BASE_MAIN);
+		}
+		else if (currentMenu == State.EXP) {
 			if (bexpController.DeselectCharacter()) {
-				menuMode = 0;
+				currentMenu = State.MAIN;
 				menuTitle.text = "TRAINING";
 				basicView.SetActive(true);
 				bexpView.SetActive(false);
 				menuBackEvent.Invoke();
 			}
 		}
-		else if (menuMode == 2) {
+		else if (currentMenu == State.CLASS) {
 			if (changeController.DeselectCharacter()) {
-				menuMode = 0;
+				currentMenu = State.MAIN;
 				menuTitle.text = "TRAINING";
 				basicView.SetActive(true);
 				classView.SetActive(false);
@@ -119,15 +124,13 @@ public class BaseTrainingArea : InputReceiverDelegate {
 	}
 
     public override void OnLeftArrow() {
-		int menuMode = buttons.GetPosition();
-		if (menuMode == 1) {
+		if (currentMenu == State.EXP) {
 			bexpController.UpdateAwardExp(-1);
 			menuMoveEvent.Invoke();
 		}
 	}
     public override void OnRightArrow() {
-		int menuMode = buttons.GetPosition();
-		if (menuMode == 1) {
+		if (currentMenu == State.EXP) {
 			bexpController.UpdateAwardExp(1);
 			menuMoveEvent.Invoke();
 		}

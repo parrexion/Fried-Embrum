@@ -20,23 +20,20 @@ MonoBehaviour:
   portrait: {fileID: 21300000, guid: 95ce5b014561d414e835bf199933598d, type: 3}
   battleSprite: {fileID: 21300000, guid: 145e100d7193c474aa2541edcb2d71d1, type: 3}
   portraitSet: {fileID: 11400000, guid: 193b3a8379d8c464db011f1fa6fd2bde, type: 2}
-  charClass: {fileID: 11400000, guid: 2f7a88298f4c1c34db14c3ccd176d8a4, type: 2}
-  personalSkill: {fileID: 0}
-  hp: 0
-  atk: 1
-  skl: 4
-  spd: 2
-  lck: 2
-  def: -1
-  res: 1
-  con: 9
-  gHp: 10
-  gAtk: 5
-  gSkl: 10
-  gSpd: 15
-  gLck: -10
+  startClass: {fileID: 11400000, guid: c4bc7321941913a41ab6841c0ec39fe9, type: 2}
+  startClassLevels: 0000000001000000000000000000000000000000
+  hp: 1
+  dmg: 1
+  mnd: 0
+  skl: 0
+  spd: -1
+  def: 2
+  gHp: 5
+  gDmg: 5
+  gMnd: 0
+  gSkl: 0
+  gSpd: -5
   gDef: 10
-  gRes: 10
   supports:
   - partner: {fileID: 11400000, guid: ebe64c7e451dc494fbc8211be6f10d6a, type: 2}
     maxlevel: 3
@@ -44,5 +41,9 @@ MonoBehaviour:
   - partner: {fileID: 11400000, guid: 0bf81bfd9c0d55f49a76297d05c3a788, type: 2}
     maxlevel: 4
     speed: 2
+  - partner: {fileID: 11400000, guid: 43608e2c8ad57eb47bb7a3d5bf9c5263, type: 2}
+    maxlevel: 2
+    speed: 3
+  faction: 0
   mustSurvive: 0
   deathQuote: {fileID: 11400000, guid: 83b51abb9adc82341aca3b3b4121bb4b, type: 2}

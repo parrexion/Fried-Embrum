@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class BexpController : MonoBehaviour {
 
-    public PlayerData playerData;
+	public PlayerData playerData;
 	public GameObject listView;
 	public GameObject awardView;
 	private bool awardMode;
@@ -24,6 +24,7 @@ public class BexpController : MonoBehaviour {
 	public Text currentExp;
 	public IntVariable totalBonusExp;
 	private int awardExp;
+	private bool runningExp;
 
 	[Header("Exp animations")]
 	public UIExpMeter expMeter;
@@ -50,8 +51,12 @@ public class BexpController : MonoBehaviour {
 	public Text sklText;
 	public Text spdText;
 	public Text defText;
-	public Text conText;
-	public Text movText;
+
+	public Image[] skillIcons;
+	public IconLibrary wpnIcons;
+	public Transform wpnParent;
+	public Transform wpnTemplate;
+	private List<Transform> wpnRanks = new List<Transform>();
 
 
 	private void Start() {
@@ -80,7 +85,10 @@ public class BexpController : MonoBehaviour {
 	}
 
 	public void SelectCharacter() {
-		if (!awardMode) {
+		if (runningExp) {
+			levelupScript.Continue();
+		}
+		else if (!awardMode) {
 			awardMode = true;
 			awardExp = 0;
 			SetupBexpAwarding();
@@ -109,7 +117,7 @@ public class BexpController : MonoBehaviour {
 		bonusExp.text = "Available EXP:  " + (totalBonusExp.value - awardExp);
 		bonusExp.color = (awardExp > 0) ? Color.green : Color.black;
 		spendExp.text = awardExp.ToString();
-		currentLevel.text = "Current level:  " + ((stats.currentExp + awardExp >= 100) ? stats.level+1 : stats.level);
+		currentLevel.text = "Current level:  " + ((stats.currentExp + awardExp >= 100) ? stats.level + 1 : stats.level);
 		currentLevel.color = (stats.currentExp + awardExp >= 100) ? Color.green : Color.black;
 		currentExp.text = "Current EXP:   " + ((stats.currentExp + awardExp) % 100);
 		currentExp.color = (awardExp > 0) ? Color.green : Color.black;
@@ -117,28 +125,52 @@ public class BexpController : MonoBehaviour {
 
 	private void SetupCharacterInfo() {
 		StatsContainer stats = playerData.stats[entryList.GetPosition()];
+		InventoryContainer inventory = playerData.inventory[entryList.GetPosition()];
+		SkillsContainer skills = playerData.skills[entryList.GetPosition()];
 
 		characterName.text = stats.charData.entryName;
 		portrait.sprite = stats.charData.portrait;
-		className.text = stats.classData.entryName;
+		className.text = stats.currentClass.entryName;
 		level.text = "Level: " + stats.level.ToString();
 		exp.text = "EXP: " + stats.currentExp.ToString();
 
-		hpText.text  = "HP:  " + stats.hp.ToString();
-		dmgText.text = "Atk:  " + stats.dmg.ToString();
-		mndText.text = "Res:  " + stats.mnd.ToString();
+		hpText.text = "HP:  " + stats.hp.ToString();
+		dmgText.text = "Dmg:  " + stats.dmg.ToString();
+		mndText.text = "Mnd:  " + stats.mnd.ToString();
 		sklText.text = "Skl:  " + stats.skl.ToString();
 		spdText.text = "Spd:  " + stats.spd.ToString();
 		defText.text = "Def:  " + stats.def.ToString();
-		conText.text = "Con:  " + stats.GetConstitution().ToString();
-		movText.text = "Mov:  " + stats.GetMovespeed().ToString();
+
+		for (int i = 0; i < skillIcons.Length; i++) {
+			if (skills.skills[i] == null) {
+				skillIcons[i].enabled = false;
+			}
+			else {
+				skillIcons[i].sprite = skills.skills[i].icon;
+				skillIcons[i].enabled = true;
+			}
+		}
+
+		for (int i = 0; i < wpnRanks.Count; i++) {
+			Destroy(wpnRanks[i].gameObject);
+		}
+		wpnRanks.Clear();
+		for (int i = 0; i < inventory.wpnSkills.Length; i++) {
+			if (inventory.wpnSkills[i] == WeaponRank.NONE)
+				continue;
+
+			Transform t = Instantiate(wpnTemplate, wpnParent);
+			t.GetComponentInChildren<Image>().sprite = wpnIcons.icons[i];
+			t.GetComponentInChildren<Text>().text = inventory.wpnSkills[i].ToString();
+			t.gameObject.SetActive(true);
+			wpnRanks.Add(t);
+		}
 	}
 
 	public void UpdateAwardExp(int dir) {
 		if (!awardMode)
 			return;
-
-		StatsContainer stats = playerData.stats[entryList.GetPosition()];
+		
 		awardExp = OPMath.FullLoop(0, 101, awardExp + dir);
 		awardExp = Mathf.Min(awardExp, totalBonusExp.value);
 
@@ -146,6 +178,10 @@ public class BexpController : MonoBehaviour {
 	}
 
 	public IEnumerator AwardExp() {
+		if (runningExp)
+			yield break;
+
+		runningExp = true;
 		lockControls.value = true;
 		totalBonusExp.value -= awardExp;
 		StatsContainer stats = playerData.stats[entryList.GetPosition()];
@@ -156,7 +192,7 @@ public class BexpController : MonoBehaviour {
 		yield return new WaitForSeconds(0.5f * slowGameSpeed.value / currentGameSpeed.value);
 		sfxQueue.Enqueue(levelupFill);
 		playSfxEvent.Invoke();
-		while(awardExp > 0) {
+		while (awardExp > 0) {
 			awardExp--;
 			expMeter.currentExp++;
 			if (expMeter.currentExp == 100) {
@@ -170,11 +206,6 @@ public class BexpController : MonoBehaviour {
 				sfxQueue.Enqueue(levelupFanfare);
 				playSfxEvent.Invoke();
 				yield return StartCoroutine(levelupScript.RunLevelup(stats));
-				// CharacterSkill skill = player.stats.classData.AwardSkills(player.stats.level);
-				// if (skill) { TODO
-				// 	player.skills.GainSkill(skill);
-				// 	yield return StartCoroutine(popup.ShowPopup(skill.icon,  "gained: " + skill.entryName, popup.droppedItemFanfare));
-				// }
 				expMeter.gameObject.SetActive(true);
 				sfxQueue.Enqueue(levelupFill);
 				playSfxEvent.Invoke();
@@ -190,5 +221,6 @@ public class BexpController : MonoBehaviour {
 		SetupBexpAwarding();
 		SetupCharacterInfo();
 		lockControls.value = false;
+		runningExp = false;
 	}
 }

@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ClassType { NONE, INFANTRY, ARMORED, CAVALRY, FLYING }
+public enum MovementType { NONE, INFANTRY, ARMORED, CAVALRY, FLYING }
 
 [CreateAssetMenu(menuName = "LibraryEntries/CharClass")]
 public class CharClass : ScrObjLibraryEntry {
+	
+	public PlayerClassName className = PlayerClassName.NONE;
+	public Sprite icon;
 
-	public ClassType classType;
+	[Header("Movement")]
+	public MovementType classType;
 	public int movespeed = 2;
-	public int con;
 
 	[Header("Bases")]
 	public int hp;
@@ -28,19 +31,23 @@ public class CharClass : ScrObjLibraryEntry {
 	public int gDef;
 
 	[Header("Skills")]
-	public List<ItemType> weaponSkills = new List<ItemType>();
-	public List<int> weaponLevels = new List<int>();
-	public List<SkillTuple> skillGains = new List<SkillTuple>();
-
-	[Header("Upgrade class")]
-	public List<CharClass> nextClass = new List<CharClass>();
+	public List<WeaponType> weaponSkills = new List<WeaponType>();
+	public List<CharacterSkill> skills = new List<CharacterSkill>();
+	public int bonusHp;
+	public int bonusDmg;
+	public int bonusMnd;
+	public int bonusSkl;
+	public int bonusSpd;
+	public int bonusDef;
 	
 
 	public override void ResetValues() {
 		base.ResetValues();
-		classType = ClassType.NONE;
+		className = PlayerClassName.NONE;
+		icon = null;
+
+		classType = MovementType.NONE;
 		movespeed = 5;
-		con = 0;
 
 		hp = 1;
 		dmg = 0;
@@ -56,20 +63,25 @@ public class CharClass : ScrObjLibraryEntry {
 		gSpd = 0;
 		gDef = 0;
 
-		weaponSkills = new List<ItemType>();
-		weaponLevels = new List<int>();
-		skillGains = new List<SkillTuple>();
+		weaponSkills = new List<WeaponType>();
+		skills = new List<CharacterSkill>();
 
-		nextClass = new List<CharClass>();
+		bonusHp = 0;
+		bonusDmg = 0;
+		bonusMnd = 0;
+		bonusSkl = 0;
+		bonusSpd = 0;
+		bonusDef = 0;
 	}
 	
 	public override void CopyValues(ScrObjLibraryEntry other) {
 		base.CopyValues(other);
 		CharClass cc = (CharClass)other;
 
+		className = cc.className;
+		icon = cc.icon;
 		classType = cc.classType;
 		movespeed = cc.movespeed;
-		con = cc.con;
 
 		hp = cc.hp;
 		dmg = cc.dmg;
@@ -85,55 +97,31 @@ public class CharClass : ScrObjLibraryEntry {
 		gSpd = cc.gSpd;
 		gDef = cc.gDef;
 
-		weaponSkills = new List<ItemType>();
-		weaponLevels = new List<int>();
+		weaponSkills = new List<WeaponType>();
 		for (int i = 0; i < cc.weaponSkills.Count; i++) {
 			weaponSkills.Add(cc.weaponSkills[i]);
-			weaponLevels.Add(cc.weaponLevels[i]);
 		}
-		skillGains = new List<SkillTuple>();
-		for (int i = 0; i < cc.skillGains.Count; i++) {
-			skillGains.Add(cc.skillGains[i]);
+		skills = new List<CharacterSkill>();
+		for (int i = 0; i < cc.skills.Count; i++) {
+			skills.Add(cc.skills[i]);
 		}
-		
-		nextClass = new List<CharClass>();
-		for (int i = 0; i < cc.nextClass.Count; i++) {
-			nextClass.Add(cc.nextClass[i]);
-		}
+		bonusHp = cc.bonusHp;
+		bonusDmg = cc.bonusDmg;
+		bonusMnd = cc.bonusMnd;
+		bonusSkl = cc.bonusSkl;
+		bonusSpd = cc.bonusSpd;
+		bonusDef = cc.bonusDef;
 	}
 
 	/// <summary>
 	/// Creates an array with the basic weapon skills this class can use.
 	/// </summary>
 	/// <returns></returns>
-	public int[] GenerateBaseWpnSkill() {
-		int[] res = new int[StatsContainer.WPN_SKILLS];
+	public WeaponRank[] GetWeaponSkill(int classLevel) {
+		WeaponRank[] res = new WeaponRank[InventoryContainer.WPN_SKILLS];
 		for (int i = 0; i < weaponSkills.Count; i++) {
-			res[(int)weaponSkills[i]] = weaponLevels[i];
+			res[(int)weaponSkills[i]] = (WeaponRank)Mathf.Min((int)WeaponRank.S, classLevel);
 		}
 		return res;
 	}
-
-	public CharacterSkill AwardSkills(int level) {
-		for (int i = 0; i < skillGains.Count; i++) {
-			if (skillGains[i].level == level) {
-				return skillGains[i].skill;
-			}
-		}
-		return null;
-	}
-
-	public int GetWeaponSkill(int skill) {
-		for (int i = 0; i < weaponSkills.Count; i++) {
-			if ((int)weaponSkills[i] == skill)
-				return 1;
-		}
-		return 0;
-	}
-}
-
-[System.Serializable]
-public class SkillTuple {
-	public int level;
-	public CharacterSkill skill;
 }

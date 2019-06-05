@@ -5,17 +5,20 @@ using UnityEngine;
 public class CharacterSaveData {
 
 	public string id;
-	public string classID;
 	public int level;
 	public int currentExp;
 
-	[Header("Inventory and skills")]
+	[Header("Class")]
+	public int[] classLevels;
+	public string currentClass;
 	public int[] wpnSkills;
-	public List<string> inventory;
-	public List<int> invCharges;
 	public List<string> skills;
 
-	[Header("EV values")]
+	[Header("Inventory")]
+	public List<string> inventory;
+	public List<int> invCharges;
+
+	[Header("Current stats")]
 	public int eHp;
 	public int eDmg;
 	public int eMnd;
@@ -33,25 +36,29 @@ public class CharacterSaveData {
 		level = -1;
 	}
 
-	public void StoreData(StatsContainer stats, InventoryContainer invCont, SkillsContainer skillCont) {
+	public void StoreData(StatsContainer stats, InventoryContainer invCon, SkillsContainer skillCont) {
 		id = stats.charData.uuid;
-		classID = stats.classData.uuid;
+		currentClass = stats.currentClass.uuid;
+		classLevels = new int[ClassWheel.CLASS_COUNT];
+		for (int i = 0; i < ClassWheel.CLASS_COUNT; i++) {
+			classLevels[i] = stats.classLevels[i];
+		}
 		
 		level = stats.level;
 		currentExp = stats.currentExp;
 
-		wpnSkills = new int[StatsContainer.WPN_SKILLS];
-		for (int i = 0; i < stats.wpnSkills.Length; i++) {
-			wpnSkills[i] = stats.wpnSkills[i];
+		wpnSkills = new int[InventoryContainer.WPN_SKILLS];
+		for (int i = 0; i < invCon.wpnSkills.Length; i++) {
+			wpnSkills[i] = (int)invCon.wpnSkills[i];
 		}
 		
 		inventory = new List<string>();
 		invCharges = new List<int>();
 		for (int i = 0; i < InventoryContainer.INVENTORY_SIZE; i++) {
-			if (invCont.GetTuple(i).item == null)
+			if (invCon.GetTuple(i).item == null)
 				continue;
-			inventory.Add(invCont.GetTuple(i).item.uuid);
-			invCharges.Add(invCont.GetTuple(i).charge);
+			inventory.Add(invCon.GetTuple(i).item.uuid);
+			invCharges.Add(invCon.GetTuple(i).charge);
 		}
 
 		skills = new List<string>();
@@ -70,11 +77,11 @@ public class CharacterSaveData {
 		eSkl = stats.eSkl;
 		eDef = stats.eDef;
 
-		roomNo = stats.roomNo;
-		supports = new List<SupportValue>();
-		for (int i = 0; i < stats.supportValues.Count; i++) {
-			supports.Add(stats.supportValues[i]);
-		}
+		//roomNo = stats.roomNo;
+		//supports = new List<SupportValue>();
+		//for (int i = 0; i < stats.supportValues.Count; i++) {
+		//	supports.Add(stats.supportValues[i]);
+		//}
 	}
 
 }

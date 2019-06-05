@@ -45,7 +45,6 @@ public class RestockController : MonoBehaviour {
 	public Text hitText;
 	public Text critText;
 	public Text reqText;
-	public Text weightText;
 
 	[Header("Restock promt")]
 	public MyPrompt restockPrompt;
@@ -305,7 +304,7 @@ public class RestockController : MonoBehaviour {
 		InventoryItem item = new InventoryItem(tuple);
 		playerData.items.Add(item);
 		tuple.item = null;
-		characters.GetEntry().invCon.CleanupInventory(null);
+		characters.GetEntry().invCon.CleanupInventory();
 
 		itemList.RemoveEntry();
 		Transform t2 = Instantiate(restockPrefab, listParentRestock);
@@ -336,7 +335,6 @@ public class RestockController : MonoBehaviour {
 			hitText.text = "Hit:  ";
 			critText.text = "Crit:  ";
 			reqText.text = "Req:  ";
-			weightText.text = "Weight:  ";
 			return;
 		}
 
@@ -348,7 +346,6 @@ public class RestockController : MonoBehaviour {
 		hitText.text = "Hit:  " + item.hitRate.ToString();
 		critText.text = "Crit:  " + item.critRate.ToString();
 		reqText.text = "Req:  " + item.skillReq.ToString();
-		weightText.text = "Weight:  " + item.weight.ToString();
 	}
 
 }

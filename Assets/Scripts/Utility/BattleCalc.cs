@@ -20,7 +20,7 @@ public static class BattleCalc {
 	}
 
 	public static int GetAttackSpeed(ItemEntry weaponAtk, StatsContainer attacker) {
-		return attacker.spd - attacker.GetConPenalty(weaponAtk);
+		return attacker.spd;
 	}
 
 	/// <summary>
@@ -32,8 +32,7 @@ public static class BattleCalc {
 	public static int GetHitRate(ItemEntry weaponAtk, StatsContainer attacker) {
 		if (weaponAtk == null)
 			return -1;
-		int trueSkl = attacker.skl - attacker.GetConPenalty(weaponAtk);
-		int statsBoost = trueSkl * 2;
+		int statsBoost = attacker.skl * 2;
 		return statsBoost + weaponAtk.hitRate;
 	}
 
@@ -46,8 +45,7 @@ public static class BattleCalc {
 	public static int GetCritRate(ItemEntry weaponAtk, StatsContainer attacker) {
 		if (weaponAtk == null)
 			return -1;
-		int trueSkl = attacker.skl - attacker.GetConPenalty(weaponAtk);
-		int calcCrit = weaponAtk.critRate + (int)(trueSkl * 0.5f);
+		int calcCrit = weaponAtk.critRate + (int)(attacker.skl * 0.5f);
 		return calcCrit;
 	}
 	
@@ -66,7 +64,7 @@ public static class BattleCalc {
 	/// <param name="defender"></param>
 	/// <returns></returns>
 	public static int GetCritAvoid(ItemEntry weaponDef, StatsContainer defender) {
-		return (weaponDef == null) ? defender.spd : defender.spd - defender.GetConPenalty(weaponDef);
+		return defender.spd;
 	}
 
 
@@ -75,10 +73,9 @@ public static class BattleCalc {
 	public static int CalculateDamageBattle(ItemEntry weaponAtk, ItemEntry weaponDef, StatsContainer attacker, StatsContainer defender, TerrainTile terrain) {
 		int pwr = weaponAtk.power + attacker.dmg;
 		int def = defender.def + terrain.defense;
-		int bonus = GetDamageAdvantage(weaponAtk, weaponDef);
 		float weakness = GetWeaknessBonus(weaponAtk, defender);
 
-		int damage = Mathf.Max(0, Mathf.FloorToInt(pwr * weakness) + bonus - def);
+		int damage = Mathf.Max(0, Mathf.FloorToInt(pwr * weakness) - def);
 		return damage;
 	}
 
@@ -92,54 +89,17 @@ public static class BattleCalc {
 	/// <param name="terrain"></param>
 	/// <returns></returns>
 	public static int GetHitRateBattle(ItemEntry weaponAtk, ItemEntry weaponDef, StatsContainer attacker, StatsContainer defender, TerrainTile terrain) {
-		int bonus = GetHitAdvantage(weaponAtk, weaponDef);
 		int avoid = GetAvoid(defender) + terrain.avoid;
-		return Mathf.Clamp(GetHitRate(weaponAtk, attacker) + bonus - avoid, 0, 100);
+		return Mathf.Clamp(GetHitRate(weaponAtk, attacker) - avoid, 0, 100);
 	}
 
 	public static int GetCritRateBattle(ItemEntry weaponAtk, ItemEntry weaponDef, StatsContainer attacker, StatsContainer defender) {
-		int trueSkl = attacker.skl - attacker.GetConPenalty(weaponAtk);
-		int calcCrit = weaponAtk.critRate + (int)(trueSkl * 0.5f);
+		int calcCrit = weaponAtk.critRate + (int)(attacker.skl * 0.5f);
 		return Mathf.Clamp(calcCrit - GetCritAvoid(weaponDef, defender), 0, 100);
 	}
 
 
 	// Different types of advantages
-
-	/// <summary>
-	/// Compares the weapon advantage between the two weapons.
-	/// 1 means attack is at advantage, -1 defender, and 0 is neutral.
-	/// </summary>
-	/// <param name="weaponAtk"></param>
-	/// <param name="weaponDef"></param>
-	/// <returns></returns>
-	public static int GetWeaponAdvantage(ItemEntry weaponAtk, ItemEntry weaponDef) {
-		if (weaponAtk == null)
-			return 0;
-		return weaponAtk.GetAdvantage(weaponDef);
-	}
-
-	/// <summary>
-	/// Returns the damage bonus for the weapon given the opponent's weapon.
-	/// </summary>
-	/// <param name="weaponAtk"></param>
-	/// <param name="weaponDef"></param>
-	/// <returns></returns>
-	public static int GetDamageAdvantage(ItemEntry weaponAtk, ItemEntry weaponDef) {
-		int adv = GetWeaponAdvantage(weaponAtk, weaponDef);
-		return (adv == 1) ? 1 : (adv == -1) ? -1 : 0;
-	}
-
-	/// <summary>
-	/// Calculates the weapon's hit rate given the opponent's weapon.
-	/// </summary>
-	/// <param name="weaponAtk"></param>
-	/// <param name="weaponDef"></param>
-	/// <returns></returns>
-	public static int GetHitAdvantage(ItemEntry weaponAtk, ItemEntry weaponDef) {
-		int adv = GetWeaponAdvantage(weaponAtk, weaponDef);
-		return (adv == 1) ? 15 : (adv == -1) ? -15 : 0;
-	}
 
 	/// <summary>
 	/// Checks if the attacking weapon has advantage against the defender.
@@ -152,15 +112,21 @@ public static class BattleCalc {
 			return false;
 
 		for (int i = 0; i < weaponAtk.advantageType.Count; i++) {
-			if (weaponAtk.advantageType[i] == defender.classData.classType)
+			if (weaponAtk.advantageType[i] == defender.currentClass.classType)
 				return true;
 		}
 		return false;
 	}
 
+	/// <summary>
+	/// Adds a damage bonus if the weapon exploits a weakness.
+	/// </summary>
+	/// <param name="weaponAtk"></param>
+	/// <param name="defender"></param>
+	/// <returns></returns>
 	public static float GetWeaknessBonus(ItemEntry weaponAtk, StatsContainer defender) {
 		for (int i = 0; i < weaponAtk.advantageType.Count; i++) {
-			if (weaponAtk.advantageType[i] == defender.classData.classType)
+			if (weaponAtk.advantageType[i] == defender.currentClass.classType)
 				return 2.5f;
 		}
 		return 1f;
@@ -186,7 +152,7 @@ public static class BattleCalc {
 
 	public static int GetExperienceSupport(ItemEntry weapon, StatsContainer player) {
 		int ld = Mathf.Max(0, (int)(player.level * 0.5f) - 3);
-		int baseExp = (weapon.itemType == ItemType.HEAL) ? 15 : 30;
+		int baseExp = (weapon.weaponType == WeaponType.C_HEAL) ? 15 : 30;
 		return baseExp - ld;
 	}
 }

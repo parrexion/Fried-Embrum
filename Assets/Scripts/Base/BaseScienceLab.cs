@@ -22,13 +22,13 @@ public class BaseScienceLab : InputReceiverDelegate {
     public Image previousItem;
     public Image upgradedItem;
 	
-	private int menuMode;
+	private int currentMenu;
     public UnityEvent upgradeChangedEvent;
 
 
 	private void Start () {
 		menuTitle.text = "LAB";
-		menuMode = 0;
+		currentMenu = 0;
 		basicView.SetActive(true);
 		developView.SetActive(false);
 		buttons.ResetButtons();
@@ -42,46 +42,46 @@ public class BaseScienceLab : InputReceiverDelegate {
 	}
 
 	public override void OnUpArrow() {
-		if (menuMode == 0) {
+		if (currentMenu == 0) {
 			buttons.Move(-1);
 			menuMoveEvent.Invoke();
 		}
-		else if (menuMode == 1 || menuMode == 2) {
+		else if (currentMenu == 1 || currentMenu == 2) {
 			scienceController.MoveSelection(-1);
 			menuMoveEvent.Invoke();
 		}
 	}
 
 	public override void OnDownArrow() {
-		if (menuMode == 0) {
+		if (currentMenu == 0) {
 			buttons.Move(1);
 			menuMoveEvent.Invoke();
 		}
-		else if (menuMode == 1 || menuMode == 2) {
+		else if (currentMenu == 1 || currentMenu == 2) {
 			scienceController.MoveSelection(1);
 			menuMoveEvent.Invoke();
 		}
 	}
 
 	public override void OnLeftArrow() {
-		if (menuMode == 1 || menuMode == 2) {
+		if (currentMenu == 1 || currentMenu == 2) {
 			scienceController.MovePromt(-1);
 			menuMoveEvent.Invoke();
 		}
 	}
 
 	public override void OnRightArrow() {
-		if (menuMode == 1 || menuMode == 2) {
+		if (currentMenu == 1 || currentMenu == 2) {
 			scienceController.MovePromt(1);
 			menuMoveEvent.Invoke();
 		}
 	}
 
 	public override void OnOkButton() {
-		if (menuMode == 0) {
+		if (currentMenu == 0) {
 			int currentIndex = buttons.GetPosition();
 			if (currentIndex == 0) {
-				menuMode = 1;
+				currentMenu = 1;
 				menuTitle.text = "UPGRADE";
 				scienceController.GenerateLists(true);
 				developView.SetActive(true);
@@ -89,7 +89,7 @@ public class BaseScienceLab : InputReceiverDelegate {
 				menuAcceptEvent.Invoke();
 			}
 			else if (currentIndex == 1) {
-				menuMode = 2;
+				currentMenu = 2;
 				menuTitle.text = "INVENTIONS";
 				scienceController.GenerateLists(false);
 				developView.SetActive(true);
@@ -97,16 +97,19 @@ public class BaseScienceLab : InputReceiverDelegate {
 				menuAcceptEvent.Invoke();
 			}
 		}
-		else if (menuMode == 1 || menuMode == 2) {
+		else if (currentMenu == 1 || currentMenu == 2) {
 			scienceController.SelectItem(false);
 			menuAcceptEvent.Invoke();
 		}
 	}
 
 	public override void OnBackButton() {
-		if (menuMode == 1 || menuMode == 2) {
+		if (currentMenu == 0) {
+			MenuChangeDelay(MenuMode.BASE_MAIN);
+		}
+		else if (currentMenu == 1 || currentMenu == 2) {
 			if (scienceController.DeselectItem()) {
-				menuMode = 0;
+				currentMenu = 0;
 				menuTitle.text = "LAB";
 				basicView.SetActive(true);
 				developView.SetActive(false);

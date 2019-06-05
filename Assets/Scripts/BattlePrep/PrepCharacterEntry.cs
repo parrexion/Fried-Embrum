@@ -30,7 +30,7 @@ public class PrepCharacterEntry : ListEntry {
 		invCon = inventory;
 		icon.sprite = stats.charData.portrait;
 		entryName.text = stats.charData.entryName;
-		className.text = stats.classData.entryName;
+		className.text = stats.currentClass.entryName;
 		level.text = stats.level.ToString();
 		exp.text = stats.currentExp.ToString();
 		hp.text = stats.hp.ToString();

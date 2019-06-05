@@ -14,7 +14,6 @@ public class UpgradeEntry : ScrObjLibraryEntry {
 	public int level;
 	public int hit;
 	public int power;
-	public int weight;
 	public int minRange;
 	public int maxRange;
 
@@ -28,7 +27,6 @@ public class UpgradeEntry : ScrObjLibraryEntry {
 		level = up.level;
 		hit = up.hit;
 		power = up.power;
-		weight = up.weight;
 		minRange = up.minRange;
 		maxRange = up.maxRange;
 	}
@@ -42,7 +40,6 @@ public class UpgradeEntry : ScrObjLibraryEntry {
 		level = 1;
 		hit = 0;
 		power = 0;
-		weight = 0;
 		minRange = 0;
 		maxRange = 0;
 	}

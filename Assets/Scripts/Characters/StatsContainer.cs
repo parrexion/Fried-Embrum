@@ -5,16 +5,14 @@ using Random = UnityEngine.Random;
 [System.Serializable]
 public class StatsContainer {
 
-	public const int WPN_SKILLS = 8;
-	
 	[Header("Character Info")]
 	public CharData charData;
-	public CharClass classData;
-	
+	public CharClass currentClass;
+	public int[] classLevels = new int[0];
+
 	[Header("Player stuff")]
 	public int level;
 	public int currentExp;
-	public int[] wpnSkills = new int[WPN_SKILLS];
 
 	[Header("Current Stats")]
 	public int hp;
@@ -24,7 +22,7 @@ public class StatsContainer {
 	public int skl;
 	public int def;
 
-	[Header("EV values")]
+	//Base stats
 	public int eHp;
 	public int eDmg;
 	public int eMnd;
@@ -32,52 +30,57 @@ public class StatsContainer {
 	public int eSkl;
 	public int eDef;
 
-	[Header("Boost values")]
-	public int bHp;
-	public int bDmg;
-	public int bMnd;
-	public int bSpd;
-	public int bSkl;
-	public int bDef;
-
-	[SerializeField]
+	[Header("Boost")]
 	public List<Boost> boosts = new List<Boost>();
-
-	[Header("Supports")]
-	public int roomNo = -1;
-	public List<SupportValue> supportValues = new List<SupportValue>();
+	public Boost supportBoost = new Boost();
+	private Boost currentBoost;
 
 
 	public StatsContainer(CharacterSaveData saveData, CharData cStats, CharClass charClass) {
 		SetupValues(saveData, cStats, charClass);
 	}
 
-	public StatsContainer(CharData cStats, CharClass cClass, int level) {
-		this.level = level;
-		charData = cStats;
-		classData = cClass;
+	public StatsContainer(PlayerPosition pos) {
+		level = pos.level;
+		charData = pos.charData;
+		currentClass = pos.charData.startClass;
+		classLevels = pos.charData.startClassLevels;
 		GenerateStartingStats();
-		wpnSkills = classData.GenerateBaseWpnSkill();
 	}
 
-	private void SetupValues(CharacterSaveData saveData, CharData cStats, CharClass charClass) {
-		charData = cStats;
-		classData = charClass;
-		
+	public StatsContainer(EnemyPosition pos) {
+		level = pos.level;
+		charData = pos.charData;
+		currentClass = pos.charData.startClass;
+		classLevels = pos.charData.startClassLevels;
+		GenerateStartingStats();
+	}
+
+	public StatsContainer(ReinforcementPosition pos) {
+		level = pos.level;
+		charData = pos.charData;
+		currentClass = pos.charData.startClass;
+		classLevels = pos.charData.startClassLevels;
+		GenerateStartingStats();
+	}
+
+	private void SetupValues(CharacterSaveData saveData, CharData cStacDatas, CharClass cClass) {
+		charData = cStacDatas;
+		currentClass = cClass;
+
 		if (saveData == null) {
 			return;
 		}
-// Fixa level och current level överallt
+
+		classLevels = new int[ClassWheel.CLASS_COUNT];
+		for (int i = 0; i < ClassWheel.CLASS_COUNT; i++) {
+			classLevels[i] = saveData.classLevels[i];
+		}
 		level = saveData.level;
 		if (level == -1)
 			return;
 		currentExp = saveData.currentExp;
 
-		wpnSkills = new int[WPN_SKILLS];
-		for (int i = 0; i < saveData.wpnSkills.Length; i++) {
-			wpnSkills[i] = saveData.wpnSkills[i];
-		}
-	
 		eHp = saveData.eHp;
 		eDmg = saveData.eDmg;
 		eMnd = saveData.eMnd;
@@ -85,26 +88,19 @@ public class StatsContainer {
 		eSkl = saveData.eSkl;
 		eDef = saveData.eDef;
 
-		roomNo = saveData.roomNo;
-		supportValues = new List<SupportValue>();
-		// for (int i = 0; i < charData.supports.Count; i++) {
-		// 	supportValues.Add(new SupportValue(){uuid = charData.supports[i].partner.uuid});
-		// }
-		for (int i = 0; i < saveData.supports.Count; i++) {
-			supportValues.Add(saveData.supports[i]);
-			//Debug.Log("Added support value " + supportValues[i].uuid + " = " + supportValues[i].value);
-		}
-		
+		//TODO calculate support boost.
+		supportBoost = new Boost();
+
 		CalculateStats();
 	}
 
 	public void GenerateStartingStats() {
-		eHp = charData.hp + classData.hp;
-		eDmg = charData.dmg + classData.dmg;
-		eMnd = charData.mnd + classData.mnd;
-		eSpd = charData.spd + classData.spd;
-		eSkl = charData.skl + classData.skl;
-		eDef = charData.def + classData.def;
+		eHp = charData.hp + currentClass.hp;
+		eDmg = charData.dmg + currentClass.dmg;
+		eMnd = charData.mnd + currentClass.mnd;
+		eSpd = charData.spd + currentClass.spd;
+		eSkl = charData.skl + currentClass.skl;
+		eDef = charData.def + currentClass.def;
 
 		for (int i = 1; i < level; i++) {
 			GainLevel();
@@ -116,20 +112,10 @@ public class StatsContainer {
 	/// Sums up the stat boosts the character has active at the moment.
 	/// </summary>
 	private void GenerateBoosts() {
-		bHp = 0;
-		bDmg = 0;
-		bMnd = 0;
-		bSpd = 0;
-		bSkl = 0;
-		bDef = 0;
+		currentBoost = new Boost();
 
 		for (int i = 0; i < boosts.Count; i++) {
-			bHp += boosts[i].hp;
-			bDmg += boosts[i].atk;
-			bMnd += boosts[i].res;
-			bSpd += boosts[i].spd;
-			bSkl += boosts[i].skl;
-			bDef += boosts[i].def;
+			currentBoost.AddBoost(boosts[i]);
 		}
 	}
 
@@ -137,35 +123,60 @@ public class StatsContainer {
 		if (charData == null)
 			return;
 		GenerateBoosts();
-		hp = bHp + eHp;
-		dmg = bDmg + eDmg;
-		mnd = bMnd + eMnd;
-		spd = bSpd + eSpd;
-		skl = bSkl + eSkl;
-		def = bDef + eDef;
+		hp = currentBoost.hp + eHp;
+		dmg = currentBoost.dmg + eDmg;
+		mnd = currentBoost.mnd + eMnd;
+		spd = currentBoost.spd + eSpd;
+		skl = currentBoost.skl + eSkl;
+		def = currentBoost.def + eDef;
 	}
 
 	public void GainLevel() {
 		level++;
-		eHp += (int)(0.01f * (classData.gHp+charData.gHp + Random.Range(0,100)));
-		eDmg += (int)(0.01f * (classData.gDmg+charData.gDmg + Random.Range(0,100)));
-		eMnd += (int)(0.01f * (classData.gMnd+charData.gMnd + Random.Range(0,100)));
-		eSpd += (int)(0.01f * (classData.gSpd+charData.gSpd + Random.Range(0,100)));
-		eSkl += (int)(0.01f * (classData.gSkl+charData.gSkl + Random.Range(0,100)));
-		eDef += (int)(0.01f * (classData.gDef+charData.gDef + Random.Range(0,100)));
+		int sum = eHp + eDmg + eMnd + eSpd + eSkl + eDef;
+		while (sum == eHp + eDmg + eMnd + eSpd + eSkl + eDef) {
+			eHp += (int)(0.01f * (currentClass.gHp + charData.gHp + Random.Range(0, 100)));
+			eDmg += (int)(0.01f * (currentClass.gDmg + charData.gDmg + Random.Range(0, 100)));
+			eMnd += (int)(0.01f * (currentClass.gMnd + charData.gMnd + Random.Range(0, 100)));
+			eSpd += (int)(0.01f * (currentClass.gSpd + charData.gSpd + Random.Range(0, 100)));
+			eSkl += (int)(0.01f * (currentClass.gSkl + charData.gSkl + Random.Range(0, 100)));
+			eDef += (int)(0.01f * (currentClass.gDef + charData.gDef + Random.Range(0, 100)));
+		}
+
+		CalculateStats();
+	}
+
+	public void ClassGain(LevelGain gainedClass, int classPosition) {
+		eHp += gainedClass.bonusHp;
+		eDmg += gainedClass.bonusDmg;
+		eMnd += gainedClass.bonusMnd;
+		eSpd += gainedClass.bonusSpd;
+		eSkl += gainedClass.bonusSkl;
+		eDef += gainedClass.bonusDef;
+		classLevels[classPosition]++;
 
 		CalculateStats();
 	}
 
 	public void ChangeClass(CharClass newClass) {
-		eHp += newClass.hp - classData.hp;
-		eDmg += newClass.dmg - classData.dmg;
-		eMnd += newClass.mnd - classData.mnd;
-		eSpd += newClass.spd - classData.spd;
-		eSkl += newClass.skl - classData.skl;
-		eDef += newClass.def - classData.def;
-		classData = newClass;
+		eHp += newClass.hp - currentClass.hp;
+		eDmg += newClass.dmg - currentClass.dmg;
+		eMnd += newClass.mnd - currentClass.mnd;
+		eSpd += newClass.spd - currentClass.spd;
+		eSkl += newClass.skl - currentClass.skl;
+		eDef += newClass.def - currentClass.def;
+		currentClass = newClass;
+
 		CalculateStats();
+	}
+
+	public bool CanLevelup() {
+		int classSum = 0;
+		for (int i = 0; i < classLevels.Length; i++) {
+			classSum += classLevels[i];
+		}
+		return (level / 10 + 2 > classSum);
+		//return (level / 10 + 1 > classSum);
 	}
 
 	/// <summary>
@@ -173,42 +184,13 @@ public class StatsContainer {
 	/// </summary>
 	/// <returns></returns>
 	public int GetMovespeed() {
-		return classData.movespeed;
-	}
-
-	public int GetConstitution() {
-		return charData.con + classData.con;
-	}
-
-	public int GetConPenalty(ItemEntry item) {
-		return (item) ? Mathf.Max(item.weight - GetConstitution(),0) : 0;
-	}
-
-	public void GiveWpnExp(ItemEntry usedItem) {
-		if (usedItem.itemCategory == ItemCategory.WEAPON) {
-            wpnSkills[(int)usedItem.itemType] += 3;
-		}
-		else if (usedItem.itemCategory == ItemCategory.STAFF) {
-            wpnSkills[(int)ItemType.HEAL] += 3;
-		}
-	}
-
-	/// <summary>
-	/// Returns the current weapon skill level for the weapon.
-	/// </summary>
-	/// <param name="weapon"></param>
-	/// <returns></returns>
-	public int GetWpnSkill(ItemEntry weapon) {
-		if (weapon == null)
-			return 0;
-		int skill = Mathf.Clamp((int)weapon.itemType, 0, wpnSkills.Length-1);
-		return wpnSkills[skill] * classData.GetWeaponSkill(skill);
+		return currentClass.movespeed;
 	}
 
 	public void BoostBaseStats(Boost boost) {
 		eHp += boost.hp;
-		eDmg += boost.atk;
-		eMnd += boost.res;
+		eDmg += boost.dmg;
+		eMnd += boost.mnd;
 		eSpd += boost.spd;
 		eSkl += boost.skl;
 		eDef += boost.def;
@@ -224,15 +206,8 @@ public class StatsContainer {
 		}
 
 		boosts.RemoveAll((b => !b.IsActive()));
-		
+
 		CalculateStats();
 	}
 
-	public SupportValue GetSupportValue(CharData other) {
-		for (int i = 0; i < supportValues.Count; i++) {
-			if (supportValues[i].uuid == other.uuid)
-				return supportValues[i];
-		}
-		return new SupportValue(){ uuid = other.uuid };
-	}
 }

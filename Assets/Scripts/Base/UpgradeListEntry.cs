@@ -29,7 +29,7 @@ public class UpgradeListEntry : ListEntry, IComparer<UpgradeListEntry> {
 	public void FillData(int index, UpgradeEntry upgrade, bool done, int totalScrap, int totalMoney) {
 		entryName.text = upgrade.entryName;
 		icon.color = upgrade.repColor;
-		upgradeType.text = upgrade.item.itemType.ToString();
+		upgradeType.text = upgrade.item.weaponType.ToString();
 		this.index = index;
 		this.upgrade = upgrade;
 		this.done = done;

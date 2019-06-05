@@ -32,7 +32,7 @@ public class TrainingListEntry : ListEntry {
 		entryName.text = stats.charData.entryName;
 		level.text = stats.level.ToString();
 		exp.text = stats.currentExp.ToString();
-		currentClass.text = stats.classData.entryName;
+		currentClass.text = stats.currentClass.entryName;
 	}
 
 	/// <summary>

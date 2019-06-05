@@ -34,7 +34,6 @@ public class ScienceController : MonoBehaviour {
 	public Text pwrText;
 	public Text rangeText;
 	public Text hitText;
-	public Text weightText;
 
 	[Header("Invention info")]
 	public GameObject inventionInfoObject;
@@ -42,7 +41,6 @@ public class ScienceController : MonoBehaviour {
 	public Text invRangeText;
 	public Text invHitText;
 	public Text invCritText;
-	public Text invWeightText;
 	public Text invReqText;
 
 	[Header("Buy upgrade promt")]
@@ -150,7 +148,6 @@ public class ScienceController : MonoBehaviour {
 			pwrText.gameObject.SetActive(false);
 			rangeText.gameObject.SetActive(false);
 			hitText.gameObject.SetActive(false);
-			weightText.gameObject.SetActive(false);
 			return;
 		}
 
@@ -177,8 +174,6 @@ public class ScienceController : MonoBehaviour {
 		pwrText.gameObject.SetActive(upgrade.power != 0);
 		hitText.text = "Hit Rate:  " + upgrade.item.hitRate + "  ->  " + (upgrade.item.hitRate + upgrade.hit);
 		hitText.gameObject.SetActive(upgrade.hit != 0);
-		weightText.text = "Weight:  " + upgrade.item.weight + "  ->  " + (upgrade.item.weight - upgrade.weight);
-		weightText.gameObject.SetActive(upgrade.weight != 0);
 	}
 
 	private void SetupDevelopInfo() {
@@ -195,7 +190,6 @@ public class ScienceController : MonoBehaviour {
 			invRangeText.text = "";
 			invHitText.text = "";
 			invCritText.text = "";
-			weightText.text = "";
 			invReqText.text = "";
 			return;
 		}
@@ -221,8 +215,7 @@ public class ScienceController : MonoBehaviour {
 		invRangeText.text = "Range:  " + upgrade.item.range.ToString();
 		invHitText.text = "Hit Rate:  " + upgrade.item.hitRate;
 		invCritText.text = "Crit Rate:  " + upgrade.item.critRate;
-		weightText.text = "Weight:  " + upgrade.item.weight;
-		invReqText.text = "Req:  " + ItemEntry.GetRankLetter(upgrade.item.skillReq);
+		invReqText.text = "Req:  " + upgrade.item.skillReq.ToString();
 		return;
 	}
 }

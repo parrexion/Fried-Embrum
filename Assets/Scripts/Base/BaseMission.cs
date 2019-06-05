@@ -80,10 +80,13 @@ public class BaseMission : InputReceiverDelegate {
 	}
 
     public override void OnBackButton() {
-		if (!promptMode)
-			return;
-		promptMode = false;
-		startPrompt.Click(false);
+		if (promptMode) {
+			promptMode = false;
+			startPrompt.Click(false);
+		}
+		else {
+			MenuChangeDelay(MenuMode.BASE_MAIN);
+		}
 	}
 
     public override void OnLeftArrow() {

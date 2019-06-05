@@ -127,7 +127,6 @@ public class ShopBuyController : MonoBehaviour {
 		hitText.text = "Hit:  " + item.hitRate.ToString();
 		critText.text = "Crit:  " + item.critRate.ToString();
 		reqText.text = "Req:  " + item.skillReq.ToString();
-		weightText.text = "Weight:  " + item.weight.ToString();
 	}
 
 }

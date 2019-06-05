@@ -71,11 +71,12 @@ public abstract class TacticsMove : MonoBehaviour {
 			return;
 		}
 		stats.boosts.Clear();
-		ActivateSkills(Activation.PASSIVE, null);
+		ActivateSkills(SkillActivation.PASSIVE, null);
 		stats.CalculateStats();
 		gameObject.name = stats.charData.entryName;
 		currentHealth = stats.hp;
-		inventory.CleanupInventory(stats);
+		UpdateHealth();
+		inventory.CleanupInventory();
 		GetComponent<SpriteRenderer>().sprite = stats.charData.battleSprite;
 		currentTile = battleMap.GetTile(posx, posy);
 		currentTile.currentCharacter = this;
@@ -147,13 +148,13 @@ public abstract class TacticsMove : MonoBehaviour {
 		currentTile.target = true;
 		
 		WeaponRange weapon = inventory.GetReach(ItemCategory.WEAPON);
-		WeaponRange staff = inventory.GetReach(ItemCategory.STAFF);
+		WeaponRange staff = inventory.GetReach(ItemCategory.SUPPORT);
 
 		bool isBuff = false;
 		if (weapon.max > 0)
 			battleMap.ShowAttackTiles(currentTile, weapon, faction, isDanger);
 		if (staff.max > 0) {
-			isBuff = (inventory.GetFirstUsableItem(ItemType.BUFF, stats) != null);
+			isBuff = (inventory.GetFirstUsableItemTuple(ItemCategory.SUPPORT) != null);
 			battleMap.ShowSupportTiles(currentTile, staff, faction, isDanger, isBuff);
 		}
 
@@ -227,7 +228,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// </summary>
 	/// <returns></returns>
 	public List<MapTile> GetAttackablesInRange() {
-		List<InventoryTuple> weaponList = inventory.GetAllUsableItemTuple(ItemCategory.WEAPON, stats);
+		List<InventoryTuple> weaponList = inventory.GetAllUsableItemTuple(ItemCategory.WEAPON);
 		List<MapTile> enemies = new List<MapTile>();
 		// currentTile.current = true;
 		for (int i = 0; i < enemyList.values.Count; i++) {
@@ -262,7 +263,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// </summary>
 	/// <returns></returns>
 	public List<MapTile> FindSupportablesInRange() {
-		InventoryTuple staff = inventory.GetFirstUsableItemTuple(ItemCategory.STAFF, stats);
+		InventoryTuple staff = inventory.GetFirstUsableItemTuple(ItemCategory.SUPPORT);
 		if (staff.item == null)
 			return new List<MapTile>();
 
@@ -472,7 +473,7 @@ public abstract class TacticsMove : MonoBehaviour {
 			return;
 			
 		stats.ClearBoosts(true);
-		ForEachSkills(Activation.STARTTURN, playerList);
+		ForEachSkills(SkillActivation.STARTTURN, playerList);
 		hasMoved = false;
 		canUndoMove = true;
 
@@ -530,14 +531,14 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// </summary>
 	/// <returns></returns>
 	public bool CanSupport() {
-		WeaponRange range = inventory.GetReach(ItemCategory.STAFF);
+		WeaponRange range = inventory.GetReach(ItemCategory.SUPPORT);
 		if (range.max == 0)
 			return false;
 		
-		List<InventoryTuple> staffs = inventory.GetAllUsableItemTuple(ItemCategory.STAFF, stats);
+		List<InventoryTuple> staffs = inventory.GetAllUsableItemTuple(ItemCategory.SUPPORT);
 		bool isBuff = false;
 		for (int i = 0; i < staffs.Count; i++) {
-			if (staffs[i].item.itemType == ItemType.BUFF){
+			if (staffs[i].item.weaponType == WeaponType.BARRIER){
 				isBuff = true;
 				break;
 			}
@@ -593,25 +594,25 @@ public abstract class TacticsMove : MonoBehaviour {
 		if (category == ItemCategory.WEAPON) {
 			return inventory.GetTuple(0);
 		}
-		return inventory.GetFirstUsableItemTuple(category, stats);
+		return inventory.GetFirstUsableItemTuple(category);
 	}
 
 
 	//SKills
 
-	public void ActivateSkills(Activation activation, TacticsMove enemy) {
+	public void ActivateSkills(SkillActivation activation, TacticsMove enemy) {
 		skills.ActivateSkills(activation, this, enemy);
 	}
 
-	public void EndSkills(Activation activation, TacticsMove enemy) {
+	public void EndSkills(SkillActivation activation, TacticsMove enemy) {
 		skills.EndSkills(activation, this, enemy);
 	}
 
-	public int EditValueSkills(Activation activation, int value) {
+	public int EditValueSkills(SkillActivation activation, int value) {
 		return skills.EditValueSkills(activation, this, value);
 	}
 
-	public void ForEachSkills(Activation activation, CharacterListVariable list) {
+	public void ForEachSkills(SkillActivation activation, CharacterListVariable list) {
 		skills.ForEachSkills(activation, this, list);
 	}
 }

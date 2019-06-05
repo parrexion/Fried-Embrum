@@ -42,7 +42,7 @@ public class InventoryMenuController : InputReceiverDelegate {
 	private void ButtonSetup() {
 		inventoryButtons.ResetButtons();
 		InventoryTuple tuple = selectedCharacter.value.inventory.GetTuple(inventoryIndex.value);
-		int skill = selectedCharacter.value.stats.GetWpnSkill(tuple.item);
+		WeaponRank skill = selectedCharacter.value.inventory.GetWpnSkill(tuple.item);
 		if (tuple.item?.itemCategory == ItemCategory.WEAPON && tuple.item.CanUse(skill)) {
 			inventoryButtons.AddButton("EQUIP", 0);
 		}
@@ -134,7 +134,7 @@ public class InventoryMenuController : InputReceiverDelegate {
 		selectMode = false;
 		inventoryButtons.ResetButtons();
 		InventoryTuple tup = selectedCharacter.value.inventory.GetTuple(inventoryIndex.value);
-		SfxEntry sfx = (tup.item.itemType == ItemType.CHEAL) ? healItemSfx : boostItemSfx;
+		SfxEntry sfx = (tup.item.weaponType == WeaponType.C_HEAL) ? healItemSfx : boostItemSfx;
 		sfxQueue.Enqueue(sfx);
 		playSfxEvent.Invoke();
 

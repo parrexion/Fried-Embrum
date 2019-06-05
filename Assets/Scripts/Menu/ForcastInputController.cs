@@ -31,9 +31,9 @@ public class ForcastInputController : InputReceiverDelegate {
 
 		listIndex = 0;
 		if (currentAction.value == ActionMode.ATTACK)
-			attackerWeapons = selectedCharacter.value.inventory.GetAllUsableItemTuple(ItemCategory.WEAPON, selectedCharacter.value.stats);
+			attackerWeapons = selectedCharacter.value.inventory.GetAllUsableItemTuple(ItemCategory.WEAPON);
 		else
-			attackerWeapons = selectedCharacter.value.inventory.GetAllUsableItemTuple(ItemCategory.STAFF, selectedCharacter.value.stats);
+			attackerWeapons = selectedCharacter.value.inventory.GetAllUsableItemTuple(ItemCategory.SUPPORT);
 		battleWeaponIndex.value = attackerWeapons[listIndex].index;
 		characterChangedEvent.Invoke();
 	}

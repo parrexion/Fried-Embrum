@@ -29,7 +29,6 @@ public class ForecastUI : MonoBehaviour {
 	public Image colorBackground;
 	public Image portrait;
 	public Text characterName;
-	public Image wpnAdvantage;
 	public Image wpnIcon;
 	public Text wpnName;
 	public Text wpnCharge;
@@ -44,7 +43,6 @@ public class ForecastUI : MonoBehaviour {
 	public Image eColorBackground;
 	public Image ePortrait;
 	public Text eCharacterName;
-	public Image eWpnAdvantage;
 	public Image eWpnIcon;
 	public Text eWpnName;
 	public Text eWpnCharge;
@@ -115,11 +113,9 @@ public class ForecastUI : MonoBehaviour {
 				int crit2 = -1;
 				bool atkWeak = false;
 				bool defWeak = false;
-				int atkAdv = 0;
-				int defAdv = 0;
 				UpdateHealthUI();
-				ShowAttackerStats(attacker, act1.weaponAtk, atk, spd, hit, crit, atkAdv, atkWeak);
-				ShowDefenderStats(defender, new InventoryTuple(), ret, spd, hit2, crit2, defAdv, defWeak);
+				ShowAttackerStats(attacker, act1.weaponAtk, atk, spd, hit, crit, atkWeak);
+				ShowDefenderStats(defender, new InventoryTuple(), ret, spd, hit2, crit2, defWeak);
 				if (!inBattle) {
 					backgroundFight.SetActive(true);
 					backgroundHeal.SetActive(false);
@@ -150,11 +146,9 @@ public class ForecastUI : MonoBehaviour {
 				int crit2 = (ret != -1) ? act2.GetCritRate() : -1;
 				bool atkWeak = act1.CheckWeaponWeakness();
 				bool defWeak = act2.CheckWeaponWeakness();
-				int atkAdv = act1.GetAdvantage();
-				int defAdv = act2.GetAdvantage();
 				UpdateHealthUI();
-				ShowAttackerStats(attacker, act1.weaponAtk, atk, spd, hit, crit, atkAdv, atkWeak);
-				ShowDefenderStats(defender, act2.weaponAtk, ret, spd, hit2, crit2, defAdv, defWeak);
+				ShowAttackerStats(attacker, act1.weaponAtk, atk, spd, hit, crit, atkWeak);
+				ShowDefenderStats(defender, act2.weaponAtk, ret, spd, hit2, crit2, defWeak);
 				if (!inBattle) {
 					backgroundFight.SetActive(true);
 					backgroundHeal.SetActive(false);
@@ -170,13 +164,11 @@ public class ForecastUI : MonoBehaviour {
 		}
 	}
 
-	private void ShowAttackerStats(TacticsMove tactics, InventoryTuple InvTup, int damage, int speed, int hit, int crit, int atkAdv, bool defWeak) {
+	private void ShowAttackerStats(TacticsMove tactics, InventoryTuple InvTup, int damage, int speed, int hit, int crit, bool defWeak) {
 		colorBackground.color = (tactics.faction == Faction.PLAYER) ? new Color(0.7f, 0.7f, 1f) : new Color(1f, 0.7f, 0.7f);
 
 		characterName.text = tactics.stats.charData.entryName;
 		portrait.sprite = tactics.stats.charData.portrait;
-		wpnAdvantage.enabled = (atkAdv != 0);
-		wpnAdvantage.sprite = (atkAdv == 1) ? advArrow : disArrow;
 		wpnIcon.sprite = (InvTup.item != null) ? InvTup.item.icon : null;
 		wpnName.text = (InvTup.item != null) ? InvTup.item.entryName : "";
 		if (wpnCharge)
@@ -189,13 +181,11 @@ public class ForecastUI : MonoBehaviour {
 		critText.text = (crit != -1) ? crit.ToString() : "--";
 	}
 
-	private void ShowDefenderStats(TacticsMove tactics, InventoryTuple invTup, int damage, int speed, int hit, int crit, int defAdv, bool atkWeak) {
+	private void ShowDefenderStats(TacticsMove tactics, InventoryTuple invTup, int damage, int speed, int hit, int crit, bool atkWeak) {
 		eColorBackground.color = (tactics.faction == Faction.PLAYER) ? new Color(0.7f, 0.7f, 1f) : new Color(1f, 0.7f, 0.7f);
 
 		eCharacterName.text = tactics.stats.charData.entryName;
 		ePortrait.sprite = tactics.stats.charData.portrait;
-		eWpnAdvantage.enabled = (defAdv != 0);
-		eWpnAdvantage.sprite = (defAdv == 1) ? advArrow : disArrow;
 		eWpnIcon.sprite = (invTup.item != null) ? invTup.item.icon : null;
 		eWpnName.text = (invTup.item != null) ? invTup.item.entryName : "";
 		if (eWpnCharge)

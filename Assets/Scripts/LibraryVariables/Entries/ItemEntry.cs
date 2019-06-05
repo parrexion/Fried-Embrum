@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ItemCategory { WEAPON, STAFF, CONSUME }
-public enum ItemType {NONE, SWORD, LANCE, AXE, MAGIC, THROW, BOW, HEAL, CHEAL, BUFF, CSTATS}
+public enum ItemCategory { WEAPON, SUPPORT, CONSUME }
+public enum AttackType { PHYSICAL, MENTAL, HEAL, STATS }
 
 [CreateAssetMenu(menuName = "LibraryEntries/Item")]
 public class ItemEntry : ScrObjLibraryEntry {
@@ -12,13 +12,13 @@ public class ItemEntry : ScrObjLibraryEntry {
     public string description;
 
     public ItemCategory itemCategory = ItemCategory.WEAPON;
-    public ItemType itemType = ItemType.NONE;
+    public WeaponType weaponType = WeaponType.NONE;
+	public AttackType attackType = AttackType.PHYSICAL;
 
     public int cost;
     public int maxCharge;
 	public bool researchNeeded;
-	public int skillReq;
-    public int weight;
+	public WeaponRank skillReq;
 
     public int power;
     public int hitRate;
@@ -27,7 +27,7 @@ public class ItemEntry : ScrObjLibraryEntry {
     
     [Space(10)]
     
-    public List<ClassType> advantageType = new List<ClassType>();
+    public List<MovementType> advantageType = new List<MovementType>();
     public Boost boost;
 
 
@@ -41,20 +41,20 @@ public class ItemEntry : ScrObjLibraryEntry {
         description = "";
 
         itemCategory = ItemCategory.WEAPON;
-        itemType = ItemType.NONE;
+		weaponType = WeaponType.NONE;
+		attackType = AttackType.PHYSICAL;
 
 		cost = 0;
         maxCharge = 0;
 		researchNeeded = false;
-        skillReq = 0;
-        weight = 0;
+        skillReq = WeaponRank.NONE;
 
         power = 0;
         hitRate = 0;
         critRate = 0;
         range = new WeaponRange(1,1);
     
-        advantageType = new List<ClassType>();
+        advantageType = new List<MovementType>();
         boost = new Boost();
 	}
 
@@ -70,13 +70,13 @@ public class ItemEntry : ScrObjLibraryEntry {
         description = item.description;
 
         itemCategory = item.itemCategory;
-        itemType = item.itemType;
+        weaponType = item.weaponType;
+        attackType = item.attackType;
 
 		cost = item.cost;
         maxCharge = item.maxCharge;
 		researchNeeded = item.researchNeeded;
         skillReq = item.skillReq;
-        weight = item.weight;
 
         power = item.power;
         hitRate = item.hitRate;
@@ -84,7 +84,7 @@ public class ItemEntry : ScrObjLibraryEntry {
         range.min = item.range.min;
         range.max = item.range.max;
 
-        advantageType = new List<ClassType>();
+        advantageType = new List<MovementType>();
         for (int i = 0; i < item.advantageType.Count; i++) {
             advantageType.Add(item.advantageType[i]);
         }
@@ -106,12 +106,16 @@ public class ItemEntry : ScrObjLibraryEntry {
     /// </summary>
     /// <param name="skill"></param>
     /// <returns></returns>
-    public bool CanUse(int skill) {
-        if (itemCategory != ItemCategory.CONSUME) {
-            return (skill != 0 && skill >= skillReq);
+    public bool CanUse(WeaponRank skill) {
+		if (itemCategory == ItemCategory.CONSUME) {
+			return true;
+		}
+		else if (skill == WeaponRank.NONE) {
+			return false;
+		}
+        else {
+            return (skill >= skillReq);
         }
-
-        return true;
     }
 
     /// <summary>
@@ -119,114 +123,29 @@ public class ItemEntry : ScrObjLibraryEntry {
     /// </summary>
     /// <param name="skill"></param>
     /// <returns></returns>
-    public bool CanEquip(int skill) {
-        if (itemCategory == ItemCategory.CONSUME) {
+    public bool CanEquip(WeaponRank skill) {
+        if (itemCategory == ItemCategory.CONSUME || skill == 0) {
 			return false;
         }
 
-        return (skill != 0 && skill >= skillReq);
+        return (skill >= skillReq);
     }
 
-    /// <summary>
-    /// Compares this weapon to the otherWeapon for weapon triangle advantage.
-    /// Returns 1 if this weapon has advantage, -1 for otherWeapon and 0 for neutral.
-    /// </summary>
-    /// <param name="otherWeapon"></param>
-    /// <returns></returns>
-    public int GetAdvantage(ItemEntry otherWeapon) {
-        if (otherWeapon == null)
-            return 0;
-        switch(itemType) 
-        {
-            case ItemType.SWORD:
-            case ItemType.MAGIC:
-                if (otherWeapon.itemType == ItemType.AXE || otherWeapon.itemType == ItemType.BOW)
-                    return 1;
-                else if (otherWeapon.itemType == ItemType.LANCE || otherWeapon.itemType == ItemType.THROW)
-                    return -1;
-                break;
-            case ItemType.LANCE:
-            case ItemType.THROW:
-                if (otherWeapon.itemType == ItemType.SWORD || otherWeapon.itemType == ItemType.MAGIC)
-                    return 1;
-                else if (otherWeapon.itemType == ItemType.AXE || otherWeapon.itemType == ItemType.BOW)
-                    return -1;
-                break;
-            case ItemType.AXE:
-            case ItemType.BOW:
-                if (otherWeapon.itemType == ItemType.LANCE || otherWeapon.itemType == ItemType.THROW)
-                    return 1;
-                else if (otherWeapon.itemType == ItemType.SWORD || otherWeapon.itemType == ItemType.MAGIC)
-                    return -1;
-                break;
-            default:
-                return 0;
-        }
-
-        return 0;
-    }
-
-    /// <summary>
-    /// Returns the type's color of the weapon for weapon triangle clarity.
-    /// </summary>
-    /// <returns></returns>
-    public Color GetTypeColor() {
-        switch (itemType)
-        {
-            case ItemType.SWORD:
-            case ItemType.MAGIC:
-                return Color.red;
-            case ItemType.LANCE: 
-            case ItemType.THROW:
-                return Color.blue;
-            case ItemType.AXE: 
-            case ItemType.BOW:
-                return Color.green;
-            default: return Color.white;
-        }
-    }
-
-    /// <summary>
-    /// Takes the weaponskill value and converts it into a rank letter.
-    /// </summary>
-    /// <param name="level"></param>
-    /// <returns></returns>
-    public static string GetRankLetter(int level) {
-        if (level == -1) {
-            return "-";
-        }
-        else if (level == 0) {
-            Debug.LogWarning("Weapon skill is 0");
-                return "yo man!";
-        }
-        else if (level >= 400) {
-            return "A";
-        }
-        else if (level >= 300) {
-            return "B";
-        }
-        else if (level >= 200) {
-            return "C";
-        }
-        else if (level >= 100) {
-            return "D";
-        }
-        else {
-            return "E";
-        }
-    }
-
+	/// <summary>
+	/// Generates a description string containing the stats of the item.
+	/// </summary>
+	/// <returns></returns>
     public string GetDescription() {
         string desc = description;
         string rangeStr = (range.min != range.max) ? range.min + "-" + range.max : range.min.ToString();
         if (itemCategory == ItemCategory.WEAPON) {
             desc += "\nRange: " + rangeStr + ", Power: " + power + 
                     "\nHit: " + hitRate + ", Crit: " + critRate +
-                    "\nWeight: " + weight + ", Req: " + ItemEntry.GetRankLetter(skillReq);
+                    ", Req: " + skillReq.ToString();
         }
-        else if (itemCategory == ItemCategory.STAFF) {
+        else if (itemCategory == ItemCategory.SUPPORT) {
             desc += "\nRange: " + rangeStr + ", Power: " + power +
-                    "\nReq: " + ItemEntry.GetRankLetter(skillReq);
+                    "\nReq: " + skillReq.ToString();
         }
         return desc;
     }
