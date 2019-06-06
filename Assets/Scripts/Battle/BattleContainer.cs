@@ -409,7 +409,7 @@ public class BattleContainer : InputReceiverDelegate {
 		}
 
 		int exp = actions[0].GetExperience();
-		exp = player.EditValueSkills(SkillActivation.EXP, exp);
+		exp = player.EditValueSkills(SkillActivation.REWARD, exp);
 		if (exp > 0) {
 			expMeter.gameObject.SetActive(true);
 			expMeter.currentExp = player.stats.currentExp;

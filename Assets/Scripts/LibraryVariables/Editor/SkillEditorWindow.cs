@@ -151,6 +151,48 @@ public class SkillEditorWindow {
 
 		switch (skillValues.activationType) {
 			case SkillActivation.PRECOMBAT:
+				GUILayout.Label("Boost during combat", EditorStyles.boldLabel);
+				skillValues.boost.hp = EditorGUILayout.IntField("HP", skillValues.boost.hp);
+				skillValues.boost.dmg = EditorGUILayout.IntField("ATK", skillValues.boost.dmg);
+				skillValues.boost.mnd = EditorGUILayout.IntField("MND", skillValues.boost.mnd);
+				skillValues.boost.skl = EditorGUILayout.IntField("SKL", skillValues.boost.skl);
+				skillValues.boost.spd = EditorGUILayout.IntField("SPD", skillValues.boost.spd);
+				skillValues.boost.def = EditorGUILayout.IntField("DEF", skillValues.boost.def);
+				skillValues.boost.hit = EditorGUILayout.IntField("HIT", skillValues.boost.hit);
+				skillValues.boost.crit = EditorGUILayout.IntField("CRIT", skillValues.boost.crit);
+				skillValues.boost.avoid = EditorGUILayout.IntField("AVOID", skillValues.boost.avoid);
+				GUILayout.Space(10);
+				GUILayout.Label("Requirements", EditorStyles.boldLabel);
+				GUILayout.Space(5);
+
+				GUILayout.BeginHorizontal();
+				GUILayout.Label("Certain enemy attacks?");
+				skillValues.enemyCanAttack = (EnemyCanAttack)EditorGUILayout.EnumPopup(skillValues.enemyCanAttack);
+				GUILayout.EndHorizontal();
+				GUILayout.Space(5);
+
+				GUILayout.Label("Activation range (inclusive)");
+				GUILayout.BeginHorizontal();
+				skillValues.range = EditorGUILayout.IntField("Min range", skillValues.range);
+				skillValues.rangeMax = EditorGUILayout.IntField("Max range", skillValues.rangeMax);
+				GUILayout.EndHorizontal();
+				GUILayout.Space(5);
+
+				GUILayout.Label("Activation terrain");
+				for (int i = 0; i < skillValues.terrainReq.Count; i++) {
+					GUILayout.BeginHorizontal();
+					skillValues.terrainReq[i] = (TerrainTile)EditorGUILayout.ObjectField("Item", skillValues.terrainReq[i], typeof(TerrainTile), false);
+					if (GUILayout.Button("X", GUILayout.Width(50))) {
+						GUI.FocusControl(null);
+						skillValues.terrainReq.RemoveAt(i);
+						i--;
+						continue;
+					}
+					GUILayout.EndHorizontal();
+				}
+				if (GUILayout.Button("+")) {
+					skillValues.terrainReq.Add(null);
+				}
 				break;
 
 
@@ -199,49 +241,29 @@ public class SkillEditorWindow {
 				break;
 
 
-			case SkillActivation.EXP:
+			case SkillActivation.REWARD:
+				GUILayout.Label("Reward bonus", EditorStyles.boldLabel);
+				//skillValues.chance = EditorGUILayout.FloatField("Trigger chance %", skillValues.chance);
+				//skillValues.boost.hp = EditorGUILayout.IntField("Money gain", skillValues.boost.hp);
+				//skillValues.boost.dmg = EditorGUILayout.IntField("Scrap gain", skillValues.boost.dmg);
+				skillValues.percent = EditorGUILayout.FloatField("Exp boost %", skillValues.percent);
+				break;
+
+
+			case SkillActivation.COUNTER:
+				GUILayout.Label("Boost when being attacked", EditorStyles.boldLabel);
+				skillValues.boost.hp = EditorGUILayout.IntField("HP", skillValues.boost.hp);
+				skillValues.boost.dmg = EditorGUILayout.IntField("ATK", skillValues.boost.dmg);
+				skillValues.boost.mnd = EditorGUILayout.IntField("MND", skillValues.boost.mnd);
+				skillValues.boost.skl = EditorGUILayout.IntField("SKL", skillValues.boost.skl);
+				skillValues.boost.spd = EditorGUILayout.IntField("SPD", skillValues.boost.spd);
+				skillValues.boost.def = EditorGUILayout.IntField("DEF", skillValues.boost.def);
+				skillValues.boost.hit = EditorGUILayout.IntField("HIT", skillValues.boost.hit);
+				skillValues.boost.crit = EditorGUILayout.IntField("CRIT", skillValues.boost.crit);
+				skillValues.boost.avoid = EditorGUILayout.IntField("AVOID", skillValues.boost.avoid);
 				break;
 		}
-		/*
-		GUILayout.Label("Usable weapons", EditorStyles.boldLabel);
-		for (int i = 0; i < skillValues.weaponSkills.Count; i++) {
-			GUILayout.BeginHorizontal();
-			skillValues.weaponSkills[i] = (WeaponType)EditorGUILayout.EnumPopup("Weapon " + i, skillValues.weaponSkills[i]);
-			if (GUILayout.Button("X", GUILayout.Width(50))) {
-				skillValues.weaponSkills.RemoveAt(i);
-				i--;
-			}
-			GUILayout.EndHorizontal();
-		}
-		if (GUILayout.Button("+")) {
-			skillValues.weaponSkills.Add(WeaponType.NONE);
-		}
-		GUILayout.Space(10);
 
-		GUILayout.Label("Skill Gains", EditorStyles.boldLabel);
-		for (int i = 0; i < skillValues.skills.Count; i++) {
-			GUILayout.BeginHorizontal();
-			skillValues.skills[i] = (CharacterSkill)EditorGUILayout.ObjectField("Skill", skillValues.skills[i], typeof(CharacterSkill), false);
-			if (GUILayout.Button("X", GUILayout.Width(50))) {
-				skillValues.skills.RemoveAt(i);
-				i--;
-				continue;
-			}
-			GUILayout.EndHorizontal();
-			LibraryEditorWindow.HorizontalLine(Color.black);
-		}
-		if (GUILayout.Button("+")) {
-			skillValues.skills.Add(null);
-		}
-
-		GUILayout.Label("Promotion gains", EditorStyles.boldLabel);
-		skillValues.bonusHp = EditorGUILayout.IntField("HP", skillValues.bonusHp);
-		skillValues.bonusDmg = EditorGUILayout.IntField("ATK", skillValues.bonusDmg);
-		skillValues.bonusMnd = EditorGUILayout.IntField("MND", skillValues.bonusMnd);
-		skillValues.bonusSkl = EditorGUILayout.IntField("SKL", skillValues.bonusSkl);
-		skillValues.bonusSpd = EditorGUILayout.IntField("SPD", skillValues.bonusSpd);
-		skillValues.bonusDef = EditorGUILayout.IntField("DEF", skillValues.bonusDef);
-		*/
 		GUILayout.EndScrollView();
 		GUILayout.EndArea();
 	}
@@ -274,7 +296,7 @@ public class SkillEditorWindow {
 		CharacterSkill cs = null;
 		switch (skillActivation) {
 			case SkillActivation.PRECOMBAT:
-				break;
+				cs = Editor.CreateInstance<CombatBoost>(); break;
 			case SkillActivation.INITCOMBAT:
 				cs = Editor.CreateInstance<InitiateBoost>(); break;
 			case SkillActivation.STARTTURN:
@@ -283,8 +305,10 @@ public class SkillEditorWindow {
 				cs = Editor.CreateInstance<PermanentBoost>(); break;
 			case SkillActivation.POSTCOMBAT:
 				cs = Editor.CreateInstance<PostCombatDebuff>(); break;
-			case SkillActivation.EXP:
-				break;
+			case SkillActivation.REWARD:
+				cs = Editor.CreateInstance<ExpBoost>(); break;
+			case SkillActivation.COUNTER:
+				cs = Editor.CreateInstance<CounterBoost>(); break;
 		}
 		if (cs == null) {
 			Debug.LogError("Activation type is invalid");

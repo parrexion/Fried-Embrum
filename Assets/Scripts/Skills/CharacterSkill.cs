@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum SkillActivation { NONE = -1, PRECOMBAT, INITCOMBAT, STARTTURN, PASSIVE, POSTCOMBAT, EXP } 
+public enum SkillActivation { NONE = -1, PRECOMBAT, INITCOMBAT, STARTTURN, PASSIVE, POSTCOMBAT, REWARD, COUNTER }
+public enum EnemyCanAttack { BOTH, NO_ATTACK, ATTACK }
 
 public abstract class CharacterSkill : ScrObjLibraryEntry {
 
@@ -12,12 +13,19 @@ public abstract class CharacterSkill : ScrObjLibraryEntry {
 
     [Space(10)]
     
+	[Header("Values")]
+    public float chance;
+    public float percent;
+	public int value;
+    public Boost boost;
+
+	[Header("Requirements")]
 	public bool includeSelf;
     public int range;
     public int rangeMax;
-    public float percent;
+	public EnemyCanAttack enemyCanAttack;
     public WeaponType weaponReq;
-    public Boost boost;
+	public List<TerrainTile> terrainReq = new List<TerrainTile>();
 
 
 	public override void ResetValues() {
@@ -26,12 +34,17 @@ public abstract class CharacterSkill : ScrObjLibraryEntry {
 		description = "";
 		activationType = SkillActivation.NONE;
 
+		chance = 0;
+		percent = 0;
+		value = 0;
+		boost = new Boost();
+
 		includeSelf = false;
 		range = 0;
 		rangeMax = 0;
-		percent = 0;
+		enemyCanAttack = EnemyCanAttack.BOTH;
 		weaponReq = WeaponType.NONE;
-		boost = new Boost();
+		terrainReq = new List<TerrainTile>();
 	}
 
 	public override void CopyValues(ScrObjLibraryEntry other) {
@@ -42,13 +55,21 @@ public abstract class CharacterSkill : ScrObjLibraryEntry {
 		description = cs.description;
 		activationType = cs.activationType;
 
+		chance = cs.chance;
+		percent = cs.percent;
+		value = cs.value;
+		boost = new Boost();
+		boost.AddBoost(cs.boost);
+
 		includeSelf = cs.includeSelf;
 		range = cs.range;
 		rangeMax = cs.rangeMax;
-		percent = cs.percent;
+		enemyCanAttack = cs.enemyCanAttack;
 		weaponReq = cs.weaponReq;
-		boost = new Boost();
-		boost.AddBoost(cs.boost);
+		terrainReq = new List<TerrainTile>();
+		for (int i = 0; i < cs.terrainReq.Count; i++) {
+			terrainReq.Add(cs.terrainReq[i]);
+		}
 	}
 
 	public void ActivateSkill(SkillActivation act, TacticsMove user, TacticsMove enemy) {
