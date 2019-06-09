@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class BaseShop : InputReceiverDelegate {
 	
-	private enum State { MAIN, BUY, SELL, RESTOCK }
+	private enum State { MAIN, BUY, SELL }
 
 	[Header("Button menu")]
 	public MyButtonList buttons;
@@ -18,7 +18,6 @@ public class BaseShop : InputReceiverDelegate {
 
     [Header("Handlers")]
     public ShopBuyController shopController;
-    public RestockController restockController;
 
 	[Header("Data")]
 	public ItemListVariable shopList;
@@ -36,7 +35,6 @@ public class BaseShop : InputReceiverDelegate {
 		buttons.ResetButtons();
 		buttons.AddButton("BUY");
 		buttons.AddButton("SELL");
-		buttons.AddButton("RESTOCK");
 	}
 
     public override void OnMenuModeChanged() {
@@ -53,10 +51,6 @@ public class BaseShop : InputReceiverDelegate {
             shopController.MoveVertical(-1);
 			menuMoveEvent.Invoke();
         }
-        else if (currentMenu == State.RESTOCK) {
-            restockController.MoveSelection(-1);
-			menuMoveEvent.Invoke();
-        }
     }
 
     public override void OnDownArrow() {
@@ -66,10 +60,6 @@ public class BaseShop : InputReceiverDelegate {
         }
         else if (currentMenu == State.BUY || currentMenu == State.SELL) {
             shopController.MoveVertical(1);
-			menuMoveEvent.Invoke();
-        }
-        else if (currentMenu == State.RESTOCK) {
-            restockController.MoveSelection(1);
 			menuMoveEvent.Invoke();
         }
     }
@@ -93,21 +83,9 @@ public class BaseShop : InputReceiverDelegate {
 				basicView.SetActive(false);
 				menuAcceptEvent.Invoke();
             }
-			else if (currentIndex == 2) {
-				currentMenu = State.RESTOCK;
-				menuTitle.text = "RESTOCK";
-				restockController.ShowRestock();
-				shopView.SetActive(false);
-				basicView.SetActive(false);
-				menuAcceptEvent.Invoke();
-			}
 		}
 		else if (currentMenu == State.BUY || currentMenu == State.SELL) {
 			shopController.SelectItem();
-			menuAcceptEvent.Invoke();
-		}
-		else if (currentMenu == State.RESTOCK) {
-			restockController.SelectItem();
 			menuAcceptEvent.Invoke();
 		}
 	}
@@ -125,15 +103,6 @@ public class BaseShop : InputReceiverDelegate {
 				menuBackEvent.Invoke();
             }
         }
-		else if (currentMenu == State.RESTOCK) {
-			if (restockController.DeselectItem()) {
-				currentMenu = State.MAIN;
-				basicView.SetActive(true);
-				SetupButtons();
-				buttons.ForcePosition(2);
-				menuBackEvent.Invoke();
-			}
-		}
     }
 
     public override void OnLeftArrow() {
@@ -141,10 +110,6 @@ public class BaseShop : InputReceiverDelegate {
             shopController.MoveHorizontal(-1);
 			menuMoveEvent.Invoke();
         }
-		else if (currentMenu == State.RESTOCK) {
-			restockController.MoveSide(-1);
-			menuMoveEvent.Invoke();
-		}
     }
 
     public override void OnRightArrow() {
@@ -152,10 +117,6 @@ public class BaseShop : InputReceiverDelegate {
             shopController.MoveHorizontal(1);
 			menuMoveEvent.Invoke();
         }
-		else if (currentMenu == State.RESTOCK) {
-			restockController.MoveSide(1);
-			menuMoveEvent.Invoke();
-		}
     }
 
 

@@ -3,29 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RestockController : MonoBehaviour {
-    enum MenuState { CHARACTER, MENU, RECHARGE, TAKE, STORE }
+public class BaseEquipment : InputReceiverDelegate {
+	enum MenuState { MENU, CHARACTER, RECHARGE, STORE, TAKE }
 	private MenuState currentMode;
 	public PlayerData playerData;
 	public IntVariable totalMoney;
 
 	[Header("Views")]
+	public GameObject emptyView;
 	public GameObject charListView;
 	public GameObject convoyView;
 	public GameObject restockView;
 
 	[Header("Character List")]
-    public Transform listParentCharacter;
+	public Transform listParentCharacter;
 	public Transform characterPrefab;
 	public int characterListSize;
 	private EntryList<RestockListEntry> characters;
 
 	[Header("Stock List")]
-    public StorageList convoy;
+	public StorageList convoy;
 
 	[Header("Restock List")]
-	public Text buttonTitle;
-    public Transform listParentRestock;
+	public MyButtonList menuButtons;
+	public Transform listParentRestock;
 	public Transform restockPrefab;
 	public int itemListSize;
 	private EntryList<ItemListEntry> itemList;
@@ -52,6 +53,7 @@ public class RestockController : MonoBehaviour {
 
 
 	private void Start() {
+		emptyView.SetActive(true);
 		restockView.SetActive(false);
 		charListView.SetActive(false);
 		convoyView.SetActive(false);
@@ -59,6 +61,11 @@ public class RestockController : MonoBehaviour {
 		characters = new EntryList<RestockListEntry>(characterListSize);
 		itemList = new EntryList<ItemListEntry>(itemListSize);
 		convoy.Setup();
+
+		menuButtons.ResetButtons();
+		menuButtons.AddButton("RESTOCK");
+		menuButtons.AddButton("STORE");
+		menuButtons.AddButton("TAKE");
 	}
 
 	public void ShowRestock() {
@@ -67,31 +74,31 @@ public class RestockController : MonoBehaviour {
 		MoveSelection(0);
 	}
 
-    private void GenerateCharacterList() {
+	private void GenerateCharacterList() {
 		TotalMoneyText.text = "Money:  " + totalMoney.value;
 
-        characters.ResetList();
+		characters.ResetList();
 
-        for (int i = 0; i < playerData.stats.Count; i++) {
+		for (int i = 0; i < playerData.stats.Count; i++) {
 			Transform t = Instantiate(characterPrefab, listParentCharacter);
 			RestockListEntry entry = characters.CreateEntry(t);
 			entry.FillData(playerData.stats[i], playerData.inventory[i]);
-        }
-        characterPrefab.gameObject.SetActive(false);
-    }
+		}
+		characterPrefab.gameObject.SetActive(false);
+	}
 
-    private void UpdateCharacterList() {
-        for (int i = 0; i < playerData.stats.Count; i++) {
+	private void UpdateCharacterList() {
+		for (int i = 0; i < playerData.stats.Count; i++) {
 			characters.GetEntry(i).UpdateRestock();
-        }
-    }
+		}
+	}
 
-    private void GenerateInventoryList() {
+	private void GenerateInventoryList() {
 		TotalMoneyText.text = "Money:  " + totalMoney.value;
 
-        itemList.ResetList();
+		itemList.ResetList();
 
-        for (int i = 0; i < InventoryContainer.INVENTORY_SIZE; i++) {
+		for (int i = 0; i < InventoryContainer.INVENTORY_SIZE; i++) {
 			InventoryTuple tuple = characters.GetEntry().invCon.GetTuple(i);
 			if (!tuple.item) {
 				if (currentMode == MenuState.STORE) {
@@ -111,10 +118,10 @@ public class RestockController : MonoBehaviour {
 				chargeStr += " / " + tuple.item.maxCharge;
 			string costStr = (currentMode == MenuState.RECHARGE) ? Mathf.CeilToInt(cost * charges).ToString() : "";
 			entry.FillDataSimple(i, tuple.item, chargeStr, costStr);
-        }
-        restockPrefab.gameObject.SetActive(false);
+		}
+		restockPrefab.gameObject.SetActive(false);
 		ShowItemInfo();
-    }
+	}
 
 	private void UpdateInventoryList() {
 		for (int i = 0; i < InventoryContainer.INVENTORY_SIZE; i++) {
@@ -135,17 +142,17 @@ public class RestockController : MonoBehaviour {
 			string chargeStr = tuple.charge + " / " + tuple.item.maxCharge;
 			string costStr = (currentMode == MenuState.RECHARGE) ? Mathf.CeilToInt(cost * charges).ToString() : "";
 			entry.FillDataSimple(i, tuple.item, chargeStr, costStr);
-        }
+		}
 		itemList.Move(0);
 	}
 
 	public void MoveSelection(int dir) {
-		if (currentMode == MenuState.CHARACTER) {
+		if (currentMode == MenuState.MENU) {
+			menuButtons.Move(dir);
+		}
+		else if (currentMode == MenuState.CHARACTER) {
 			characters.Move(dir);
-            ShowCharInfo();
-        }
-		else if (currentMode == MenuState.MENU) {
-			//restockMenuButtons.Move(dir);
+			ShowCharInfo();
 		}
 		else if (currentMode == MenuState.RECHARGE) {
 			itemList.Move(dir);
@@ -179,28 +186,29 @@ public class RestockController : MonoBehaviour {
 			}
 			promptMode = false;
 		}
-		else if (currentMode == MenuState.CHARACTER) {
-			currentMode = MenuState.MENU;
-			promptMode = true;
-			//restockPrompt.Show3Options("Select action", "Restock", "Take", "Store", "Cancel", true);
-		}
 		else if (currentMode == MenuState.MENU) {
-			//int buttonPos = restockMenuButtons.GetPosition();
-			//if (buttonPos == 0) {
-			//	currentMode = MenuState.RECHARGE;
-			//	GenerateInventoryList();
-			//	restockView.SetActive(true);
-			//}
-			//else if (buttonPos == 1) {
-			//	currentMode = MenuState.TAKE;
-			//	convoy.SetupStorage();
-			//	convoyView.SetActive(true);
-			//}
-			//else if (buttonPos == 2) {
-			//	currentMode = MenuState.STORE;
-			//	GenerateInventoryList();
-			//	restockView.SetActive(true);
-			//}
+			currentMode = MenuState.CHARACTER;
+			GenerateCharacterList();
+			emptyView.SetActive(false);
+			charListView.SetActive(true);
+		}
+		else if (currentMode == MenuState.CHARACTER) {
+			int buttonPos = menuButtons.GetPosition();
+			if (buttonPos == 0) {
+				currentMode = MenuState.RECHARGE;
+				GenerateInventoryList();
+				restockView.SetActive(true);
+			}
+			else if (buttonPos == 1) {
+				currentMode = MenuState.STORE;
+				GenerateInventoryList();
+				restockView.SetActive(true);
+			}
+			else if (buttonPos == 2) {
+				currentMode = MenuState.TAKE;
+				convoy.SetupStorage();
+				convoyView.SetActive(true);
+			}
 		}
 		else if (currentMode == MenuState.RECHARGE) {
 			promptMode = true;
@@ -227,23 +235,29 @@ public class RestockController : MonoBehaviour {
 			return false;
 		}
 		else if (currentMode == MenuState.MENU) {
-			currentMode =  MenuState.CHARACTER;
+			MenuChangeDelay(MenuMode.BASE_MAIN);
+			return true;
+		}
+		else if (currentMode == MenuState.CHARACTER) {
+			currentMode = MenuState.MENU;
+			emptyView.SetActive(true);
+			charListView.SetActive(false);
 			return false;
 		}
 		else if (currentMode == MenuState.RECHARGE) {
-			currentMode = MenuState.MENU;
+			currentMode = MenuState.CHARACTER;
 			UpdateCharacterList();
 			restockView.SetActive(false);
 			return false;
 		}
 		else if (currentMode == MenuState.TAKE) {
-			currentMode = MenuState.MENU;
+			currentMode = MenuState.CHARACTER;
 			convoyView.SetActive(false);
 			UpdateCharacterList();
 			return false;
 		}
 		else if (currentMode == MenuState.STORE) {
-			currentMode = MenuState.MENU;
+			currentMode = MenuState.CHARACTER;
 			UpdateCharacterList();
 			restockView.SetActive(false);
 			return false;
@@ -341,11 +355,44 @@ public class RestockController : MonoBehaviour {
 		itemName.text = item.entryName;
 		itemIcon.sprite = item.icon;
 
-		pwrText.text  = "Pwr:  " + item.power.ToString();
+		pwrText.text = "Pwr:  " + item.power.ToString();
 		rangeText.text = "Range:  " + item.range.ToString();
 		hitText.text = "Hit:  " + item.hitRate.ToString();
 		critText.text = "Crit:  " + item.critRate.ToString();
 		reqText.text = "Req:  " + item.skillReq.ToString();
 	}
 
+	public override void OnMenuModeChanged() {
+		UpdateState(MenuMode.BASE_EQUIP);
+	}
+
+	public override void OnUpArrow() {
+		MoveSelection(-1);
+	}
+
+	public override void OnDownArrow() {
+		MoveSelection(1);
+	}
+
+	public override void OnLeftArrow() {
+		MoveSide(-1);
+	}
+
+	public override void OnRightArrow() {
+		MoveSide(1);
+	}
+
+	public override void OnOkButton() {
+		SelectItem();
+	}
+
+	public override void OnBackButton() {
+		DeselectItem();
+	}
+
+	public override void OnLButton() { }
+	public override void OnRButton() { }
+	public override void OnXButton() { }
+	public override void OnYButton() { }
+	public override void OnStartButton() { }
 }

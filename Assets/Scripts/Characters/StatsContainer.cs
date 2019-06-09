@@ -21,6 +21,9 @@ public class StatsContainer {
 	public int spd;
 	public int skl;
 	public int def;
+	public int hitBoost;
+	public int critBoost;
+	public int avoidBoost;
 
 	//Base stats
 	public int eHp;
@@ -33,7 +36,7 @@ public class StatsContainer {
 	[Header("Boost")]
 	public List<Boost> boosts = new List<Boost>();
 	public Boost supportBoost = new Boost();
-	private Boost currentBoost;
+	public Boost currentBoost;
 
 
 	public StatsContainer(CharacterSaveData saveData, CharData cStats, CharClass charClass) {
@@ -129,6 +132,9 @@ public class StatsContainer {
 		spd = currentBoost.spd + eSpd;
 		skl = currentBoost.skl + eSkl;
 		def = currentBoost.def + eDef;
+		hitBoost = currentBoost.hit;
+		critBoost = currentBoost.crit;
+		avoidBoost = currentBoost.avoid;
 	}
 
 	public void GainLevel() {

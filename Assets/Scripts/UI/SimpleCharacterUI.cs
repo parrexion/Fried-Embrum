@@ -24,6 +24,8 @@ public class SimpleCharacterUI : MonoBehaviour {
 
 	[Header("Icons")]
 	public Sprite noSkillImage;
+	public Sprite boostUp;
+	public Sprite boostDown;
 	public IconLibrary weaknessIcons;
 	public IconLibrary weaponTypeIcons;
 
@@ -57,10 +59,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 	public Text sklText;
 	public Text defText;
 	public Text movText;
-	public Image weighDownSpdIcon;
-	public Text weighDownSpdValue;
-	public Image weighDownSklIcon;
-	public Text weighDownSklValue;
+	public Transform[] boostItems;
 
 	[Header("Inventory Stats")]
 	public GameObject inventoryObject;
@@ -173,7 +172,8 @@ public class SimpleCharacterUI : MonoBehaviour {
 
 		ItemEntry weapon = tactics.GetEquippedWeapon(ItemCategory.WEAPON).item;
 		wpnIcon.sprite = (weapon != null) ? weapon.icon : null;
-		wpnName.text = (weapon != null) ? weapon.entryName : "";
+		wpnIcon.enabled = (weapon != null);
+		wpnName.text = (weapon != null) ? weapon.entryName : "---";
 
 		for (int i = 0; i < skillImages.Length; i++) {
 			if (i >= skills.skills.Length || skills.skills[i] == null) {
@@ -210,20 +210,31 @@ public class SimpleCharacterUI : MonoBehaviour {
 		inventoryObject.SetActive(false);
 		characterName.text = stats.charData.entryName;
 
-		//hpText.color = (stats.bHp != 0) ? Color.green : Color.black;
-		//dmgText.color = (stats.bDmg != 0) ? Color.green : Color.black;
-		//mndText.color = (stats.bMnd != 0) ? Color.green : Color.black;
-		//spdText.color = (stats.bSpd != 0) ? Color.green : Color.black;
-		//sklText.color = (stats.bSkl != 0) ? Color.green : Color.black;
-		//defText.color = (stats.bDef != 0) ? Color.green : Color.black;
+		boostItems[0].gameObject.SetActive(stats.currentBoost.hp != 0);
+		boostItems[1].gameObject.SetActive(stats.currentBoost.dmg != 0);
+		boostItems[2].gameObject.SetActive(stats.currentBoost.mnd != 0);
+		boostItems[3].gameObject.SetActive(stats.currentBoost.spd != 0);
+		boostItems[4].gameObject.SetActive(stats.currentBoost.skl != 0);
+		boostItems[5].gameObject.SetActive(stats.currentBoost.def != 0);
+		boostItems[6].gameObject.SetActive(stats.currentBoost.mov != 0);
+		boostItems[0].GetComponentInChildren<Image>().sprite = (stats.currentBoost.hp > 0) ? boostUp : (stats.currentBoost.hp < 0) ? boostDown : null;
+		boostItems[1].GetComponentInChildren<Image>().sprite = (stats.currentBoost.dmg > 0) ? boostUp : (stats.currentBoost.dmg < 0) ? boostDown : null;
+		boostItems[2].GetComponentInChildren<Image>().sprite = (stats.currentBoost.mnd > 0) ? boostUp : (stats.currentBoost.mnd < 0) ? boostDown : null;
+		boostItems[3].GetComponentInChildren<Image>().sprite = (stats.currentBoost.spd > 0) ? boostUp : (stats.currentBoost.spd < 0) ? boostDown : null;
+		boostItems[4].GetComponentInChildren<Image>().sprite = (stats.currentBoost.skl > 0) ? boostUp : (stats.currentBoost.skl < 0) ? boostDown : null;
+		boostItems[5].GetComponentInChildren<Image>().sprite = (stats.currentBoost.def > 0) ? boostUp : (stats.currentBoost.def < 0) ? boostDown : null;
+		boostItems[6].GetComponentInChildren<Image>().sprite = (stats.currentBoost.mov > 0) ? boostUp : (stats.currentBoost.mov < 0) ? boostDown : null;
+		boostItems[0].GetComponentInChildren<Text>().text = stats.currentBoost.hp.ToString();
+		boostItems[1].GetComponentInChildren<Text>().text = stats.currentBoost.dmg.ToString();
+		boostItems[2].GetComponentInChildren<Text>().text = stats.currentBoost.mnd.ToString();
+		boostItems[3].GetComponentInChildren<Text>().text = stats.currentBoost.spd.ToString();
+		boostItems[4].GetComponentInChildren<Text>().text = stats.currentBoost.skl.ToString();
+		boostItems[5].GetComponentInChildren<Text>().text = stats.currentBoost.def.ToString();
+		boostItems[6].GetComponentInChildren<Text>().text = stats.currentBoost.mov.ToString();
 
 		ItemEntry weapon = tactics.GetEquippedWeapon(ItemCategory.WEAPON).item;
 		spdText.text = stats.spd.ToString();
 		sklText.text = stats.skl.ToString();
-		weighDownSpdIcon.enabled = false;
-		weighDownSpdValue.text = "";
-		weighDownSklIcon.enabled = false;
-		weighDownSklValue.text = "";
 
 		levelText.text = stats.level.ToString();
 		expText.text = stats.currentExp.ToString();
@@ -270,7 +281,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 		// Set up inventory list
 		for (int i = 0; i < 5; i++) {
 			if (i >= InventoryContainer.INVENTORY_SIZE || inventory.GetTuple(i).item == null) {
-				inventoryFields[i].color = Color.black;
+				inventoryFields[i].color = Color.yellow;
 				inventoryFields[i].text = "---";
 				inventoryValues[i].text = " ";
 			}
@@ -278,7 +289,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 				InventoryTuple tuple = inventory.GetTuple(i);
 				WeaponRank skill = inventory.GetWpnSkill(tuple.item);
 				inventoryFields[i].color = (tuple.droppable) ? Color.green :
-							(tuple.item.CanUse(skill)) ? Color.black : Color.grey;
+							(tuple.item.CanUse(skill)) ? Color.yellow : Color.grey;
 				inventoryFields[i].text = tuple.item.entryName;
 				inventoryValues[i].text = (tuple.item.maxCharge >= 0) ? tuple.charge.ToString() : " ";
 				if (tuple.item.itemCategory == ItemCategory.CONSUME && tuple.item.maxCharge == 1)

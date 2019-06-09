@@ -205,7 +205,7 @@ public class MapCreator : MonoBehaviour {
 
 			StatsContainer stats = new StatsContainer(pos);
 			InventoryContainer inventory = new InventoryContainer(enemyClassWheel.GetWpnSkillFromLevel(pos.charData.startClassLevels), pos.inventory);
-			SkillsContainer skills = new SkillsContainer(new List<CharacterSkill>());
+			SkillsContainer skills = new SkillsContainer(enemyClassWheel.GetSkillsFromLevel(pos.charData.startClassLevels, pos.charData.startClass, pos.level));
 			List<FightQuote> quotes = new List<FightQuote>();
 			for (int q = 0; q < pos.quotes.Count; q++) {
 				FightQuote fight = new FightQuote();

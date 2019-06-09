@@ -14,6 +14,7 @@ public class Boost {
 	public int spd;
 	public int skl;
 	public int def;
+	public int mov;
 
 	public int hit;
 	public int crit;
@@ -34,6 +35,7 @@ public class Boost {
 			spd = -spd,
 			skl = -skl,
 			def = -def,
+			mov = -mov,
 
 			hit = -hit,
 			crit = -crit,
@@ -49,6 +51,7 @@ public class Boost {
 		spd += other.spd;
 		skl += other.skl;
 		def += other.def;
+		mov += other.mov;
 
 		hit += other.hit;
 		crit += other.crit;

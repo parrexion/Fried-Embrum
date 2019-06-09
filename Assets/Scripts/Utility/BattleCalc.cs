@@ -4,19 +4,26 @@ using UnityEngine;
 
 public static class BattleCalc {
 
+	const int FLAT_CRITRATE = 5;
 
 	// Flat calculations
 
 	public static int CalculateDamage(ItemEntry weaponAtk, StatsContainer attacker) {
 		if (weaponAtk == null)
 			return -1;
-		return weaponAtk.power + attacker.dmg;
+		if (weaponAtk.attackType == AttackType.PHYSICAL) {
+			return weaponAtk.power + attacker.dmg;
+		}
+		else if (weaponAtk.attackType == AttackType.MENTAL) {
+			return weaponAtk.power + attacker.mnd;
+		}
+		return -1;
 	}
 
-	public static int CalculateHeals(ItemEntry weapon, StatsContainer attacker) {
-		if (weapon == null)
+	public static int CalculateHeals(ItemEntry weaponAtk, StatsContainer attacker) {
+		if (weaponAtk == null)
 			return -1;
-		return weapon.power + attacker.dmg;
+		return weaponAtk.power + attacker.skl;
 	}
 
 	public static int GetAttackSpeed(ItemEntry weaponAtk, StatsContainer attacker) {
@@ -32,8 +39,7 @@ public static class BattleCalc {
 	public static int GetHitRate(ItemEntry weaponAtk, StatsContainer attacker) {
 		if (weaponAtk == null)
 			return -1;
-		int statsBoost = attacker.skl * 2;
-		return statsBoost + weaponAtk.hitRate;
+		return weaponAtk.hitRate + attacker.skl * 2 + attacker.hitBoost;
 	}
 
 	/// <summary>
@@ -45,17 +51,16 @@ public static class BattleCalc {
 	public static int GetCritRate(ItemEntry weaponAtk, StatsContainer attacker) {
 		if (weaponAtk == null)
 			return -1;
-		int calcCrit = weaponAtk.critRate + (int)(attacker.skl * 0.5f);
-		return calcCrit;
+		return FLAT_CRITRATE + weaponAtk.critRate + attacker.critBoost;
 	}
-	
+
 	/// <summary>
 	/// Avoid rate for the character.
 	/// </summary>
 	/// <param name="defender"></param>
 	/// <returns></returns>
 	public static int GetAvoid(StatsContainer defender) {
-		return defender.spd * 2;
+		return defender.spd * 2 + defender.avoidBoost;
 	}
 
 	/// <summary>
@@ -64,15 +69,15 @@ public static class BattleCalc {
 	/// <param name="defender"></param>
 	/// <returns></returns>
 	public static int GetCritAvoid(ItemEntry weaponDef, StatsContainer defender) {
-		return defender.spd;
+		return 0;
 	}
 
 
 	// Against opponent calculations
 
 	public static int CalculateDamageBattle(ItemEntry weaponAtk, ItemEntry weaponDef, StatsContainer attacker, StatsContainer defender, TerrainTile terrain) {
-		int pwr = weaponAtk.power + attacker.dmg;
-		int def = defender.def + terrain.defense;
+		int pwr = (weaponAtk.attackType == AttackType.PHYSICAL) ? weaponAtk.power + attacker.dmg : weaponAtk.power + attacker.mnd;
+		int def = (weaponAtk.attackType == AttackType.PHYSICAL) ? defender.def + terrain.defense : defender.mnd + terrain.defense;
 		float weakness = GetWeaknessBonus(weaponAtk, defender);
 
 		int damage = Mathf.Max(0, Mathf.FloorToInt(pwr * weakness) - def);
@@ -80,7 +85,7 @@ public static class BattleCalc {
 	}
 
 	/// <summary>
-	/// Returns the hit rate for the character given the opponent's weapon.
+	/// Returns the hit rate for the character given the opponent's stats.
 	/// </summary>
 	/// <param name="weaponAtk"></param>
 	/// <param name="weaponDef"></param>
@@ -93,9 +98,16 @@ public static class BattleCalc {
 		return Mathf.Clamp(GetHitRate(weaponAtk, attacker) - avoid, 0, 100);
 	}
 
+	/// <summary>
+	/// Returns the crit rate for the character given the opponent's stats.
+	/// </summary>
+	/// <param name="weaponAtk"></param>
+	/// <param name="weaponDef"></param>
+	/// <param name="attacker"></param>
+	/// <param name="defender"></param>
+	/// <returns></returns>
 	public static int GetCritRateBattle(ItemEntry weaponAtk, ItemEntry weaponDef, StatsContainer attacker, StatsContainer defender) {
-		int calcCrit = weaponAtk.critRate + (int)(attacker.skl * 0.5f);
-		return Mathf.Clamp(calcCrit - GetCritAvoid(weaponDef, defender), 0, 100);
+		return Mathf.Clamp(GetCritRate(weaponAtk, attacker) - GetCritAvoid(weaponDef, defender), 0, 100);
 	}
 
 
@@ -127,7 +139,7 @@ public static class BattleCalc {
 	public static float GetWeaknessBonus(ItemEntry weaponAtk, StatsContainer defender) {
 		for (int i = 0; i < weaponAtk.advantageType.Count; i++) {
 			if (weaponAtk.advantageType[i] == defender.currentClass.classType)
-				return 2.5f;
+				return 2f;
 		}
 		return 1f;
 	}
@@ -139,14 +151,14 @@ public static class BattleCalc {
 		int ld = player.level - enemy.level;
 		int killExp = (isBoss) ? 50 : 20;
 		if (ld < 0) {
-			ld = Mathf.Min(0,ld+2);
+			ld = Mathf.Min(0, ld + 2);
 		}
 
 		int gainedExp = (int)((30 + ld) / 3.0f);
 		if (isKill) {
 			gainedExp += killExp + (ld * 3);
 		}
-		
+
 		return gainedExp;
 	}
 

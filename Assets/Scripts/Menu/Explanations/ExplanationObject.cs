@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class ExplanationObject : MonoBehaviour {
 
 	public Image highlight;
-	public ScrObjEntryReference inventorySlot;
+	public ScrObjEntryReference scrObject;
 	public string fallbackString;
 
 
@@ -20,10 +20,11 @@ public class ExplanationObject : MonoBehaviour {
 
 	public virtual string GetTooltip() {
 
-		if (inventorySlot != null) {
-			return (inventorySlot.value != null) ? ((ItemEntry)inventorySlot.value).description : "-EMPTY-";
+		if (scrObject != null) {
+			return (scrObject.value != null) ? ((ItemEntry)scrObject.value).description : "-EMPTY-";
 		}
 
 		return fallbackString;
 	}
 }
+

@@ -8,6 +8,7 @@ public class ExplanationController : InputReceiverDelegate {
     [Header("Character stats")]
     public TacticsMoveVariable selectedCharacter;
     public ScrObjEntryReference[] inventory;
+    public ScrObjEntryReference[] skills;
 
 	[Header("Pages")]
 	public IntVariable currentPage;
@@ -46,6 +47,11 @@ public class ExplanationController : InputReceiverDelegate {
         InventoryContainer inv = selectedCharacter.value.inventory;
         for (int i = 0; i < InventoryContainer.INVENTORY_SIZE; i++) {
             inventory[i].value = inv.GetTuple(i).item;
+        }
+
+        SkillsContainer skill = selectedCharacter.value.skills;
+        for (int i = 0; i < SkillsContainer.SKILL_SIZE; i++) {
+            skills[i].value = skill.skills[i];
         }
 
 		baseStats.UpdateSelection(page == StatsPage.BASIC);

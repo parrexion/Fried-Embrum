@@ -24,7 +24,6 @@ public class ClassWheel : ScriptableObject {
 			for (int level = 0; level < classLevels[i]; level++) {
 				for (int wpn = 0; wpn < classes[i].weaponSkills.Count; wpn++) {
 					ranks[(int)classes[i].weaponSkills[wpn]]++;
-					Debug.Log("Adding  " + classes[i].weaponSkills[wpn]);
 				}
 			}
 		}
@@ -38,6 +37,7 @@ public class ClassWheel : ScriptableObject {
 		for (int i = 0; i < classLevels.Length; i++) {
 			for (int level = 0; level < classLevels[i]; level++) {
 				skills.Add(classes[i].skills[level]);
+				Debug.Log("Added skill:  " + classes[i].skills[level].entryName + " for class " + ((PlayerClassName)i));
 				edit = true;
 			}
 		}

@@ -118,6 +118,7 @@ public class BattleContainer : InputReceiverDelegate {
 			// Add battle init boosts
 			attacker.ActivateSkills(SkillActivation.INITCOMBAT, defender);
 			attacker.ActivateSkills(SkillActivation.PRECOMBAT, defender);
+			defender.ActivateSkills(SkillActivation.COUNTER, attacker);
 			defender.ActivateSkills(SkillActivation.PRECOMBAT, attacker);
 			
 			_currentCharacter = attacker;

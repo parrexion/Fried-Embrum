@@ -18,6 +18,7 @@ public class MyButtonList : MonoBehaviour {
 	private int position;
 	private int top;
 	private int bot;
+	private bool show = true;
 
 
 	/// <summary>
@@ -32,6 +33,7 @@ public class MyButtonList : MonoBehaviour {
 		bot = 0;
 		top = 0;
 		position = 0;
+		show = true;
 		UpdateButtons();
 	}
 
@@ -94,13 +96,18 @@ public class MyButtonList : MonoBehaviour {
 		return position;
 	}
 
+	public void ShowButtons(bool state) {
+		show = state;
+		UpdateButtons();
+	}
+
 	/// <summary>
 	/// Updates the highlighs and focus of the buttons.
 	/// </summary>
 	private void UpdateButtons() {
 		for(int i = 0; i < size; i++) {
-			buttons[i].SetSelected(bot + i == (position));
-			buttons[i].gameObject.SetActive(bot + i < top);
+			buttons[i].SetSelected(bot + i == position);
+			buttons[i].gameObject.SetActive(show && (bot + i < top));
 			if (bot + i < top) {
 				buttons[i].buttonText.text = buttonNames[bot + i];
 				if (buttons[i].buttonIcon != null)

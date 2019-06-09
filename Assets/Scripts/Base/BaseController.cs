@@ -47,6 +47,7 @@ public class BaseController : InputReceiverDelegate {
 		menuButtons.AddButton("MISSIONS");
 		menuButtons.AddButton("TRAINING AREA");
 		menuButtons.AddButton("ARMORY");
+		menuButtons.AddButton("EQUIPMENT");
 		menuButtons.AddButton("RESEARCH LAB");
 		menuButtons.AddButton("HOUSING");
 	}

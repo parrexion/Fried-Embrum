@@ -36,7 +36,7 @@ public class StorageList : MonoBehaviour {
 		//categories.AddButton(ItemType.BOW.ToString());
 		//categories.AddButton(ItemType.HEAL.ToString());
 		//categories.AddButton(ItemType.CHEAL.ToString());
-		for (int i = 1; i < weaponIcons.icons.Length; i++) {
+		for (int i = 0; i < weaponIcons.icons.Length -1; i++) {
 			categories.AddButton(weaponIcons.icons[i]);
 		}
         categories.ForcePosition(0);
