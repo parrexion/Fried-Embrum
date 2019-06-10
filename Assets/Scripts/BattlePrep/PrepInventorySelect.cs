@@ -243,12 +243,11 @@ public class PrepInventorySelect : MonoBehaviour {
 			return;
 
 		InventoryContainer invCon = charList.GetEntry().invCon;
-		if (!invCon.HasRoom()) {
+		if (!invCon.AddItem(playerData.items[item.index])) {
 			prompt.ShowPopup("Inventory is full!");
 			currentMode = State.MENU;
 			return;
 		}
-		invCon.AddItem(playerData.items[item.index]);
 		convoy.RemoveEntry();
 		playerData.items.RemoveAt(item.index);
 

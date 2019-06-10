@@ -8,6 +8,8 @@ public class BaseEquipment : InputReceiverDelegate {
 	private MenuState currentMode;
 	public PlayerData playerData;
 	public IntVariable totalMoney;
+	public MyButtonList menuButtons;
+	public Text buttonTitle;
 
 	[Header("Views")]
 	public GameObject emptyView;
@@ -25,7 +27,6 @@ public class BaseEquipment : InputReceiverDelegate {
 	public StorageList convoy;
 
 	[Header("Restock List")]
-	public MyButtonList menuButtons;
 	public Transform listParentRestock;
 	public Transform restockPrefab;
 	public int itemListSize;
@@ -39,6 +40,7 @@ public class BaseEquipment : InputReceiverDelegate {
 	[Header("Information box")]
 	public Text TotalMoneyText;
 	public Text itemName;
+	public Text itemType;
 	public Image itemIcon;
 
 	public Text pwrText;
@@ -53,6 +55,7 @@ public class BaseEquipment : InputReceiverDelegate {
 
 
 	private void Start() {
+		currentMode = MenuState.MENU;
 		emptyView.SetActive(true);
 		restockView.SetActive(false);
 		charListView.SetActive(false);
@@ -62,16 +65,11 @@ public class BaseEquipment : InputReceiverDelegate {
 		itemList = new EntryList<ItemListEntry>(itemListSize);
 		convoy.Setup();
 
+		buttonTitle.text = "EQUIPMENT";
 		menuButtons.ResetButtons();
 		menuButtons.AddButton("RESTOCK");
 		menuButtons.AddButton("STORE");
 		menuButtons.AddButton("TAKE");
-	}
-
-	public void ShowRestock() {
-		charListView.SetActive(true);
-		GenerateCharacterList();
-		MoveSelection(0);
 	}
 
 	private void GenerateCharacterList() {
@@ -95,7 +93,8 @@ public class BaseEquipment : InputReceiverDelegate {
 
 	private void GenerateInventoryList() {
 		TotalMoneyText.text = "Money:  " + totalMoney.value;
-
+		
+		characters.GetEntry().invCon.CleanupInventory();
 		itemList.ResetList();
 
 		for (int i = 0; i < InventoryContainer.INVENTORY_SIZE; i++) {
@@ -189,6 +188,8 @@ public class BaseEquipment : InputReceiverDelegate {
 		else if (currentMode == MenuState.MENU) {
 			currentMode = MenuState.CHARACTER;
 			GenerateCharacterList();
+			characters.ForcePosition(0);
+			ShowCharInfo();
 			emptyView.SetActive(false);
 			charListView.SetActive(true);
 		}
@@ -297,12 +298,11 @@ public class BaseEquipment : InputReceiverDelegate {
 			return;
 
 		InventoryContainer invCon = characters.GetEntry().invCon;
-		if (!invCon.HasRoom()) {
+		if (!invCon.AddItem(playerData.items[item.index])) {
 			restockPrompt.ShowPopup("Inventory is full!");
 			promptMode = true;
 			return;
 		}
-		invCon.AddItem(playerData.items[item.index]);
 		convoy.RemoveEntry();
 		playerData.items.RemoveAt(item.index);
 
@@ -310,20 +310,18 @@ public class BaseEquipment : InputReceiverDelegate {
 	}
 
 	private void StoreItem() {
-		Debug.Log("Store item");
 		if (!itemList.GetEntry().item)
 			return;
 
-		InventoryTuple tuple = characters.GetEntry().invCon.GetTuple(itemList.GetPosition());
+		Debug.Log("Store item");
+		int index = itemList.GetPosition();
+		InventoryTuple tuple = characters.GetEntry().invCon.GetTuple(index);
 		InventoryItem item = new InventoryItem(tuple);
 		playerData.items.Add(item);
 		tuple.item = null;
-		characters.GetEntry().invCon.CleanupInventory();
-
-		itemList.RemoveEntry();
-		Transform t2 = Instantiate(restockPrefab, listParentRestock);
-		ItemListEntry entry2 = itemList.CreateEntry(t2);
-		entry2.FillDataEmpty(0);
+		
+		GenerateInventoryList();
+		itemList.ForcePosition(index);
 		ShowItemInfo();
 	}
 
@@ -342,6 +340,7 @@ public class BaseEquipment : InputReceiverDelegate {
 		ItemEntry item = itemList.GetEntry().item;
 		if (!entry || !item) {
 			itemName.text = "";
+			itemType.text = "";
 			itemIcon.sprite = null;
 
 			pwrText.text = "Pwr:  ";
@@ -353,6 +352,7 @@ public class BaseEquipment : InputReceiverDelegate {
 		}
 
 		itemName.text = item.entryName;
+		itemType.text = InventoryContainer.GetWeaponTypeName(item.weaponType);
 		itemIcon.sprite = item.icon;
 
 		pwrText.text = "Pwr:  " + item.power.ToString();

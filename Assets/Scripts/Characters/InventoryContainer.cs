@@ -65,14 +65,6 @@ public class InventoryContainer {
 		}
 	}
 
-	public bool HasRoom() {
-		for (int i = 0; i < INVENTORY_SIZE; i++) {
-			if (!inventory[i].item)
-				return true;
-		}
-		return false;
-	}
-
 	/// <summary>
 	/// Returns the current weapon skill level for the weapon.
 	/// </summary>
@@ -337,7 +329,15 @@ public class InventoryContainer {
 	/// <param name="pickup"></param>
 	/// <returns></returns>
 	public bool AddItem(InventoryTuple pickup) {
-		for (int i = 0; i < inventory.Count; i++) {
+		if (inventory[0].item == null) {
+			WeaponRank rank = GetWpnSkill(pickup.item);
+			if (rank != WeaponRank.NONE && rank >= pickup.item.skillReq) {
+				inventory[0] = pickup;
+				Debug.Log("Can equip  " + rank);
+				return true;
+			}
+		}
+		for (int i = 1; i < inventory.Count; i++) {
 			if (inventory[i].item == null) {
 				inventory[i] = pickup;
 				pickup.index = i;
@@ -346,5 +346,18 @@ public class InventoryContainer {
 			}
 		}
 		return false;
+	}
+
+
+
+	public static string GetWeaponTypeName(WeaponType type) {
+		switch (type) {
+			case WeaponType.C_HEAL:
+				return "Consumable";
+			case WeaponType.C_BOOST:
+				return "Statbooster";
+			default:
+				return type.ToString();
+		}
 	}
 }

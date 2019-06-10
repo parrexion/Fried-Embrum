@@ -16,15 +16,15 @@ public class StorageList : MonoBehaviour {
 	public Text costHeader;
 
 	[Header("Stock List")]
-    public Transform entryListParent;
+	public Transform entryListParent;
 	public Transform entryPrefab;
 	public int visibleSize;
-    public MyButtonList categories;
+	public MyButtonList categories;
 	private EntryList<ItemListEntry> entryList;
 	public bool buyMode;
 
 
-    public void Setup() {
+	public void Setup() {
 		entryList = new EntryList<ItemListEntry>(visibleSize);
 
 		categories.ResetButtons();
@@ -36,11 +36,20 @@ public class StorageList : MonoBehaviour {
 		//categories.AddButton(ItemType.BOW.ToString());
 		//categories.AddButton(ItemType.HEAL.ToString());
 		//categories.AddButton(ItemType.CHEAL.ToString());
-		for (int i = 0; i < weaponIcons.icons.Length -1; i++) {
-			categories.AddButton(weaponIcons.icons[i]);
-		}
-        categories.ForcePosition(0);
-    }
+		//for (int i = 0; i < weaponIcons.icons.Length -1; i++) {
+		//	categories.AddButton(weaponIcons.icons[i]);
+		//}
+
+		categories.AddButton(weaponIcons.icons[(int)WeaponType.RIFLE], (int)WeaponType.RIFLE);
+		categories.AddButton(weaponIcons.icons[(int)WeaponType.SHOTGUN], (int)WeaponType.SHOTGUN);
+		categories.AddButton(weaponIcons.icons[(int)WeaponType.ROCKET], (int)WeaponType.ROCKET);
+		categories.AddButton(weaponIcons.icons[(int)WeaponType.PISTOL], (int)WeaponType.PISTOL);
+		categories.AddButton(weaponIcons.icons[(int)WeaponType.MEDKIT], (int)WeaponType.MEDKIT);
+		categories.AddButton(weaponIcons.icons[(int)WeaponType.PSI_BLADE], (int)WeaponType.PSI_BLADE);
+		categories.AddButton(weaponIcons.icons[(int)WeaponType.PSI_BLAST], (int)WeaponType.PSI_BLAST);
+		categories.AddButton(weaponIcons.icons[(int)WeaponType.C_HEAL], (int)WeaponType.C_HEAL);
+		categories.ForcePosition(0);
+	}
 
 	public void SetupBuy(ItemListVariable currentShopList) {
 		shopList = currentShopList;
@@ -61,37 +70,37 @@ public class StorageList : MonoBehaviour {
 		GenerateStorageList();
 	}
 
-    private void GenerateShopList() {
-        entryList.ResetList();
-        int listSize = (buyMode) ? shopList.items.Count : playerData.items.Count;
-        for (int i = 0; i < listSize; i++) {
+	private void GenerateShopList() {
+		entryList.ResetList();
+		int listSize = (buyMode) ? shopList.items.Count : playerData.items.Count;
+		for (int i = 0; i < listSize; i++) {
 			ItemEntry item = (buyMode) ? shopList.items[i] : playerData.items[i].item;
 
 			if (buyMode && item.researchNeeded && !playerData.upgrader.IsResearched(item.uuid))
 				continue;
 
 			int charges = (buyMode) ? shopList.items[i].maxCharge : playerData.items[i].charges;
-            Transform t = Instantiate(entryPrefab, entryListParent);
+			Transform t = Instantiate(entryPrefab, entryListParent);
 			ItemListEntry entry = entryList.CreateEntry(t);
 			entry.FillData(i, item, charges.ToString(), totalMoney.value, buyMode, sellRatio.value);
-        }
-        entryPrefab.gameObject.SetActive(false);
+		}
+		entryPrefab.gameObject.SetActive(false);
 		ForceCategory(0);
-    }
+	}
 
-    private void GenerateStorageList() {
-        entryList.ResetList();
-        int listSize = playerData.items.Count;
-        for (int i = 0; i < listSize; i++) {
+	private void GenerateStorageList() {
+		entryList.ResetList();
+		int listSize = playerData.items.Count;
+		for (int i = 0; i < listSize; i++) {
 			ItemEntry item = playerData.items[i].item;
 			int charges = playerData.items[i].charges;
-            Transform t = Instantiate(entryPrefab, entryListParent);
+			Transform t = Instantiate(entryPrefab, entryListParent);
 			ItemListEntry entry = entryList.CreateEntry(t);
 			entry.FillDataSimple(i, item, charges.ToString(), "");
-        }
-        entryPrefab.gameObject.SetActive(false);
+		}
+		entryPrefab.gameObject.SetActive(false);
 		ForceCategory(0);
-    }
+	}
 
 	public void Move(int dir) {
 		entryList.Move(dir);
@@ -102,15 +111,15 @@ public class StorageList : MonoBehaviour {
 		UpdateFilter();
 	}
 
-    public void ChangeCategory(int dir) {
-        categories.Move(dir);
+	public void ChangeCategory(int dir) {
+		categories.Move(dir);
 		UpdateFilter();
-    }
+	}
 
 	private void UpdateFilter() {
-		WeaponType currentCategory = (WeaponType)(categories.GetPosition()+1);
-		if (currentCategory == WeaponType.NONE) {
-			entryList.FilterShow(x => { return x.item.weaponType == WeaponType.C_HEAL || x.item.weaponType == WeaponType.C_BOOST; });
+		WeaponType currentCategory = (WeaponType)categories.GetValue();
+		if (currentCategory == WeaponType.C_HEAL) {
+			entryList.FilterShow(x => { return x.item.itemCategory == ItemCategory.CONSUME; });
 		}
 		else {
 			entryList.FilterShow(x => { return x.item.weaponType == currentCategory; });
