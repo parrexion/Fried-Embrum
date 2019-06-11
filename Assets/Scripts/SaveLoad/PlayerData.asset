@@ -16,16 +16,19 @@ MonoBehaviour:
   - charData: {fileID: 11400000, guid: ebe64c7e451dc494fbc8211be6f10d6a, type: 2}
     currentClass: {fileID: 11400000, guid: 3fd336ac5635aad48bd90c4c01e9ff20, type: 2}
     classLevels: 0100000000000000000000000000000000000000
-    level: 1
-    currentExp: 0
+    level: 2
+    currentExp: 40
     hp: 20
-    dmg: 6
+    dmg: 7
     mnd: 4
     spd: 11
     skl: 9
     def: 3
+    hitBoost: 0
+    critBoost: 0
+    avoidBoost: 0
     eHp: 20
-    eDmg: 6
+    eDmg: 7
     eMnd: 4
     eSpd: 11
     eSkl: 9
@@ -39,6 +42,22 @@ MonoBehaviour:
       spd: 0
       skl: 0
       def: 0
+      mov: 0
+      hit: 0
+      crit: 0
+      avoid: 0
+    currentBoost:
+      boostType: 0
+      hp: 0
+      dmg: 0
+      mnd: 0
+      spd: 0
+      skl: 0
+      def: 0
+      mov: 0
+      hit: 0
+      crit: 0
+      avoid: 0
   - charData: {fileID: 11400000, guid: cf951a3da37e1794b9cd29749c715911, type: 2}
     currentClass: {fileID: 11400000, guid: c4bc7321941913a41ab6841c0ec39fe9, type: 2}
     classLevels: 0000000001000000000000000000000000000000
@@ -50,6 +69,9 @@ MonoBehaviour:
     spd: 4
     skl: 4
     def: 7
+    hitBoost: 0
+    critBoost: 0
+    avoidBoost: 0
     eHp: 28
     eDmg: 10
     eMnd: 0
@@ -65,6 +87,22 @@ MonoBehaviour:
       spd: 0
       skl: 0
       def: 0
+      mov: 0
+      hit: 0
+      crit: 0
+      avoid: 0
+    currentBoost:
+      boostType: 0
+      hp: 0
+      dmg: 0
+      mnd: 0
+      spd: 0
+      skl: 0
+      def: 0
+      mov: 0
+      hit: 0
+      crit: 0
+      avoid: 0
   - charData: {fileID: 11400000, guid: 0bf81bfd9c0d55f49a76297d05c3a788, type: 2}
     currentClass: {fileID: 11400000, guid: 96d9f2b22e374ce4788766719cafc24d, type: 2}
     classLevels: 0000000000000000010000000000000000000000
@@ -76,6 +114,9 @@ MonoBehaviour:
     spd: 6
     skl: 3
     def: 6
+    hitBoost: 0
+    critBoost: 0
+    avoidBoost: 0
     eHp: 27
     eDmg: 10
     eMnd: 1
@@ -91,6 +132,22 @@ MonoBehaviour:
       spd: 0
       skl: 0
       def: 0
+      mov: 0
+      hit: 0
+      crit: 0
+      avoid: 0
+    currentBoost:
+      boostType: 0
+      hp: 0
+      dmg: 0
+      mnd: 0
+      spd: 0
+      skl: 0
+      def: 0
+      mov: 0
+      hit: 0
+      crit: 0
+      avoid: 0
   inventory:
   - wpnSkills: 000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
     inventory:
@@ -160,19 +217,19 @@ MonoBehaviour:
       droppable: 0
   skills:
   - skills:
-    - {fileID: 11400000, guid: 83612997a50e9384b8a87cdbc2ee84b7, type: 2}
+    - {fileID: 11400000, guid: 9045d3489dfc5374cafcd63d9901e7a3, type: 2}
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
   - skills:
-    - {fileID: 11400000, guid: 05c57c2505c7e3e4794badc0646cc0d6, type: 2}
+    - {fileID: 11400000, guid: 1b2dce9bc97e72946b59daac17779a14, type: 2}
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
   - skills:
-    - {fileID: 11400000, guid: f5a20a39fea275b498cd47d2b4474445, type: 2}
+    - {fileID: 11400000, guid: 8357579715960ac46b1a2dc2c6313379, type: 2}
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}

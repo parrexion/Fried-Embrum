@@ -170,6 +170,7 @@ public class BattleContainer : InputReceiverDelegate {
 		}
 		else {
 			_currentCharacter = attacker;
+			showBattleAnim = useBattleAnimations.value;
 			actions.Clear();
 			actions.Add(new BattleAction(true, BattleAction.Type.HEAL, attacker, defender));
 		}
@@ -252,7 +253,7 @@ public class BattleContainer : InputReceiverDelegate {
 			if (act.type == BattleAction.Type.DAMAGE) {
 				int damage = act.AttemptAttack(useTrueHit.value);
 				if (damage != -1 && act.AttemptCrit()) {
-					damage *= 3;
+					damage = (int)(damage * BattleCalc.CRIT_MODIFIER);
 					isCrit = true;
 				}
 				act.defender.TakeDamage(damage, isCrit);

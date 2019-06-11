@@ -5,6 +5,7 @@ using UnityEngine;
 public static class BattleCalc {
 
 	const int FLAT_CRITRATE = 5;
+	public const float CRIT_MODIFIER = 2;
 
 	// Flat calculations
 

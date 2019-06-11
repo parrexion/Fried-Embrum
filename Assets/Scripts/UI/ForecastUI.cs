@@ -15,6 +15,7 @@ public class ForecastUI : MonoBehaviour {
 	public MapTileVariable defendCharacter;
 	public ActionModeVariable currentMode;
 	public IntVariable doublingSpeed;
+	public IntVariable battleWeaponIndex;
 
 	[Header("Arrows")]
 	public Sprite advArrow;
@@ -23,7 +24,9 @@ public class ForecastUI : MonoBehaviour {
 	[Header("Objects")]
 	public GameObject backgroundFight;
 	public GameObject backgroundHeal;
-	public GameObject backgroundInBattle;
+	public GameObject attackerView;
+	public GameObject defenderView;
+	public GameObject healerView;
 
 	[Header("Attacker Stats")]
 	public Image colorBackground;
@@ -59,11 +62,11 @@ public class ForecastUI : MonoBehaviour {
 	public Image hWpnIcon;
 	public Text hWpnName;
 	public Text hWpnCharge;
-	public Text hHealText;
+	public MyBar hHpBar;
 	public Image hPortrait2;
 	public Text hCharacterName2;
-
-	public IntVariable battleWeaponIndex;
+	public MyBar hHpBar2;
+	public Text hHealText;
 
 
 	public void UpdateUI(bool active) {
@@ -100,9 +103,6 @@ public class ForecastUI : MonoBehaviour {
 			act1.weaponAtk = attacker.inventory.GetTuple(battleWeaponIndex.value);
 
 			if (battleMode == BattleAction.Type.DAMAGE) {
-				if (inBattle)
-					backgroundInBattle.SetActive(true);
-
 				int distance = BattleMap.DistanceTo(attacker, target);
 				int atk = (act1.weaponAtk.item.InRange(distance)) ? act1.GetDamage() : -1;
 				int ret = -1;
@@ -130,10 +130,20 @@ public class ForecastUI : MonoBehaviour {
 			_defenderTactics = defender;
 			act1.weaponAtk = attacker.inventory.GetTuple(battleWeaponIndex.value);
 
-			if (battlemode == BattleAction.Type.DAMAGE) {
-				if (inBattle)
-					backgroundInBattle.SetActive(true);
+			if (inBattle) {
+				if (battlemode == BattleAction.Type.DAMAGE) {
+					attackerView.SetActive(true);
+					defenderView.SetActive(true);
+					healerView.SetActive(false);
+				}
+				else {
+					attackerView.SetActive(false);
+					defenderView.SetActive(false);
+					healerView.SetActive(true);
+				}
+			}
 
+			if (battlemode == BattleAction.Type.DAMAGE) {
 				BattleAction act2 = new BattleAction(false, BattleAction.Type.DAMAGE, defender, attacker);
 				act2.weaponDef = attacker.inventory.GetTuple(battleWeaponIndex.value);
 				int distance = BattleMap.DistanceTo(defender, walkTile.value);
@@ -199,8 +209,6 @@ public class ForecastUI : MonoBehaviour {
 	}
 
 	private void ShowHealForecast(TacticsMove healer, TacticsMove receiver, InventoryTuple staff) {
-		if (inBattle)
-			backgroundInBattle.SetActive(false);
 		StatsContainer stats = healer.stats;
 
 		colorBackground.color = new Color(0.8f, 0.8f, 0.8f);
@@ -212,11 +220,8 @@ public class ForecastUI : MonoBehaviour {
 		hCharacterName2.text = stats.charData.entryName;
 		hPortrait2.sprite = stats.charData.portrait;
 		if (inBattle) {
-			hpBar.SetAmount(healer.currentHealth, healer.stats.hp);
-			hpBar.SetAmount(receiver.currentHealth, receiver.stats.hp);
-
-			eWpnIcon.sprite = null;
-			eWpnName.text = "--";
+			hHpBar.SetAmount(healer.currentHealth, healer.stats.hp);
+			hHpBar2.SetAmount(receiver.currentHealth, receiver.stats.hp);
 		}
 
 		hWpnIcon.sprite = (staff.item != null) ? staff.item.icon : null;
