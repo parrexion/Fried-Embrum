@@ -12,6 +12,7 @@ public class ShopBuyController : MonoBehaviour {
 	[Header("Information box")]
 	public Text TotalMoneyText;
 	public Text itemName;
+	public Text itemType;
 	public Image itemIcon;
 
 	public Text pwrText;
@@ -19,7 +20,6 @@ public class ShopBuyController : MonoBehaviour {
 	public Text hitText;
 	public Text critText;
 	public Text reqText;
-	public Text weightText;
 
 	[Header("Buy/Sell items")]
 	public StorageList shopList;
@@ -105,7 +105,7 @@ public class ShopBuyController : MonoBehaviour {
 		ItemListEntry itemEntry = shopList.GetEntry();
 		if (!itemEntry || !itemEntry.item) {
 			itemName.text = "";
-			itemIcon.sprite = null;
+			itemType.text = "";
 			itemIcon.color = new Color(0,0,0,0);
 
 			pwrText.text = "Pwr:  ";
@@ -113,12 +113,12 @@ public class ShopBuyController : MonoBehaviour {
 			hitText.text = "Hit:  ";
 			critText.text = "Crit:  ";
 			reqText.text = "Req:  ";
-			weightText.text = "Weight:  ";
 			return;
 		}
 
 		ItemEntry item = itemEntry.item;
 		itemName.text = item.entryName;
+		itemType.text = InventoryContainer.GetWeaponTypeName(item.weaponType);
 		itemIcon.sprite = item.icon;
 		itemIcon.color = item.repColor;
 

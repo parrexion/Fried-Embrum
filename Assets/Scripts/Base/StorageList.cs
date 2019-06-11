@@ -124,10 +124,14 @@ public class StorageList : MonoBehaviour {
 		else {
 			entryList.FilterShow(x => { return x.item.weaponType == currentCategory; });
 		}
+		UpdateCost();
 		entryList.ForcePosition(0);
 	}
 
 	public void UpdateCost() {
+		if (!buyMode)
+			return;
+
 		for (int i = 0; i < entryList.Size; i++) {
 			ItemListEntry item = entryList.GetEntry(i);
 			item.SetAffordable(item.item.cost <= totalMoney.value);
