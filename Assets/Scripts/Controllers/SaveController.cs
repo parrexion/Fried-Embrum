@@ -42,7 +42,6 @@ public class SaveController : MonoBehaviour {
 	public IntVariable currentPlayTime;
 	public IntVariable currentMoney;
 	public IntVariable currentScrap;
-	public IntVariable currentBexp;
 
 	[Header("Libraries")]
 	public ScrObjLibraryVariable missionLibrary;
@@ -99,7 +98,6 @@ public class SaveController : MonoBehaviour {
 	public void ResetCurrentData() {
 		currentMoney.value = 0;
 		currentScrap.value = 0;
-		currentBexp.value = 0;
 		playerData.ResetData();
 	}
 
@@ -124,8 +122,7 @@ public class SaveController : MonoBehaviour {
 				totalDays = simpleTotalDays[saveIndex.value].value,
 				playTime = simplePlayTimes[saveIndex.value].value,
 				money = currentMoney.value,
-				scrap = currentScrap.value,
-				bexp = currentBexp.value
+				scrap = currentScrap.value
 			};
 			for (int i = 0; i < playerData.stats.Count; i++) {
 				if (playerData.stats[i].charData == null)
@@ -228,7 +225,6 @@ public class SaveController : MonoBehaviour {
 		SaveData loadedData = saveFileData.saveFiles[saveIndex.value];
 		currentMoney.value = loadedData.money;
 		currentScrap.value = loadedData.scrap;
-		currentBexp.value = loadedData.bexp;
 		
 		playerData.ResetData();
 		for (int i = 0; i < loadedData.characters.Count; i++) {
@@ -276,7 +272,6 @@ public class SaveData {
 	public int playTime;
 	public int money;
 	public int scrap;
-	public int bexp;
 	public List<CharacterSaveData> characters = new List<CharacterSaveData>();
 	public List<ItemSaveData> items = new List<ItemSaveData>();
 	public List<UpgradeSaveData> upgrade = new List<UpgradeSaveData>();

@@ -49,7 +49,7 @@ public class BaseController : InputReceiverDelegate {
 		menuButtons.AddButton("ARMORY");
 		menuButtons.AddButton("EQUIPMENT");
 		menuButtons.AddButton("RESEARCH LAB");
-		menuButtons.AddButton("HOUSING");
+		//menuButtons.AddButton("HOUSING");
 	}
 
 	public override void OnUpArrow() {

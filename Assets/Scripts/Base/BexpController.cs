@@ -22,8 +22,8 @@ public class BexpController : MonoBehaviour {
 	public Text spendExp;
 	public Text currentLevel;
 	public Text currentExp;
-	public IntVariable totalBonusExp;
-	private int awardExp;
+	public IntVariable totalScrap;
+	private int awardAmount;
 	private bool runningExp;
 
 	[Header("Exp animations")]
@@ -90,13 +90,13 @@ public class BexpController : MonoBehaviour {
 		}
 		else if (!awardMode) {
 			awardMode = true;
-			awardExp = 0;
+			awardAmount = 0;
 			SetupBexpAwarding();
 			SetupCharacterInfo();
 			awardView.SetActive(true);
 			listView.SetActive(false);
 		}
-		else if (awardExp != 0) {
+		else if (awardAmount != 0) {
 			StartCoroutine(AwardExp());
 		}
 	}
@@ -113,14 +113,15 @@ public class BexpController : MonoBehaviour {
 	}
 
 	private void SetupBexpAwarding() {
+		int convertedExp = 10 * awardAmount;
 		StatsContainer stats = playerData.stats[entryList.GetPosition()];
-		bonusExp.text = "Available EXP:  " + (totalBonusExp.value - awardExp);
-		bonusExp.color = (awardExp > 0) ? Color.green : Color.black;
-		spendExp.text = awardExp.ToString();
-		currentLevel.text = "Current level:  " + ((stats.currentExp + awardExp >= 100) ? stats.level + 1 : stats.level);
-		currentLevel.color = (stats.currentExp + awardExp >= 100) ? Color.green : Color.black;
-		currentExp.text = "Current EXP:   " + ((stats.currentExp + awardExp) % 100);
-		currentExp.color = (awardExp > 0) ? Color.green : Color.black;
+		bonusExp.text = "Available scrap:  " + (totalScrap.value - awardAmount);
+		bonusExp.color = (awardAmount > 0) ? Color.green : Color.black;
+		spendExp.text = convertedExp.ToString();
+		currentLevel.text = "Current level:  " + ((stats.currentExp + convertedExp >= 100) ? stats.level + 1 : stats.level);
+		currentLevel.color = (stats.currentExp + convertedExp >= 100) ? Color.green : Color.black;
+		currentExp.text = "Current EXP:   " + ((stats.currentExp + convertedExp) % 100);
+		currentExp.color = (awardAmount > 0) ? Color.green : Color.black;
 	}
 
 	private void SetupCharacterInfo() {
@@ -170,10 +171,8 @@ public class BexpController : MonoBehaviour {
 	public void UpdateAwardExp(int dir) {
 		if (!awardMode)
 			return;
-		
-		awardExp = OPMath.FullLoop(0, 101, awardExp + dir);
-		awardExp = Mathf.Min(awardExp, totalBonusExp.value);
-
+		int cap = (totalScrap.value > 0) ? Mathf.Min(11, totalScrap.value+1) : 1;
+		awardAmount = OPMath.FullLoop(0, cap, awardAmount + dir);
 		SetupBexpAwarding();
 	}
 
@@ -183,7 +182,7 @@ public class BexpController : MonoBehaviour {
 
 		runningExp = true;
 		lockControls.value = true;
-		totalBonusExp.value -= awardExp;
+		totalScrap.value -= awardAmount;
 		StatsContainer stats = playerData.stats[entryList.GetPosition()];
 
 		expMeter.gameObject.SetActive(true);
@@ -192,8 +191,11 @@ public class BexpController : MonoBehaviour {
 		yield return new WaitForSeconds(0.5f * slowGameSpeed.value / currentGameSpeed.value);
 		sfxQueue.Enqueue(levelupFill);
 		playSfxEvent.Invoke();
-		while (awardExp > 0) {
-			awardExp--;
+
+		int convertedExp = 10 * awardAmount;
+		awardAmount = 0;
+		while (convertedExp > 0) {
+			convertedExp--;
 			expMeter.currentExp++;
 			if (expMeter.currentExp == 100) {
 				expMeter.currentExp = 0;

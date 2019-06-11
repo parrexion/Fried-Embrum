@@ -28,8 +28,9 @@ public class BaseTrainingArea : InputReceiverDelegate {
 		bexpView.SetActive(false);
 		classView.SetActive(false);
 		buttons.ResetButtons();
-		buttons.AddButton("BATTLE EXP");
-		buttons.AddButton("CLASS CHANGE");
+		buttons.AddButton("BATTLE TRAINING");
+		buttons.AddButton("CLASS UPGRADE");
+		//buttons.AddButton("CLASS CHANGE");
 		currentMenu = State.MAIN;
 	}
 
