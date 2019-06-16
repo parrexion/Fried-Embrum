@@ -257,15 +257,16 @@ public class MainMenuController : InputReceiverDelegate {
 			ControlsClicked();
 			menuAcceptEvent.Invoke();
 		}
-		else if (currentState == State.CONTROLS) {
+	}
+	public override void OnXButton() {
+		if (currentState == State.CONTROLS) {
 			NewGameClicked();
 			menuAcceptEvent.Invoke();
 		}
 	}
 
-
+	
+	public override void OnYButton() { }
 	public override void OnLButton() { }
 	public override void OnRButton() { }
-	public override void OnXButton() { }
-	public override void OnYButton() { }
 }

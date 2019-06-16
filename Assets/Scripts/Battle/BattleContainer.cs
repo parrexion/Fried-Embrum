@@ -238,7 +238,7 @@ public class BattleContainer : InputReceiverDelegate {
 			enemyPos = startPos + (enemyPos - startPos).normalized;
 			forecastUI.UpdateUI(true);
 			
-			yield return new WaitForSeconds(1f * slowGameSpeed.value / currentGameSpeed.value);
+			yield return new WaitForSeconds(2f * slowGameSpeed.value / currentGameSpeed.value);
 			
 			//Move forward
 			float f = 0;
@@ -308,6 +308,7 @@ public class BattleContainer : InputReceiverDelegate {
 			
 			// Move back
 			// Debug.Log("Moving back");
+			yield return new WaitForSeconds(1f * slowGameSpeed.value / currentGameSpeed.value);
 			while(f > 0f) {
 				f -= Time.deltaTime * speed;
 				attackTransform.position = Vector3.Lerp(startPos, enemyPos, f);

@@ -165,7 +165,7 @@ public static class BattleCalc {
 
 	public static int GetExperienceSupport(ItemEntry weapon, StatsContainer player) {
 		int ld = Mathf.Max(0, (int)(player.level * 0.5f) - 3);
-		int baseExp = (weapon.weaponType == WeaponType.C_HEAL) ? 15 : 30;
+		int baseExp = (weapon.weaponType == WeaponType.MEDKIT) ? 15 : 30;
 		return baseExp - ld;
 	}
 }

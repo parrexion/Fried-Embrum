@@ -84,7 +84,9 @@ public class ForecastUI : MonoBehaviour {
 	public void UpdateHealthUI() {
 		if (hpBar != null) {
 			hpBar.SetAmount(_attackerTactics.currentHealth, _attackerTactics.stats.hp);
+			hHpBar.SetAmount(_attackerTactics.currentHealth, _attackerTactics.stats.hp);
 			eHpBar.SetAmount(_defenderTactics.currentHealth, _defenderTactics.stats.hp);
+			hHpBar2.SetAmount(_defenderTactics.currentHealth, _defenderTactics.stats.hp);
 		}
 		else {
 			hpText.text = _attackerTactics.currentHealth.ToString();
@@ -210,9 +212,9 @@ public class ForecastUI : MonoBehaviour {
 
 	private void ShowHealForecast(TacticsMove healer, TacticsMove receiver, InventoryTuple staff) {
 		StatsContainer stats = healer.stats;
-
-		colorBackground.color = new Color(0.8f, 0.8f, 0.8f);
-		eColorBackground.color = new Color(0.8f, 0.8f, 0.8f);
+		
+		colorBackground.color = (healer.faction == Faction.PLAYER) ? new Color(0.7f, 0.7f, 1f) : new Color(1f, 0.7f, 0.7f);
+		eColorBackground.color = (receiver.faction == Faction.PLAYER) ? new Color(0.7f, 0.7f, 1f) : new Color(1f, 0.7f, 0.7f);
 		hCharacterName.text = stats.charData.entryName;
 		hPortrait.sprite = stats.charData.portrait;
 

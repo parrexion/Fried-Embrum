@@ -96,57 +96,57 @@ public class InputDelegateController : MonoBehaviour {
 			return;
 
 		//Button holds
-		if (Input.GetKey(KeyCode.UpArrow) || Input.GetAxis("DpadVertical") == 1 || Input.GetAxis("LstickVertical") == 1) {
+		if (Input.GetKey(KeyCode.UpArrow) || Input.GetAxis("DpadVertical") > 0.8f || Input.GetAxis("LstickVertical") > 0.8f) {
 			holdUp++;
 		}
-		if (Input.GetKey(KeyCode.DownArrow) || Input.GetAxis("DpadVertical") == -1 || Input.GetAxis("LstickVertical") == -1) {
+		if (Input.GetKey(KeyCode.DownArrow) || Input.GetAxis("DpadVertical") < -0.8f || Input.GetAxis("LstickVertical") < -0.8f) {
 			holdDown++;
 		}
-		if (Input.GetKey(KeyCode.LeftArrow) || Input.GetAxis("DpadHorizontal") == -1 || Input.GetAxis("LstickHorizontal") == -1) {
+		if (Input.GetKey(KeyCode.LeftArrow) || Input.GetAxis("DpadHorizontal") < -0.8f || Input.GetAxis("LstickHorizontal") < -0.8f) {
 			holdLeft++;
 		}
-		if (Input.GetKey(KeyCode.RightArrow) || Input.GetAxis("DpadHorizontal") == 1 || Input.GetAxis("LstickHorizontal") == 1) {
+		if (Input.GetKey(KeyCode.RightArrow) || Input.GetAxis("DpadHorizontal") > 0.8f || Input.GetAxis("LstickHorizontal") > 0.8f) {
 			holdRight++;
 		}
 
 		//Button releases
-		if (Input.GetKeyUp(KeyCode.UpArrow) && Input.GetAxis("DpadVertical") == 0 && Input.GetAxis("LstickVertical") == 0) {
+		if (Input.GetKeyUp(KeyCode.UpArrow) || (Input.GetAxis("DpadVertical") < 0.3f && Input.GetAxis("LstickVertical") < 0.3f)) {
 			holdUp = 0;
 			axisUp = false;
 		}
-		if (Input.GetKeyUp(KeyCode.DownArrow) && Input.GetAxis("DpadVertical") == 0 && Input.GetAxis("LstickVertical") == 0) {
+		if (Input.GetKeyUp(KeyCode.DownArrow) || (Input.GetAxis("DpadVertical") > -0.3f && Input.GetAxis("LstickVertical") > -0.3f)) {
 			holdDown = 0;
 			axisDown = false;
 		}
-		if (Input.GetKeyUp(KeyCode.LeftArrow) && Input.GetAxis("DpadHorizontal") == 0 && Input.GetAxis("LstickHorizontal") == 0) {
+		if (Input.GetKeyUp(KeyCode.LeftArrow) || (Input.GetAxis("DpadHorizontal") > -0.3f && Input.GetAxis("LstickHorizontal") > -0.3f)) {
 			holdLeft = 0;
 			axisLeft = false;
 		}
-		if (Input.GetKeyUp(KeyCode.RightArrow) && Input.GetAxis("DpadHorizontal") == 0 && Input.GetAxis("LstickHorizontal") == 0) {
+		if (Input.GetKeyUp(KeyCode.RightArrow) || (Input.GetAxis("DpadHorizontal") < 0.3f && Input.GetAxis("LstickHorizontal") < 0.3f)) {
 			holdRight = 0;
 			axisRight = false;
 		}
 
 		// Arrow presses
-		if (Input.GetKeyDown(KeyCode.UpArrow) || holdUp > holdDelay || (!axisUp && (Input.GetAxis("DpadVertical") == 1 || Input.GetAxis("LstickVertical") == 1))) {
+		if (Input.GetKeyDown(KeyCode.UpArrow) || holdUp > holdDelay || (!axisUp && (Input.GetAxis("DpadVertical") > 0.8f || Input.GetAxis("LstickVertical") > 0.8f))) {
 			if(upArrowDelegate != null)
 				upArrowDelegate.Invoke();
 			holdUp -= scrollSpeed;
 			axisUp = true;
 		}
-		if (Input.GetKeyDown(KeyCode.DownArrow) || holdDown > holdDelay || (!axisDown && (Input.GetAxis("DpadVertical") == -1 || Input.GetAxis("LstickVertical") == -1))) {
+		if (Input.GetKeyDown(KeyCode.DownArrow) || holdDown > holdDelay || (!axisDown && (Input.GetAxis("DpadVertical") < -0.8f || Input.GetAxis("LstickVertical") < -0.8f))) {
 			if(downArrowDelegate != null)
 				downArrowDelegate.Invoke();
 			holdDown -= scrollSpeed;
 			axisDown = true;
 		}
-		if (Input.GetKeyDown(KeyCode.LeftArrow) || holdLeft > holdDelay || (!axisLeft && (Input.GetAxis("DpadHorizontal") == -1 || Input.GetAxis("LstickHorizontal") == -1))) {
+		if (Input.GetKeyDown(KeyCode.LeftArrow) || holdLeft > holdDelay || (!axisLeft && (Input.GetAxis("DpadHorizontal") < -0.8f || Input.GetAxis("LstickHorizontal") < -0.8f))) {
 			if(leftArrowDelegate != null)
 				leftArrowDelegate.Invoke();
 			holdLeft -= scrollSpeed;
 			axisLeft = true;
 		}
-		if (Input.GetKeyDown(KeyCode.RightArrow) || holdRight > holdDelay || (!axisRight && (Input.GetAxis("DpadHorizontal") == 1 || Input.GetAxis("LstickHorizontal") == 1))) {
+		if (Input.GetKeyDown(KeyCode.RightArrow) || holdRight > holdDelay || (!axisRight && (Input.GetAxis("DpadHorizontal") > 0.8f || Input.GetAxis("LstickHorizontal") > 0.8f))) {
 			if(rightArrowDelegate != null)
 				rightArrowDelegate.Invoke();
 			holdRight -= scrollSpeed;
