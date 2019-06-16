@@ -66,7 +66,7 @@ public class ShopBuyController : MonoBehaviour {
 
 		if (!promptMode) {
 			promptMode = true;
-			buyPrompt.ShowWindow((shopList.buyMode) ? "Buy item?" : "Sell item?", true);
+			buyPrompt.ShowYesNoPopup((shopList.buyMode) ? "Buy item?" : "Sell item?", true);
 		}
 		else {
 			if (buyPrompt.Click(true) == MyPrompt.Result.OK1) {

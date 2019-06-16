@@ -5,9 +5,12 @@ using UnityEngine.Events;
 
 public class SaveScreenController : InputReceiverDelegate {
 
+	public enum NextState { MAIN, BASE, LOADSCREEN }
+
 	public SaveFileController saveFileController;
-	public ScrObjEntryReference currentMap;
 	public ScrObjLibraryVariable chapterLibrary;
+	public IntVariable nextState;
+	public ScrObjEntryReference currentMap;
 	public StringVariable currentChapterId;
 	public IntVariable currentPlayDays;
 	public BoolVariable lockControls;
@@ -22,6 +25,11 @@ public class SaveScreenController : InputReceiverDelegate {
 	private void Start() {
 		MenuChangeDelay(MenuMode.SAVE);
 		stopMusicEvent.Invoke();
+		if (currentMap.value == null) {
+			currentChapterId.value = "";
+			return;
+		}
+
 		currentPlayDays.value += ((MapEntry)currentMap.value).mapDuration;
 		MapEntry nextEntry = ((MapEntry)currentMap.value).autoNextChapter;
 		if (nextEntry == null) {
@@ -37,17 +45,26 @@ public class SaveScreenController : InputReceiverDelegate {
 	}
 
 	public void NextLevel() {
-		MapEntry map = ((MapEntry)currentMap.value).autoNextChapter;
-		if (map == null) {
-			InputDelegateController.instance.TriggerSceneChange(MenuMode.NONE, "BaseScene");
-			return;
+		currentMap.value = ((MapEntry)currentMap.value)?.autoNextChapter;
+
+		if (currentMap.value == null) {
+			NextState next = ((NextState)nextState.value);
+			if (next == NextState.MAIN) {
+				InputDelegateController.instance.TriggerSceneChange(MenuMode.MAIN_MENU, "MainMenu");
+				return;
+			}
+			else if (next == NextState.BASE) {
+				InputDelegateController.instance.TriggerSceneChange(MenuMode.NONE, "BaseScene");
+				return;
+			}
 		}
-		currentChapterId.value = map.uuid;
+
+		currentChapterId.value = currentMap.value.uuid;
+
 		if (currentChapterId.value == SaveFileController.CLEAR_GAME_ID) {
 			InputDelegateController.instance.TriggerSceneChange(MenuMode.MAIN_MENU, "MainMenu");
 		}
 		else {
-			currentMap.value = map;
 			InputDelegateController.instance.TriggerSceneChange(MenuMode.NONE, "LoadingScreen");
 		}
 	}
@@ -106,7 +123,7 @@ public class SaveScreenController : InputReceiverDelegate {
 		}
 		else if (saveFileController.BackClicked()) {
 			isPrompt = true;
-			savePrompt.ShowWindow("Continue without saving?", false);
+			savePrompt.ShowYesNoPopup("Continue without saving?", false);
 			menuBackEvent.Invoke();
 		}
 	}

@@ -219,7 +219,7 @@ public class BaseEquipment : InputReceiverDelegate {
 			if (charges == 0)
 				return;
 
-			restockPrompt.ShowWindow("Restock item?\n" + charges + " / " + Mathf.CeilToInt(cost * charges) + " cost", true);
+			restockPrompt.ShowYesNoPopup("Restock item?\n" + charges + " / " + Mathf.CeilToInt(cost * charges) + " cost", true);
 		}
 		else if (currentMode == MenuState.TAKE) {
 			TakeItem();
@@ -299,7 +299,7 @@ public class BaseEquipment : InputReceiverDelegate {
 
 		InventoryContainer invCon = characters.GetEntry().invCon;
 		if (!invCon.AddItem(playerData.items[item.index])) {
-			restockPrompt.ShowPopup("Inventory is full!");
+			restockPrompt.ShowOkPopup("Inventory is full!");
 			promptMode = true;
 			return;
 		}

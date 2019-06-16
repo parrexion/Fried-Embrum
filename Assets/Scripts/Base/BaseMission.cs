@@ -67,7 +67,7 @@ public class BaseMission : InputReceiverDelegate {
 		if (!promptMode) {
 			promptMode = true;
 			ChangePrompt(0);
-			startPrompt.ShowWindow("Start mission?", false);
+			startPrompt.ShowYesNoPopup("Start mission?", false);
 			menuAcceptEvent.Invoke();
 		}
 		else if (startPrompt.Click(true) == MyPrompt.Result.OK1) {

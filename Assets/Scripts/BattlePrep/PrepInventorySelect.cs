@@ -244,7 +244,7 @@ public class PrepInventorySelect : MonoBehaviour {
 
 		InventoryContainer invCon = charList.GetEntry().invCon;
 		if (!invCon.AddItem(playerData.items[item.index])) {
-			prompt.ShowPopup("Inventory is full!");
+			prompt.ShowOkPopup("Inventory is full!");
 			currentMode = State.MENU;
 			return;
 		}

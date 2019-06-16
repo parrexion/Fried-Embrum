@@ -69,10 +69,10 @@ public class SaveFileController : MonoBehaviour {
 
 			isPopup = true;
 			if (usedForLoad) {
-				filePrompt.ShowWindow("Load selected file?", false);
+				filePrompt.ShowYesNoPopup("Load selected file?", false);
 			}
 			else {
-				filePrompt.ShowWindow("Save to selected file?", false);
+				filePrompt.ShowYesNoPopup("Save to selected file?", false);
 			}
 			return false;
 		}

@@ -32,10 +32,12 @@ public class TurnController : MonoBehaviour {
 	public TurnState currentState;
 
 	[Header("Rewards")]
-	public PopupController popup;
+	public MySpinner spinner;
 	public IntVariable totalMoney;
 	public IntVariable totalScrap;
 	public PlayerData playerData;
+	public IntVariable nextLoadState;
+	public SfxEntry droppedItemFanfare;
 
 	[Header("UI")]
 	public GameObject notificationObject;
@@ -358,20 +360,21 @@ public class TurnController : MonoBehaviour {
 		MapEntry map = (MapEntry)currentMap.value;
 		if (map.reward.money > 0) {
 			totalMoney.value += map.reward.money;
-			yield return StartCoroutine(popup.ShowPopup(null, "Gained " + map.reward.money + " Money", popup.droppedItemFanfare));
+			yield return StartCoroutine(spinner.ShowSpinner(null, "Gained " + map.reward.money + " Money", droppedItemFanfare));
 		}
 		if (map.reward.scrap > 0) {
 			totalScrap.value += map.reward.scrap;
-			yield return StartCoroutine(popup.ShowPopup(null, "Gained " + map.reward.scrap + " Scrap", popup.droppedItemFanfare));
+			yield return StartCoroutine(spinner.ShowSpinner(null, "Gained " + map.reward.scrap + " Scrap", droppedItemFanfare));
 		}
 		for (int i = 0; i < map.reward.items.Count; i++) {
 			playerData.items.Add(new InventoryItem(map.reward.items[i]));
-			yield return StartCoroutine(popup.ShowPopup(map.reward.items[i].icon, "Gained " + map.reward.items[i].entryName, popup.droppedItemFanfare));
+			yield return StartCoroutine(spinner.ShowSpinner(map.reward.items[i].icon, "Gained " + map.reward.items[i].entryName, droppedItemFanfare));
 		}
 
 		//Move to the ending dialogue
 		currentDialogueMode.value = (int)DialogueMode.ENDING;
 		currentDialogue.value = ((MapEntry)currentMap.value).endDialogue;
+		nextLoadState.value = (int)SaveScreenController.NextState.BASE;
 		startDialogueEvent.Invoke();
 	}
 

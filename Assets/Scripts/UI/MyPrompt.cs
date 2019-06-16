@@ -51,7 +51,7 @@ public class MyPrompt : MonoBehaviour {
 	/// </summary>
 	/// <param name="message"></param>
 	/// <param name="startOk"></param>
-	public void ShowWindow(string message, bool startOk, string yesName = "", string noName = "") {
+	public void ShowYesNoPopup(string message, bool startOk, string yesName = "", string noName = "") {
 		optionSize = 2;
 		position = startOk ? 1 : 0;
 		textArea.text = message;
@@ -69,7 +69,7 @@ public class MyPrompt : MonoBehaviour {
 	/// Shows a simple popup with a message and an OK button to click.
 	/// </summary>
 	/// <param name="message"></param>
-	public void ShowPopup(string message) {
+	public void ShowOkPopup(string message) {
 		optionSize = 1;
 		position = -1;
 		textArea.text = message;

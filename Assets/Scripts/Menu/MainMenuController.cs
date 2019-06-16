@@ -15,7 +15,7 @@ public class MainMenuController : InputReceiverDelegate {
 
 	[Header("Views")]
 	public GameObject saveView;
-	
+
 	[Header("Current Data")]
 	public StringVariable currentChapterIndex;
 	public IntVariable currentTotalDays;
@@ -51,7 +51,7 @@ public class MainMenuController : InputReceiverDelegate {
 	}
 
 	private IEnumerator WaitForInit() {
-		while(InputDelegateController.instance == null) {
+		while (InputDelegateController.instance == null) {
 			yield return null;
 		}
 
@@ -61,17 +61,18 @@ public class MainMenuController : InputReceiverDelegate {
 		lockControls.value = false;
 		startMenuView.SetActive(true);
 		saveView.SetActive(false);
-		
+
 		mainButtons.ResetButtons();
 		mainButtons.AddButton("NEW GAME");
 		mainButtons.AddButton("LOAD GAME");
 		mainButtons.AddButton("OPTIONS");
+		mainButtons.AddButton("QUIT");
 
 		musicFocus.value = true;
 		mainMusic.value = mainTheme.clip;
 		subMusic.value = null;
 		playBkgMusicEvent.Invoke();
-		
+
 		InputDelegateController.instance.TriggerMenuChange(MenuMode.MAIN_MENU);
 	}
 
@@ -95,6 +96,13 @@ public class MainMenuController : InputReceiverDelegate {
 		currentState = State.OPTIONS;
 		startMenuView.SetActive(false);
 		optionsController.UpdateState(true);
+	}
+
+	private void QuitClicked() {
+		Application.Quit();
+#if UNITY_EDITOR
+		UnityEditor.EditorApplication.isPlaying = false;
+#endif
 	}
 
 	/// <summary>
@@ -135,7 +143,7 @@ public class MainMenuController : InputReceiverDelegate {
 		}
 	}
 
-    public override void OnUpArrow() {
+	public override void OnUpArrow() {
 		if (currentState == State.MAIN) {
 			mainButtons.Move(-1);
 			menuMoveEvent.Invoke();
@@ -152,9 +160,9 @@ public class MainMenuController : InputReceiverDelegate {
 			optionsController.MoveVertical(-1);
 			menuMoveEvent.Invoke();
 		}
-    }
+	}
 
-    public override void OnDownArrow() {
+	public override void OnDownArrow() {
 		if (currentState == State.MAIN) {
 			mainButtons.Move(1);
 			menuMoveEvent.Invoke();
@@ -171,9 +179,9 @@ public class MainMenuController : InputReceiverDelegate {
 			optionsController.MoveVertical(1);
 			menuMoveEvent.Invoke();
 		}
-    }
+	}
 
-    public override void OnLeftArrow() {
+	public override void OnLeftArrow() {
 		if (currentState == State.LOAD) {
 			saveFileController.MoveHorizontal(-1);
 			menuMoveEvent.Invoke();
@@ -182,9 +190,9 @@ public class MainMenuController : InputReceiverDelegate {
 			if (optionsController.MoveHorizontal(-1))
 				menuMoveEvent.Invoke();
 		}
-    }
+	}
 
-    public override void OnRightArrow() {
+	public override void OnRightArrow() {
 		if (currentState == State.LOAD) {
 			saveFileController.MoveHorizontal(1);
 			menuMoveEvent.Invoke();
@@ -193,12 +201,11 @@ public class MainMenuController : InputReceiverDelegate {
 			if (optionsController.MoveHorizontal(1))
 				menuMoveEvent.Invoke();
 		}
-    }
+	}
 
-    public override void OnOkButton() {
+	public override void OnOkButton() {
 		if (currentState == State.MAIN) {
-			switch (mainButtons.GetPosition())
-			{
+			switch (mainButtons.GetPosition()) {
 				case 0:
 					ControlsClicked();
 					break;
@@ -208,6 +215,9 @@ public class MainMenuController : InputReceiverDelegate {
 				case 2:
 					OptionsClicked();
 					break;
+				case 3:
+					QuitClicked();
+					break;
 			}
 			menuAcceptEvent.Invoke();
 		}
@@ -216,9 +226,9 @@ public class MainMenuController : InputReceiverDelegate {
 				menuAcceptEvent.Invoke();
 			}
 		}
-    }
+	}
 
-    public override void OnBackButton() {
+	public override void OnBackButton() {
 		if (currentState == State.CONTROLS) {
 			currentState = State.MAIN;
 			howTo.BackClicked();
@@ -242,7 +252,7 @@ public class MainMenuController : InputReceiverDelegate {
 		}
 	}
 
-    public override void OnStartButton() {
+	public override void OnStartButton() {
 		if (currentState == State.MAIN) {
 			ControlsClicked();
 			menuAcceptEvent.Invoke();
@@ -254,8 +264,8 @@ public class MainMenuController : InputReceiverDelegate {
 	}
 
 
-    public override void OnLButton() { }
-    public override void OnRButton() { }
-    public override void OnXButton() { }
-    public override void OnYButton() { }
+	public override void OnLButton() { }
+	public override void OnRButton() { }
+	public override void OnXButton() { }
+	public override void OnYButton() { }
 }

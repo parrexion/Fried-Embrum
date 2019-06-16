@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class BaseController : InputReceiverDelegate {
 
+	public ScrObjEntryReference currentMap;
+	public IntVariable nextLoadState;
 	public GameObject mainArea;
 	public Transform[] areas;
 	//public BoolVariable lockControls;
@@ -15,6 +17,8 @@ public class BaseController : InputReceiverDelegate {
 	//private int height;
 
 	public MyButtonList menuButtons;
+	public MyPrompt prompt;
+	private bool promptMode;
 
 
 	private void Start() {
@@ -49,25 +53,72 @@ public class BaseController : InputReceiverDelegate {
 		menuButtons.AddButton("ARMORY");
 		menuButtons.AddButton("EQUIPMENT");
 		menuButtons.AddButton("RESEARCH LAB");
+		menuButtons.AddButton("SAVE AND QUIT");
 		//menuButtons.AddButton("HOUSING");
 	}
 
 	public override void OnUpArrow() {
-		menuButtons.Move(-1);
+		if (!promptMode) {
+			menuButtons.Move(-1);
+		}
 	}
 
 	public override void OnDownArrow() {
-		menuButtons.Move(1);
+		if (!promptMode) {
+			menuButtons.Move(1);
+		}
+	}
+
+	public override void OnLeftArrow() {
+		if (promptMode) {
+			prompt.Move(-1);
+		}
+	}
+
+	public override void OnRightArrow() {
+		if (promptMode) {
+			prompt.Move(1);
+		}
 	}
 
 	public override void OnOkButton() {
-		mainArea.SetActive(false);
+		if (promptMode) {
+			MyPrompt.Result res = prompt.Click(true);
+			if (res == MyPrompt.Result.OK1) {
+				Debug.Log("SAVE GAME");
+				currentMap.value = null;
+				nextLoadState.value = (int)SaveScreenController.NextState.MAIN;
+				SceneChangeDelay(MenuMode.SAVE, "SaveScene");
+				menuAcceptEvent.Invoke();
+			}
+			else {
+				promptMode = false;
+				menuBackEvent.Invoke();
+			}
+			return;
+		}
 		int menu = menuButtons.GetPosition();
-		for (int i = 0; i < areas.Length; i++) {
-			areas[i].gameObject.SetActive(i == menu);
+		if (menu == 5) {
+			promptMode = true;
+			prompt.ShowYesNoPopup("Save and return to main menu?", false);
+		}
+		else {
+			mainArea.SetActive(false);
+			for (int i = 0; i < areas.Length; i++) {
+				areas[i].gameObject.SetActive(i == menu);
+			}
+			MenuChangeDelay(screens[menu]);
 		}
 
-		MenuChangeDelay(screens[menu]);
+		menuAcceptEvent.Invoke();
+	}
+
+	public override void OnBackButton() {
+		if (promptMode) {
+			prompt.Click(false);
+			promptMode = false;
+			menuBackEvent.Invoke();
+		}
 	}
 
 	public void StartMission() {
@@ -118,9 +169,6 @@ public class BaseController : InputReceiverDelegate {
 
 
 
-	public override void OnLeftArrow() { }
-	public override void OnRightArrow() { }
-	public override void OnBackButton() { }
 	public override void OnStartButton() { }
 	public override void OnXButton() { }
 	public override void OnYButton() { }

@@ -58,7 +58,7 @@ public class SupportList : MonoBehaviour {
 		}
 		else if (detailedMode == Mode.DETAILED) {
 			if (supportList.GetEntry().newLevel.enabled) {
-				levelupPrompt.ShowWindow("Increase support level?", true);
+				levelupPrompt.ShowYesNoPopup("Increase support level?", true);
 				detailedMode = Mode.PROMPT;
 			}
 		}

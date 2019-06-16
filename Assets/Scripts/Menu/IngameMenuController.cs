@@ -6,12 +6,14 @@ using UnityEngine.UI;
 
 public class IngameMenuController : InputReceiverDelegate {
 
+	private enum State { MAIN, CONTROLS, OPTION, POPUP }
 	public Image overlay;
 
 	[Header("Ingame Menu")]
 	public GameObject ingameMenu;
 	public MyButtonList ingameButtons;
-	private int state;
+	public MyPrompt prompt;
+	private State state;
 
 	[Header("Other Menus")]
 	public HowToPlayController howTo;
@@ -28,10 +30,11 @@ public class IngameMenuController : InputReceiverDelegate {
 		ingameButtons.ResetButtons();
 		ingameButtons.AddButton("CONTROLS");
 		ingameButtons.AddButton("OPTIONS");
+		ingameButtons.AddButton("RETURN TO MAIN");
 		ingameButtons.AddButton("END TURN");
 	}
 
-    public override void OnMenuModeChanged() {
+	public override void OnMenuModeChanged() {
 		bool active = UpdateState(MenuMode.INGAME);
 		ingameMenu.SetActive(active);
 		overlay.enabled = active;
@@ -39,42 +42,41 @@ public class IngameMenuController : InputReceiverDelegate {
 			ingameButtons.ForcePosition(0);
 			objective.UpdateState(true);
 		}
-    }
+	}
 
-    public override void OnUpArrow() {
-		if (state == 0) {
+	public override void OnUpArrow() {
+		if (state == State.MAIN) {
 			ingameButtons.Move(-1);
 			menuMoveEvent.Invoke();
 		}
-		else if (state == 1) {
+		else if (state == State.CONTROLS) {
 			if (howTo.Move(-1))
 				menuMoveEvent.Invoke();
 		}
-		else if (state == 2) {
+		else if (state == State.OPTION) {
 			options.MoveVertical(-1);
 			menuMoveEvent.Invoke();
 		}
-    }
+	}
 
-    public override void OnDownArrow() {
-		if (state == 0) {
+	public override void OnDownArrow() {
+		if (state == State.MAIN) {
 			ingameButtons.Move(1);
 			menuMoveEvent.Invoke();
 		}
-		else if (state == 1) {
+		else if (state == State.CONTROLS) {
 			if (howTo.Move(1))
 				menuMoveEvent.Invoke();
 		}
-		else if (state == 2) {
+		else if (state == State.OPTION) {
 			options.MoveVertical(1);
 			menuMoveEvent.Invoke();
 		}
-    }
+	}
 
-    public override void OnOkButton() {
-		if (state == 0) {
-			switch (ingameButtons.GetPosition())
-			{
+	public override void OnOkButton() {
+		if (state == State.MAIN) {
+			switch (ingameButtons.GetPosition()) {
 				case 0:
 					Controls();
 					break;
@@ -82,46 +84,64 @@ public class IngameMenuController : InputReceiverDelegate {
 					Options();
 					break;
 				case 2:
+					ReturnToMain();
+					break;
+				case 3:
 					EndTurn();
 					break;
 			}
 			menuAcceptEvent.Invoke();
 		}
-		else if (state == 1) {
+		else if (state == State.CONTROLS) {
 			if (howTo.CheckOk()) {
 				OnBackButton();
 			}
 		}
-		else if (state == 2) {
+		else if (state == State.OPTION) {
 			bool res = options.OKClicked();
 			if (res)
 				menuAcceptEvent.Invoke();
 		}
-    }
+		else if (state == State.POPUP) {
+			MyPrompt.Result res = prompt.Click(true);
+			if (res == MyPrompt.Result.OK1) {
+				SceneChangeDelay(MenuMode.MAIN_MENU, "MainMenu");
+				menuAcceptEvent.Invoke();
+			}
+			else {
+				state = State.MAIN;
+				menuBackEvent.Invoke();
+			}
+		}
+	}
 
-    public override void OnBackButton() {
-		if (state == 0) {
+	public override void OnBackButton() {
+		if (state == State.MAIN) {
 			MenuChangeDelay(MenuMode.MAP);
 			objective.UpdateState(false);
 		}
-		else if (state == 1) {
+		else if (state == State.CONTROLS) {
 			state = 0;
 			ingameMenu.SetActive(true);
 			objective.UpdateState(true);
 			overlay.enabled = true;
 			howTo.BackClicked();
 		}
-		else if (state == 2) {
+		else if (state == State.OPTION) {
 			state = 0;
 			ingameMenu.SetActive(true);
 			objective.UpdateState(true);
 			options.BackClicked();
 		}
+		else if (state == State.POPUP) {
+			state = State.MAIN;
+			prompt.Click(false);
+		}
 		menuBackEvent.Invoke();
-    }
+	}
 
 	private void Controls() {
-		state = 1;
+		state = State.CONTROLS;
 		ingameMenu.SetActive(false);
 		objective.UpdateState(false);
 		overlay.enabled = false;
@@ -129,10 +149,15 @@ public class IngameMenuController : InputReceiverDelegate {
 	}
 
 	private void Options() {
-		state = 2;
+		state = State.OPTION;
 		ingameMenu.SetActive(false);
 		objective.UpdateState(false);
 		options.UpdateState(true);
+	}
+
+	private void ReturnToMain() {
+		state = State.POPUP;
+		prompt.ShowYesNoPopup("Quit to main menu? Your progress will not be saved.", false);
 	}
 
 	/// <summary>
@@ -143,24 +168,32 @@ public class IngameMenuController : InputReceiverDelegate {
 		nextStateEvent.Invoke();
 	}
 
-    public override void OnLeftArrow() {
-		if (state == 2) {
+	public override void OnLeftArrow() {
+		if (state == State.OPTION) {
 			if (options.MoveHorizontal(-1))
 				menuMoveEvent.Invoke();
 		}
+		else if (state == State.POPUP) {
+			prompt.Move(-1);
+			menuMoveEvent.Invoke();
+		}
 	}
-    public override void OnRightArrow() {
-		if (state == 2) {
+	public override void OnRightArrow() {
+		if (state == State.OPTION) {
 			if (options.MoveHorizontal(1))
 				menuMoveEvent.Invoke();
+		}
+		else if (state == State.POPUP) {
+			prompt.Move(1);
+			menuMoveEvent.Invoke();
 		}
 	}
 
 
 
-    public override void OnLButton() {}
-    public override void OnRButton() {}
-    public override void OnXButton() { }
-    public override void OnYButton() { }
-    public override void OnStartButton() { }
+	public override void OnLButton() { }
+	public override void OnRButton() { }
+	public override void OnXButton() { }
+	public override void OnYButton() { }
+	public override void OnStartButton() { }
 }

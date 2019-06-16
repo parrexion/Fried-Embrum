@@ -186,7 +186,7 @@ public class BattlePrepController : InputReceiverDelegate {
 			}
 			else if (mainIndex == 4) {
 				currentState = State.PROMPT;
-				startPrompt.ShowWindow("Start mission?", false);
+				startPrompt.ShowYesNoPopup("Start mission?", false);
 				menuAcceptEvent.Invoke();
 			}
 		}
@@ -253,7 +253,7 @@ public class BattlePrepController : InputReceiverDelegate {
 		if (currentState != State.MAIN)
 			return;
 		currentState = State.PROMPT;
-		startPrompt.ShowWindow("Start mission?", false);
+		startPrompt.ShowYesNoPopup("Start mission?", false);
 		menuAcceptEvent.Invoke();
 	}
 
