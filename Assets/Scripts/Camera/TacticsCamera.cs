@@ -48,7 +48,7 @@ public class TacticsCamera : MonoBehaviour {
 	public void UpdateCameraPositionCursor() {
 		Vector3 currentPosition = _camera.transform.localPosition;
 		Vector3 nextPosition = new Vector3(
-			Mathf.Clamp(currentPosition.x, cursorX.value-moveWidth, cursorX.value+moveWidth),
+			Mathf.Clamp(currentPosition.x, cursorX.value-moveWidth+2, cursorX.value+moveWidth+2),
 			Mathf.Clamp(currentPosition.y, cursorY.value-moveHeight, cursorY.value+moveHeight),
 			currentPosition.z
 		);

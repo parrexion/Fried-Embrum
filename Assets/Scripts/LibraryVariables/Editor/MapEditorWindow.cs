@@ -185,8 +185,10 @@ public class MapEditorWindow {
 		GUILayout.Space(10);
 
 		GUILayout.Label("Map Size", EditorStyles.boldLabel);
+		EditorGUIUtility.labelWidth = 120;
 		mapValues.mapSprite = (Texture2D)EditorGUILayout.ObjectField("Map Info Sprite",mapValues.mapSprite, typeof(Texture2D),false);
 		GUILayout.BeginHorizontal();
+		EditorGUIUtility.labelWidth = 80;
 		mapValues.sizeX = EditorGUILayout.IntField("Size X", mapValues.sizeX);
 		mapValues.sizeY = EditorGUILayout.IntField("Size Y", mapValues.sizeY);
 		EditorGUIUtility.labelWidth = 120;
@@ -367,6 +369,12 @@ public class MapEditorWindow {
 			mapValues.enemies[i].x = EditorGUILayout.IntField("X", mapValues.enemies[i].x);
 			mapValues.enemies[i].y = EditorGUILayout.IntField("Y", mapValues.enemies[i].y);
 			//  = (ClassType)EditorGUILayout.EnumPopup("",entryValues.advantageType[i]);
+			if (GUILayout.Button("Dup", GUILayout.Width(50))) {
+				GUI.FocusControl(null);
+				EnemyPosition epos = new EnemyPosition();
+				epos.Copy(mapValues.enemies[i]);
+				mapValues.enemies.Insert(i+1, epos);
+			}
 			if (GUILayout.Button("X", GUILayout.Width(50))) {
 				GUI.FocusControl(null);
 				mapValues.enemies.RemoveAt(i);
@@ -456,6 +464,12 @@ public class MapEditorWindow {
 			GUILayout.BeginHorizontal();
 			GUILayout.Label("End of turn");
 			pos.spawnTurn = EditorGUILayout.IntField("", pos.spawnTurn);
+			if (GUILayout.Button("Dup", GUILayout.Width(50))) {
+				GUI.FocusControl(null);
+				ReinforcementPosition rpos = new ReinforcementPosition();
+				rpos.Copy(mapValues.reinforcements[i]);
+				mapValues.reinforcements.Insert(i+1, rpos);
+			}
 			if (GUILayout.Button("X", GUILayout.Width(50))) {
 				GUI.FocusControl(null);
 				mapValues.reinforcements.RemoveAt(i);

@@ -51,6 +51,7 @@ public class MapCursor : MonoBehaviour {
 		int prevY = cursorY.value;
 		cursorX.value = Mathf.Clamp(cursorX.value + xDir, 0, battleMap.SizeX()-1);
 		cursorY.value = Mathf.Clamp(cursorY.value + yDir, 0, battleMap.SizeY()-1);
+		cursorMovedEvent.Invoke();
 		UpdateCursor();
 		CursorHover();
 

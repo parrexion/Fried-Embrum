@@ -2830,6 +2830,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: LoadGame Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 1708912850470516, guid: 54b7ce48319d74544940f54420359663, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114459560469236114, guid: 54b7ce48319d74544940f54420359663,
+        type: 3}
+      propertyPath: usedForLoad
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 224740703705661992, guid: 54b7ce48319d74544940f54420359663,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2958,15 +2967,6 @@ PrefabInstance:
     - target: {fileID: 224989744490679686, guid: 54b7ce48319d74544940f54420359663,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114459560469236114, guid: 54b7ce48319d74544940f54420359663,
-        type: 3}
-      propertyPath: usedForLoad
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1708912850470516, guid: 54b7ce48319d74544940f54420359663, type: 3}
-      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -3315,7 +3315,7 @@ MonoBehaviour:
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   saveController: {fileID: 1829959294}
-  firstMission: {fileID: 11400000, guid: a433301cc1f14f043ab12fbd97fedd44, type: 2}
+  firstMission: {fileID: 11400000, guid: 8a7a41e0ecb60c44d9087d38d5c7a20d, type: 2}
   playerData: {fileID: 11400000, guid: cf29fce9ee9388e4290741fe2d10bab5, type: 2}
   classWheel: {fileID: 11400000, guid: d29c1242cf6052c43bfa5c9fb5fdb98b, type: 2}
   startingCharacters:
@@ -3337,22 +3337,10 @@ MonoBehaviour:
     inventory:
     - item: {fileID: 11400000, guid: a2de7015579e1f14ab703abbdd88c510, type: 2}
       droppable: 0
-    - item: {fileID: 11400000, guid: 77017b3b7bf0cc5418c9f5200dff282f, type: 2}
-      droppable: 0
-    - item: {fileID: 11400000, guid: 2c6481630a321de4f97f98e24d095e8e, type: 2}
-      droppable: 0
-  - x: 0
-    y: 0
-    level: 1
-    charData: {fileID: 11400000, guid: 6587ac31779338744838102a4e36b2cd, type: 2}
-    inventory:
-    - item: {fileID: 11400000, guid: 88dad0c030764d04faf43114e0b17fe2, type: 2}
-      droppable: 0
     - item: {fileID: 11400000, guid: 2c6481630a321de4f97f98e24d095e8e, type: 2}
       droppable: 0
   startItems:
   - {fileID: 11400000, guid: 2c6481630a321de4f97f98e24d095e8e, type: 2}
-  - {fileID: 11400000, guid: b3e6f4c923b5f004695709a2dadf3762, type: 2}
   startUpgrade:
   - {fileID: 11400000, guid: 4035965c954be614e8ec78461529e883, type: 2}
   - {fileID: 11400000, guid: f3394d16d0d3fab42a82ea1e02f8194c, type: 2}
@@ -3360,7 +3348,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 170d5cbfd40f8fc4f8591920d6fd3385, type: 2}
   - {fileID: 11400000, guid: 888645a9dd134f5499d3487214fd78ae, type: 2}
   startMissions:
-  - {fileID: 11400000, guid: 144511ad652a75a499faf89078692f97, type: 2}
+  - {fileID: 11400000, guid: fd35f25322a2d3b4ebdb9eaa5433b197, type: 2}
   saveGameEvent:
     m_PersistentCalls:
       m_Calls:

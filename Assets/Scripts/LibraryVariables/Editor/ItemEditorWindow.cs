@@ -241,6 +241,7 @@ public class ItemEditorWindow {
 		ce.CopyValues(itemValues);
 		Undo.RecordObject(ce, "Updated item");
 		EditorUtility.SetDirty(ce);
+		itemLibrary.initialized = false;
 	}
 
 	void InstansiateItem() {

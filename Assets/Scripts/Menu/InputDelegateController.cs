@@ -26,7 +26,7 @@ public class InputDelegateController : MonoBehaviour {
 	public IntVariable menuMode;
 	public MenuMode startMode;
 	public ActionModeVariable currentAction;
-	public int holdDelay = 25;
+	public int holdDelay = 12;
 	public int scrollSpeed = 5;
 
 	[Header("Control locks")]
@@ -110,19 +110,19 @@ public class InputDelegateController : MonoBehaviour {
 		}
 
 		//Button releases
-		if (Input.GetKeyUp(KeyCode.UpArrow) || (Input.GetAxis("DpadVertical") < 0.3f && Input.GetAxis("LstickVertical") < 0.3f)) {
+		if (!Input.GetKey(KeyCode.UpArrow) && Input.GetAxis("DpadVertical") < 0.3f && Input.GetAxis("LstickVertical") < 0.3f) {
 			holdUp = 0;
 			axisUp = false;
 		}
-		if (Input.GetKeyUp(KeyCode.DownArrow) || (Input.GetAxis("DpadVertical") > -0.3f && Input.GetAxis("LstickVertical") > -0.3f)) {
+		if (!Input.GetKey(KeyCode.DownArrow) && Input.GetAxis("DpadVertical") > -0.3f && Input.GetAxis("LstickVertical") > -0.3f) {
 			holdDown = 0;
 			axisDown = false;
 		}
-		if (Input.GetKeyUp(KeyCode.LeftArrow) || (Input.GetAxis("DpadHorizontal") > -0.3f && Input.GetAxis("LstickHorizontal") > -0.3f)) {
+		if (!Input.GetKey(KeyCode.LeftArrow) && Input.GetAxis("DpadHorizontal") > -0.3f && Input.GetAxis("LstickHorizontal") > -0.3f) {
 			holdLeft = 0;
 			axisLeft = false;
 		}
-		if (Input.GetKeyUp(KeyCode.RightArrow) || (Input.GetAxis("DpadHorizontal") < 0.3f && Input.GetAxis("LstickHorizontal") < 0.3f)) {
+		if (!Input.GetKey(KeyCode.RightArrow) && Input.GetAxis("DpadHorizontal") < 0.3f && Input.GetAxis("LstickHorizontal") < 0.3f) {
 			holdRight = 0;
 			axisRight = false;
 		}

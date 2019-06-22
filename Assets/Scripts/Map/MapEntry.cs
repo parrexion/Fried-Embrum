@@ -198,6 +198,28 @@ public class EnemyPosition {
 	public bool hasQuotes;
 	public List<FightQuote> quotes = new List<FightQuote>();
 	public int huntX, huntY;
+
+	public void Copy(EnemyPosition other) {
+		spawnTurn = other.spawnTurn;
+		x = other.x;
+		y = other.y;
+		level = other.level;
+		charData = other.charData;
+		for (int i = 0; i < other.inventory.Count; i++) {
+			inventory.Add(new WeaponTuple(){
+				item = other.inventory[i].item, droppable = other.inventory[i].droppable
+			});
+		}
+		aggroType = other.aggroType;
+		hasQuotes = other.hasQuotes;
+		for (int i = 0; i < other.quotes.Count; i++) {
+			quotes.Add(new FightQuote(){
+				triggerer = other.quotes[i].triggerer, quote = other.quotes[i].quote, activated = other.quotes[i].activated
+			});
+		}
+		huntX = other.huntX;
+		huntY = other.huntY;
+	}
 }
 
 [System.Serializable]
@@ -214,6 +236,29 @@ public class ReinforcementPosition {
 	public bool hasQuotes;
 	public List<FightQuote> quotes = new List<FightQuote>();
 	public int huntX, huntY;
+
+	public void Copy(ReinforcementPosition other) {
+		spawnTurn = other.spawnTurn;
+		faction = other.faction;
+		x = other.x;
+		y = other.y;
+		level = other.level;
+		charData = other.charData;
+		for (int i = 0; i < other.inventory.Count; i++) {
+			inventory.Add(new WeaponTuple(){
+				item = other.inventory[i].item, droppable = other.inventory[i].droppable
+			});
+		}
+		aggroType = other.aggroType;
+		hasQuotes = other.hasQuotes;
+		for (int i = 0; i < other.quotes.Count; i++) {
+			quotes.Add(new FightQuote(){
+				triggerer = other.quotes[i].triggerer, quote = other.quotes[i].quote, activated = other.quotes[i].activated
+			});
+		}
+		huntX = other.huntX;
+		huntY = other.huntY;
+	}
 }
 
 public enum InteractType { NONE, BLOCK, DIALOGUE, VILLAGE, SEIZE, CHEST }

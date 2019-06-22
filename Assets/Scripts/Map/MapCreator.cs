@@ -40,6 +40,8 @@ public class MapCreator : MonoBehaviour {
 	
 	[Header("Terrain Tiles")]
 	public TerrainTile tileNormal;
+	public TerrainTile tileDirt;
+	public TerrainTile tileFloor;
 	public TerrainTile tileForest;
 	public TerrainTile tileMountain;
 	public TerrainTile tileBridge;
@@ -369,6 +371,12 @@ public class MapCreator : MonoBehaviour {
 
 		if (pixelColor.r == 255 && pixelColor.g == 255 && pixelColor.b == 255) {
 			//Normal empty space
+		}
+		else if (pixelColor.r == 128 && pixelColor.g == 64 && pixelColor.b == 0) {
+			terrain = tileDirt;
+		}
+		else if (pixelColor.r == 128 && pixelColor.g == 128 && pixelColor.b == 128) {
+			terrain = tileFloor;
 		}
 		else if (pixelColor == new Color(0f,0f,0f,1f)) {
 			terrain = tileWall;
