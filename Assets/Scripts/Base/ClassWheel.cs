@@ -37,7 +37,7 @@ public class ClassWheel : ScriptableObject {
 		for (int i = 0; i < classLevels.Length; i++) {
 			for (int level = 0; level < classLevels[i]; level++) {
 				skills.Add(classes[i].skills[level]);
-				Debug.Log("Added skill:  " + classes[i].skills[level].entryName + " for class " + ((PlayerClassName)i));
+				//Debug.Log("Added skill:  " + classes[i].skills[level].entryName + " for class " + ((PlayerClassName)i));
 				edit = true;
 			}
 		}

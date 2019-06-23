@@ -52,13 +52,22 @@ MonoBehaviour:
     level: 7
     charData: {fileID: 11400000, guid: 45c55465875f3494d94f2fe7b4c0143d, type: 2}
     inventory:
-    - item: {fileID: 11400000, guid: 61b5282282d02b544a200d088100d5e3, type: 2}
+    - item: {fileID: 11400000, guid: bb93947bced453f4cbba944f33781d64, type: 2}
       droppable: 0
     - item: {fileID: 11400000, guid: 7bdb62b1a2ae1df4d9a71c84d3e18ab7, type: 2}
       droppable: 1
     aggroType: 3
-    hasQuotes: 0
-    quotes: []
+    hasQuotes: 1
+    quotes:
+    - triggerer: {fileID: 11400000, guid: cf951a3da37e1794b9cd29749c715911, type: 2}
+      quote: {fileID: 11400000, guid: b5139b7988475d24f8299cab08cf5c2f, type: 2}
+      activated: 0
+    - triggerer: {fileID: 11400000, guid: 6587ac31779338744838102a4e36b2cd, type: 2}
+      quote: {fileID: 11400000, guid: 01e2028c677e17a488cffe0844c27383, type: 2}
+      activated: 0
+    - triggerer: {fileID: 11400000, guid: 43608e2c8ad57eb47bb7a3d5bf9c5263, type: 2}
+      quote: {fileID: 11400000, guid: 89865dffc179f9a4f9d50d0f5a6b1e10, type: 2}
+      activated: 0
     huntX: 0
     huntY: 0
   - spawnTurn: 0
@@ -237,7 +246,7 @@ MonoBehaviour:
     faction: 0
     x: 2
     y: 4
-    level: 0
+    level: 1
     charData: {fileID: 11400000, guid: 6587ac31779338744838102a4e36b2cd, type: 2}
     inventory:
     - item: {fileID: 11400000, guid: 88dad0c030764d04faf43114e0b17fe2, type: 2}

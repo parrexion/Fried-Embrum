@@ -24,7 +24,7 @@ public class NPCMove : TacticsMove {
 		bossCrest.enabled = (aggroType == AggroType.BOSS);
 
 		enemyList.values.Add(this);
-		Debug.Log("Spawned  " + stats.charData.entryName);
+		//Debug.Log("Spawned  " + stats.charData.entryName);
 	}
 
 

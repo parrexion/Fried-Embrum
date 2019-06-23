@@ -39,7 +39,7 @@ public class Boost {
 
 			hit = -hit,
 			crit = -crit,
-			avoid = avoid
+			avoid = -avoid
 		};
 		return temp;
 	}
@@ -85,5 +85,11 @@ public class Boost {
 	public void EndTurn() {
 		if (boostType == BoostType.ENDTURN)
 			_active = false;
+	}
+
+
+	public override string ToString() {
+		return string.Format("HP: {0}, DMG:{1}, MND:{2}, SKL:{3}, SPD:{4}, DEF:{5}, MOV:{6}, HIT:{7}, CRIT:{8}, AVOID:{9}", 
+			hp, dmg, mnd, skl, spd, def, mov, hit, crit, avoid);
 	}
 }

@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0c66341c8af3a7549bd8e191fbd754ff, type: 3}
-  m_Name: Star2Intro
+  m_Name: GruntGenericQuote
   m_EditorClassIdentifier: 
-  uuid: Star2Intro
-  entryName: Star2Intro
+  uuid: GruntGenericQuote
+  entryName: GruntKentQuote
   repColor: {r: 0, g: 0, b: 0, a: 0}
-  tag: INTRO
+  tag: QUOTE
   participantColors: []
   actions:
   - autoContinue: 1
@@ -30,7 +30,7 @@ MonoBehaviour:
     useDelay: 0
     type: 5
     entries:
-    - {fileID: 11400000, guid: 83b1fb2996ec3714086f3742febe829e, type: 2}
+    - {fileID: 0}
     values: 
     text: []
     boolValue: 0
@@ -56,7 +56,7 @@ MonoBehaviour:
     values: 00000000
     text:
     - '###'
-    - The monsters have taken the abandonded factory.
+    - So you're their leader, huh?
     boolValue: 1
   - autoContinue: 0
     useDelay: 0
@@ -65,16 +65,7 @@ MonoBehaviour:
     values: 00000000
     text:
     - '###'
-    - We need to drive them out and reclaim the control point in the factory.
-    boolValue: 1
-  - autoContinue: 0
-    useDelay: 0
-    type: 2
-    entries: []
-    values: 00000000
-    text:
-    - '###'
-    - The rest of the monsters should start to scatter once we do that.
+    - Not that it matter when you're dead.
     boolValue: 1
   - autoContinue: 0
     useDelay: 0

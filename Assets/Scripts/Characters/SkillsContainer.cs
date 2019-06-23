@@ -25,17 +25,17 @@ public class SkillsContainer {
 		skills = new CharacterSkill[SKILL_SIZE];
 		for (int i = 0; i < saveData.skills.Count; i++) {
 			skills[i] = (CharacterSkill) iLib.GetEntry(saveData.skills[i]);
-			Debug.Log("Found skill " + skills[i].uuid);
+			//Debug.Log("Found skill " + skills[i].uuid);
 		}
 	}
 
 	
 	public bool GainSkill(CharacterSkill skill) {
-		Debug.Log("Adding skill " + skill.entryName);
+		//Debug.Log("Adding skill " + skill.entryName);
 		for (int i = 0; i < skills.Length; i++) {
 			if (skills[i] == null) {
 				skills[i] = skill;
-				Debug.Log("Added the skill to position " + i);
+				//Debug.Log("Added the skill to position " + i);
 				return true;
 			}
 		}
@@ -64,7 +64,7 @@ public class SkillsContainer {
 		for (int i = 0; i < skills.Length; i++) {
 			if (!skills[i])
 				continue;
-			skills[i].EditValue(activation, value, user);
+			value = skills[i].EditValue(activation, value, user);
 		}
 		return value;
 	}

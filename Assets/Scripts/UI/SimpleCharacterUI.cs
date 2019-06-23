@@ -335,6 +335,9 @@ public class SimpleCharacterUI : MonoBehaviour {
 		weakIcon1.enabled = false;
 		wpnIcon.sprite = null;
 		wpnName.text = "";
+		for (int i = 0; i < skillImages.Length; i++) {
+			skillImages[i].sprite = noSkillImage;
+		}
 		pwrText.text = "Hit:  --";
 		hitText.text = "Pwr:  --";
 		critText.text = "Crit:   --";

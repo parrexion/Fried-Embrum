@@ -70,6 +70,7 @@ public abstract class TacticsMove : MonoBehaviour {
 			Debug.LogWarning("No stats");
 			return;
 		}
+		currentHealth = stats.hp;
 		stats.boosts.Clear();
 		ActivateSkills(SkillActivation.PASSIVE, null);
 		stats.CalculateStats();

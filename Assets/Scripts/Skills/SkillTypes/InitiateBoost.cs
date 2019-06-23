@@ -6,6 +6,7 @@ using UnityEngine;
 public class InitiateBoost : CharacterSkill {
     
     protected override void UseSkill(TacticsMove user, TacticsMove enemy) {
+		Debug.Log(boost.ToString(), this);
         user.ReceiveBuff(boost, true, false);
     }
 
