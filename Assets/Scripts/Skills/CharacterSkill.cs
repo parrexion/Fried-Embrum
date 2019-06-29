@@ -72,32 +72,12 @@ public abstract class CharacterSkill : ScrObjLibraryEntry {
 		}
 	}
 
-	public void ActivateSkill(SkillActivation act, TacticsMove user, TacticsMove enemy) {
-        if (act == activationType)
-            UseSkill(user, enemy);
-    }
+    public virtual void UseSkill(TacticsMove user, TacticsMove enemy){ }
+    public virtual void EndSkill(TacticsMove user, TacticsMove enemy){ }
 
-    public void EndSkill(SkillActivation act, TacticsMove user, TacticsMove enemy) {
-        if (act == activationType)
-            RemoveEffect(user, enemy);
-    }
-
-    public int EditValue(SkillActivation act, int value, TacticsMove user) {
-        return (act == activationType) ? EditValue(value, user) : value;
-    }
-
-    public void ActivateForEach(SkillActivation act, TacticsMove user, CharacterListVariable list) {
-        if (act == activationType) {
-            ForEachBoost(list, user);
-        }
-    }
-    
-    protected abstract void UseSkill(TacticsMove user, TacticsMove enemy);
-    protected abstract void RemoveEffect(TacticsMove user, TacticsMove enemy);
-
-    protected virtual int EditValue(int value, TacticsMove user) {
+    public virtual int EditValue(int value, TacticsMove user) {
         return value;
     }
 
-    protected virtual void ForEachBoost(CharacterListVariable list, TacticsMove user) { }
+    public virtual void ForEachBoost(CharacterListVariable list, TacticsMove user) { }
 }

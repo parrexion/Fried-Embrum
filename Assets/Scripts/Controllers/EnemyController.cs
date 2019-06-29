@@ -15,9 +15,15 @@ public class EnemyController : MonoBehaviour {
 	public IntVariable currentPage;
 	public IntVariable cursorX;
 	public IntVariable cursorY;
+
+	[Header("Settings")]
+	public BoolVariable selectMainCharacter;
 	public IntVariable slowGameSpeed;
 	public IntVariable currentGameSpeed;
-	public PopupController popup;
+
+	[Header("Spinner")]
+	public MySpinner spinner;
+	public SfxEntry destroyedTileSfx;
 
 	[Header("Events")]
 	public UnityEvent charClicked;
@@ -57,9 +63,9 @@ public class EnemyController : MonoBehaviour {
 			selectTile.value = selectCharacter.value.currentTile;
 			enemy = (NPCMove)enemyList.values[i];
 			// enemy.FindAllMoveTiles(false);
-			cursorX.value = enemy.posx;
-			cursorY.value = enemy.posy;
-			cursorMovedEvent.Invoke();
+				cursorX.value = enemy.posx;
+				cursorY.value = enemy.posy;
+				cursorMovedEvent.Invoke();
 
 			// Calculate the tile to move towards and wait for the character to move there if any
 			MapTile moveTile = enemy.CalculateMovement();
@@ -91,9 +97,11 @@ public class EnemyController : MonoBehaviour {
 			enemy.End();
 		}
 
-		cursorX.value = playerList.values[0].posx;
-		cursorY.value = playerList.values[0].posy;
-		cursorMovedEvent.Invoke();
+		if (selectMainCharacter.value) {
+			cursorX.value = playerList.values[0].posx;
+			cursorY.value = playerList.values[0].posy;
+			cursorMovedEvent.Invoke();
+		}
 		isRunning = false;
 		nextStateEvent.Invoke();
 	}
@@ -120,7 +128,12 @@ public class EnemyController : MonoBehaviour {
 	/// <returns></returns>
 	private IEnumerator DestroyTile() {
 		string destroyType = (enemy.currentTile.interactType == InteractType.VILLAGE) ? "Village" : "???";
-		yield return StartCoroutine(popup.ShowPopup(null, destroyType + " was destroyed!", popup.brokenItemFanfare));
+		MySpinnerData data = new MySpinnerData(){
+			 icon = null,
+			 sfx = destroyedTileSfx,
+			 text = destroyType + " was destroyed!"
+		};
+		yield return StartCoroutine(spinner.ShowSpinner(data));
 		waitForNextAction = false;
 	}
 }

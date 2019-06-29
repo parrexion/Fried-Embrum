@@ -114,19 +114,19 @@ public abstract class TacticsMove : MonoBehaviour {
 
 		if (Vector3.Distance(transform.position, _heading) >= 0.05f) {
 			_velocity = Vector3.MoveTowards(transform.position, _heading, movementVelocity.value * Time.deltaTime);
-			_velocity = new Vector3(_velocity.x,_velocity.y,0);
+			_velocity = new Vector3(_velocity.x, _velocity.y, 0);
 			transform.position = _velocity;
 		}
 		else if (path.Count > 0) {
 			MapTile tile = path.Pop();
-			_heading = new Vector3(tile.transform.position.x,tile.transform.position.y,0);
+			_heading = new Vector3(tile.transform.position.x, tile.transform.position.y, 0);
 			//posx = currentTile.posx;
 			//posy = currentTile.posy;
 			cameraFollowEvent.Invoke();
 		}
 		else {
 			//currentTile.currentCharacter = null;
-			currentTile = battleMap.GetTile(Mathf.RoundToInt(transform.localPosition.x),Mathf.RoundToInt(transform.localPosition.y));
+			currentTile = battleMap.GetTile(Mathf.RoundToInt(transform.localPosition.x), Mathf.RoundToInt(transform.localPosition.y));
 			currentTile.currentCharacter = this;
 			posx = currentTile.posx;
 			posy = currentTile.posy;
@@ -147,7 +147,7 @@ public abstract class TacticsMove : MonoBehaviour {
 		currentTile.parent = null;
 		currentTile.selectable = true;
 		currentTile.target = true;
-		
+
 		WeaponRange weapon = inventory.GetReach(ItemCategory.WEAPON);
 		WeaponRange staff = inventory.GetReach(ItemCategory.SUPPORT);
 
@@ -159,7 +159,7 @@ public abstract class TacticsMove : MonoBehaviour {
 			battleMap.ShowSupportTiles(currentTile, staff, faction, isDanger, isBuff);
 		}
 
-		while(process.Count > 0) {
+		while (process.Count > 0) {
 			MapTile tile = process.Dequeue();
 			if (tile.distance >= (GetMoveSpeed()))
 				continue;
@@ -177,7 +177,7 @@ public abstract class TacticsMove : MonoBehaviour {
 		endTile.target = true;
 		path.Clear();
 		MapTile cTile = endTile;
-		while(cTile.parent != null) {
+		while (cTile.parent != null) {
 			path.Push(cTile);
 			cTile.pathable = true;
 			cTile = cTile.parent;
@@ -195,7 +195,7 @@ public abstract class TacticsMove : MonoBehaviour {
 		startTile = currentTile;
 		isMoving = true;
 	}
-	
+
 	/// <summary>
 	/// Starts the movement for the character and moves it in a straight
 	/// line towards the target map tile.
@@ -220,9 +220,9 @@ public abstract class TacticsMove : MonoBehaviour {
 		currentTile.currentCharacter = this;
 		posx = currentTile.posx;
 		posy = currentTile.posy;
-		transform.position = new Vector3(startTile.transform.position.x,startTile.transform.position.y,0);
+		transform.position = new Vector3(startTile.transform.position.x, startTile.transform.position.y, 0);
 	}
-	
+
 	/// <summary>
 	/// Takes the current position and makes a list of all enemies which can be reached from 
 	/// there using the character's weapons.
@@ -337,7 +337,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// </summary>
 	public void End() {
 		hasMoved = true;
-		GetComponent<SpriteRenderer>().color = new Color(0.66f,0.66f,0.66f);
+		GetComponent<SpriteRenderer>().color = new Color(0.66f, 0.66f, 0.66f);
 		battleMap.ResetMap();
 		currentTile.current = true;
 		waitEvent.Invoke();
@@ -375,7 +375,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	public void TakeHeals(int health) {
 		currentHealth = Mathf.Min(stats.hp, currentHealth + health);
 		damageNumber.text = health.ToString();
-		damageNumber.color = new Color(0,0.5f,0);
+		damageNumber.color = new Color(0, 0.5f, 0);
 		UpdateHealth();
 		StartCoroutine(DamageDisplay());
 	}
@@ -401,7 +401,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	public void ReceiveBuff(Boost boost, bool isBuff, bool useAnim) {
 		if (!IsAlive())
 			return;
-		
+
 		boost.ActivateBoost();
 		stats.boosts.Add(boost);
 		stats.CalculateStats();
@@ -448,7 +448,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// </summary>
 	/// <returns></returns>
 	protected virtual IEnumerator OnDeath() {
-		GetComponent<SpriteRenderer>().color = new Color(0.4f,0.4f,0.4f);
+		GetComponent<SpriteRenderer>().color = new Color(0.4f, 0.4f, 0.4f);
 		currentTile.currentCharacter = null;
 		yield return new WaitForSeconds(0.4f);
 		sfxQueue.Enqueue(deathSfx);
@@ -472,9 +472,9 @@ public abstract class TacticsMove : MonoBehaviour {
 	public void OnStartTurn() {
 		if (!IsAlive())
 			return;
-			
+
 		stats.ClearBoosts(true);
-		ForEachSkills(SkillActivation.STARTTURN, playerList);
+		ForEachSkills(SkillActivation.STARTTURN);
 		hasMoved = false;
 		canUndoMove = true;
 
@@ -535,11 +535,11 @@ public abstract class TacticsMove : MonoBehaviour {
 		WeaponRange range = inventory.GetReach(ItemCategory.SUPPORT);
 		if (range.max == 0)
 			return false;
-		
+
 		List<InventoryTuple> staffs = inventory.GetAllUsableItemTuple(ItemCategory.SUPPORT);
 		bool isBuff = false;
 		for (int i = 0; i < staffs.Count; i++) {
-			if (staffs[i].item.weaponType == WeaponType.BARRIER){
+			if (staffs[i].item.weaponType == WeaponType.BARRIER) {
 				isBuff = true;
 				break;
 			}
@@ -613,7 +613,12 @@ public abstract class TacticsMove : MonoBehaviour {
 		return skills.EditValueSkills(activation, this, value);
 	}
 
-	public void ForEachSkills(SkillActivation activation, CharacterListVariable list) {
-		skills.ForEachSkills(activation, this, list);
+	public void ForEachSkills(SkillActivation activation) {
+		if (faction == Faction.PLAYER) {
+			skills.ForEachSkills(activation, this, playerList);
+		}
+		else if (faction == Faction.ENEMY) {
+			skills.ForEachSkills(activation, this, enemyList);
+		}
 	}
 }

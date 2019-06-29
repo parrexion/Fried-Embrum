@@ -10,21 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55a5d666a228d1c41bca2d7c9c95dc13, type: 3}
-  m_Name: Pillar
+  m_Name: Bunker
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: 940bfe0a872dc2341841d9e5b286472d, type: 3}
+  sprite: {fileID: 21300000, guid: 74bc2e29cd94fee4f81eb67423cdbb9c, type: 3}
   tint: {r: 1, g: 1, b: 1, a: 1}
-  defense: 1
+  defense: 2
   avoid: 20
-  healPercent: 0
+  healPercent: 20
   health: 0
-  substitueTile: {fileID: 0}
+  substitueTile: {fileID: 11400000, guid: 03dca92375a4019468556f89d9b5cf0a, type: 2}
   canMoveTypes:
   - type: 1
     roughness: 2
   - type: 2
     roughness: 2
   - type: 3
-    roughness: 3
+    roughness: 2
   - type: 4
-    roughness: 1
+    roughness: 2

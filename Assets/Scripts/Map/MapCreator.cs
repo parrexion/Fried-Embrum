@@ -6,7 +6,7 @@ using UnityEngine.Events;
 public class MapCreator : MonoBehaviour {
 
 	public ScrObjEntryReference currentMap;
-	public PlayerData availableCharacters;
+	public PlayerData playerData;
 	public ClassWheel playerClassWheel;
 	public ClassWheel enemyClassWheel;
 	public CharacterListVariable playerList;
@@ -186,9 +186,9 @@ public class MapCreator : MonoBehaviour {
 			}
 
 			int index = prepList.values[prepPos].index;
-			StatsContainer stats = availableCharacters.stats[index];
-			InventoryContainer inventory = availableCharacters.inventory[index];
-			SkillsContainer skills = availableCharacters.skills[index];
+			StatsContainer stats = playerData.stats[index];
+			InventoryContainer inventory = playerData.inventory[index];
+			SkillsContainer skills = playerData.skills[index];
 			prepPos++;
 			
 			SpawnPlayerCharacter(pos.x, pos.y, stats, inventory, skills, true);
@@ -309,7 +309,11 @@ public class MapCreator : MonoBehaviour {
 					InventoryContainer inventory = new InventoryContainer(wheel.GetWpnSkillFromLevel(pos.charData.startClassLevels), pos.inventory);
 					SkillsContainer skills = new SkillsContainer(wheel.GetSkillsFromLevel(pos.charData.startClassLevels, pos.charData.startClass, pos.level));
 					if (pos.faction == Faction.PLAYER) {
-						SpawnPlayerCharacter(pos.x, pos.y, stats, inventory, skills, true);
+						TacticsMove tm = SpawnPlayerCharacter(pos.x, pos.y, stats, inventory, skills, true);
+						playerData.stats.Add(tm.stats);
+						playerData.inventory.Add(tm.inventory);
+						playerData.skills.Add(tm.skills);
+						playerData.baseInfo.Add(null);
 					}
 					else if (pos.faction == Faction.ENEMY) {
 						SpawnEnemyCharacter(pos.x, pos.y, stats, inventory, skills, pos.quotes, pos.aggroType, battleMap.GetTile(pos.huntX, pos.huntY));

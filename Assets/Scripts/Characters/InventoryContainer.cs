@@ -77,6 +77,16 @@ public class InventoryContainer {
 	}
 
 	/// <summary>
+	/// Checks if the character can equip the target item.
+	/// </summary>
+	/// <param name="weapon"></param>
+	/// <returns></returns>
+	public bool CanEquip(ItemEntry weapon) {
+		WeaponRank rank = GetWpnSkill(weapon);
+		return (rank != WeaponRank.NONE && weapon.skillReq <= rank);
+	}
+
+	/// <summary>
 	/// Increases the weapon rank of all the weapon types in the list.
 	/// </summary>
 	/// <param name="weapons"></param>
@@ -180,7 +190,7 @@ public class InventoryContainer {
 			if (inventory[i].item == null)
 				continue;
 			WeaponRank skill = GetWpnSkill(inventory[i].item);
-			if (inventory[i].item.itemCategory == category && inventory[i].item.CanUse(skill))
+			if (inventory[i].item.itemCategory == category && inventory[i].item.CanUse(skill) && inventory[i].charge > 0)
 				list.Add(inventory[i]);
 		}
 		return list;
@@ -194,9 +204,10 @@ public class InventoryContainer {
 		for (int i = 0; i < inventory.Count; i++) {
 			if (inventory[i].item == null)
 				continue;
-			if (inventory[i].item.itemCategory == category)
+			if (inventory[i].item.itemCategory == category) {
 				inventory[i].charge--;
-			return;
+				return;
+			}
 		}
 	}
 
@@ -262,7 +273,8 @@ public class InventoryContainer {
 
 		InventoryTuple equip = inventory[index];
 		inventory.RemoveAt(index);
-		inventory.Insert(0, equip);
+		int startIndex = (equip.item.itemCategory == ItemCategory.WEAPON) ? 0 : 1;
+		inventory.Insert(startIndex, equip);
 		for (int i = 0; i < INVENTORY_SIZE; i++) {
 			inventory[i].index = i;
 		}

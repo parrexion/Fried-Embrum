@@ -34,6 +34,11 @@ public class BattlePrepController : InputReceiverDelegate {
 	[Header("Popup")]
 	public MyPrompt startPrompt;
 
+	[Header("Music")]
+	public AudioVariable mainMusic;
+	public MusicEntry prepMusic;
+	public UnityEvent playMusicEvent;
+
 
 	private void Start() {
 		mainMenuView.SetActive(false);
@@ -56,6 +61,8 @@ public class BattlePrepController : InputReceiverDelegate {
 		bool active = UpdateState(MenuMode.PREP);
 		mainMenuView.SetActive(active);
 		if (active) {
+			mainMusic.value = prepMusic.clip;
+			playMusicEvent.Invoke();
 			menuCollectionView.SetActive(!active);
 			buttonMenuView.SetActive(true);
 			currentState = State.MAIN;

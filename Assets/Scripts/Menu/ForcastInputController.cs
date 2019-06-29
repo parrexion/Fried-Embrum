@@ -29,23 +29,21 @@ public class ForcastInputController : InputReceiverDelegate {
 		if (!active)
 			return;
 
-		listIndex = 0;
 		if (currentAction.value == ActionMode.ATTACK)
 			attackerWeapons = selectedCharacter.value.inventory.GetAllUsableItemTuple(ItemCategory.WEAPON);
 		else
 			attackerWeapons = selectedCharacter.value.inventory.GetAllUsableItemTuple(ItemCategory.SUPPORT);
-		battleWeaponIndex.value = attackerWeapons[listIndex].index;
+		listIndex = -1;
+		ChangeWeapon(1);
 		characterChangedEvent.Invoke();
 	}
 
 	public override void OnLeftArrow() {
 		ChangeWeapon(-1);
-		menuMoveEvent.Invoke();
 	}
 
 	public override void OnRightArrow() {
 		ChangeWeapon(1);
-		menuMoveEvent.Invoke();
 	}
 
 	public override void OnOkButton() {
@@ -72,10 +70,14 @@ public class ForcastInputController : InputReceiverDelegate {
 	/// </summary>
 	/// <param name="diff"></param>
 	public void ChangeWeapon(int diff) {
+		bool inRange = false;
 		int startIndex = listIndex;
-		listIndex += diff;
-		listIndex = (listIndex >= 0) ? listIndex % attackerWeapons.Count : listIndex + attackerWeapons.Count;
-		battleWeaponIndex.value = attackerWeapons[listIndex].index;
+		do {
+			listIndex = OPMath.FullLoop(0, attackerWeapons.Count, listIndex + diff);
+			inRange = attackerWeapons[listIndex].item.InRange(BattleMap.DistanceTo(selectedCharacter.value, defendTile.value));
+			battleWeaponIndex.value = attackerWeapons[listIndex].index;
+		} while (!inRange && startIndex != listIndex);
+
 		if (startIndex != listIndex)
 			menuMoveEvent.Invoke();
 		forecast.UpdateUI(true);

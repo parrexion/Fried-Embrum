@@ -26,7 +26,7 @@ public class ActionInputController : MonoBehaviour {
 	[Header("Dialogues")]
 	public IntVariable dialogueMode;
 	public ScrObjEntryReference dialogueEntry;
-	public PopupController popup;
+	public MySpinner spinner;
 	public SfxEntry gainItemSfx;
 	public UnityEvent startDialogue;
 
@@ -122,7 +122,7 @@ public class ActionInputController : MonoBehaviour {
 	private IEnumerator WaitForItemGain() {
 		InventoryItem item = selectedCharacter.value.currentTile.gift;
 		string message = "Received " + item.item.entryName;
-		yield return StartCoroutine(popup.ShowPopup(item.item.icon, message, gainItemSfx));
+		yield return StartCoroutine(spinner.ShowSpinner(item.item.icon, message, gainItemSfx));
 
 		bool res = selectedCharacter.value.inventory.AddItem(item);
 		if (!res) {

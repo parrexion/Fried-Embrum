@@ -285,6 +285,7 @@ public class BattleContainer : InputReceiverDelegate {
 				act.attacker.inventory.ReduceItemCharge(ItemCategory.WEAPON);
 			}
 			else {
+				// Heal or buff
 				if (act.staffAtk.item.weaponType == WeaponType.MEDKIT) {
 					int health = act.GetHeals();
 					act.defender.TakeHeals(health);

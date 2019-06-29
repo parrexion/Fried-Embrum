@@ -29,7 +29,6 @@ public class SkillsContainer {
 		}
 	}
 
-	
 	public bool GainSkill(CharacterSkill skill) {
 		//Debug.Log("Adding skill " + skill.entryName);
 		for (int i = 0; i < skills.Length; i++) {
@@ -42,38 +41,39 @@ public class SkillsContainer {
 		return false;
 	}
 
+
 	//Skill activations
 
 	public void ActivateSkills(SkillActivation activation, TacticsMove user, TacticsMove enemy) {
 		for (int i = 0; i < skills.Length; i++) {
-			if (!skills[i])
+			if (!skills[i] || skills[i].activationType != activation)
 				continue;
-			skills[i].ActivateSkill(activation, user, enemy);
+			skills[i].UseSkill(user, enemy);
 		}
 	}
 
 	public void EndSkills(SkillActivation activation, TacticsMove user, TacticsMove enemy) {
 		for (int i = 0; i < skills.Length; i++) {
-			if (!skills[i])
+			if (!skills[i] || skills[i].activationType != activation)
 				continue;
-			skills[i].EndSkill(activation, user, enemy);
+			skills[i].EndSkill(user, enemy);
 		}
 	}
 
 	public int EditValueSkills(SkillActivation activation, TacticsMove user, int value) {
 		for (int i = 0; i < skills.Length; i++) {
-			if (!skills[i])
+			if (!skills[i] || skills[i].activationType != activation)
 				continue;
-			value = skills[i].EditValue(activation, value, user);
+			value = skills[i].EditValue(value, user);
 		}
 		return value;
 	}
 
 	public void ForEachSkills(SkillActivation activation, TacticsMove user, CharacterListVariable list) {
 		for (int i = 0; i < skills.Length; i++) {
-			if (!skills[i])
+			if (!skills[i] || skills[i].activationType != activation)
 				continue;
-			skills[i].ActivateForEach(activation, user, list);
+			skills[i].ForEachBoost(list, user);
 		}
 	}
 

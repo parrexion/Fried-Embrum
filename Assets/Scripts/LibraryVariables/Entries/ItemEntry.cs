@@ -124,7 +124,7 @@ public class ItemEntry : ScrObjLibraryEntry {
     /// <param name="skill"></param>
     /// <returns></returns>
     public bool CanEquip(WeaponRank skill) {
-        if (itemCategory == ItemCategory.CONSUME || skill == 0) {
+        if (itemCategory != ItemCategory.WEAPON || skill == 0) {
 			return false;
         }
 

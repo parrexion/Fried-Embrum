@@ -44,7 +44,6 @@ public class SimpleCharacterUI : MonoBehaviour {
 	public Image[] skillImages;
 	public Text pwrText;
 	public Text hitText;
-	public Text critText;
 	public Text avoidText;
 	public Image boostAvoid;
 
@@ -69,10 +68,6 @@ public class SimpleCharacterUI : MonoBehaviour {
 	public Text[] inventoryFields;
 	public Text[] inventoryValues;
 
-	[Header("Terrain Info")]
-	public GameObject terrainObject;
-	public Text terrainText;
-
 
 	private void Start() {
 		currentPage.value = (int)StatsPage.BASIC;
@@ -85,7 +80,6 @@ public class SimpleCharacterUI : MonoBehaviour {
 	public void UpdateUI() {
 		TacticsMove tactics = selectedCharacter.value;
 		MapTile tile = selectedTile.value;
-		bool active = true;
 
 		//Set selected character to the targeted tile instead of the selected character
 		if (actionMode.value == ActionMode.ATTACK || actionMode.value == ActionMode.HEAL || actionMode.value == ActionMode.TRADE) {
@@ -98,7 +92,6 @@ public class SimpleCharacterUI : MonoBehaviour {
 			currentMenuMode.value != (int)MenuMode.INV && currentMenuMode.value != (int)MenuMode.FORMATION &&
 			currentMenuMode.value != (int)MenuMode.TOOLTIP) {
 			HideStats();
-			active = false;
 		}
 		else if (tactics == null && tile.interactType != InteractType.NONE) {
 			ShowObjectStats(tile);
@@ -115,8 +108,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 		else if (currentPage.value == (int)StatsPage.BASIC) {
 			ShowBasicStats(tactics);
 		}
-
-		ShowTerrainInfo(active);
+		
 		flipButton.SetActive(currentMenuMode.value != (int)MenuMode.INV);
 	}
 
@@ -188,8 +180,6 @@ public class SimpleCharacterUI : MonoBehaviour {
 		pwrText.text = (pwer != -1) ? "Pwr:  " + pwer : "Pwr:  --";
 		int hitrate = BattleCalc.GetHitRate(weapon, stats);
 		hitText.text = (hitrate != -1) ? "Hit:  " + hitrate : "Hit:  --";
-		int critrate = BattleCalc.GetCritRate(weapon, stats);
-		critText.text = (critrate != -1) ? "Crit:   " + critrate : "Crit:   --";
 		avoidText.text = "Avo:  " + BattleCalc.GetAvoid(stats);
 
 		//Terrain
@@ -340,25 +330,8 @@ public class SimpleCharacterUI : MonoBehaviour {
 		}
 		pwrText.text = "Hit:  --";
 		hitText.text = "Pwr:  --";
-		critText.text = "Crit:   --";
 		avoidText.text = "Avo:  --";
 		boostAvoid.enabled = false;
-	}
-
-	/// <summary>
-	/// Shows some terrain information of the currently selected tile.
-	/// </summary>
-	/// <param name="terrain"></param>
-	/// <param name="active"></param>
-	private void ShowTerrainInfo(bool active) {
-		TerrainTile terrain = selectedTile.value.terrain;
-		terrainObject.SetActive(active);
-		if (active) {
-			if (terrain.healPercent != 0)
-				terrainText.text = string.Format("{0}    Def: {1}\nAvo: {2}    Heal: {3}", terrain.name, terrain.defense, terrain.avoid, terrain.healPercent);
-			else
-				terrainText.text = string.Format("{0}\nDef: {1}    Avo: {2}", terrain.name, terrain.defense, terrain.avoid);
-		}
 	}
 
 	/// <summary>

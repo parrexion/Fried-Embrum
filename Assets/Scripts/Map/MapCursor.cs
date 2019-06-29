@@ -254,7 +254,10 @@ public class MapCursor : MonoBehaviour {
 	/// Updates the position of the cursor depending on the menu mode.
 	/// </summary>
 	private void UpdateCursor() {
-		if (currentActionMode.value == ActionMode.ATTACK || currentActionMode.value == ActionMode.HEAL || currentActionMode.value == ActionMode.TRADE) {
+		if (currentFaction.value == Faction.ENEMY) {
+			transform.position = new Vector3(cursorX.value, cursorY.value, zHeight);
+		}
+		else if (currentActionMode.value == ActionMode.ATTACK || currentActionMode.value == ActionMode.HEAL || currentActionMode.value == ActionMode.TRADE) {
 			transform.position = new Vector3(target.value.posx, target.value.posy, zHeight);
 		}
 		else {

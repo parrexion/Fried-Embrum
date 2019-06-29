@@ -8,6 +8,7 @@ public enum BoostType { SINGLE, PASSIVE, DECREASE, ENDTURN, OTHER = 99 }
 public class Boost {
 
 	public BoostType boostType;
+
 	public int hp;
 	public int dmg;
 	public int mnd;
@@ -58,6 +59,32 @@ public class Boost {
 		avoid += other.avoid;
 	}
 
+	public void MergeBoost(Boost other) {
+		hp = MergeValues(hp, other.hp);
+		dmg = MergeValues(dmg, other.dmg);
+		mnd = MergeValues(mnd, other.mnd);
+		spd = MergeValues(spd, other.spd);
+		skl = MergeValues(skl, other.skl);
+		def = MergeValues(def, other.def);
+		mov = MergeValues(mov, other.mov);
+
+		hit = MergeValues(hit, other.hit);
+		crit = MergeValues(crit, other.crit);
+		avoid = MergeValues(avoid, other.avoid);
+	}
+
+	private int MergeValues(int a, int b) {
+		if (Mathf.Sign(a) != Mathf.Sign(b)) {
+			return a + b;
+		}
+		if (a > 0) {
+			return Mathf.Max(a, b);
+		}
+		else {
+			return Mathf.Min(a, b);
+		}
+	}
+
 	public bool IsActive() {
 		return _active;
 	}
@@ -69,12 +96,22 @@ public class Boost {
 			case BoostType.ENDTURN:
 				break;
 			case BoostType.DECREASE:
-				if (hp > 0) hp--;
-				if (dmg > 0) dmg--;
-				if (mnd > 0) mnd--;
-				if (spd > 0) spd--;
-				if (skl > 0) skl--;
-				if (def > 0) def--;
+				bool update = false;
+				if (hp > 0) { hp--; update = true; }
+				if (dmg > 0) { dmg--; update = true; }
+				if (mnd > 0) { mnd--; update = true; }
+				if (spd > 0) { spd--; update = true; }
+				if (skl > 0) { skl--; update = true; }
+				if (def > 0) { def--; update = true; }
+				if (hp < 0) { hp++; update = true; }
+				if (dmg < 0) { dmg++; update = true; }
+				if (mnd < 0) { mnd++; update = true; }
+				if (spd < 0) { spd++; update = true; }
+				if (skl < 0) { skl++; update = true; }
+				if (def < 0) { def++; update = true; }
+				if (!update) {
+					_active = false;
+				}
 				break;
 			case BoostType.SINGLE:
 				_active = false;
@@ -89,7 +126,7 @@ public class Boost {
 
 
 	public override string ToString() {
-		return string.Format("HP: {0}, DMG:{1}, MND:{2}, SKL:{3}, SPD:{4}, DEF:{5}, MOV:{6}, HIT:{7}, CRIT:{8}, AVOID:{9}", 
+		return string.Format("HP: {0}, DMG:{1}, MND:{2}, SKL:{3}, SPD:{4}, DEF:{5}, MOV:{6}, HIT:{7}, CRIT:{8}, AVOID:{9}",
 			hp, dmg, mnd, skl, spd, def, mov, hit, crit, avoid);
 	}
 }

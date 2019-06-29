@@ -9,10 +9,10 @@ public class AreaStartTurn : CharacterSkill {
     [Space(10)]
     public bool useOnSelf;
     
-    protected override void UseSkill(TacticsMove user, TacticsMove enemy) { }
-    protected override void RemoveEffect(TacticsMove user, TacticsMove enemy) { }
+    public override void UseSkill(TacticsMove user, TacticsMove enemy) { }
+    public override void EndSkill(TacticsMove user, TacticsMove enemy) { }
 
-    protected override void ForEachBoost(CharacterListVariable list, TacticsMove user) {
+    public override void ForEachBoost(CharacterListVariable list, TacticsMove user) {
         for (int i = 0; i < list.values.Count; i++) {
             if (list.values[i] == user && !useOnSelf)
                 continue;

@@ -32,7 +32,7 @@ public class TradeController : InputReceiverDelegate {
 	}
 
 
-    public override void OnMenuModeChanged() {
+	public override void OnMenuModeChanged() {
 		bool active = UpdateState(MenuMode.TRADE);
 		tradeWindowLeft.SetActive(active);
 		tradeWindowRight.SetActive(active);
@@ -45,10 +45,10 @@ public class TradeController : InputReceiverDelegate {
 
 		UpdateInventories();
 		UpdateSelection();
-    }
+	}
 
-    public override void OnDownArrow() {
-        if (menuPosition < InventoryContainer.INVENTORY_SIZE) {
+	public override void OnDownArrow() {
+		if (menuPosition < InventoryContainer.INVENTORY_SIZE) {
 			menuPosition++;
 			if (menuPosition >= InventoryContainer.INVENTORY_SIZE)
 				menuPosition -= InventoryContainer.INVENTORY_SIZE;
@@ -60,10 +60,10 @@ public class TradeController : InputReceiverDelegate {
 		}
 		UpdateSelection();
 		menuMoveEvent.Invoke();
-    }
+	}
 
-    public override void OnUpArrow() {
-        if (menuPosition < InventoryContainer.INVENTORY_SIZE) {
+	public override void OnUpArrow() {
+		if (menuPosition < InventoryContainer.INVENTORY_SIZE) {
 			menuPosition--;
 			if (menuPosition < 0)
 				menuPosition += InventoryContainer.INVENTORY_SIZE;
@@ -75,25 +75,25 @@ public class TradeController : InputReceiverDelegate {
 		}
 		UpdateSelection();
 		menuMoveEvent.Invoke();
-    }
+	}
 
-    public override void OnLeftArrow() {
-        if (menuPosition >= InventoryContainer.INVENTORY_SIZE) {
+	public override void OnLeftArrow() {
+		if (menuPosition >= InventoryContainer.INVENTORY_SIZE) {
 			menuPosition -= InventoryContainer.INVENTORY_SIZE;
 			UpdateSelection();
 			menuMoveEvent.Invoke();
 		}
-    }
+	}
 
-    public override void OnRightArrow() {
-        if (menuPosition < InventoryContainer.INVENTORY_SIZE) {
+	public override void OnRightArrow() {
+		if (menuPosition < InventoryContainer.INVENTORY_SIZE) {
 			menuPosition += InventoryContainer.INVENTORY_SIZE;
 			UpdateSelection();
 			menuMoveEvent.Invoke();
 		}
-    }
+	}
 
-    public override void OnOkButton() {
+	public override void OnOkButton() {
 		if (selectedIndex != -1) {
 			SwapItems();
 			menuAcceptEvent.Invoke();
@@ -103,10 +103,10 @@ public class TradeController : InputReceiverDelegate {
 			UpdateSelection();
 			menuAcceptEvent.Invoke();
 		}
-    }
+	}
 
-    public override void OnBackButton() {
-        if (selectedIndex != -1) {
+	public override void OnBackButton() {
+		if (selectedIndex != -1) {
 			selectedIndex = -1;
 			UpdateSelection();
 		}
@@ -117,7 +117,7 @@ public class TradeController : InputReceiverDelegate {
 			MenuChangeDelay(MenuMode.MAP);
 		}
 		menuBackEvent.Invoke();
-    }
+	}
 
 	/// <summary>
 	/// Updates the UI to show the current state of the inventories.
@@ -128,13 +128,6 @@ public class TradeController : InputReceiverDelegate {
 		portraitRight.sprite = targetCharacter.stats.charData.bigPortrait;
 
 		for (int i = 0, j = InventoryContainer.INVENTORY_SIZE; i < InventoryContainer.INVENTORY_SIZE; i++, j++) {
-			//InventoryTuple tup = selectedCharacter.value.inventory.GetTuple(i);
-			//itemNames[i].text = (tup.item != null) ? tup.item.entryName : "--";
-			//itemCharges[i].text = (tup.item != null) ? tup.charge.ToString() : "";
-			
-			//tup = targetCharacter.inventory.GetTuple(i);
-			//itemNames[j].text = (tup.item != null) ? tup.item.entryName : "--";
-			//itemCharges[j].text = (tup.item != null && tup.item.maxCharge != 1) ? tup.charge.ToString() : "";
 			slots[i].FillData(i, selectedCharacter.value.inventory.GetTuple(i));
 			slots[j].FillData(j, targetCharacter.inventory.GetTuple(i));
 		}
@@ -154,36 +147,55 @@ public class TradeController : InputReceiverDelegate {
 	/// Swaps the two items selected by menuPosition and selectedIndex and the updates the inventories.
 	/// </summary>
 	private void SwapItems() {
-		selectedCharacter.value.canUndoMove = false;
-		TacticsMove targetCharacter = targetTile.value.currentCharacter;
-		InventoryTuple tup1 = (selectedIndex >= InventoryContainer.INVENTORY_SIZE) ? 
-				targetCharacter.inventory.GetTuple(selectedIndex-InventoryContainer.INVENTORY_SIZE) : 
-				selectedCharacter.value.inventory.GetTuple(selectedIndex);
-		InventoryTuple tup2 = (menuPosition >= InventoryContainer.INVENTORY_SIZE) ? 
-				targetCharacter.inventory.GetTuple(menuPosition-InventoryContainer.INVENTORY_SIZE) : 
-				selectedCharacter.value.inventory.GetTuple(menuPosition);
+		TacticsMove leftCharacter = null;
+		TacticsMove rightCharacter = null;
+
+		int leftIndex = 0;
+		int rightIndex = 0;
+
+		InventoryTuple tupLeft = null;
+		InventoryTuple tupRight = null;
+
+		leftCharacter = (selectedIndex >= InventoryContainer.INVENTORY_SIZE) ? targetTile.value.currentCharacter : selectedCharacter.value;
+		rightCharacter = (menuPosition >= InventoryContainer.INVENTORY_SIZE) ? targetTile.value.currentCharacter : selectedCharacter.value;
+		leftIndex = (selectedIndex >= InventoryContainer.INVENTORY_SIZE) ? selectedIndex - InventoryContainer.INVENTORY_SIZE : selectedIndex;
+		rightIndex = (menuPosition >= InventoryContainer.INVENTORY_SIZE) ? menuPosition - InventoryContainer.INVENTORY_SIZE : menuPosition;
+
+		tupLeft = leftCharacter.inventory.GetTuple(leftIndex);
+		tupRight = rightCharacter.inventory.GetTuple(rightIndex);
+		
+		if (leftCharacter != rightCharacter) {
+			if (tupLeft.item != null && rightIndex == 0 && !rightCharacter.inventory.CanEquip(tupLeft.item)) {
+				return;
+			}
+			if (tupRight.item != null && leftIndex == 0 && !leftCharacter.inventory.CanEquip(tupRight.item)) {
+				return;
+			}
+		}
 
 		InventoryTuple temp = new InventoryTuple();
-		temp.charge = tup1.charge;
-		temp.droppable = tup1.droppable;
-		temp.item = tup1.item;
-		tup1.charge = tup2.charge;
-		tup1.droppable = tup2.droppable;
-		tup1.item = tup2.item;
-		tup2.charge = temp.charge;
-		tup2.droppable = temp.droppable;
-		tup2.item = temp.item;
-
+		temp.charge = tupLeft.charge;
+		temp.droppable = tupLeft.droppable;
+		temp.item = tupLeft.item;
+		tupLeft.charge = tupRight.charge;
+		tupLeft.droppable = tupRight.droppable;
+		tupLeft.item = tupRight.item;
+		tupRight.charge = temp.charge;
+		tupRight.droppable = temp.droppable;
+		tupRight.item = temp.item;
+		
+		if (leftCharacter == rightCharacter)
+			selectedCharacter.value.canUndoMove = false;
 		selectedIndex = -1;
-		targetCharacter.inventory.CleanupInventory();
-		selectedCharacter.value.inventory.CleanupInventory();
+		leftCharacter.inventory.CleanupInventory();
+		rightCharacter.inventory.CleanupInventory();
 		UpdateInventories();
 		UpdateSelection();
 	}
 
-    public override void OnLButton() { }
-    public override void OnRButton() { }
-    public override void OnXButton() { }
-    public override void OnYButton() { }
-    public override void OnStartButton() { }
+	public override void OnLButton() { }
+	public override void OnRButton() { }
+	public override void OnXButton() { }
+	public override void OnYButton() { }
+	public override void OnStartButton() { }
 }

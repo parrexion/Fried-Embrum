@@ -78,13 +78,16 @@ public class NPCMove : TacticsMove {
 		// Skip move if guarding type of enemy
 		if (aggroType == AggroType.GUARD || aggroType == AggroType.BOSS) {
 			if (currentTile.attackable) {
-				currentMode.value = (weapons[0].item.itemCategory == ItemCategory.WEAPON) ? ActionMode.ATTACK : ActionMode.HEAL;
-				tileBest = currentTile;
+				//currentMode.value = (weapons[0].item.itemCategory == ItemCategory.WEAPON) ? ActionMode.ATTACK : ActionMode.HEAL;
+				currentMode.value = ActionMode.MOVE;
+				//tileBest = currentTile;
+				tileBest = null;
 				tileGood = null;
 			}
 			else {
 				tileBest = null;
-				tileGood = currentTile;
+				tileGood = null;
+				//tileGood = currentTile;
 				currentMode.value = ActionMode.NONE;
 			}
 			return;
@@ -104,11 +107,11 @@ public class NPCMove : TacticsMove {
 			tileBest = huntTile;
 			tileGood = null;
 			while(tileBest != null && (tileBest.distance > moveSpeed || !tileBest.selectable)) {
-				Debug.Log("EY!");
 				tileBest = tileBest.parent;
 			}
 			if (tileBest != null) {
 				tileBest.PrintPos();
+				currentMode.value = ActionMode.MOVE;
 				return;
 			}
 		}
@@ -134,7 +137,6 @@ public class NPCMove : TacticsMove {
 			// Found a best tile to move to
 			bestTile.current = true;
 			currentMode.value = (weapons[0].item.itemCategory == ItemCategory.WEAPON) ? ActionMode.ATTACK : ActionMode.HEAL;
-			Debug.Log("That's the best");
 			tileBest = bestTile;
 			tileGood = null;
 			if (aggroType == AggroType.WAIT)
@@ -142,7 +144,6 @@ public class NPCMove : TacticsMove {
 		}
 		else if (!goodTile || aggroType != AggroType.CHARGE) {
 			//Have no weapons that can be used
-			Debug.Log("Nothing is good!!");
 			currentMode.value = ActionMode.NONE;
 			tileBest = null;
 			tileGood = null;
@@ -155,7 +156,6 @@ public class NPCMove : TacticsMove {
 
 			goodTile.current = true;
 			currentMode.value = ActionMode.MOVE;
-			Debug.Log("That's good enough");
 			tileBest = null;
 			tileGood = goodTile;
 		}
@@ -230,7 +230,7 @@ public class NPCMove : TacticsMove {
 	/// Ends the character's movement and clears the map of the selection.
 	/// </summary>
 	public override void EndMovement() {
-		Debug.Log("Finished move");
+		//Debug.Log("Finished move");
 		isMoving = false;
 		battleMap.ResetMap();
 		currentTile.current = true;

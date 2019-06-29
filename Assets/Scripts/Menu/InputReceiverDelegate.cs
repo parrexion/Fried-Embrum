@@ -12,6 +12,7 @@ public abstract class InputReceiverDelegate : MonoBehaviour {
 	public UnityEvent menuAcceptEvent;
 	public UnityEvent menuBackEvent;
 	public UnityEvent menuMoveEvent;
+	public UnityEvent menuFailEvent;
 	private bool active = false;
 
 	/// <summary>

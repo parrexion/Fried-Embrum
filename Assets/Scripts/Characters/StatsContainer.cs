@@ -117,6 +117,19 @@ public class StatsContainer {
 	private void GenerateBoosts() {
 		currentBoost = new Boost();
 
+		Boost mergeBoost = new Boost();
+		mergeBoost.boostType = BoostType.DECREASE;
+		for (int i = 0; i < boosts.Count; i++) {
+			if (boosts[i].boostType == BoostType.DECREASE) {
+				mergeBoost.MergeBoost(boosts[i]);
+				boosts.RemoveAt(i);
+				i--;
+				mergeBoost.ActivateBoost();
+			}
+		}
+		if (mergeBoost.IsActive())
+			boosts.Add(mergeBoost);
+
 		for (int i = 0; i < boosts.Count; i++) {
 			currentBoost.AddBoost(boosts[i]);
 		}
@@ -204,6 +217,7 @@ public class StatsContainer {
 	}
 
 	public void ClearBoosts(bool isStartTurn) {
+		Debug.Log("Clearing boosts  " + boosts.Count);
 		for (int i = 0; i < boosts.Count; i++) {
 			if (isStartTurn)
 				boosts[i].StartTurn();

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public static class BattleCalc {
 
-	const int FLAT_CRITRATE = 5;
 	public const float CRIT_MODIFIER = 2;
 
 	// Flat calculations
@@ -52,7 +51,7 @@ public static class BattleCalc {
 	public static int GetCritRate(ItemEntry weaponAtk, StatsContainer attacker) {
 		if (weaponAtk == null)
 			return -1;
-		return FLAT_CRITRATE + weaponAtk.critRate + attacker.critBoost;
+		return weaponAtk.critRate + attacker.critBoost;
 	}
 
 	/// <summary>
@@ -81,7 +80,7 @@ public static class BattleCalc {
 		int def = (weaponAtk.attackType == AttackType.PHYSICAL) ? defender.def + terrain.defense : defender.mnd + terrain.defense;
 		float weakness = GetWeaknessBonus(weaponAtk, defender);
 
-		int damage = Mathf.Max(0, Mathf.FloorToInt(pwr * weakness) - def);
+		int damage = Mathf.Max(1, Mathf.FloorToInt(pwr * weakness) - def);
 		return damage;
 	}
 
@@ -108,7 +107,9 @@ public static class BattleCalc {
 	/// <param name="defender"></param>
 	/// <returns></returns>
 	public static int GetCritRateBattle(ItemEntry weaponAtk, ItemEntry weaponDef, StatsContainer attacker, StatsContainer defender) {
-		return Mathf.Clamp(GetCritRate(weaponAtk, attacker) - GetCritAvoid(weaponDef, defender), 0, 100);
+		int levelDifference = attacker.level - defender.level;
+		int critBoost = (Mathf.Abs(levelDifference) < 2) ? 0 : 1 + levelDifference * 2;
+		return Mathf.Clamp(critBoost + GetCritRate(weaponAtk, attacker) - GetCritAvoid(weaponDef, defender), 0, 100);
 	}
 
 

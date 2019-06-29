@@ -5,9 +5,9 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Skills/Permanent")]
 public class PermanentBoost : CharacterSkill {
     
-    protected override void UseSkill(TacticsMove user, TacticsMove enemy) {
+    public override void UseSkill(TacticsMove user, TacticsMove enemy) {
+		boost.boostType = BoostType.PASSIVE;
         user.ReceiveBuff(boost, true, false);
     }
-
-    protected override void RemoveEffect(TacticsMove user, TacticsMove enemy) { }
+	
 }
