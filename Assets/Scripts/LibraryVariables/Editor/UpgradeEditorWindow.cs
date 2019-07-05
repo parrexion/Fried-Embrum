@@ -148,6 +148,8 @@ public class UpgradeEditorWindow {
 		entryValues.entryName = EditorGUILayout.TextField("Name", entryValues.entryName);
 		entryValues.type = (UpgradeType)EditorGUILayout.EnumPopup("Upgrade Type",entryValues.type);
 		entryValues.item = (ItemEntry)EditorGUILayout.ObjectField("Related item", entryValues.item, typeof(ItemEntry), false);
+		entryValues.rank = Mathf.Clamp(EditorGUILayout.IntField("Upgrade Rank", entryValues.rank), 1, 5);
+
 		entryValues.cost = EditorGUILayout.IntField("Money Cost", entryValues.cost);
 		entryValues.scrap = EditorGUILayout.IntField("Scrap Cost", entryValues.scrap);
 

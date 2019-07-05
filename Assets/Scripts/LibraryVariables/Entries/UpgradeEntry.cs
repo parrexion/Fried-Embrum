@@ -9,6 +9,8 @@ public class UpgradeEntry : ScrObjLibraryEntry {
 
 	public ItemEntry item;
 	public UpgradeType type;
+	public int rank = 1;
+
 	public int cost;
 	public int scrap;
 
@@ -26,6 +28,8 @@ public class UpgradeEntry : ScrObjLibraryEntry {
 
 		item = up.item;
 		type = up.type;
+		rank = up.rank;
+
 		cost = up.cost;
 		scrap = up.scrap;
 
@@ -41,6 +45,8 @@ public class UpgradeEntry : ScrObjLibraryEntry {
 
 		item = null;
 		type = UpgradeType.UPGRADE;
+		rank = 1;
+
 		cost = 0;
 		scrap = 0;
 

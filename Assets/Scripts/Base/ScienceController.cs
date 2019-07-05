@@ -28,6 +28,7 @@ public class ScienceController : MonoBehaviour {
 	public Text costMoney;
 	public Text costScrap;
 	public GameObject alreadyResearched;
+	public Image[] levelStars;
 
 	[Header("Upgrade info")]
 	public GameObject upgradeInfoObject;
@@ -147,6 +148,9 @@ public class ScienceController : MonoBehaviour {
 			costMoney.text = "Cost:";
 			costScrap.text = "Scrap:";
 			relatedItem.text = "Item:";
+			for (int i = 0; i < levelStars.Length; i++) {
+				levelStars[i].enabled = false;
+			}
 
 			pwrText.gameObject.SetActive(false);
 			hitText.gameObject.SetActive(false);
@@ -184,7 +188,11 @@ public class ScienceController : MonoBehaviour {
 			chargesText.text = "Max Charges:  " + tuple.maxCharge + "  ->  " + (tuple.maxCharge + upgrade.charges);
 			costValueText.text = "Item Value:  " + tuple.cost + "  ->  " + (tuple.cost + upgrade.costValue);
 		}
-		
+
+		for (int i = 0; i < levelStars.Length; i++) {
+			levelStars[i].enabled = i < upgrade.rank;
+		}
+
 		pwrText.gameObject.SetActive(upgrade.power != 0);
 		hitText.gameObject.SetActive(upgrade.hit != 0);
 		critText.gameObject.SetActive(upgrade.crit != 0);
@@ -224,6 +232,10 @@ public class ScienceController : MonoBehaviour {
 			costMoney.text = "Cost:  " + upgrade.cost;
 			costScrap.text = "Scrap:  " + upgrade.scrap;
 			alreadyResearched.SetActive(false);
+		}
+
+		for (int i = 0; i < levelStars.Length; i++) {
+			levelStars[i].enabled = i < upgrade.rank;
 		}
 
 		invPwrText.text = "Power:  " + upgrade.item.power;
