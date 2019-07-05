@@ -16,6 +16,7 @@ public class BaseEquipment : InputReceiverDelegate {
 	public GameObject charListView;
 	public GameObject convoyView;
 	public GameObject restockView;
+	public GameObject infoBoxView;
 
 	[Header("Character List")]
 	public Transform listParentCharacter;
@@ -33,9 +34,9 @@ public class BaseEquipment : InputReceiverDelegate {
 	private EntryList<ItemListEntry> itemList;
 
 	[Header("Inventory box")]
-	public TMPro.TextMeshProUGUI charName;
+	public Text charName;
 	public Image portrait;
-	public TMPro.TextMeshProUGUI[] inventory;
+	public Text[] inventory;
 
 	[Header("Information box")]
 	public Text TotalMoneyText;
@@ -60,6 +61,7 @@ public class BaseEquipment : InputReceiverDelegate {
 		restockView.SetActive(false);
 		charListView.SetActive(false);
 		convoyView.SetActive(false);
+		infoBoxView.SetActive(false);
 
 		characters = new EntryList<RestockListEntry>(characterListSize);
 		itemList = new EntryList<ItemListEntry>(itemListSize);
@@ -99,7 +101,7 @@ public class BaseEquipment : InputReceiverDelegate {
 
 		for (int i = 0; i < InventoryContainer.INVENTORY_SIZE; i++) {
 			InventoryTuple tuple = characters.GetEntry().invCon.GetTuple(i);
-			if (!tuple.item) {
+			if (string.IsNullOrEmpty(tuple.uuid)) {
 				if (currentMode == MenuState.STORE) {
 					Transform t2 = Instantiate(restockPrefab, listParentRestock);
 					ItemListEntry entry2 = itemList.CreateEntry(t2);
@@ -112,11 +114,11 @@ public class BaseEquipment : InputReceiverDelegate {
 			int charges = 0;
 			float cost = 0;
 			CalculateCharge(tuple, ref cost, ref charges, false);
-			string chargeStr = tuple.charge.ToString();
+			string chargeStr = tuple.currentCharges.ToString();
 			if (currentMode == MenuState.RECHARGE)
-				chargeStr += " / " + tuple.item.maxCharge;
+				chargeStr += " / " + tuple.maxCharge;
 			string costStr = (currentMode == MenuState.RECHARGE) ? Mathf.CeilToInt(cost * charges).ToString() : "";
-			entry.FillDataSimple(i, tuple.item, chargeStr, costStr);
+			entry.FillDataSimple(i, tuple, chargeStr, costStr);
 		}
 		restockPrefab.gameObject.SetActive(false);
 		ShowItemInfo();
@@ -125,7 +127,7 @@ public class BaseEquipment : InputReceiverDelegate {
 	private void UpdateInventoryList() {
 		for (int i = 0; i < InventoryContainer.INVENTORY_SIZE; i++) {
 			InventoryTuple tuple = characters.GetEntry().invCon.GetTuple(i);
-			if (!tuple.item) {
+			if (string.IsNullOrEmpty(tuple.uuid)) {
 				if (currentMode == MenuState.STORE) {
 					Transform t2 = Instantiate(restockPrefab, listParentRestock);
 					ItemListEntry entry2 = itemList.CreateEntry(t2);
@@ -138,9 +140,9 @@ public class BaseEquipment : InputReceiverDelegate {
 			int charges = 0;
 			float cost = 0;
 			CalculateCharge(tuple, ref cost, ref charges, false);
-			string chargeStr = tuple.charge + " / " + tuple.item.maxCharge;
+			string chargeStr = tuple.currentCharges + " / " + tuple.maxCharge;
 			string costStr = (currentMode == MenuState.RECHARGE) ? Mathf.CeilToInt(cost * charges).ToString() : "";
-			entry.FillDataSimple(i, tuple.item, chargeStr, costStr);
+			entry.FillDataSimple(i, tuple, chargeStr, costStr);
 		}
 		itemList.Move(0);
 	}
@@ -192,6 +194,7 @@ public class BaseEquipment : InputReceiverDelegate {
 			ShowCharInfo();
 			emptyView.SetActive(false);
 			charListView.SetActive(true);
+			infoBoxView.SetActive(false);
 		}
 		else if (currentMode == MenuState.CHARACTER) {
 			int buttonPos = menuButtons.GetPosition();
@@ -249,11 +252,13 @@ public class BaseEquipment : InputReceiverDelegate {
 			currentMode = MenuState.CHARACTER;
 			UpdateCharacterList();
 			restockView.SetActive(false);
+			infoBoxView.SetActive(false);
 			return false;
 		}
 		else if (currentMode == MenuState.TAKE) {
 			currentMode = MenuState.CHARACTER;
 			convoyView.SetActive(false);
+			infoBoxView.SetActive(false);
 			UpdateCharacterList();
 			return false;
 		}
@@ -261,6 +266,7 @@ public class BaseEquipment : InputReceiverDelegate {
 			currentMode = MenuState.CHARACTER;
 			UpdateCharacterList();
 			restockView.SetActive(false);
+			infoBoxView.SetActive(false);
 			return false;
 		}
 		charListView.SetActive(false);
@@ -285,7 +291,7 @@ public class BaseEquipment : InputReceiverDelegate {
 		float cost = 0;
 		CalculateCharge(tuple, ref cost, ref charges, true);
 
-		tuple.charge += charges;
+		tuple.currentCharges += charges;
 		totalMoney.value -= Mathf.CeilToInt(cost * charges);
 		TotalMoneyText.text = "Money:  " + totalMoney.value;
 		UpdateInventoryList();
@@ -310,15 +316,14 @@ public class BaseEquipment : InputReceiverDelegate {
 	}
 
 	private void StoreItem() {
-		if (!itemList.GetEntry().item)
+		if (string.IsNullOrEmpty(itemList.GetEntry().tuple.uuid))
 			return;
 
 		Debug.Log("Store item");
 		int index = itemList.GetPosition();
 		InventoryTuple tuple = characters.GetEntry().invCon.GetTuple(index);
-		InventoryItem item = new InventoryItem(tuple);
-		playerData.items.Add(item);
-		tuple.item = null;
+		playerData.items.Add(tuple.StoreData());
+		characters.GetEntry().invCon.DropItem(index);
 		
 		GenerateInventoryList();
 		itemList.ForcePosition(index);
@@ -330,15 +335,16 @@ public class BaseEquipment : InputReceiverDelegate {
 		charName.text = restock.entryName.text;
 		portrait.sprite = restock.icon.sprite;
 		for (int i = 0; i < InventoryContainer.INVENTORY_SIZE; i++) {
-			ItemEntry item = restock.invCon.GetTuple(i).item;
-			inventory[i].text = (item) ? item.entryName : "-NONE-";
+			InventoryTuple tuple = restock.invCon.GetTuple(i);
+			inventory[i].text = (!string.IsNullOrEmpty(tuple.uuid)) ? tuple.entryName : "-NONE-";
 		}
 	}
 
 	private void ShowItemInfo() {
+		infoBoxView.SetActive(true);
 		RestockListEntry entry = characters.GetEntry();
-		ItemEntry item = itemList.GetEntry().item;
-		if (!entry || !item) {
+		InventoryTuple tuple = itemList.GetEntry().tuple;
+		if (!entry || tuple == null || string.IsNullOrEmpty(tuple.uuid)) {
 			itemName.text = "";
 			itemType.text = "";
 			itemIcon.sprite = null;
@@ -351,15 +357,15 @@ public class BaseEquipment : InputReceiverDelegate {
 			return;
 		}
 
-		itemName.text = item.entryName;
-		itemType.text = InventoryContainer.GetWeaponTypeName(item.weaponType);
-		itemIcon.sprite = item.icon;
+		itemName.text = tuple.entryName;
+		itemType.text = InventoryContainer.GetWeaponTypeName(tuple.weaponType);
+		itemIcon.sprite = tuple.icon;
 
-		pwrText.text = "Pwr:  " + item.power.ToString();
-		rangeText.text = "Range:  " + item.range.ToString();
-		hitText.text = "Hit:  " + item.hitRate.ToString();
-		critText.text = "Crit:  " + item.critRate.ToString();
-		reqText.text = "Req:  " + item.skillReq.ToString();
+		pwrText.text = "Pwr:  " + tuple.power.ToString();
+		rangeText.text = "Range:  " + tuple.range.ToString();
+		hitText.text = "Hit:  " + tuple.hitRate.ToString();
+		critText.text = "Crit:  " + tuple.critRate.ToString();
+		reqText.text = "Req:  " + tuple.skillReq.ToString();
 	}
 
 	public override void OnMenuModeChanged() {

@@ -127,17 +127,17 @@ public class BattleContainer : InputReceiverDelegate {
 			actions.Clear();
 			actions.Add(new BattleAction(true, BattleAction.Type.DAMAGE, attacker, defender));
 			int range = Mathf.Abs(attacker.posx - defender.posx) + Mathf.Abs(attacker.posy - defender.posy);
-			if (defTup.item != null && defTup.charge > 0 && defender.GetEquippedWeapon(ItemCategory.WEAPON).item.InRange(range)) {
+			if (!string.IsNullOrEmpty(defTup.uuid) && defTup.currentCharges > 0 && defender.GetEquippedWeapon(ItemCategory.WEAPON).InRange(range)) {
 				actions.Add(new BattleAction(false, BattleAction.Type.DAMAGE, defender, attacker));
 			}
 			//Compare speeds
 			int spdDiff = actions[0].GetSpeedDifference();
 			if (spdDiff >= doublingSpeed.value) {
-				if (atkTup.charge > 1)
+				if (atkTup.currentCharges > 1)
 					actions.Add(new BattleAction(true, BattleAction.Type.DAMAGE, attacker, defender));
 			}
 			else if (spdDiff <= - doublingSpeed.value) {
-				if (defTup.item != null && defTup.charge > 0 && defender.GetEquippedWeapon(ItemCategory.WEAPON).item.InRange(range)) {
+				if (!string.IsNullOrEmpty(defTup.uuid) && defTup.currentCharges > 0 && defender.GetEquippedWeapon(ItemCategory.WEAPON).InRange(range)) {
 					actions.Add(new BattleAction(false, BattleAction.Type.DAMAGE, defender, attacker));
 				}
 			}
@@ -224,10 +224,10 @@ public class BattleContainer : InputReceiverDelegate {
 		for (int i = 0; i < actions.Count; i++) {
 			Debug.Log("Next action");
 			BattleAction act = actions[i];
-			if (act.type == BattleAction.Type.DAMAGE && act.attacker.inventory.GetFirstUsableItemTuple(ItemCategory.WEAPON).charge <= 0) {
+			if (act.type == BattleAction.Type.DAMAGE && act.attacker.inventory.GetFirstUsableItemTuple(ItemCategory.WEAPON).currentCharges <= 0) {
 				continue; //Broken weapon
 			}
-			if (act.type != BattleAction.Type.DAMAGE && act.attacker.inventory.GetFirstUsableItemTuple(ItemCategory.SUPPORT).charge <= 0) {
+			if (act.type != BattleAction.Type.DAMAGE && act.attacker.inventory.GetFirstUsableItemTuple(ItemCategory.SUPPORT).currentCharges <= 0) {
 				continue; //Broken staff
 			}
 			
@@ -286,13 +286,13 @@ public class BattleContainer : InputReceiverDelegate {
 			}
 			else {
 				// Heal or buff
-				if (act.staffAtk.item.weaponType == WeaponType.MEDKIT) {
+				if (act.staffAtk.weaponType == WeaponType.MEDKIT) {
 					int health = act.GetHeals();
 					act.defender.TakeHeals(health);
 					StartCoroutine(DamageDisplay(act.leftSide, health, false, false));
 				}
-				else if (act.staffAtk.item.weaponType == WeaponType.BARRIER) {
-					act.defender.ReceiveBuff(act.attacker.GetEquippedWeapon(ItemCategory.SUPPORT).item.boost, true, true);
+				else if (act.staffAtk.weaponType == WeaponType.BARRIER) {
+					act.defender.ReceiveBuff(act.attacker.GetEquippedWeapon(ItemCategory.SUPPORT).boost, true, true);
 				}
 				act.attacker.inventory.ReduceItemCharge(ItemCategory.SUPPORT);
 				_attackerDealtDamage = true;
@@ -453,20 +453,20 @@ public class BattleContainer : InputReceiverDelegate {
 		//Broken weapons
 		if (actions[0].type == BattleAction.Type.DAMAGE) {
 			InventoryTuple invTup = actions[0].weaponAtk;
-			if (invTup.item != null && invTup.charge <= 0) {
-				yield return StartCoroutine(spinner.ShowSpinner(invTup.item.icon, invTup.item.entryName + " is out of ammo!", badStuffSfx));
+			if (!string.IsNullOrEmpty(invTup.uuid) && invTup.currentCharges <= 0) {
+				yield return StartCoroutine(spinner.ShowSpinner(invTup.icon, invTup.entryName + " is out of ammo!", badStuffSfx));
 				actions[0].attacker.inventory.CleanupInventory();
 			}
 			invTup = actions[0].weaponDef;
-			if (invTup.item != null && invTup.charge <= 0) {
-				yield return StartCoroutine(spinner.ShowSpinner(invTup.item.icon, invTup.item.entryName + " is out of ammo!", badStuffSfx));
+			if (!string.IsNullOrEmpty(invTup.uuid) && invTup.currentCharges <= 0) {
+				yield return StartCoroutine(spinner.ShowSpinner(invTup.icon, invTup.entryName + " is out of ammo!", badStuffSfx));
 				actions[0].defender.inventory.CleanupInventory();
 			}
 		}
 		else {
 			InventoryTuple invTup = actions[0].staffAtk;
-			if (invTup.item != null && invTup.charge <= 0) {
-				yield return StartCoroutine(spinner.ShowSpinner(invTup.item.icon, invTup.item.entryName + " is out of ammo!", badStuffSfx));
+			if (!string.IsNullOrEmpty(invTup.uuid) && invTup.currentCharges <= 0) {
+				yield return StartCoroutine(spinner.ShowSpinner(invTup.icon, invTup.entryName + " is out of ammo!", badStuffSfx));
 				actions[0].attacker.inventory.CleanupInventory();
 			}
 		}
@@ -478,11 +478,11 @@ public class BattleContainer : InputReceiverDelegate {
 			if (itemTup == null || !itemTup.droppable)
 				continue;
 			
-			Debug.Log("Dropped item:  " + itemTup.item.entryName);
+			Debug.Log("Dropped item:  " + itemTup.entryName);
 			itemTup.droppable = false;
 			receiver.inventory.AddItem(itemTup);
 
-			yield return StartCoroutine(spinner.ShowSpinner(itemTup.item.icon, "Gained " + itemTup.item.entryName, rewardSfx));
+			yield return StartCoroutine(spinner.ShowSpinner(itemTup.icon, "Gained " + itemTup.entryName, rewardSfx));
 		}
 		yield break;
 	}

@@ -88,7 +88,7 @@ public class PrepInventorySelect : MonoBehaviour {
 
         for (int i = 0; i < InventoryContainer.INVENTORY_SIZE; i++) {
 			InventoryTuple tuple = charList.GetEntry().invCon.GetTuple(i);
-			if (!tuple.item) {
+			if (string.IsNullOrEmpty(tuple.uuid)) {
 				Transform t2 = Instantiate(restockPrefab, listParentRestock);
 				ItemListEntry entry2 = itemList.CreateEntry(t2);
 				entry2.FillDataEmpty(i);
@@ -99,9 +99,9 @@ public class PrepInventorySelect : MonoBehaviour {
 			int charges = 0;
 			float cost = 0;
 			CalculateCharge(tuple, ref cost, ref charges, false);
-			string chargeStr = tuple.charge + " / " + tuple.item.maxCharge;
+			string chargeStr = tuple.currentCharges + " / " + tuple.maxCharge;
 			string costStr = Mathf.CeilToInt(cost * charges).ToString();
-			entry.FillDataSimple(i, tuple.item, chargeStr, costStr);
+			entry.FillDataSimple(i, tuple, chargeStr, costStr);
         }
         restockPrefab.gameObject.SetActive(false);
     }
@@ -188,8 +188,8 @@ public class PrepInventorySelect : MonoBehaviour {
 		charName.text = entry.entryName.text;
 		portrait.sprite = entry.icon.sprite;
 		for (int i = 0; i < InventoryContainer.INVENTORY_SIZE; i++) {
-			ItemEntry item = entry.invCon.GetTuple(i).item;
-			inventory[i].text = (item) ? item.entryName : "-NONE-";
+			InventoryTuple tuple = entry.invCon.GetTuple(i);
+			inventory[i].text = (!string.IsNullOrEmpty(tuple.uuid)) ? tuple.entryName : "-NONE-";
 		}
 	}
 
@@ -198,20 +198,20 @@ public class PrepInventorySelect : MonoBehaviour {
 		tCharName.text = entry.entryName.text;
 		//portrait.sprite = entry.icon.sprite;
 		for (int i = 0; i < InventoryContainer.INVENTORY_SIZE; i++) {
-			ItemEntry item = entry.invCon.GetTuple(i).item;
-			tInventory[i].text = (item) ? item.entryName : "-NONE-";
+			InventoryTuple tuple = entry.invCon.GetTuple(i);
+			tInventory[i].text = (!string.IsNullOrEmpty(tuple.uuid)) ? tuple.entryName : "-NONE-";
 		}
 	}
 
 	private void ShowItemInfo() {
 		PrepCharacterEntry entry = charList.GetEntry();
-		ItemEntry item = null;
+		InventoryTuple tuple = null;
 		if (currentMode == State.STORE)
-			item = itemList.GetEntry().item;
+			tuple = itemList.GetEntry().tuple;
 		else if (convoy.GetEntry())
-			item = convoy.GetEntry().item;
+			tuple = convoy.GetEntry().tuple;
 		
-		if (!entry || !item) {
+		if (!entry || tuple == null || string.IsNullOrEmpty(tuple.uuid)) {
 			itemName.text = "";
 			itemIcon.sprite = null;
 
@@ -223,14 +223,14 @@ public class PrepInventorySelect : MonoBehaviour {
 			return;
 		}
 
-		itemName.text = item.entryName;
-		itemIcon.sprite = item.icon;
+		itemName.text = tuple.entryName;
+		itemIcon.sprite = tuple.icon;
 
-		pwrText.text  = "Pwr:  " + item.power.ToString();
-		rangeText.text = "Range:  " + item.range.ToString();
-		hitText.text = "Hit:  " + item.hitRate.ToString();
-		critText.text = "Crit:  " + item.critRate.ToString();
-		reqText.text = "Req:  " + item.skillReq.ToString();
+		pwrText.text  = "Pwr:  " + tuple.power.ToString();
+		rangeText.text = "Range:  " + tuple.range.ToString();
+		hitText.text = "Hit:  " + tuple.hitRate.ToString();
+		critText.text = "Crit:  " + tuple.critRate.ToString();
+		reqText.text = "Req:  " + tuple.skillReq.ToString();
 
 		if (currentMode == State.TAKE)
 			ShowCharInfoTake();
@@ -258,13 +258,12 @@ public class PrepInventorySelect : MonoBehaviour {
 	
 	private void StoreItem() {
 		Debug.Log("Store item");
-		if (!itemList.GetEntry().item)
+		if (itemList.GetEntry().tuple == null)
 			return;
 
 		InventoryTuple tuple = charList.GetEntry().invCon.GetTuple(itemList.GetPosition());
-		InventoryItem item = new InventoryItem(tuple);
-		playerData.items.Add(item);
-		tuple.item = null;
+		playerData.items.Add(tuple.StoreData());
+		charList.GetEntry().invCon.DropItem(itemList.GetPosition());
 		charList.GetEntry().invCon.CleanupInventory();
 
 		itemList.RemoveEntry();

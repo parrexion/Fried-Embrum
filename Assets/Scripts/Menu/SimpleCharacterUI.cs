@@ -162,7 +162,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 		weakIcon1.sprite = weaknessIcons.icons[(int)stats.currentClass.classType];
 		weakIcon1.enabled = (weakIcon1.sprite != null);
 
-		ItemEntry weapon = tactics.GetEquippedWeapon(ItemCategory.WEAPON).item;
+		InventoryTuple weapon = tactics.GetEquippedWeapon(ItemCategory.WEAPON);
 		wpnIcon.sprite = (weapon != null) ? weapon.icon : null;
 		wpnIcon.enabled = (weapon != null);
 		wpnName.text = (weapon != null) ? weapon.entryName : "---";
@@ -221,8 +221,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 		boostItems[4].GetComponentInChildren<Text>().text = stats.currentBoost.spd.ToString();
 		boostItems[5].GetComponentInChildren<Text>().text = stats.currentBoost.def.ToString();
 		boostItems[6].GetComponentInChildren<Text>().text = stats.currentBoost.mov.ToString();
-
-		ItemEntry weapon = tactics.GetEquippedWeapon(ItemCategory.WEAPON).item;
+		
 		spdText.text = stats.spd.ToString();
 		sklText.text = stats.skl.ToString();
 
@@ -270,19 +269,19 @@ public class SimpleCharacterUI : MonoBehaviour {
 
 		// Set up inventory list
 		for (int i = 0; i < 5; i++) {
-			if (i >= InventoryContainer.INVENTORY_SIZE || inventory.GetTuple(i).item == null) {
+			if (i >= InventoryContainer.INVENTORY_SIZE || string.IsNullOrEmpty(inventory.GetTuple(i).uuid)) {
 				inventoryFields[i].color = Color.yellow;
 				inventoryFields[i].text = "---";
 				inventoryValues[i].text = " ";
 			}
 			else {
 				InventoryTuple tuple = inventory.GetTuple(i);
-				WeaponRank skill = inventory.GetWpnSkill(tuple.item);
+				WeaponRank skill = inventory.GetWpnSkill(tuple);
 				inventoryFields[i].color = (tuple.droppable) ? Color.green :
-							(tuple.item.CanUse(skill)) ? Color.yellow : Color.grey;
-				inventoryFields[i].text = tuple.item.entryName;
-				inventoryValues[i].text = (tuple.item.maxCharge >= 0) ? tuple.charge.ToString() : " ";
-				if (tuple.item.itemCategory == ItemCategory.CONSUME && tuple.item.maxCharge == 1)
+							(tuple.CanUse(skill)) ? Color.yellow : Color.grey;
+				inventoryFields[i].text = tuple.entryName;
+				inventoryValues[i].text = (tuple.maxCharge >= 0) ? tuple.currentCharges.ToString() : " ";
+				if (tuple.itemCategory == ItemCategory.CONSUME && tuple.maxCharge == 1)
 					inventoryValues[i].text = " ";
 			}
 		}

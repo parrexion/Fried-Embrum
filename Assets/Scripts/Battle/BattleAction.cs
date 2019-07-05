@@ -37,34 +37,34 @@ public class BattleAction {
 	public int GetSpeedDifference() {
 		if (defender.faction == Faction.WORLD)
 			return 0;
-		ItemEntry wpn = (weaponDef != null) ? weaponDef.item : null;
-		return BattleCalc.GetAttackSpeed(weaponAtk.item, attacker.stats) - BattleCalc.GetAttackSpeed(wpn, defender.stats);
+		InventoryTuple wpn = (weaponDef != null) ? weaponDef : null;
+		return BattleCalc.GetAttackSpeed(weaponAtk, attacker.stats) - BattleCalc.GetAttackSpeed(wpn, defender.stats);
 	}
 
 	public int GetDamage() {
-		ItemEntry wpn = (weaponDef != null) ? weaponDef.item : null;
-		return BattleCalc.CalculateDamageBattle(weaponAtk.item, wpn, attacker.stats, defender.stats, terrainDef);
+		InventoryTuple wpn = (weaponDef != null) ? weaponDef : null;
+		return BattleCalc.CalculateDamageBattle(weaponAtk, wpn, attacker.stats, defender.stats, terrainDef);
 	}
 
 	public int GetHeals() {
-		return BattleCalc.CalculateHeals(staffAtk.item, attacker.stats);
+		return BattleCalc.CalculateHeals(staffAtk, attacker.stats);
 	}
 
 	public int GetHitRate() {
 		if (defender.faction == Faction.WORLD)
 			return 100;
-		ItemEntry wpn = (weaponDef != null) ? weaponDef.item : null;
-		return BattleCalc.GetHitRateBattle(weaponAtk.item, wpn, attacker.stats, defender.stats, terrainDef);
+		InventoryTuple wpn = (weaponDef != null) ? weaponDef : null;
+		return BattleCalc.GetHitRateBattle(weaponAtk, wpn, attacker.stats, defender.stats, terrainDef);
 	}
 
 	public int GetCritRate() {
 		if (defender.faction == Faction.WORLD)
 			return 0;
-		return BattleCalc.GetCritRateBattle(weaponAtk.item, weaponDef.item, attacker.stats, defender.stats);
+		return BattleCalc.GetCritRateBattle(weaponAtk, weaponDef, attacker.stats, defender.stats);
 	}
 
 	public bool CheckWeaponWeakness() {
-		ItemEntry wpn = (weaponAtk != null) ? weaponAtk.item : null;
+		InventoryTuple wpn = (weaponAtk != null) ? weaponAtk : null;
 		return BattleCalc.CheckWeaponWeakness(wpn, defender.stats);
 	}
 
@@ -74,7 +74,7 @@ public class BattleAction {
 
 		//Exp for support skills
 		if (type != Type.DAMAGE) {
-			return (attacker.faction == Faction.PLAYER) ? BattleCalc.GetExperienceSupport(staffAtk.item, attacker.stats) : 0;
+			return (attacker.faction == Faction.PLAYER) ? BattleCalc.GetExperienceSupport(staffAtk, attacker.stats) : 0;
 		}
 
 		//Exp for fights
@@ -94,10 +94,10 @@ public class BattleAction {
 	/// <param name="distance"></param>
 	/// <returns></returns>
 	public bool DefenderInRange(int distance) {
-		if (weaponDef.item == null || weaponDef.charge <= 0)
+		if (string.IsNullOrEmpty(weaponDef.uuid) || weaponDef.currentCharges <= 0)
 			return false;
 
-		return weaponDef.item.InRange(distance);
+		return weaponDef.InRange(distance);
 	}
 
 	/// <summary>

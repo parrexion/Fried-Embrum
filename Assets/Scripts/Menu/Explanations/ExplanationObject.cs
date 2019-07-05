@@ -19,11 +19,6 @@ public class ExplanationObject : MonoBehaviour {
 	}
 
 	public virtual string GetTooltip() {
-
-		if (scrObject != null) {
-			return (scrObject.value != null) ? ((ItemEntry)scrObject.value).description : "-EMPTY-";
-		}
-
 		return fallbackString;
 	}
 }

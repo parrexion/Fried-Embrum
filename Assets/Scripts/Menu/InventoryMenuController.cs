@@ -28,6 +28,7 @@ public class InventoryMenuController : InputReceiverDelegate {
 	private void Start () {
 		inventoryMenu.SetActive(false);
 		inventoryButtons.ResetButtons();
+		inventoryIndex.value = -1;
 	}
 
     public override void OnMenuModeChanged() {
@@ -42,11 +43,11 @@ public class InventoryMenuController : InputReceiverDelegate {
 	private void ButtonSetup() {
 		inventoryButtons.ResetButtons();
 		InventoryTuple tuple = selectedCharacter.value.inventory.GetTuple(inventoryIndex.value);
-		WeaponRank skill = selectedCharacter.value.inventory.GetWpnSkill(tuple.item);
-		if (tuple.item?.itemCategory == ItemCategory.WEAPON && tuple.item.CanUse(skill)) {
+		WeaponRank skill = selectedCharacter.value.inventory.GetWpnSkill(tuple);
+		if (tuple.itemCategory == ItemCategory.WEAPON && tuple.CanUse(skill)) {
 			inventoryButtons.AddButton("EQUIP", 0);
 		}
-		else if (tuple.item?.itemCategory == ItemCategory.CONSUME) {
+		else if (tuple.itemCategory == ItemCategory.CONSUME) {
 			inventoryButtons.AddButton("USE", 1);
 		}
 		inventoryButtons.AddButton("DROP", 2);
@@ -81,7 +82,7 @@ public class InventoryMenuController : InputReceiverDelegate {
     public override void OnOkButton() {
 		if (!selectMode) {
 			InventoryTuple tuple = selectedCharacter.value.inventory.GetTuple(inventoryIndex.value);
-			if (tuple.item != null) {
+			if (!string.IsNullOrEmpty(tuple.uuid)) {
 				selectMode = true;
 				ButtonSetup();
 				menuAcceptEvent.Invoke();
@@ -134,7 +135,7 @@ public class InventoryMenuController : InputReceiverDelegate {
 		selectMode = false;
 		inventoryButtons.ResetButtons();
 		InventoryTuple tup = selectedCharacter.value.inventory.GetTuple(inventoryIndex.value);
-		SfxEntry sfx = (tup.item.weaponType == WeaponType.C_HEAL) ? healItemSfx : boostItemSfx;
+		SfxEntry sfx = (tup.weaponType == WeaponType.C_HEAL) ? healItemSfx : boostItemSfx;
 		sfxQueue.Enqueue(sfx);
 		playSfxEvent.Invoke();
 
@@ -152,7 +153,7 @@ public class InventoryMenuController : InputReceiverDelegate {
 	private void DropItem() {
 		selectMode = false;
 		inventoryButtons.ResetButtons();
-		selectedCharacter.value.inventory.DropItem(inventoryIndex.value, selectedCharacter.value.stats);
+		selectedCharacter.value.inventory.DropItem(inventoryIndex.value);
 		inventoryChangedEvent.Invoke();
 	}
 

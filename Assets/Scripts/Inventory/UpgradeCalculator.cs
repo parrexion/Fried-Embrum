@@ -31,6 +31,20 @@ public class UpgradeCalculator {
 		}
 	}
 
+	/// <summary>
+	/// Returns a list of all upgrades related to the given item.
+	/// </summary>
+	/// <param name="itemID"></param>
+	/// <returns></returns>
+	public List<UpgradeItem> GetItemUpgradeList(string itemID) {
+		List<UpgradeItem> relatedUpgrades = new List<UpgradeItem>();
+		for (int i = 0; i < upgrades.Count; i++) {
+			if (upgrades[i].upgrade.item.uuid == itemID)
+				relatedUpgrades.Add(upgrades[i]);
+		}
+		return relatedUpgrades;
+	}
+
 	public bool IsResearched(string uuid) {
 		return developed.Contains(uuid);
 	}

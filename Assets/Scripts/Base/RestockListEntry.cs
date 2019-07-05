@@ -26,8 +26,8 @@ public class RestockListEntry : ListEntry {
 	public void UpdateRestock() {
 		bool restock = false;
 		for (int i = 0; i < InventoryContainer.INVENTORY_SIZE; i++) {
-			ItemEntry item = invCon.GetTuple(i).item;
-			if (item  && invCon.GetTuple(i).charge < item.maxCharge) {
+			InventoryTuple tuple = invCon.GetTuple(i);
+			if (!string.IsNullOrEmpty(tuple.uuid) && tuple.currentCharges < tuple.maxCharge) {
 				restock = true;
 				break;
 			}

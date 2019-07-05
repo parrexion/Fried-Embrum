@@ -9,7 +9,7 @@ public class ExplanationSkillObject : ExplanationObject {
 			return (scrObject.value != null) ? ((CharacterSkill)scrObject.value).description : "-EMPTY-";
 		}
 
-		return fallbackString;
+		return base.GetTooltip();
 	}
 
 }

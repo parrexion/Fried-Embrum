@@ -237,9 +237,9 @@ public abstract class TacticsMove : MonoBehaviour {
 				continue;
 			int tempDist = BattleMap.DistanceTo(this, enemyList.values[i]);
 			for (int w = 0; w < weaponList.Count; w++) {
-				if (weaponList[w].item == null)
+				if (string.IsNullOrEmpty(weaponList[w].uuid))
 					continue;
-				if (weaponList[w].item.InRange(tempDist) && faction != enemyList.values[i].faction) {
+				if (weaponList[w].InRange(tempDist) && faction != enemyList.values[i].faction) {
 					enemies.Add(enemyList.values[i].currentTile);
 					break;
 				}
@@ -248,9 +248,9 @@ public abstract class TacticsMove : MonoBehaviour {
 		for (int i = 0; i < battleMap.breakables.Count; i++) {
 			int tempDist = BattleMap.DistanceTo(this, battleMap.breakables[i]);
 			for (int w = 0; w < weaponList.Count; w++) {
-				if (weaponList[w].item == null)
+				if (string.IsNullOrEmpty(weaponList[w].uuid))
 					continue;
-				if (weaponList[w].item.InRange(tempDist)) {
+				if (weaponList[w].InRange(tempDist)) {
 					enemies.Add(battleMap.breakables[i]);
 					break;
 				}
@@ -265,7 +265,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// <returns></returns>
 	public List<MapTile> FindSupportablesInRange() {
 		InventoryTuple staff = inventory.GetFirstUsableItemTuple(ItemCategory.SUPPORT);
-		if (staff.item == null)
+		if (string.IsNullOrEmpty(staff.uuid))
 			return new List<MapTile>();
 
 		List<MapTile> supportables = new List<MapTile>();
@@ -274,7 +274,7 @@ public abstract class TacticsMove : MonoBehaviour {
 				continue;
 
 			int tempDist = BattleMap.DistanceTo(this, playerList.values[i]);
-			if (staff.item.InRange(tempDist) && faction == playerList.values[i].faction)
+			if (staff.InRange(tempDist) && faction == playerList.values[i].faction)
 				supportables.Add(playerList.values[i].currentTile);
 		}
 		return supportables;
@@ -539,7 +539,7 @@ public abstract class TacticsMove : MonoBehaviour {
 		List<InventoryTuple> staffs = inventory.GetAllUsableItemTuple(ItemCategory.SUPPORT);
 		bool isBuff = false;
 		for (int i = 0; i < staffs.Count; i++) {
-			if (staffs[i].item.weaponType == WeaponType.BARRIER) {
+			if (staffs[i].weaponType == WeaponType.BARRIER) {
 				isBuff = true;
 				break;
 			}

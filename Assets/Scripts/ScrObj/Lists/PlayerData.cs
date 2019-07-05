@@ -33,4 +33,10 @@ public class PlayerData : ScriptableObject {
 
 		missions = new List<MissionContainer>();
 	}
+
+	public void UpdateUpgrades() {
+		for (int i = 0; i < inventory.Count; i++) {
+			inventory[i].RefreshUpgrades(upgrader);
+		}
+	}
 } 

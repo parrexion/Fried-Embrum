@@ -26,6 +26,7 @@ public class TurnController : MonoBehaviour {
 	public BoolVariable triggeredWin;
 	public IntVariable currentDialogueMode;
 	public ScrObjEntryReference currentDialogue;
+	public BoolVariable selectMainCharacter;
 	public BoolVariable autoEndTurn;
 	public IntVariable cursorX, cursorY;
 
@@ -199,15 +200,12 @@ public class TurnController : MonoBehaviour {
 			return;
 
 		// Check if any players are alive
-		bool gameFinished = true;
+		bool gameFinished = false;
 		MapEntry map = (MapEntry)currentMap.value;
 		// Normal lose condition
 		if (map.loseCondition == LoseCondition.NORMAL) {
 			for (int i = 0; i < playerList.values.Count; i++) {
-				if (playerList.values[i].IsAlive()) {
-					gameFinished = false;
-				}
-				else if (playerList.values[i].stats.charData.mustSurvive) {
+				if (!playerList.values[i].IsAlive() && playerList.values[i].stats.charData.mustSurvive) {
 					gameFinished = true;
 					break;
 				}
@@ -313,9 +311,11 @@ public class TurnController : MonoBehaviour {
 			for (int i = 0; i < playerList.values.Count; i++) {
 				playerList.values[i].OnStartTurn();
 			}
-			cursorX.value = playerList.values[0].posx;
-			cursorY.value = playerList.values[0].posy;
-			moveCursorEvent.Invoke();
+			if (selectMainCharacter.value) {
+				cursorX.value = playerList.values[0].posx;
+				cursorY.value = playerList.values[0].posy;
+				moveCursorEvent.Invoke();
+			}
 			lockControls.value = false;
 			currentAction.value = ActionMode.NONE;
 			InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
@@ -351,6 +351,19 @@ public class TurnController : MonoBehaviour {
 		notificationObject.SetActive(true);
 		sfxQueue.Enqueue(victoryFanfare);
 		playSfxEvent.Invoke();
+
+		//Remove dead characters
+		for (int i = 0; i < playerList.values.Count; i++) {
+			if (!playerList.values[i].IsAlive()) {
+				playerData.stats.RemoveAt(i);
+				playerData.inventory.RemoveAt(i);
+				playerData.skills.RemoveAt(i);
+				playerData.baseInfo.RemoveAt(i);
+				playerList.values.RemoveAt(i);
+				i--;
+			}
+		}
+
 		yield return new WaitForSeconds(4f);
 
 		notificationObject.SetActive(false);

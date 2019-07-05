@@ -8,7 +8,7 @@ public static class BattleCalc {
 
 	// Flat calculations
 
-	public static int CalculateDamage(ItemEntry weaponAtk, StatsContainer attacker) {
+	public static int CalculateDamage(InventoryTuple weaponAtk, StatsContainer attacker) {
 		if (weaponAtk == null)
 			return -1;
 		if (weaponAtk.attackType == AttackType.PHYSICAL) {
@@ -20,13 +20,13 @@ public static class BattleCalc {
 		return -1;
 	}
 
-	public static int CalculateHeals(ItemEntry weaponAtk, StatsContainer attacker) {
+	public static int CalculateHeals(InventoryTuple weaponAtk, StatsContainer attacker) {
 		if (weaponAtk == null)
 			return -1;
 		return weaponAtk.power + attacker.skl;
 	}
 
-	public static int GetAttackSpeed(ItemEntry weaponAtk, StatsContainer attacker) {
+	public static int GetAttackSpeed(InventoryTuple weaponAtk, StatsContainer attacker) {
 		return attacker.spd;
 	}
 
@@ -36,7 +36,7 @@ public static class BattleCalc {
 	/// <param name="weaponAtk"></param>
 	/// <param name="attacker"></param>
 	/// <returns></returns>
-	public static int GetHitRate(ItemEntry weaponAtk, StatsContainer attacker) {
+	public static int GetHitRate(InventoryTuple weaponAtk, StatsContainer attacker) {
 		if (weaponAtk == null)
 			return -1;
 		return weaponAtk.hitRate + attacker.skl * 2 + attacker.hitBoost;
@@ -48,7 +48,7 @@ public static class BattleCalc {
 	/// <param name="weaponAtk"></param>
 	/// <param name="attacker"></param>
 	/// <returns></returns>
-	public static int GetCritRate(ItemEntry weaponAtk, StatsContainer attacker) {
+	public static int GetCritRate(InventoryTuple weaponAtk, StatsContainer attacker) {
 		if (weaponAtk == null)
 			return -1;
 		return weaponAtk.critRate + attacker.critBoost;
@@ -68,14 +68,14 @@ public static class BattleCalc {
 	/// </summary>
 	/// <param name="defender"></param>
 	/// <returns></returns>
-	public static int GetCritAvoid(ItemEntry weaponDef, StatsContainer defender) {
+	public static int GetCritAvoid(InventoryTuple weaponDef, StatsContainer defender) {
 		return 0;
 	}
 
 
 	// Against opponent calculations
 
-	public static int CalculateDamageBattle(ItemEntry weaponAtk, ItemEntry weaponDef, StatsContainer attacker, StatsContainer defender, TerrainTile terrain) {
+	public static int CalculateDamageBattle(InventoryTuple weaponAtk, InventoryTuple weaponDef, StatsContainer attacker, StatsContainer defender, TerrainTile terrain) {
 		int pwr = (weaponAtk.attackType == AttackType.PHYSICAL) ? weaponAtk.power + attacker.dmg : weaponAtk.power + attacker.mnd;
 		int def = (weaponAtk.attackType == AttackType.PHYSICAL) ? defender.def + terrain.defense : defender.mnd + terrain.defense;
 		float weakness = GetWeaknessBonus(weaponAtk, defender);
@@ -93,7 +93,7 @@ public static class BattleCalc {
 	/// <param name="defender"></param>
 	/// <param name="terrain"></param>
 	/// <returns></returns>
-	public static int GetHitRateBattle(ItemEntry weaponAtk, ItemEntry weaponDef, StatsContainer attacker, StatsContainer defender, TerrainTile terrain) {
+	public static int GetHitRateBattle(InventoryTuple weaponAtk, InventoryTuple weaponDef, StatsContainer attacker, StatsContainer defender, TerrainTile terrain) {
 		int avoid = GetAvoid(defender) + terrain.avoid;
 		return Mathf.Clamp(GetHitRate(weaponAtk, attacker) - avoid, 0, 100);
 	}
@@ -106,7 +106,7 @@ public static class BattleCalc {
 	/// <param name="attacker"></param>
 	/// <param name="defender"></param>
 	/// <returns></returns>
-	public static int GetCritRateBattle(ItemEntry weaponAtk, ItemEntry weaponDef, StatsContainer attacker, StatsContainer defender) {
+	public static int GetCritRateBattle(InventoryTuple weaponAtk, InventoryTuple weaponDef, StatsContainer attacker, StatsContainer defender) {
 		int levelDifference = attacker.level - defender.level;
 		int critBoost = (Mathf.Abs(levelDifference) < 2) ? 0 : 1 + levelDifference * 2;
 		return Mathf.Clamp(critBoost + GetCritRate(weaponAtk, attacker) - GetCritAvoid(weaponDef, defender), 0, 100);
@@ -121,7 +121,7 @@ public static class BattleCalc {
 	/// <param name="weaponAtk"></param>
 	/// <param name="defender"></param>
 	/// <returns></returns>
-	public static bool CheckWeaponWeakness(ItemEntry weaponAtk, StatsContainer defender) {
+	public static bool CheckWeaponWeakness(InventoryTuple weaponAtk, StatsContainer defender) {
 		if (weaponAtk == null)
 			return false;
 
@@ -138,7 +138,7 @@ public static class BattleCalc {
 	/// <param name="weaponAtk"></param>
 	/// <param name="defender"></param>
 	/// <returns></returns>
-	public static float GetWeaknessBonus(ItemEntry weaponAtk, StatsContainer defender) {
+	public static float GetWeaknessBonus(InventoryTuple weaponAtk, StatsContainer defender) {
 		for (int i = 0; i < weaponAtk.advantageType.Count; i++) {
 			if (weaponAtk.advantageType[i] == defender.currentClass.classType)
 				return 2f;
@@ -164,7 +164,7 @@ public static class BattleCalc {
 		return gainedExp;
 	}
 
-	public static int GetExperienceSupport(ItemEntry weapon, StatsContainer player) {
+	public static int GetExperienceSupport(InventoryTuple weapon, StatsContainer player) {
 		int ld = Mathf.Max(0, (int)(player.level * 0.5f) - 3);
 		int baseExp = (weapon.weaponType == WeaponType.MEDKIT) ? 15 : 30;
 		return baseExp - ld;

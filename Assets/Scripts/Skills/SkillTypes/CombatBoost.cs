@@ -30,7 +30,7 @@ public class CombatBoost : CharacterSkill {
 		bool retaliateOk = (enemyCanAttack == EnemyCanAttack.BOTH);
 		if (enemyCanAttack != EnemyCanAttack.BOTH) {
 			InventoryTuple tuple = enemy.GetEquippedWeapon(ItemCategory.WEAPON);
-			bool inRange = (tuple.item != null && tuple.item.InRange(range));
+			bool inRange = (!string.IsNullOrEmpty(tuple.uuid) && tuple.InRange(range));
 			retaliateOk = ((inRange && enemyCanAttack == EnemyCanAttack.ATTACK) || 
 				(!inRange && enemyCanAttack == EnemyCanAttack.NO_ATTACK));
 		}

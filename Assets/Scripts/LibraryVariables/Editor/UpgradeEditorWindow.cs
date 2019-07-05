@@ -154,15 +154,12 @@ public class UpgradeEditorWindow {
 		GUILayout.Space(10);
 
 		if (entryValues.type == UpgradeType.UPGRADE) {
+			entryValues.costValue = EditorGUILayout.IntField("Value increase", entryValues.costValue);
 			GUILayout.Label("Improvements", EditorStyles.boldLabel);
-			entryValues.level = EditorGUILayout.IntField("Level", entryValues.level);
-			entryValues.hit = EditorGUILayout.IntField("Hit Rate", entryValues.hit);
 			entryValues.power = EditorGUILayout.IntField("Power", entryValues.power);
-			GUILayout.Label("Range modification");
-			GUILayout.BeginHorizontal();
-			entryValues.minRange = EditorGUILayout.IntField("Min", entryValues.minRange);
-			entryValues.maxRange = EditorGUILayout.IntField("Max", entryValues.maxRange);
-			GUILayout.EndHorizontal();
+			entryValues.hit = EditorGUILayout.IntField("Hit Rate", entryValues.hit);
+			entryValues.crit = EditorGUILayout.IntField("Crit Rate", entryValues.crit);
+			entryValues.charges = EditorGUILayout.IntField("Max Charges", entryValues.charges);
 		}
 		
 		GUILayout.EndScrollView();

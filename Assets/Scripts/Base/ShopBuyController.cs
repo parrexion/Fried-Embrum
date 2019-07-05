@@ -71,14 +71,11 @@ public class ShopBuyController : MonoBehaviour {
 		else {
 			if (buyPrompt.Click(true) == MyPrompt.Result.OK1) {
 				if (shopList.buyMode) { // Buy item
-					ItemEntry item = ScriptableObject.CreateInstance<ItemEntry>();
-					item.CopyValues(itemEntry.item);
-					totalMoney.value -= item.cost;
-					playerData.items.Add(new InventoryItem(item));
+					totalMoney.value -= itemEntry.tuple.cost;
+					playerData.items.Add(itemEntry.tuple.StoreData());
 				}
 				else { // Sell item
-					ItemEntry item = itemEntry.item;
-					totalMoney.value += (int)(item.cost * sellRatio.value);
+					totalMoney.value += (int)(itemEntry.tuple.cost * sellRatio.value);
 					playerData.items.RemoveAt(itemEntry.index);
 					shopList.RemoveEntry();
 				}
@@ -103,7 +100,7 @@ public class ShopBuyController : MonoBehaviour {
 		TotalMoneyText.text = "Money:  " + totalMoney.value;
 
 		ItemListEntry itemEntry = shopList.GetEntry();
-		if (!itemEntry || !itemEntry.item) {
+		if (!itemEntry || string.IsNullOrEmpty(itemEntry.tuple.uuid)) {
 			itemName.text = "";
 			itemType.text = "";
 			itemIcon.color = new Color(0,0,0,0);
@@ -116,7 +113,7 @@ public class ShopBuyController : MonoBehaviour {
 			return;
 		}
 
-		ItemEntry item = itemEntry.item;
+		InventoryTuple item = itemEntry.tuple;
 		itemName.text = item.entryName;
 		itemType.text = InventoryContainer.GetWeaponTypeName(item.weaponType);
 		itemIcon.sprite = item.icon;

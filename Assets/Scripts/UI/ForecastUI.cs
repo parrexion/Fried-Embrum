@@ -106,7 +106,7 @@ public class ForecastUI : MonoBehaviour {
 
 			if (battleMode == BattleAction.Type.DAMAGE) {
 				int distance = BattleMap.DistanceTo(attacker, target);
-				int atk = (act1.weaponAtk.item.InRange(distance)) ? act1.GetDamage() : -1;
+				int atk = (act1.weaponAtk.InRange(distance)) ? act1.GetDamage() : -1;
 				int ret = -1;
 				int spd = 0;
 				int hit = (atk != -1) ? act1.GetHitRate() : -1;
@@ -117,7 +117,7 @@ public class ForecastUI : MonoBehaviour {
 				bool defWeak = false;
 				UpdateHealthUI();
 				ShowAttackerStats(attacker, act1.weaponAtk, atk, spd, hit, crit, atkWeak);
-				ShowDefenderStats(defender, new InventoryTuple(), ret, spd, hit2, crit2, defWeak);
+				ShowDefenderStats(defender, new InventoryTuple(null), ret, spd, hit2, crit2, defWeak);
 				if (!inBattle) {
 					backgroundFight.SetActive(true);
 					backgroundHeal.SetActive(false);
@@ -149,7 +149,7 @@ public class ForecastUI : MonoBehaviour {
 				BattleAction act2 = new BattleAction(false, BattleAction.Type.DAMAGE, defender, attacker);
 				act2.weaponDef = attacker.inventory.GetTuple(battleWeaponIndex.value);
 				int distance = BattleMap.DistanceTo(defender, walkTile.value);
-				int atk = (act1.weaponAtk.item.InRange(distance)) ? act1.GetDamage() : -1;
+				int atk = (act1.weaponAtk.InRange(distance)) ? act1.GetDamage() : -1;
 				int ret = (act1.DefenderInRange(distance)) ? act2.GetDamage() : -1;
 				int spd = act1.GetSpeedDifference();
 				int hit = (atk != -1) ? act1.GetHitRate() : -1;
@@ -181,10 +181,10 @@ public class ForecastUI : MonoBehaviour {
 
 		characterName.text = tactics.stats.charData.entryName;
 		portrait.sprite = tactics.stats.charData.portrait;
-		wpnIcon.sprite = (InvTup.item != null) ? InvTup.item.icon : null;
-		wpnName.text = (InvTup.item != null) ? InvTup.item.entryName : "";
+		wpnIcon.sprite = InvTup.icon;
+		wpnName.text = InvTup.entryName;
 		if (wpnCharge)
-			wpnCharge.text = (InvTup.item != null) ? InvTup.charge.ToString() : "";
+			wpnCharge.text = (InvTup.currentCharges > 0) ? InvTup.currentCharges.ToString() : "";
 
 		dmgText.text = (damage != -1) ? damage.ToString() : "--";
 		//dmgText.color = (damage != -1 && defWeak) ? Color.green : Color.black;
@@ -198,10 +198,10 @@ public class ForecastUI : MonoBehaviour {
 
 		eCharacterName.text = tactics.stats.charData.entryName;
 		ePortrait.sprite = tactics.stats.charData.portrait;
-		eWpnIcon.sprite = (invTup.item != null) ? invTup.item.icon : null;
-		eWpnName.text = (invTup.item != null) ? invTup.item.entryName : "";
+		eWpnIcon.sprite = invTup.icon;
+		eWpnName.text = invTup.entryName;
 		if (eWpnCharge)
-			eWpnCharge.text = (invTup.item != null) ? invTup.charge.ToString() : "";
+			eWpnCharge.text = (invTup.currentCharges > 0) ? invTup.currentCharges.ToString() : "";
 
 		eDmgText.text = (damage != -1) ? damage.ToString() : "--";
 		//eDmgText.color = (damage != -1 && atkWeak) ? Color.green : Color.black;
@@ -226,14 +226,14 @@ public class ForecastUI : MonoBehaviour {
 			hHpBar2.SetAmount(receiver.currentHealth, receiver.stats.hp);
 		}
 
-		hWpnIcon.sprite = (staff.item != null) ? staff.item.icon : null;
-		hWpnName.text = (staff.item != null) ? staff.item.entryName : "";
+		hWpnIcon.sprite = staff.icon;
+		hWpnName.text = staff.entryName;
 
 		if (!inBattle) {
-			hWpnCharge.text = (staff.item != null) ? staff.charge.ToString() : "";
+			hWpnCharge.text = (string.IsNullOrEmpty(staff.uuid)) ? staff.currentCharges.ToString() : "";
 			hHealText.text = string.Format("{0} → {1} ({2})",
 					_defenderTactics.currentHealth,
-					Mathf.Min(_defenderTactics.currentHealth + BattleCalc.CalculateHeals(staff.item, _attackerTactics.stats), _defenderTactics.stats.hp),
+					Mathf.Min(_defenderTactics.currentHealth + BattleCalc.CalculateHeals(staff, _attackerTactics.stats), _defenderTactics.stats.hp),
 					_defenderTactics.stats.hp);
 		}
 	}

@@ -15,8 +15,23 @@ public class InventoryContainer {
 	[SerializeField] private List<InventoryTuple> inventory = new List<InventoryTuple>();
 
 
-	public InventoryContainer(ScrObjLibraryVariable iLib, CharacterSaveData saveData) {
-		SetupValues(iLib, saveData);
+	public InventoryContainer(ScrObjLibraryVariable iLib, CharacterSaveData saveData, UpgradeCalculator calculator) {
+		wpnSkills = new WeaponRank[WPN_SKILLS];
+		for (int i = 0; i < saveData.wpnSkills.Length; i++) {
+			wpnSkills[i] = (WeaponRank)saveData.wpnSkills[i];
+		}
+		for (int i = 0; i < INVENTORY_SIZE; i++) {
+			if (i >= saveData.inventory.Count) {
+				inventory.Add(new InventoryTuple(null, i));
+			}
+			else {
+				ItemEntry item = (ItemEntry)iLib.GetEntry(saveData.inventory[i]);
+				inventory.Add(new InventoryTuple(item, i) {
+					currentCharges = saveData.invCharges[i]
+				});
+				inventory[i].UpdateUpgrades(calculator);
+			}
+		}
 	}
 
 	public InventoryContainer(WeaponRank[] ranks, List<WeaponTuple> presetInventory) {
@@ -24,45 +39,26 @@ public class InventoryContainer {
 		inventory = new List<InventoryTuple>();
 		for (int i = 0; i < INVENTORY_SIZE; i++) {
 			if (i < presetInventory.Count && presetInventory[i].item != null) {
-				inventory.Add(new InventoryTuple {
-					index = i,
-					item = presetInventory[i].item,
-					charge = presetInventory[i].item.maxCharge,
-					droppable = presetInventory[i].droppable
-				});
+				inventory.Add(new InventoryTuple(presetInventory[i].item, i) { droppable = presetInventory[i].droppable });
 			}
 			else {
-				inventory.Add(new InventoryTuple {
-					index = i,
-					charge = 0,
-					droppable = false
-				});
+				inventory.Add(new InventoryTuple(null, i));
 			}
 		}
 	}
 
-	private void SetupValues(ScrObjLibraryVariable iLib, CharacterSaveData saveData) {
-		wpnSkills = new WeaponRank[WPN_SKILLS];
-		for (int i = 0; i < saveData.wpnSkills.Length; i++) {
-			wpnSkills[i] = (WeaponRank)saveData.wpnSkills[i];
+	/// <summary>
+	/// Refreshes the bonus values for all the items in the inventory.
+	/// </summary>
+	/// <param name="calculator"></param>
+	public void RefreshUpgrades(UpgradeCalculator calculator) {
+		for (int i = 0; i < inventory.Count; i++) {
+			inventory[i].UpdateUpgrades(calculator);
 		}
+	}
 
-		inventory = new List<InventoryTuple>();
-		for (int i = 0; i < INVENTORY_SIZE; i++) {
-			if (i < saveData.inventory.Count) {
-				inventory.Add(new InventoryTuple {
-					index = i,
-					item = (ItemEntry)iLib.GetEntry(saveData.inventory[i]),
-					charge = saveData.invCharges[i]
-				});
-			}
-			else {
-				inventory.Add(new InventoryTuple {
-					index = i,
-					charge = 0
-				});
-			}
-		}
+	public InventoryTuple GetItem(int index) {
+		return inventory[index];
 	}
 
 	/// <summary>
@@ -70,7 +66,7 @@ public class InventoryContainer {
 	/// </summary>
 	/// <param name="weapon"></param>
 	/// <returns></returns>
-	public virtual WeaponRank GetWpnSkill(ItemEntry weapon) {
+	public virtual WeaponRank GetWpnSkill(InventoryTuple weapon) {
 		if (weapon == null || weapon.itemCategory == ItemCategory.CONSUME)
 			return WeaponRank.NONE;
 		return wpnSkills[(int)weapon.weaponType];
@@ -81,7 +77,7 @@ public class InventoryContainer {
 	/// </summary>
 	/// <param name="weapon"></param>
 	/// <returns></returns>
-	public bool CanEquip(ItemEntry weapon) {
+	public bool CanEquip(InventoryTuple weapon) {
 		WeaponRank rank = GetWpnSkill(weapon);
 		return (rank != WeaponRank.NONE && weapon.skillReq <= rank);
 	}
@@ -105,8 +101,8 @@ public class InventoryContainer {
 		int close = 99, far = 0;
 		List<InventoryTuple> useables = GetAllUsableItemTuple(category);
 		for (int i = 0; i < useables.Count; i++) {
-			close = Mathf.Min(close, useables[i].item.range.min);
-			far = Mathf.Max(far, useables[i].item.range.max);
+			close = Mathf.Min(close, useables[i].range.min);
+			far = Mathf.Max(far, useables[i].range.max);
 		}
 
 		return new WeaponRange(close, far);
@@ -120,13 +116,13 @@ public class InventoryContainer {
 	/// <returns></returns>
 	public InventoryTuple GetFirstUsableItemTuple(ItemCategory category) {
 		for (int i = 0; i < inventory.Count; i++) {
-			if (inventory[i].item == null || inventory[i].item.itemCategory != category)
+			if (string.IsNullOrEmpty(inventory[i].uuid) || inventory[i].itemCategory != category)
 				continue;
-			WeaponRank skill = GetWpnSkill(inventory[i].item);
-			if (inventory[i].item.CanUse(skill) && inventory[i].charge > 0)
+			WeaponRank skill = GetWpnSkill(inventory[i]);
+			if (inventory[i].CanUse(skill) && inventory[i].currentCharges > 0)
 				return inventory[i];
 		}
-		return new InventoryTuple();
+		return new InventoryTuple(null);
 	}
 
 	/// <summary>
@@ -137,13 +133,13 @@ public class InventoryContainer {
 	/// <returns></returns>
 	public InventoryTuple GetFirstUsableItemTuple(WeaponType type) {
 		for (int i = 0; i < inventory.Count; i++) {
-			if (inventory[i].item == null || inventory[i].item.weaponType != type)
+			if (string.IsNullOrEmpty(inventory[i].uuid) || inventory[i].weaponType != type)
 				continue;
-			WeaponRank skill = GetWpnSkill(inventory[i].item);
-			if (inventory[i].item.CanUse(skill) && inventory[i].charge > 0)
+			WeaponRank skill = GetWpnSkill(inventory[i]);
+			if (inventory[i].CanUse(skill) && inventory[i].currentCharges > 0)
 				return inventory[i];
 		}
-		return new InventoryTuple();
+		return new InventoryTuple(null);
 	}
 
 	/// <summary>
@@ -153,7 +149,7 @@ public class InventoryContainer {
 	/// <returns></returns>
 	public InventoryTuple GetFirstEmptyItemTuple() {
 		for (int i = 0; i < inventory.Count; i++) {
-			if (inventory[i].item == null) {
+			if (string.IsNullOrEmpty(inventory[i].uuid)) {
 				return inventory[i];
 			}
 		}
@@ -169,10 +165,10 @@ public class InventoryContainer {
 	/// <returns></returns>
 	public void EquipFirstInRangeItem(ItemCategory category, int range) {
 		for (int i = 0; i < inventory.Count; i++) {
-			if (inventory[i].item == null)
+			if (string.IsNullOrEmpty(inventory[i].uuid))
 				continue;
-			WeaponRank skill = GetWpnSkill(inventory[i].item);
-			if (inventory[i].item.itemCategory == category && inventory[i].item.CanEquip(skill) && inventory[i].item.InRange(range)) {
+			WeaponRank skill = GetWpnSkill(inventory[i]);
+			if (inventory[i].itemCategory == category && inventory[i].CanEquip(skill) && inventory[i].InRange(range)) {
 				EquipItem(i);
 				return;
 			}
@@ -187,10 +183,10 @@ public class InventoryContainer {
 	public List<InventoryTuple> GetAllUsableItemTuple(ItemCategory category) {
 		List<InventoryTuple> list = new List<InventoryTuple>();
 		for (int i = 0; i < inventory.Count; i++) {
-			if (inventory[i].item == null)
+			if (string.IsNullOrEmpty(inventory[i].uuid))
 				continue;
-			WeaponRank skill = GetWpnSkill(inventory[i].item);
-			if (inventory[i].item.itemCategory == category && inventory[i].item.CanUse(skill) && inventory[i].charge > 0)
+			WeaponRank skill = GetWpnSkill(inventory[i]);
+			if (inventory[i].itemCategory == category && inventory[i].CanUse(skill) && inventory[i].currentCharges > 0)
 				list.Add(inventory[i]);
 		}
 		return list;
@@ -202,10 +198,10 @@ public class InventoryContainer {
 	/// <param name="category"></param>
 	public void ReduceItemCharge(ItemCategory category) {
 		for (int i = 0; i < inventory.Count; i++) {
-			if (inventory[i].item == null)
+			if (string.IsNullOrEmpty(inventory[i].uuid))
 				continue;
-			if (inventory[i].item.itemCategory == category) {
-				inventory[i].charge--;
+			if (inventory[i].itemCategory == category) {
+				inventory[i].currentCharges--;
 				return;
 			}
 		}
@@ -219,7 +215,7 @@ public class InventoryContainer {
 		int pos = 0;
 
 		for (int i = 0; i < INVENTORY_SIZE; i++) {
-			if (inventory[pos].item == null) {
+			if (string.IsNullOrEmpty(inventory[i].uuid)) {
 				InventoryTuple tup = inventory[pos];
 				inventory.RemoveAt(pos);
 				inventory.Add(tup);
@@ -232,15 +228,15 @@ public class InventoryContainer {
 			inventory[i].index = i;
 		}
 
-		if (inventory[0].item != null) {
-			WeaponRank skill = GetWpnSkill(inventory[0].item);
-			if (!inventory[0].item.CanEquip(skill) || inventory[0].charge <= 0) {
+		if (!string.IsNullOrEmpty(inventory[0].uuid)) {
+			WeaponRank skill = GetWpnSkill(inventory[0]);
+			if (!inventory[0].CanEquip(skill) || inventory[0].currentCharges <= 0) {
 				InventoryTuple tup = GetFirstUsableItemTuple(ItemCategory.WEAPON);
-				if (tup.item != null) {
+				if (!string.IsNullOrEmpty(tup.uuid)) {
 					inventory.RemoveAt(tup.index);
 					inventory.Insert(0, tup);
 				}
-				else if (!inventory[0].item.CanEquip(skill)) {
+				else if (!inventory[0].CanEquip(skill)) {
 					tup = GetFirstEmptyItemTuple();
 					if (tup != null) {
 						inventory.RemoveAt(tup.index);
@@ -268,12 +264,12 @@ public class InventoryContainer {
 	/// </summary>
 	/// <param name="index"></param>
 	public void EquipItem(int index) {
-		if (index == 0 || inventory[index].item == null)
+		if (index == 0 || string.IsNullOrEmpty(inventory[index].uuid))
 			return;
 
 		InventoryTuple equip = inventory[index];
 		inventory.RemoveAt(index);
-		int startIndex = (equip.item.itemCategory == ItemCategory.WEAPON) ? 0 : 1;
+		int startIndex = (equip.itemCategory == ItemCategory.WEAPON) ? 0 : 1;
 		inventory.Insert(startIndex, equip);
 		for (int i = 0; i < INVENTORY_SIZE; i++) {
 			inventory[i].index = i;
@@ -288,12 +284,12 @@ public class InventoryContainer {
 	/// <param name="player"></param>
 	public void UseItem(int index, TacticsMove player) {
 		InventoryTuple useItem = inventory[index];
-		if (useItem.item.itemCategory == ItemCategory.CONSUME) {
-			if (useItem.item.weaponType == WeaponType.C_HEAL) {
-				player.TakeHeals(useItem.item.power);
+		if (useItem.itemCategory == ItemCategory.CONSUME) {
+			if (useItem.weaponType == WeaponType.C_HEAL) {
+				player.TakeHeals(useItem.power);
 			}
 			else {
-				Boost boost = useItem.item.boost;
+				Boost boost = useItem.boost;
 				player.stats.BoostBaseStats(boost);
 			}
 		}
@@ -302,9 +298,9 @@ public class InventoryContainer {
 			return;
 		}
 
-		useItem.charge--;
-		if (useItem.charge <= 0) {
-			inventory[index].item = null;
+		useItem.currentCharges--;
+		if (useItem.currentCharges <= 0) {
+			inventory[index] = new InventoryTuple(null);
 			CleanupInventory();
 		}
 
@@ -315,9 +311,8 @@ public class InventoryContainer {
 	/// Drops the item at the given index.
 	/// </summary>
 	/// <param name="index"></param>
-	public void DropItem(int index, StatsContainer stats) {
-		inventory[index].item = null;
-		inventory[index].charge = 0;
+	public void DropItem(int index) {
+		inventory[index] = new InventoryTuple(null);
 		CleanupInventory();
 	}
 
@@ -328,10 +323,7 @@ public class InventoryContainer {
 	/// <param name="item"></param>
 	/// <returns></returns>
 	public bool AddItem(InventoryItem item) {
-		return AddItem(new InventoryTuple() {
-			item = item.item,
-			charge = item.charges
-		});
+		return AddItem(new InventoryTuple(item.item, -1, item.charges));
 	}
 
 	/// <summary>
@@ -341,16 +333,16 @@ public class InventoryContainer {
 	/// <param name="pickup"></param>
 	/// <returns></returns>
 	public bool AddItem(InventoryTuple pickup) {
-		if (inventory[0].item == null) {
-			WeaponRank rank = GetWpnSkill(pickup.item);
-			if (rank != WeaponRank.NONE && rank >= pickup.item.skillReq) {
+		if (string.IsNullOrEmpty(inventory[0].uuid)) {
+			WeaponRank rank = GetWpnSkill(pickup);
+			if (rank != WeaponRank.NONE && rank >= pickup.skillReq) {
 				inventory[0] = pickup;
-				Debug.Log("Can equip  " + rank);
+				Debug.Log("Equipped  " + rank);
 				return true;
 			}
 		}
 		for (int i = 1; i < inventory.Count; i++) {
-			if (inventory[i].item == null) {
+			if (string.IsNullOrEmpty(inventory[i].uuid)) {
 				inventory[i] = pickup;
 				pickup.index = i;
 				Debug.Log("Added the item to position " + i);

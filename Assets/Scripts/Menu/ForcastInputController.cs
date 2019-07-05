@@ -74,7 +74,7 @@ public class ForcastInputController : InputReceiverDelegate {
 		int startIndex = listIndex;
 		do {
 			listIndex = OPMath.FullLoop(0, attackerWeapons.Count, listIndex + diff);
-			inRange = attackerWeapons[listIndex].item.InRange(BattleMap.DistanceTo(selectedCharacter.value, defendTile.value));
+			inRange = attackerWeapons[listIndex].InRange(BattleMap.DistanceTo(selectedCharacter.value, defendTile.value));
 			battleWeaponIndex.value = attackerWeapons[listIndex].index;
 		} while (!inRange && startIndex != listIndex);
 

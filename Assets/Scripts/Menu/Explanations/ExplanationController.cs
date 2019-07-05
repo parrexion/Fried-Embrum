@@ -7,7 +7,7 @@ public class ExplanationController : InputReceiverDelegate {
 
     [Header("Character stats")]
     public TacticsMoveVariable selectedCharacter;
-    public ScrObjEntryReference[] inventory;
+    public InventoryTuple[] inventory;
     public ScrObjEntryReference[] skills;
 
 	[Header("Pages")]
@@ -46,7 +46,7 @@ public class ExplanationController : InputReceiverDelegate {
     private void Setup() {
         InventoryContainer inv = selectedCharacter.value.inventory;
         for (int i = 0; i < InventoryContainer.INVENTORY_SIZE; i++) {
-            inventory[i].value = inv.GetTuple(i).item;
+            inventory[i] = inv.GetTuple(i);
         }
 
         SkillsContainer skill = selectedCharacter.value.skills;

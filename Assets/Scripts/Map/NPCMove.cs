@@ -136,7 +136,7 @@ public class NPCMove : TacticsMove {
 		if (bestTile) {
 			// Found a best tile to move to
 			bestTile.current = true;
-			currentMode.value = (weapons[0].item.itemCategory == ItemCategory.WEAPON) ? ActionMode.ATTACK : ActionMode.HEAL;
+			currentMode.value = (weapons[0].itemCategory == ItemCategory.WEAPON) ? ActionMode.ATTACK : ActionMode.HEAL;
 			tileBest = bestTile;
 			tileGood = null;
 			if (aggroType == AggroType.WAIT)
@@ -172,7 +172,7 @@ public class NPCMove : TacticsMove {
 		//Calculate range
 
 		//Generate attack/support tiles
-		if (weapons[0].item.itemCategory == ItemCategory.WEAPON) {
+		if (weapons[0].itemCategory == ItemCategory.WEAPON) {
 			WeaponRange reach = inventory.GetReach(ItemCategory.WEAPON);
 			for (int i = 0; i < playerList.values.Count; i++) {
 				((PlayerMove)playerList.values[i]).ShowAttackTiles(reach);
@@ -183,7 +183,7 @@ public class NPCMove : TacticsMove {
 			for (int i = 0; i < enemyList.values.Count; i++) {
 				if (this == enemyList.values[i])
 					continue;
-				bool isBuff = (weapons[0].item.weaponType == WeaponType.BARRIER);
+				bool isBuff = (weapons[0].weaponType == WeaponType.BARRIER);
 				if (isBuff || enemyList.values[i].IsInjured())
 					((NPCMove)enemyList.values[i]).ShowSupportTiles(reach);
 			}

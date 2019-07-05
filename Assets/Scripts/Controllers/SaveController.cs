@@ -227,21 +227,21 @@ public class SaveController : MonoBehaviour {
 		currentScrap.value = loadedData.scrap;
 		
 		playerData.ResetData();
+		for (int i = 0; i < loadedData.upgrade.Count; i++) {
+			UpgradeEntry upgrade = (UpgradeEntry)upgradeLibrary.GetEntry(loadedData.upgrade[i].id);
+			playerData.upgrader.upgrades.Add(new UpgradeItem(upgrade, loadedData.upgrade[i].researched));
+		}
 		for (int i = 0; i < loadedData.characters.Count; i++) {
 			CharData cStats = (CharData)characterLibrary.GetEntry(loadedData.characters[i].id);
 			CharClass cClass = (CharClass)classLibrary.GetEntry(loadedData.characters[i].currentClass);
 			playerData.stats.Add(new StatsContainer(loadedData.characters[i], cStats, cClass));
-			playerData.inventory.Add(new InventoryContainer(itemLibrary, loadedData.characters[i]));
+			playerData.inventory.Add(new InventoryContainer(itemLibrary, loadedData.characters[i], playerData.upgrader));
 			playerData.skills.Add(new SkillsContainer(skillLibrary, loadedData.characters[i]));
 		}
 		Debug.Log("Successfully loaded " + loadedData.characters.Count + " characters");
 		for (int i = 0; i < loadedData.items.Count; i++) {
 			ItemEntry item = (ItemEntry)itemLibrary.GetEntry(loadedData.items[i].id);
 			playerData.items.Add(new InventoryItem(item, loadedData.items[i].charges));
-		}
-		for (int i = 0; i < loadedData.upgrade.Count; i++) {
-			UpgradeEntry upgrade = (UpgradeEntry)upgradeLibrary.GetEntry(loadedData.upgrade[i].id);
-			playerData.upgrader.upgrades.Add(new UpgradeItem(upgrade, loadedData.upgrade[i].researched));
 		}
 		for (int i = 0; i < loadedData.missions.Count; i++) {
 			MapEntry map = (MapEntry)missionLibrary.GetEntry(loadedData.missions[i].id);

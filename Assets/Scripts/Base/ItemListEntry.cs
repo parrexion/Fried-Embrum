@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class ItemListEntry : ListEntry {
 
 	public int index;
-	public ItemEntry item;
+	public InventoryTuple tuple;
 	public Text maxCharge;
 	public Text cost;
 	public bool affordable;
@@ -14,7 +14,7 @@ public class ItemListEntry : ListEntry {
 
 	public void FillDataEmpty(int index) {
 		this.index = index;
-		item = null;
+		tuple = null;
 		icon.sprite = null;
 		icon.color = new Color(0,0,0,0);
 		entryName.text = "- - -";
@@ -22,12 +22,12 @@ public class ItemListEntry : ListEntry {
 		cost.text = "";
 	}
 
-	public void FillDataSimple(int index, ItemEntry item, string charges, string cost) {
+	public void FillDataSimple(int index, InventoryTuple tuple, string charges, string cost) {
 		this.index = index;
-		this.item = item;
-		icon.sprite = item.icon;
-		icon.color = item.repColor;
-		entryName.text = item.entryName;
+		this.tuple = tuple;
+		icon.sprite = tuple.icon;
+		icon.color = tuple.repColor;
+		entryName.text = tuple.entryName;
 		maxCharge.text = charges;
 		this.cost.text = cost;
 	}
@@ -36,15 +36,15 @@ public class ItemListEntry : ListEntry {
     /// Fills the entry with the data of the character.
     /// </summary>
     /// <param name="statsCon"></param>
-    public void FillData(int index, ItemEntry item, string charges, int totalMoney, bool buyMode, float sellRatio) {
-		affordable = (!buyMode || totalMoney >= item.cost);
+    public void FillData(int index, InventoryTuple tuple, string charges, int totalMoney, bool buyMode, float sellRatio) {
+		affordable = (!buyMode || totalMoney >= tuple.cost);
 		this.index = index;
-		this.item = item;
-		icon.sprite = item.icon;
-		icon.color = item.repColor;
-		entryName.text = item.entryName;
+		this.tuple = tuple;
+		icon.sprite = tuple.icon;
+		icon.color = tuple.repColor;
+		entryName.text = tuple.entryName;
 		maxCharge.text = charges;
-		cost.text = (buyMode) ? item.cost.ToString() : (Mathf.FloorToInt(item.cost * sellRatio)).ToString();
+		cost.text = (buyMode) ? tuple.cost.ToString() : (Mathf.FloorToInt(tuple.cost * sellRatio)).ToString();
 		SetDark(!affordable);
     }
 

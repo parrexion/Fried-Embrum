@@ -9,7 +9,6 @@ public class InventoryListEntry : ListEntry {
 
 	[Header("Ignore")]
 	public int index;
-	public ItemEntry item;
 
 
 	/// <summary>
@@ -18,7 +17,6 @@ public class InventoryListEntry : ListEntry {
 	/// <param name="index"></param>
 	public void FillDataEmpty(int index) {
 		this.index = index;
-		item = null;
 		icon.sprite = null;
 		icon.color = new Color(0,0,0,0);
 		entryName.text = "--";
@@ -30,16 +28,15 @@ public class InventoryListEntry : ListEntry {
     /// </summary>
     /// <param name="statsCon"></param>
 	public void FillData(int index, InventoryTuple tuple) {
-		if (tuple.item == null) {
+		if (string.IsNullOrEmpty(tuple.uuid)) {
 			FillDataEmpty(index);
 			return;
 		}
 		this.index = index;
-		item = tuple.item;
-		icon.sprite = item.icon;
-		icon.color = item.repColor;
-		entryName.text = item.entryName;
-		charges.text = (tuple.item.maxCharge != 1) ? tuple.charge.ToString() : "";
+		icon.sprite = tuple.icon;
+		icon.color = tuple.repColor;
+		entryName.text = tuple.entryName;
+		charges.text = (tuple.maxCharge != 1) ? tuple.currentCharges.ToString() : "";
 	}
 
 	public override void SetStyle(UIStyle style, Font font) {

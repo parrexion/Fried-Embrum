@@ -28,17 +28,6 @@ public class StorageList : MonoBehaviour {
 		entryList = new EntryList<ItemListEntry>(visibleSize);
 
 		categories.ResetButtons();
-		//categories.AddButton(ItemType.SWORD.ToString());
-		//categories.AddButton(ItemType.LANCE.ToString());
-		//categories.AddButton(ItemType.AXE.ToString());
-		//categories.AddButton(ItemType.MAGIC.ToString());
-		//categories.AddButton(ItemType.THROW.ToString());
-		//categories.AddButton(ItemType.BOW.ToString());
-		//categories.AddButton(ItemType.HEAL.ToString());
-		//categories.AddButton(ItemType.CHEAL.ToString());
-		//for (int i = 0; i < weaponIcons.icons.Length -1; i++) {
-		//	categories.AddButton(weaponIcons.icons[i]);
-		//}
 
 		categories.AddButton(weaponIcons.icons[(int)WeaponType.RIFLE], (int)WeaponType.RIFLE);
 		categories.AddButton(weaponIcons.icons[(int)WeaponType.SHOTGUN], (int)WeaponType.SHOTGUN);
@@ -79,10 +68,12 @@ public class StorageList : MonoBehaviour {
 			if (buyMode && item.researchNeeded && !playerData.upgrader.IsResearched(item.uuid))
 				continue;
 
-			int charges = (buyMode) ? shopList.items[i].maxCharge : playerData.items[i].charges;
 			Transform t = Instantiate(entryPrefab, entryListParent);
 			ItemListEntry entry = entryList.CreateEntry(t);
-			entry.FillData(i, item, charges.ToString(), totalMoney.value, buyMode, sellRatio.value);
+			InventoryTuple tup = new InventoryTuple(item);
+			tup.UpdateUpgrades(playerData.upgrader);
+			int charges = tup.maxCharge;
+			entry.FillData(i, tup, charges.ToString(), totalMoney.value, buyMode, sellRatio.value);
 		}
 		entryPrefab.gameObject.SetActive(false);
 		ForceCategory(0);
@@ -96,7 +87,9 @@ public class StorageList : MonoBehaviour {
 			int charges = playerData.items[i].charges;
 			Transform t = Instantiate(entryPrefab, entryListParent);
 			ItemListEntry entry = entryList.CreateEntry(t);
-			entry.FillDataSimple(i, item, charges.ToString(), "");
+			InventoryTuple tup = new InventoryTuple(item);
+			tup.UpdateUpgrades(playerData.upgrader);
+			entry.FillDataSimple(i, tup, charges.ToString(), "");
 		}
 		entryPrefab.gameObject.SetActive(false);
 		ForceCategory(0);
@@ -119,10 +112,10 @@ public class StorageList : MonoBehaviour {
 	private void UpdateFilter() {
 		WeaponType currentCategory = (WeaponType)categories.GetValue();
 		if (currentCategory == WeaponType.C_HEAL) {
-			entryList.FilterShow(x => { return x.item.itemCategory == ItemCategory.CONSUME; });
+			entryList.FilterShow(x => { return x.tuple.itemCategory == ItemCategory.CONSUME; });
 		}
 		else {
-			entryList.FilterShow(x => { return x.item.weaponType == currentCategory; });
+			entryList.FilterShow(x => { return x.tuple.weaponType == currentCategory; });
 		}
 		UpdateCost();
 		entryList.ForcePosition(0);
@@ -134,7 +127,7 @@ public class StorageList : MonoBehaviour {
 
 		for (int i = 0; i < entryList.Size; i++) {
 			ItemListEntry item = entryList.GetEntry(i);
-			item.SetAffordable(item.item.cost <= totalMoney.value);
+			item.SetAffordable(item.tuple.cost <= totalMoney.value);
 		}
 	}
 

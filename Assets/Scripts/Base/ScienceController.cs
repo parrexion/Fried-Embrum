@@ -27,13 +27,15 @@ public class ScienceController : MonoBehaviour {
 	public Text relatedItem;
 	public Text costMoney;
 	public Text costScrap;
-	public Text level;
+	public GameObject alreadyResearched;
 
 	[Header("Upgrade info")]
 	public GameObject upgradeInfoObject;
 	public Text pwrText;
-	public Text rangeText;
 	public Text hitText;
+	public Text critText;
+	public Text chargesText;
+	public Text costValueText;
 
 	[Header("Invention info")]
 	public GameObject inventionInfoObject;
@@ -73,6 +75,7 @@ public class ScienceController : MonoBehaviour {
 		entryPrefab.gameObject.SetActive(false);
 		upgradeInfoObject.SetActive(upgradeMode);
 		inventionInfoObject.SetActive(!upgradeMode);
+		entryList.Sort(SortUpgrades);
 		UpdateListDarkness();
 	}
 
@@ -113,6 +116,7 @@ public class ScienceController : MonoBehaviour {
 				totalScrap.value -= upgrade.upgrade.scrap;
 				playerData.upgrader.upgrades[upgrade.index].researched = true;
 				playerData.upgrader.CalculateResearch();
+				playerData.UpdateUpgrades();
 				UpdateListDarkness();
 			}
 			GenerateList();
@@ -142,38 +146,50 @@ public class ScienceController : MonoBehaviour {
 
 			costMoney.text = "Cost:";
 			costScrap.text = "Scrap:";
-			level.text = "Level:";
 			relatedItem.text = "Item:";
 
 			pwrText.gameObject.SetActive(false);
-			rangeText.gameObject.SetActive(false);
 			hitText.gameObject.SetActive(false);
+			critText.gameObject.SetActive(false);
+			chargesText.gameObject.SetActive(false);
+			costValueText.gameObject.SetActive(false);
 			return;
 		}
 
 		UpgradeEntry upgrade = entryList.GetEntry().upgrade;
 		upgradeName.text = upgrade.entryName;
-		relatedItem.text = "Item:  " + upgrade.item.entryName;
-		itemIcon.sprite = upgrade.item.icon;
+		InventoryTuple tuple = new InventoryTuple(upgrade.item);
+		tuple.UpdateUpgrades(playerData.upgrader);
+		relatedItem.text = "Item:  " + tuple.entryName;
+		itemIcon.sprite = tuple.icon;
 		itemIcon.color = upgrade.repColor;
 
 		if (entryList.GetEntry().done) {
 			costMoney.text = "";
 			costScrap.text = "";
-			level.text = "Researched!";
+			alreadyResearched.SetActive(true);
+			pwrText.text = "Power:  " + tuple.power;
+			hitText.text = "Hit Rate:  " + tuple.hitRate;
+			critText.text = "Crit Rate:  " + tuple.critRate;
+			chargesText.text = "Max Charges:  " + tuple.maxCharge;
+			costValueText.text = "Item Value:  " + tuple.cost;
 		}
 		else {
 			costMoney.text = "Cost:  " + upgrade.cost;
 			costScrap.text = "Scrap:  " + upgrade.scrap;
-			level.text = "Level:  " + upgrade.level;
+			alreadyResearched.SetActive(false);
+			pwrText.text = "Power:  " + tuple.power + "  ->  " + (tuple.power + upgrade.power);
+			hitText.text = "Hit Rate:  " + tuple.hitRate + "  ->  " + (tuple.hitRate + upgrade.hit);
+			critText.text = "Crit Rate:  " + tuple.critRate + "  ->  " + (tuple.critRate + upgrade.crit);
+			chargesText.text = "Max Charges:  " + tuple.maxCharge + "  ->  " + (tuple.maxCharge + upgrade.charges);
+			costValueText.text = "Item Value:  " + tuple.cost + "  ->  " + (tuple.cost + upgrade.costValue);
 		}
-
-		rangeText.text = upgrade.minRange + " - " + upgrade.maxRange + " Range";
-		rangeText.gameObject.SetActive(upgrade.minRange != 0 && upgrade.maxRange != 0);
-		pwrText.text = "Power:  " + upgrade.item.power + "  ->  " + (upgrade.item.power + upgrade.power);
+		
 		pwrText.gameObject.SetActive(upgrade.power != 0);
-		hitText.text = "Hit Rate:  " + upgrade.item.hitRate + "  ->  " + (upgrade.item.hitRate + upgrade.hit);
 		hitText.gameObject.SetActive(upgrade.hit != 0);
+		critText.gameObject.SetActive(upgrade.crit != 0);
+		chargesText.gameObject.SetActive(upgrade.charges != 0);
+		costValueText.gameObject.SetActive(upgrade.costValue != 0);
 	}
 
 	private void SetupDevelopInfo() {
@@ -183,7 +199,6 @@ public class ScienceController : MonoBehaviour {
 
 			costMoney.text = "Cost:";
 			costScrap.text = "Scrap:";
-			level.text = "Level:";
 			relatedItem.text = "Item:";
 
 			invPwrText.text = "";
@@ -203,12 +218,12 @@ public class ScienceController : MonoBehaviour {
 		if (entryList.GetEntry().done) {
 			costMoney.text = "";
 			costScrap.text = "";
-			level.text = "Researched!";
+			alreadyResearched.SetActive(true);
 		}
 		else {
 			costMoney.text = "Cost:  " + upgrade.cost;
 			costScrap.text = "Scrap:  " + upgrade.scrap;
-			level.text = "Level:  " + upgrade.level;
+			alreadyResearched.SetActive(false);
 		}
 
 		invPwrText.text = "Power:  " + upgrade.item.power;
@@ -217,5 +232,14 @@ public class ScienceController : MonoBehaviour {
 		invCritText.text = "Crit Rate:  " + upgrade.item.critRate;
 		invReqText.text = "Req:  " + upgrade.item.skillReq.ToString();
 		return;
+	}
+
+	private int SortUpgrades(UpgradeListEntry x, UpgradeListEntry y) {
+		if (x.done != y.done) {
+			return (x.done) ? 1 : -1;
+		}
+		else {
+			return y.index - x.index;
+		}
 	}
 }

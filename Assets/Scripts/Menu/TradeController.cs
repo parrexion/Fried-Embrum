@@ -165,24 +165,28 @@ public class TradeController : InputReceiverDelegate {
 		tupRight = rightCharacter.inventory.GetTuple(rightIndex);
 		
 		if (leftCharacter != rightCharacter) {
-			if (tupLeft.item != null && rightIndex == 0 && !rightCharacter.inventory.CanEquip(tupLeft.item)) {
+			if (string.IsNullOrEmpty(tupLeft.uuid) && rightIndex == 0 && !rightCharacter.inventory.CanEquip(tupLeft)) {
 				return;
 			}
-			if (tupRight.item != null && leftIndex == 0 && !leftCharacter.inventory.CanEquip(tupRight.item)) {
+			if (string.IsNullOrEmpty(tupRight.uuid) && leftIndex == 0 && !leftCharacter.inventory.CanEquip(tupRight)) {
 				return;
 			}
 		}
 
-		InventoryTuple temp = new InventoryTuple();
-		temp.charge = tupLeft.charge;
-		temp.droppable = tupLeft.droppable;
-		temp.item = tupLeft.item;
-		tupLeft.charge = tupRight.charge;
-		tupLeft.droppable = tupRight.droppable;
-		tupLeft.item = tupRight.item;
-		tupRight.charge = temp.charge;
-		tupRight.droppable = temp.droppable;
-		tupRight.item = temp.item;
+		//InventoryTuple temp = new InventoryTuple();
+		//temp.Charge = tupLeft.Charge;
+		//temp.droppable = tupLeft.droppable;
+		//temp.item = tupLeft.item;
+		//tupLeft.Charge = tupRight.Charge;
+		//tupLeft.droppable = tupRight.droppable;
+		//tupLeft.item = tupRight.item;
+		//tupRight.Charge = temp.Charge;
+		//tupRight.droppable = temp.droppable;
+		//tupRight.item = temp.item;
+		
+		InventoryTuple temp = tupLeft;
+		tupLeft = tupRight;
+		tupRight = temp;
 		
 		if (leftCharacter == rightCharacter)
 			selectedCharacter.value.canUndoMove = false;

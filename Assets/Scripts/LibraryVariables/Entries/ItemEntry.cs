@@ -92,45 +92,6 @@ public class ItemEntry : ScrObjLibraryEntry {
 	}
 
 
-    /// <summary>
-    /// Returns true if the given distance is within the range of the weapon.
-    /// </summary>
-    /// <param name="distance"></param>
-    /// <returns></returns>
-    public bool InRange(int distance) {
-        return (distance == -1 || range.InRange(distance));
-    }
-
-    /// <summary>
-    /// Checks if an item can be used with the given skill value.
-    /// </summary>
-    /// <param name="skill"></param>
-    /// <returns></returns>
-    public bool CanUse(WeaponRank skill) {
-		if (itemCategory == ItemCategory.CONSUME) {
-			return true;
-		}
-		else if (skill == WeaponRank.NONE) {
-			return false;
-		}
-        else {
-            return (skill >= skillReq);
-        }
-    }
-
-    /// <summary>
-    /// Checks if an item can be used with the given skill value.
-    /// </summary>
-    /// <param name="skill"></param>
-    /// <returns></returns>
-    public bool CanEquip(WeaponRank skill) {
-        if (itemCategory != ItemCategory.WEAPON || skill == 0) {
-			return false;
-        }
-
-        return (skill >= skillReq);
-    }
-
 	/// <summary>
 	/// Generates a description string containing the stats of the item.
 	/// </summary>

@@ -10,7 +10,7 @@ using UnityEngine;
 [System.Serializable]
 public class EntryList<T> where T : ListEntry {
 
-	public int Size { get {return entries.Count; } }
+	public int Size { get { return entries.Count; } }
 
 	private List<T> entries = new List<T>();
 	private List<T> original = new List<T>();
@@ -32,7 +32,7 @@ public class EntryList<T> where T : ListEntry {
 	/// Resets the entrylist by destroying previous entries and resetting all values.
 	/// </summary>
 	public void ResetList() {
-		for(int i = 0; i < original.Count; i++) {
+		for (int i = 0; i < original.Count; i++) {
 			GameObject.Destroy(original[i].gameObject);
 		}
 		entries.Clear();
@@ -81,7 +81,7 @@ public class EntryList<T> where T : ListEntry {
 	public void ForcePosition(int pos) {
 		if (entries.Count == 0)
 			return;
-		position = Mathf.Clamp(pos, 0, entries.Count -1);
+		position = Mathf.Clamp(pos, 0, entries.Count - 1);
 		Move(0);
 	}
 
@@ -97,9 +97,9 @@ public class EntryList<T> where T : ListEntry {
 		}
 
 		position = OPMath.FullLoop(0, entries.Count, position + dir);
-		if(position <= bot)
+		if (position <= bot)
 			bot = Mathf.Max(0, position - 1);
-		else if(top - 1 <= position)
+		else if (top - 1 <= position)
 			bot = Mathf.Max(0, Mathf.Min(entries.Count - visibleSize, position - visibleSize + 2));
 		top = Mathf.Min(bot + visibleSize, entries.Count);
 
@@ -141,27 +141,30 @@ public class EntryList<T> where T : ListEntry {
 		UpdateEntries();
 	}
 
-	///// <summary>
-	///// Delegate for creating sorting functions for the entry list.
-	///// </summary>
-	///// <param name="a"></param>
-	///// <param name="b"></param>
-	///// <returns></returns>
-	//public delegate int SortingFunction(T a, T b);
+	/// <summary>
+	/// Delegate for creating sorting functions for the entry list.
+	/// </summary>
+	/// <param name="a"></param>
+	/// <param name="b"></param>
+	/// <returns></returns>
+	public delegate int SortingFunction(T a, T b);
 
-	///// <summary>
-	///// Sort function which takes the sorting function to use and sorts the entry list.
-	///// </summary>
-	///// <param name="sort"></param>
-	//public void Sort(SortingFunction sort) {
-	//	entries.Sort((x,y) => sort(x,y));
-	//}
+	/// <summary>
+	/// Sort function which takes the sorting function to use and sorts the entry list.
+	/// </summary>
+	/// <param name="sort"></param>
+	public void Sort(SortingFunction sort) {
+		entries.Sort((x, y) => sort(x, y));
+		for (int i = 0; i < entries.Count; i++) {
+			entries[i].transform.SetSiblingIndex(i);
+		}
+	}
 
 	/// <summary>
 	/// Updates all the entries' highlights and hide the entries out of focus.
 	/// </summary>
 	private void UpdateEntries() {
-		for(int i = 0; i < entries.Count; i++) {
+		for (int i = 0; i < entries.Count; i++) {
 			entries[i].gameObject.SetActive(bot <= i && i < top);
 			entries[i].SetHighlight(i == position);
 		}
@@ -174,7 +177,7 @@ public class EntryList<T> where T : ListEntry {
 	public int GetPosition() {
 		return (entries.Count == 0) ? -1 : position;
 	}
-	
+
 	/// <summary>
 	/// Returns true if there are more entries above the ones that are visible.
 	/// </summary>
@@ -182,7 +185,7 @@ public class EntryList<T> where T : ListEntry {
 	public bool CanScrollUp() {
 		return bot > 0;
 	}
-	
+
 	/// <summary>
 	/// Returns true if there are more entries below the ones that are visible.
 	/// </summary>
@@ -207,7 +210,7 @@ public class EntryList<T> where T : ListEntry {
 	/// <param name="index"></param>
 	/// <returns></returns>
 	public T GetEntry(int index) {
-		if(entries.Count <= index)
+		if (entries.Count <= index)
 			return null;
 		return entries[index];
 	}
