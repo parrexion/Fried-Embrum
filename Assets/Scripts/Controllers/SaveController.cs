@@ -58,6 +58,8 @@ public class SaveController : MonoBehaviour {
 	public BoolVariable useAnimations;
 	public BoolVariable trueHit;
 	public BoolVariable autoEnd;
+	public BoolVariable autoSelectCharacter;
+	public IntVariable controlScheme;
 
 	public UnityEvent preLoadFinishedEvent;
 	public UnityEvent loadFinishedEvent;
@@ -109,6 +111,8 @@ public class SaveController : MonoBehaviour {
 		saveFileData.useAnimations = useAnimations.value;
 		saveFileData.trueHit = trueHit.value;
 		saveFileData.autoEnd = autoEnd.value;
+		saveFileData.autoSelectCharacter = autoSelectCharacter.value;
+		saveFileData.controlScheme = controlScheme.value;
 
 		if (!onlyOptions) {
 			// Update data
@@ -261,6 +265,8 @@ public class SavePackage {
 	public bool useAnimations;
 	public bool trueHit;
 	public bool autoEnd;
+	public bool autoSelectCharacter;
+	public int controlScheme;
 	public SaveData[] saveFiles = new SaveData[SaveController.SAVE_FILES_COUNT];
 }
 

@@ -72,12 +72,12 @@ public abstract class InputReceiverDelegate : MonoBehaviour {
 			InputDelegateController.instance.leftArrowDelegate += OnLeftArrow;
 			InputDelegateController.instance.rightArrowDelegate += OnRightArrow;
 			
-			InputDelegateController.instance.okButtonDelegate += OnOkButton;
-			InputDelegateController.instance.backButtonDelegate += OnBackButton;
-			InputDelegateController.instance.lButtonDelegate += OnLButton;
-			InputDelegateController.instance.rButtonDelegate += OnRButton;
-			InputDelegateController.instance.xButtonDelegate += OnXButton;
-			InputDelegateController.instance.yButtonDelegate += OnYButton;
+			InputDelegateController.instance.acceptButtonDelegate += OnOkButton;
+			InputDelegateController.instance.cancelButtonDelegate += OnBackButton;
+			InputDelegateController.instance.trigLButtonDelegate += OnLButton;
+			InputDelegateController.instance.trigRButtonDelegate += OnRButton;
+			InputDelegateController.instance.opLButtonDelegate += OnXButton;
+			InputDelegateController.instance.opRButtonDelegate += OnYButton;
 			InputDelegateController.instance.startButtonDelegate += OnStartButton;
 }
 		else {
@@ -86,12 +86,12 @@ public abstract class InputReceiverDelegate : MonoBehaviour {
 			InputDelegateController.instance.leftArrowDelegate -= OnLeftArrow;
 			InputDelegateController.instance.rightArrowDelegate -= OnRightArrow;
 
-			InputDelegateController.instance.okButtonDelegate -= OnOkButton;
-			InputDelegateController.instance.backButtonDelegate -= OnBackButton;
-			InputDelegateController.instance.lButtonDelegate -= OnLButton;
-			InputDelegateController.instance.rButtonDelegate -= OnRButton;
-			InputDelegateController.instance.xButtonDelegate -= OnXButton;
-			InputDelegateController.instance.yButtonDelegate -= OnYButton;
+			InputDelegateController.instance.acceptButtonDelegate -= OnOkButton;
+			InputDelegateController.instance.cancelButtonDelegate -= OnBackButton;
+			InputDelegateController.instance.trigLButtonDelegate -= OnLButton;
+			InputDelegateController.instance.trigRButtonDelegate -= OnRButton;
+			InputDelegateController.instance.opLButtonDelegate -= OnXButton;
+			InputDelegateController.instance.opRButtonDelegate -= OnYButton;
 			InputDelegateController.instance.startButtonDelegate -= OnStartButton;
 		}
 	}
