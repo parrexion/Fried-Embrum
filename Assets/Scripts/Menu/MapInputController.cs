@@ -138,13 +138,13 @@ public class MapInputController : InputReceiverDelegate {
 	}
 
     public override void OnXButton() {
-		cursor.DangerAreaToggle(true);
-		menuAcceptEvent.Invoke();
+		changeStatsEvent.Invoke();
+		menuMoveEvent.Invoke();
 	}
 
     public override void OnYButton() {
-		changeStatsEvent.Invoke();
-		menuMoveEvent.Invoke();
+		cursor.DangerAreaToggle(true);
+		menuAcceptEvent.Invoke();
 	}
 
     public override void OnRButton() {

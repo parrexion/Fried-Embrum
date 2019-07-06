@@ -15,7 +15,8 @@ public class OptionEntryChoice : OptionEntry {
 
     public override void UpdateUI() {
 		for (int i = 0; i < selections.Length; i++) {
-			if (selections[i].value == value.value) {
+			int current = (selections[i] != null) ? selections[i].value : i;
+			if (current == value.value) {
 				index = i;
 				break;
 			}
@@ -30,7 +31,7 @@ public class OptionEntryChoice : OptionEntry {
     public override bool MoveValue(int dir) {
 		index = OPMath.FullLoop(0, selections.Length, index + dir);
 
-		value.value = selections[index].value;
+		value.value = (selections[index] != null) ? selections[index].value : index;
 		valueText.text = selectionNames[index];
 		updateEvent.Invoke();
 		return true;

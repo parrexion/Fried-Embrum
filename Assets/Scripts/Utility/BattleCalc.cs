@@ -5,6 +5,9 @@ using UnityEngine;
 public static class BattleCalc {
 
 	public const float CRIT_MODIFIER = 2;
+	public const float RETALIATE_HIT_REDUCTION = 10;
+	public const float RETALIATE_AVOID_REDUCTION = 20;
+	public const float RETALIATE_DAMAGE_REDUCTION = 0.15f;
 
 	// Flat calculations
 
@@ -12,10 +15,10 @@ public static class BattleCalc {
 		if (weaponAtk == null)
 			return -1;
 		if (weaponAtk.attackType == AttackType.PHYSICAL) {
-			return weaponAtk.power + attacker.dmg;
+			return (int)((weaponAtk.power + attacker.dmg) * (1 - RETALIATE_DAMAGE_REDUCTION * attacker.fatigueAmount));
 		}
 		else if (weaponAtk.attackType == AttackType.MENTAL) {
-			return weaponAtk.power + attacker.mnd;
+			return (int)((weaponAtk.power + attacker.mnd) * (1 - RETALIATE_DAMAGE_REDUCTION * attacker.fatigueAmount));
 		}
 		return -1;
 	}
@@ -27,7 +30,7 @@ public static class BattleCalc {
 	}
 
 	public static int GetAttackSpeed(InventoryTuple weaponAtk, StatsContainer attacker) {
-		return attacker.spd;
+		return attacker.spd - attacker.fatigueAmount;
 	}
 
 	/// <summary>
@@ -39,7 +42,7 @@ public static class BattleCalc {
 	public static int GetHitRate(InventoryTuple weaponAtk, StatsContainer attacker) {
 		if (weaponAtk == null)
 			return -1;
-		return weaponAtk.hitRate + attacker.skl * 2 + attacker.hitBoost;
+		return weaponAtk.hitRate + attacker.skl * 2 + attacker.hitBoost - (int)(attacker.fatigueAmount * RETALIATE_HIT_REDUCTION);
 	}
 
 	/// <summary>
@@ -51,7 +54,7 @@ public static class BattleCalc {
 	public static int GetCritRate(InventoryTuple weaponAtk, StatsContainer attacker) {
 		if (weaponAtk == null)
 			return -1;
-		return weaponAtk.critRate + attacker.critBoost;
+		return Mathf.Max(0, weaponAtk.critRate + attacker.critBoost - attacker.fatigueAmount);
 	}
 
 	/// <summary>
@@ -60,7 +63,7 @@ public static class BattleCalc {
 	/// <param name="defender"></param>
 	/// <returns></returns>
 	public static int GetAvoid(StatsContainer defender) {
-		return defender.spd * 2 + defender.avoidBoost;
+		return defender.spd * 2 + defender.avoidBoost - (int)(defender.fatigueAmount * RETALIATE_AVOID_REDUCTION);
 	}
 
 	/// <summary>

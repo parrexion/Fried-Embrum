@@ -473,6 +473,7 @@ public abstract class TacticsMove : MonoBehaviour {
 		if (!IsAlive())
 			return;
 
+		stats.fatigueAmount = 0;
 		stats.ClearBoosts(true);
 		ForEachSkills(SkillActivation.STARTTURN);
 		hasMoved = false;
@@ -496,6 +497,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	public void OnEndTurn() {
 		hasMoved = false;
 		canUndoMove = true;
+		stats.fatigueAmount = 0;
 		stats.ClearBoosts(false);
 		GetComponent<SpriteRenderer>().color = Color.white;
 	}

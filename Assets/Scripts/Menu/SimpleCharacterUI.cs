@@ -46,6 +46,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 	public Text hitText;
 	public Text avoidText;
 	public Image boostAvoid;
+	public GameObject[] retailiateStars;
 
 	[Header("Stats Stats")]
 	public GameObject statsObject;
@@ -180,7 +181,10 @@ public class SimpleCharacterUI : MonoBehaviour {
 		pwrText.text = (pwer != -1) ? "Pwr:  " + pwer : "Pwr:  --";
 		int hitrate = BattleCalc.GetHitRate(weapon, stats);
 		hitText.text = (hitrate != -1) ? "Hit:  " + hitrate : "Hit:  --";
-		avoidText.text = "Avo:  " + BattleCalc.GetAvoid(stats);
+		avoidText.text = "Avo:  " + (BattleCalc.GetAvoid(stats) + tactics.currentTile.terrain.avoid);
+		for (int i = 0; i < retailiateStars.Length; i++) {
+			retailiateStars[i].SetActive(i < tactics.stats.fatigueAmount);
+		}
 
 		//Terrain
 		boostAvoid.enabled = (tactics.currentTile.terrain.avoid > 0);
@@ -204,25 +208,25 @@ public class SimpleCharacterUI : MonoBehaviour {
 		boostItems[1].gameObject.SetActive(stats.currentBoost.dmg != 0);
 		boostItems[2].gameObject.SetActive(stats.currentBoost.mnd != 0);
 		boostItems[3].gameObject.SetActive(stats.currentBoost.skl != 0);
-		boostItems[4].gameObject.SetActive(stats.currentBoost.spd != 0);
+		boostItems[4].gameObject.SetActive(stats.currentBoost.spd - stats.fatigueAmount != 0);
 		boostItems[5].gameObject.SetActive(stats.currentBoost.def != 0);
 		boostItems[6].gameObject.SetActive(stats.currentBoost.mov != 0);
 		boostItems[0].GetComponentInChildren<Image>().sprite = (stats.currentBoost.hp > 0) ? boostUp : (stats.currentBoost.hp < 0) ? boostDown : null;
 		boostItems[1].GetComponentInChildren<Image>().sprite = (stats.currentBoost.dmg > 0) ? boostUp : (stats.currentBoost.dmg < 0) ? boostDown : null;
 		boostItems[2].GetComponentInChildren<Image>().sprite = (stats.currentBoost.mnd > 0) ? boostUp : (stats.currentBoost.mnd < 0) ? boostDown : null;
 		boostItems[3].GetComponentInChildren<Image>().sprite = (stats.currentBoost.skl > 0) ? boostUp : (stats.currentBoost.skl < 0) ? boostDown : null;
-		boostItems[4].GetComponentInChildren<Image>().sprite = (stats.currentBoost.spd > 0) ? boostUp : (stats.currentBoost.spd < 0) ? boostDown : null;
+		boostItems[4].GetComponentInChildren<Image>().sprite = (stats.currentBoost.spd - stats.fatigueAmount > 0) ? boostUp : (stats.currentBoost.spd - stats.fatigueAmount < 0) ? boostDown : null;
 		boostItems[5].GetComponentInChildren<Image>().sprite = (stats.currentBoost.def > 0) ? boostUp : (stats.currentBoost.def < 0) ? boostDown : null;
 		boostItems[6].GetComponentInChildren<Image>().sprite = (stats.currentBoost.mov > 0) ? boostUp : (stats.currentBoost.mov < 0) ? boostDown : null;
 		boostItems[0].GetComponentInChildren<Text>().text = stats.currentBoost.hp.ToString();
 		boostItems[1].GetComponentInChildren<Text>().text = stats.currentBoost.dmg.ToString();
 		boostItems[2].GetComponentInChildren<Text>().text = stats.currentBoost.mnd.ToString();
 		boostItems[3].GetComponentInChildren<Text>().text = stats.currentBoost.skl.ToString();
-		boostItems[4].GetComponentInChildren<Text>().text = stats.currentBoost.spd.ToString();
+		boostItems[4].GetComponentInChildren<Text>().text = (stats.currentBoost.spd - stats.fatigueAmount).ToString();
 		boostItems[5].GetComponentInChildren<Text>().text = stats.currentBoost.def.ToString();
 		boostItems[6].GetComponentInChildren<Text>().text = stats.currentBoost.mov.ToString();
 		
-		spdText.text = stats.spd.ToString();
+		spdText.text = (stats.spd - stats.fatigueAmount).ToString();
 		sklText.text = stats.skl.ToString();
 
 		levelText.text = stats.level.ToString();

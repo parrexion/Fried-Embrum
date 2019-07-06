@@ -34,6 +34,7 @@ public class StatsContainer {
 	public int eDef;
 
 	[Header("Boost")]
+	public int fatigueAmount;
 	public List<Boost> boosts = new List<Boost>();
 	public Boost supportBoost = new Boost();
 	public Boost currentBoost;

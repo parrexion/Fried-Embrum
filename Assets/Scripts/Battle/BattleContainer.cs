@@ -32,7 +32,7 @@ public class BattleContainer : InputReceiverDelegate {
 	[Header("Experience")]
 	public UIExpMeter expMeter;
 	public LevelupScript levelupScript;
-	
+
 	[Header("Battle Actions")]
 	public List<BattleAction> actions = new List<BattleAction>();
 	public float speed = 1.5f;
@@ -66,7 +66,7 @@ public class BattleContainer : InputReceiverDelegate {
 	public SfxEntry healSfx;
 	public SfxEntry badStuffSfx;
 	public SfxEntry rewardSfx;
-	
+
 	[Header("Events")]
 	public UnityEvent updateHealthEvent;
 	public UnityEvent battleFinishedEvent;
@@ -74,13 +74,13 @@ public class BattleContainer : InputReceiverDelegate {
 	public UnityEvent playSubMusicEvent;
 	public UnityEvent playSfxEvent;
 	public UnityEvent stopSfxEvent;
-	
+
 	private State state;
 	private TacticsMove _currentCharacter;
 	private bool _attackerDealtDamage;
 	private bool _defenderDealtDamage;
 
-	
+
 	public override void OnMenuModeChanged() {
 		bool active = UpdateState(MenuMode.BATTLE);
 		if (!active)
@@ -88,7 +88,7 @@ public class BattleContainer : InputReceiverDelegate {
 		if (state == State.INIT) {
 			if (currentAction.value == ActionMode.ATTACK)
 				GenerateDamageActions();
-			else 
+			else
 				GenerateHealAction();
 			PlayBattleAnimations();
 		}
@@ -120,7 +120,7 @@ public class BattleContainer : InputReceiverDelegate {
 			attacker.ActivateSkills(SkillActivation.PRECOMBAT, defender);
 			defender.ActivateSkills(SkillActivation.COUNTER, attacker);
 			defender.ActivateSkills(SkillActivation.PRECOMBAT, attacker);
-			
+
 			_currentCharacter = attacker;
 			InventoryTuple atkTup = attacker.GetEquippedWeapon(ItemCategory.WEAPON);
 			InventoryTuple defTup = defender.GetEquippedWeapon(ItemCategory.WEAPON);
@@ -136,7 +136,7 @@ public class BattleContainer : InputReceiverDelegate {
 				if (atkTup.currentCharges > 1)
 					actions.Add(new BattleAction(true, BattleAction.Type.DAMAGE, attacker, defender));
 			}
-			else if (spdDiff <= - doublingSpeed.value) {
+			else if (spdDiff <= -doublingSpeed.value) {
 				if (!string.IsNullOrEmpty(defTup.uuid) && defTup.currentCharges > 0 && defender.GetEquippedWeapon(ItemCategory.WEAPON).InRange(range)) {
 					actions.Add(new BattleAction(false, BattleAction.Type.DAMAGE, defender, attacker));
 				}
@@ -203,8 +203,8 @@ public class BattleContainer : InputReceiverDelegate {
 		forecastUI.UpdateUI(true);
 
 		battleAnimationObject.transform.localPosition = new Vector3(
-			cameraPosX.value, 
-			cameraPosY.value, 
+			cameraPosX.value,
+			cameraPosY.value,
 			battleAnimationObject.transform.localPosition.z
 		);
 		battleAnimationObject.SetActive(showBattleAnim);
@@ -230,20 +230,20 @@ public class BattleContainer : InputReceiverDelegate {
 			if (act.type != BattleAction.Type.DAMAGE && act.attacker.inventory.GetFirstUsableItemTuple(ItemCategory.SUPPORT).currentCharges <= 0) {
 				continue; //Broken staff
 			}
-			
+
 			Transform attackTransform = (!showBattleAnim) ? act.attacker.transform : (act.leftSide) ? leftTransform : rightTransform;
 			Transform defenseTransform = (!showBattleAnim) ? act.defender.transform : (act.leftSide) ? rightTransform : leftTransform;
 			Vector3 startPos = attackTransform.position;
 			Vector3 enemyPos = defenseTransform.position;
 			enemyPos = startPos + (enemyPos - startPos).normalized;
 			forecastUI.UpdateUI(true);
-			
+
 			yield return new WaitForSeconds(2f * slowGameSpeed.value / currentGameSpeed.value);
-			
+
 			//Move forward
 			float f = 0;
 			// Debug.Log("Start moving");
-			while(f < 0.5f) {
+			while (f < 0.5f) {
 				f += Time.deltaTime * speed * currentGameSpeed.value / slowGameSpeed.value;
 				attackTransform.position = Vector3.Lerp(startPos, enemyPos, f);
 				yield return null;
@@ -262,25 +262,25 @@ public class BattleContainer : InputReceiverDelegate {
 					playSfxEvent.Invoke();
 				}
 				else {
-					SfxEntry hitSfx = (isCrit) ? critAttackSfx : 
+					SfxEntry hitSfx = (isCrit) ? critAttackSfx :
 									(!act.defender.IsAlive()) ? leathalAttackSfx : hitAttackSfx;
 					sfxQueue.Enqueue(hitSfx);
 					playSfxEvent.Invoke();
 				}
 				StartCoroutine(DamageDisplay(act.leftSide, damage, true, isCrit));
-				
+
 				if (damage > 0) {
 					if (act.leftSide)
 						_attackerDealtDamage = true;
 					else
 						_defenderDealtDamage = true;
 				}
-				
+
 				if (!act.defender.IsAlive()) {
 					if (act.leftSide)
-						rightTransform.GetComponent<SpriteRenderer>().color = new Color(0.4f,0.4f,0.4f);
+						rightTransform.GetComponent<SpriteRenderer>().color = new Color(0.4f, 0.4f, 0.4f);
 					else
-						leftTransform.GetComponent<SpriteRenderer>().color = new Color(0.4f,0.4f,0.4f);
+						leftTransform.GetComponent<SpriteRenderer>().color = new Color(0.4f, 0.4f, 0.4f);
 				}
 				act.attacker.inventory.ReduceItemCharge(ItemCategory.WEAPON);
 			}
@@ -300,17 +300,17 @@ public class BattleContainer : InputReceiverDelegate {
 			//Update health
 			forecastUI.UpdateHealthUI();
 			updateHealthEvent.Invoke();
-			
+
 			//Extra crit animation
 			if (isCrit) {
 				defenseTransform.GetComponent<ParticleSystem>().Play();
 				yield return new WaitForSeconds(0.2f);
 			}
-			
+
 			// Move back
 			// Debug.Log("Moving back");
 			yield return new WaitForSeconds(1f * slowGameSpeed.value / currentGameSpeed.value);
-			while(f > 0f) {
+			while (f > 0f) {
 				f -= Time.deltaTime * speed;
 				attackTransform.position = Vector3.Lerp(startPos, enemyPos, f);
 				yield return null;
@@ -328,7 +328,7 @@ public class BattleContainer : InputReceiverDelegate {
 					showDialogueEvent.Invoke();
 					lockControls.value = false;
 
-					while(state == State.DEATH) {
+					while (state == State.DEATH) {
 						yield return null;
 					}
 				}
@@ -338,10 +338,10 @@ public class BattleContainer : InputReceiverDelegate {
 
 		//Handle exp
 		yield return StartCoroutine(ShowExpGain());
-		
+
 		//Broken weapons
 		yield return StartCoroutine(HandleBrokenWeapons());
-		
+
 		//Drop Items
 		if (!actions[0].attacker.IsAlive() && actions[0].attacker.faction == Faction.ENEMY) {
 			yield return StartCoroutine(DropItems(actions[0].attacker, actions[0].defender));
@@ -354,6 +354,7 @@ public class BattleContainer : InputReceiverDelegate {
 		if (actions[0].type == BattleAction.Type.DAMAGE) {
 			actions[0].attacker.ActivateSkills(SkillActivation.POSTCOMBAT, actions[0].defender);
 			actions[0].defender.ActivateSkills(SkillActivation.POSTCOMBAT, actions[0].attacker);
+			actions[0].defender.stats.fatigueAmount = Mathf.Min(3, actions[0].defender.stats.fatigueAmount + 1);
 		}
 
 		//Clean up
@@ -371,7 +372,7 @@ public class BattleContainer : InputReceiverDelegate {
 			lockControls.value = false;
 		_currentCharacter.End();
 		_currentCharacter = null;
-		
+
 		yield return new WaitForSeconds(0.5f * slowGameSpeed.value / currentGameSpeed.value);
 
 		//Music
@@ -386,11 +387,11 @@ public class BattleContainer : InputReceiverDelegate {
 	private IEnumerator DamageDisplay(bool leftSide, int damage, bool isDamage, bool isCrit) {
 		GameObject damageObject = (leftSide) ? rightDamageObject : leftDamageObject;
 		Text damageText = (leftSide) ? rightDamageText : leftDamageText;
-		damageText.color = (isDamage) ? Color.black : new Color(0,0.5f,0);
+		damageText.color = (isDamage) ? Color.black : new Color(0, 0.5f, 0);
 		damageText.text = (damage != -1) ? damage.ToString() : "Miss";
 		damageObject.transform.localScale = (isCrit) ? new Vector3(2, 2, 2) : new Vector3(1, 1, 1);
 		damageObject.gameObject.SetActive(true);
-		
+
 		yield return new WaitForSeconds(1f);
 		damageObject.gameObject.SetActive(false);
 	}
@@ -405,7 +406,7 @@ public class BattleContainer : InputReceiverDelegate {
 				}
 			}
 		}
-		
+
 		if (player == null) {
 			Debug.Log("Nothing to give exp for");
 			yield return new WaitForSeconds(0.5f * slowGameSpeed.value / currentGameSpeed.value);
@@ -421,7 +422,7 @@ public class BattleContainer : InputReceiverDelegate {
 			yield return new WaitForSeconds(0.5f * slowGameSpeed.value / currentGameSpeed.value);
 			sfxQueue.Enqueue(levelupFill);
 			playSfxEvent.Invoke();
-			while(exp > 0) {
+			while (exp > 0) {
 				exp--;
 				expMeter.currentExp++;
 				if (expMeter.currentExp == 100) {
@@ -477,7 +478,7 @@ public class BattleContainer : InputReceiverDelegate {
 			InventoryTuple itemTup = dropper.inventory.GetTuple(i);
 			if (itemTup == null || !itemTup.droppable)
 				continue;
-			
+
 			Debug.Log("Dropped item:  " + itemTup.entryName);
 			itemTup.droppable = false;
 			receiver.inventory.AddItem(itemTup);
@@ -493,14 +494,14 @@ public class BattleContainer : InputReceiverDelegate {
 	}
 
 
-	public override void OnUpArrow() {}
-	public override void OnDownArrow() {}
-	public override void OnLeftArrow() {}
-	public override void OnRightArrow() {}
-	public override void OnBackButton() {}
-	public override void OnLButton() {}
-	public override void OnRButton() {}
-	public override void OnXButton() {}
-	public override void OnYButton() {}
-	public override void OnStartButton() {}
+	public override void OnUpArrow() { }
+	public override void OnDownArrow() { }
+	public override void OnLeftArrow() { }
+	public override void OnRightArrow() { }
+	public override void OnBackButton() { }
+	public override void OnLButton() { }
+	public override void OnRButton() { }
+	public override void OnXButton() { }
+	public override void OnYButton() { }
+	public override void OnStartButton() { }
 }

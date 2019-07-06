@@ -56,6 +56,9 @@ public class InventoryTuple {
 		UpdateBonus();
 
 		currentCharges = (charges == -1) ? maxCharge : charges;
+		range.min = item.range.min;
+		range.max = item.range.max;
+
 		skillReq = item.skillReq;
 		boost = new Boost();
 		boost.AddBoost(item.boost);
