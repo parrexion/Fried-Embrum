@@ -181,6 +181,7 @@ public class BattleContainer : InputReceiverDelegate {
 		if (dialogue != null) {
 			uiCanvas.gameObject.SetActive(!showBattleAnim);
 			uiCanvas.gameObject.SetActive(false);
+			state = State.QUOTE;
 			dialogueMode.value = (int)DialogueMode.QUOTE;
 			currentDialogue.value = dialogue;
 			showDialogueEvent.Invoke();

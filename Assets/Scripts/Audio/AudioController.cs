@@ -69,6 +69,7 @@ public class AudioController : MonoBehaviour {
 	/// Plays the music if the area has changed.
 	/// </summary>
 	public void PlaySubMusic() {
+		Debug.Log("ASFJSL:   " + subMusic.value);
 		PlayBackgroundMusic(true, false);
 		PlayBackgroundMusic(false, true);
 	}

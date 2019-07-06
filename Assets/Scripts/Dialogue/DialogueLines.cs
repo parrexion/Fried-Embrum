@@ -43,7 +43,7 @@ public class DialogueLines : MonoBehaviour {
 		NextFrame();
 
 		scene.backgroundChanged.Invoke();
-		scene.bkgMusicChanged.Invoke();
+		//scene.bkgMusicChanged.Invoke();
 		scene.characterChanged.Invoke();
 		scene.dialogueTextChanged.Invoke();
 	}

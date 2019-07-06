@@ -56,7 +56,7 @@ public class DialogueScene : MonoBehaviour {
 		
 		backgroundChanged.Invoke();
 		characterChanged.Invoke();
-		bkgMusicChanged.Invoke();
+		//bkgMusicChanged.Invoke();
 		dialogueTextChanged.Invoke();
 	}
 
