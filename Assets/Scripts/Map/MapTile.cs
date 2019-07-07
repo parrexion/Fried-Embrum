@@ -9,6 +9,7 @@ public class MapTile : MonoBehaviour {
 	public TacticsMove currentCharacter;
 	public GameObject highlight;
 	public GameObject dangerZone;
+	public GameObject spawnPoint;
 
 	[Header("Selectable")]
 	public bool current;
@@ -91,6 +92,7 @@ public class MapTile : MonoBehaviour {
 
 		_rendHighlight.color = tileColor;
 		dangerZone.SetActive(dangerous);
+		spawnPoint.SetActive(deployable);
 	}
 
 	public void SetTerrain(TerrainTile terrainData) {
