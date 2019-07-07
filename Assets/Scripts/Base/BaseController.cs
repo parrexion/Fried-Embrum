@@ -119,6 +119,9 @@ public class BaseController : InputReceiverDelegate {
 			promptMode = false;
 			menuBackEvent.Invoke();
 		}
+		else {
+			menuFailEvent.Invoke();
+		}
 	}
 
 	public void StartMission() {

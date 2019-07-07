@@ -35,7 +35,7 @@ public class MapCursor : MonoBehaviour {
 	public BoolVariable alwaysShowMovement;
 
 	private bool _dangerAreaActive;
-	
+
 
 	/// <summary>
 	/// Initialization
@@ -49,8 +49,8 @@ public class MapCursor : MonoBehaviour {
 	public bool Move(int xDir, int yDir) {
 		int prevX = cursorX.value;
 		int prevY = cursorY.value;
-		cursorX.value = Mathf.Clamp(cursorX.value + xDir, 0, battleMap.SizeX()-1);
-		cursorY.value = Mathf.Clamp(cursorY.value + yDir, 0, battleMap.SizeY()-1);
+		cursorX.value = Mathf.Clamp(cursorX.value + xDir, 0, battleMap.SizeX() - 1);
+		cursorY.value = Mathf.Clamp(cursorY.value + yDir, 0, battleMap.SizeY() - 1);
 		cursorMovedEvent.Invoke();
 		UpdateCursor();
 		CursorHover();
@@ -68,6 +68,7 @@ public class MapCursor : MonoBehaviour {
 				if (!playerCharacters.values[i].hasMoved) {
 					cursorX.value = playerCharacters.values[i].posx;
 					cursorY.value = playerCharacters.values[i].posy;
+					cursorMovedEvent.Invoke();
 					break;
 				}
 			}
@@ -83,11 +84,12 @@ public class MapCursor : MonoBehaviour {
 			}
 			int startPos = pos;
 			do {
-				pos = OPMath.FullLoop(0, playerCharacters.values.Count, pos+1);
+				pos = OPMath.FullLoop(0, playerCharacters.values.Count, pos + 1);
 			} while (startPos != pos && playerCharacters.values[pos].hasMoved);
 
 			cursorX.value = playerCharacters.values[pos].posx;
 			cursorY.value = playerCharacters.values[pos].posy;
+			cursorMovedEvent.Invoke();
 		}
 		else if (selectCharacter.value.faction == Faction.ENEMY) {
 			// Enemy selected - Jump to next enemy
@@ -99,9 +101,10 @@ public class MapCursor : MonoBehaviour {
 					break;
 			}
 
-			pos = OPMath.FullLoop(0, enemyCharacters.values.Count, pos+1);
+			pos = OPMath.FullLoop(0, enemyCharacters.values.Count, pos + 1);
 			cursorX.value = enemyCharacters.values[pos].posx;
 			cursorY.value = enemyCharacters.values[pos].posy;
+			cursorMovedEvent.Invoke();
 		}
 		UpdateCursor();
 		CursorHover();
@@ -293,7 +296,7 @@ public class MapCursor : MonoBehaviour {
 	/// <param name="doToggle"></param>
 	public void DangerAreaToggle(bool doToggle) {
 		_dangerAreaActive = (doToggle) ? !_dangerAreaActive : false;
-		
+
 		battleMap.ClearDangerous();
 		if (_dangerAreaActive) {
 			for (int i = 0; i < enemyCharacters.values.Count; i++) {

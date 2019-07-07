@@ -252,12 +252,6 @@ public class MainMenuController : InputReceiverDelegate {
 		}
 	}
 
-	public override void OnStartButton() {
-		if (currentState == State.MAIN) {
-			ControlsClicked();
-			menuAcceptEvent.Invoke();
-		}
-	}
 	public override void OnXButton() {
 		if (currentState == State.CONTROLS) {
 			NewGameClicked();
@@ -266,6 +260,7 @@ public class MainMenuController : InputReceiverDelegate {
 	}
 
 	
+	public override void OnStartButton() { }
 	public override void OnYButton() { }
 	public override void OnLButton() { }
 	public override void OnRButton() { }

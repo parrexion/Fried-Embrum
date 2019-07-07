@@ -57,13 +57,11 @@ public class PrepCharacterSelect : MonoBehaviour {
 			if (sum > 1 && !pc.forced) {
 				pc.selected = false;
 				changed = true;
-				Debug.Log("Changed");
 			}
 		}
 		else if (sum < playerCap && !pc.locked) {
 			pc.selected = true;
 			changed = true;
-			Debug.Log("Changed");
 		}
 		entryList.GetEntry().SetDark(!pc.selected || pc.locked);
 		ShowInfo();

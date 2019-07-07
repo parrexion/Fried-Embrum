@@ -25,6 +25,7 @@ public class TacticsCamera : MonoBehaviour {
 	public TacticsMoveVariable selectedCharacter;
 	public FloatVariable cameraPosX;
 	public FloatVariable cameraPosY;
+	public float moveSpeed = 0.1f;
 
 	[Header("Cursor Position")]
 	public IntVariable cursorX;
@@ -34,42 +35,44 @@ public class TacticsCamera : MonoBehaviour {
 	
 	private Vector3 _origin;
 	private Vector3 _diff;
-	private bool _drag;
 	private Camera _camera;
+	private Vector3 _goal = new Vector3(0f,0f,-10f);
 
 
 	private void Start() {
 		_camera = GetComponent<Camera>();
 	}
 
+	private void Update() {
+		transform.localPosition = Vector3.MoveTowards(transform.localPosition, _goal, moveSpeed);
+		cameraPosX.value = transform.localPosition.x;
+		cameraPosY.value = transform.localPosition.y;
+	}
+
 	/// <summary>
 	/// Sets the camera position in such a wat that the map cursor appears in the camera box.
 	/// </summary>
 	public void UpdateCameraPositionCursor() {
-		Vector3 currentPosition = _camera.transform.localPosition;
+		Vector3 currentPosition = _goal;
 		Vector3 nextPosition = new Vector3(
 			Mathf.Clamp(currentPosition.x, cursorX.value-moveWidth+2, cursorX.value+moveWidth+2),
 			Mathf.Clamp(currentPosition.y, cursorY.value-moveHeight, cursorY.value+moveHeight),
 			currentPosition.z
 		);
-		transform.localPosition = AdjustPosition(nextPosition);
-		cameraPosX.value = transform.localPosition.x;
-		cameraPosY.value = transform.localPosition.y;
+		_goal = AdjustPosition(nextPosition);
 	}
 
 	/// <summary>
 	/// Sets the camera position in such a wat that the selected character appears in the camera box.
 	/// </summary>
 	public void UpdateCameraPositionFollow() {
-		Vector3 currentPosition = _camera.transform.localPosition;
+		Vector3 currentPosition = _goal;
 		Vector3 nextPosition = new Vector3(
 			Mathf.Clamp(currentPosition.x, selectedCharacter.value.posx-moveWidth, selectedCharacter.value.posx+moveWidth),
 			Mathf.Clamp(currentPosition.y, selectedCharacter.value.posy-moveHeight, selectedCharacter.value.posy+moveHeight),
 			currentPosition.z
 		);
-		transform.localPosition = AdjustPosition(nextPosition);
-		cameraPosX.value = transform.localPosition.x;
-		cameraPosY.value = transform.localPosition.y;
+		_goal = AdjustPosition(nextPosition);
 	}
 
 	/// <summary>

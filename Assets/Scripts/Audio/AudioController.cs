@@ -69,7 +69,6 @@ public class AudioController : MonoBehaviour {
 	/// Plays the music if the area has changed.
 	/// </summary>
 	public void PlaySubMusic() {
-		Debug.Log("ASFJSL:   " + subMusic.value);
 		PlayBackgroundMusic(true, false);
 		PlayBackgroundMusic(false, true);
 	}
@@ -79,7 +78,6 @@ public class AudioController : MonoBehaviour {
 	/// </summary>
 	/// <param name="clip">Clip.</param>
 	void PlayBackgroundMusic(bool isMain, bool updateClip) {
-		// Debug.Log("MUSIC!");
 		AudioClip selectedSong = (isMain) ? mainMusic.value : subMusic.value;
 		AudioSource source = (isMain) ? musicMainSource : musicSubSource;
 		bool useVolume = (isMain && musicFocusSource.value || !isMain && !musicFocusSource.value);
