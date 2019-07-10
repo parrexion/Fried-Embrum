@@ -5,7 +5,20 @@ using UnityEngine.Events;
 
 public enum AggroType { WAIT, CHARGE, GUARD, BOSS, HUNT }
 
+public class SearchInfo {
+	public TacticsMove tactics;
+	public int moveSpeed;
+
+	public WeaponRange wpnRange;
+	public WeaponRange staff;
+
+	public bool showAttack;
+	public bool isDanger;
+	public bool isBuff;
+}
+
 public class NPCMove : TacticsMove {
+
 
 	public ActionModeVariable currentMode;
 	public AggroType aggroType;
@@ -28,7 +41,7 @@ public class NPCMove : TacticsMove {
 	}
 
 
-	
+
 	///////////   MOVEMENT	
 
 
@@ -106,7 +119,7 @@ public class NPCMove : TacticsMove {
 		if (aggroType == AggroType.HUNT) {
 			tileBest = huntTile;
 			tileGood = null;
-			while(tileBest != null && (tileBest.distance > moveSpeed || !tileBest.selectable)) {
+			while (tileBest != null && (tileBest.distance > moveSpeed || !tileBest.selectable)) {
 				tileBest = tileBest.parent;
 			}
 			if (tileBest != null) {
@@ -121,7 +134,7 @@ public class NPCMove : TacticsMove {
 			MapTile tempTile = battleMap.tiles[i];
 			if ((!tempTile.attackable && !tempTile.supportable) || !tempTile.selectable)
 				continue;
-			
+
 			tempTile.target = true;
 			if (tempTile.distance <= moveSpeed) {
 				if (IsBetterTile(bestTile, tempTile))
@@ -173,9 +186,11 @@ public class NPCMove : TacticsMove {
 
 		//Generate attack/support tiles
 		if (weapons[0].itemCategory == ItemCategory.WEAPON) {
+			int damage = BattleCalc.CalculateDamage(weapons[0], stats);
 			WeaponRange reach = inventory.GetReach(ItemCategory.WEAPON);
 			for (int i = 0; i < playerList.values.Count; i++) {
-				((PlayerMove)playerList.values[i]).ShowAttackTiles(reach);
+				int defense = (weapons[0].attackType == AttackType.PHYSICAL) ? playerList.values[i].stats.def : playerList.values[i].stats.mnd;
+				((PlayerMove)playerList.values[i]).ShowAttackTiles(reach, damage - defense);
 			}
 		}
 		else {
@@ -185,11 +200,11 @@ public class NPCMove : TacticsMove {
 					continue;
 				bool isBuff = (weapons[0].weaponType == WeaponType.BARRIER);
 				if (isBuff || enemyList.values[i].IsInjured())
-					((NPCMove)enemyList.values[i]).ShowSupportTiles(reach);
+					((NPCMove)enemyList.values[i]).ShowSupportTiles(reach, isBuff);
 			}
 		}
 	}
-	
+
 	/// <summary>
 	/// Does a BFS for the whole map, creating paths for the character to use when moving towards  
 	/// the target tiles at the other characters.
@@ -200,17 +215,25 @@ public class NPCMove : TacticsMove {
 		currentTile.distance = 0;
 		currentTile.parent = null;
 		currentTile.selectable = true;
-		
-		WeaponRange weapon = inventory.GetReach(ItemCategory.WEAPON);
-		WeaponRange staff = inventory.GetReach(ItemCategory.SUPPORT);
-		
-		bool isBuff = false;
-		if (staff.max > 0)
-			isBuff = (inventory.GetFirstUsableItemTuple(WeaponType.BARRIER) != null);
 
-		while(process.Count > 0) {
+		SearchInfo info = new SearchInfo() {
+			tactics = this,
+			moveSpeed = 1000,
+
+			wpnRange = inventory.GetReach(ItemCategory.WEAPON),
+			staff = inventory.GetReach(ItemCategory.SUPPORT),
+
+			//showAttack = false,
+			//isDanger = false,
+			//isBuff = false
+		};
+
+		if (info.staff.max > 0)
+			info.isBuff = (inventory.GetFirstUsableItemTuple(WeaponType.BARRIER) != null);
+
+		while (process.Count > 0) {
 			MapTile tile = process.Dequeue();
-			tile.FindNeighbours(process, tile.distance, this, 1000, weapon, staff, false, false, isBuff);
+			tile.FindNeighbours(process, tile.distance, info);
 		}
 	}
 
@@ -223,9 +246,13 @@ public class NPCMove : TacticsMove {
 	private bool IsBetterTile(MapTile current, MapTile challenger) {
 		if (current == null)
 			return true;
+
+		if (challenger.value != current.value)
+			return challenger.value > current.value;
+
 		return challenger.distance < current.distance;
 	}
-	
+
 	/// <summary>
 	/// Ends the character's movement and clears the map of the selection.
 	/// </summary>
@@ -259,13 +286,13 @@ public class NPCMove : TacticsMove {
 			targetTile.value = FindRandomTarget(playerList, ItemCategory.WEAPON, false);
 			int distance = BattleMap.DistanceTo(this, targetTile.value);
 			inventory.EquipFirstInRangeItem(ItemCategory.WEAPON, distance);
-            Attack(targetTile.value);
+			Attack(targetTile.value);
 		}
 		else {
 			targetTile.value = FindRandomTarget(enemyList, ItemCategory.SUPPORT, true);
 			int distance = BattleMap.DistanceTo(this, targetTile.value);
 			inventory.EquipFirstInRangeItem(ItemCategory.SUPPORT, distance);
-            Heal(targetTile.value);
+			Heal(targetTile.value);
 		}
 		InputDelegateController.instance.TriggerMenuChange(MenuMode.BATTLE);
 		return true;
@@ -294,19 +321,26 @@ public class NPCMove : TacticsMove {
 		hits.Shuffle();
 		return hits[0];
 	}
-	
+
 	/// <summary>
 	/// Adds supportable to all tiles surrounding the character depending on range.
 	/// </summary>
 	/// <param name="range1"></param>
 	/// <param name="range2"></param>
-	public void ShowSupportTiles(WeaponRange range) {
+	public void ShowSupportTiles(WeaponRange range, bool isBuff) {
 		if (!IsAlive())
 			return;
 
-		for (int i = 0; i < battleMap.tiles.Length; i++) {			
-			if (range.InRange(BattleMap.DistanceTo(this, battleMap.tiles[i])))
+		for (int i = 0; i < battleMap.tiles.Length; i++) {
+			if (range.InRange(BattleMap.DistanceTo(this, battleMap.tiles[i]))) {
 				battleMap.tiles[i].supportable = true;
+				if (isBuff) {
+					battleMap.tiles[i].value = 5;
+				}
+				else {
+					battleMap.tiles[i].value = stats.hp - currentHealth;
+				}
+			}
 		}
 	}
 }

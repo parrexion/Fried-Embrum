@@ -28,6 +28,7 @@ public class MapTile : MonoBehaviour {
 
 	[Header("Distance Search")]
 	public int distance = 1000;
+	public int value = 0;
 	public MapTile parent;
 
 	[Header("Special Tiles")]
@@ -122,55 +123,56 @@ public class MapTile : MonoBehaviour {
 		supportable = false;
 
 		distance = 1000;
+		value = 0;
 		parent = null;
 	}
 
-	public void FindNeighbours(Queue<MapTile> progress, int currentDistance, TacticsMove tactics, int moveSpeed, WeaponRange weapon, WeaponRange staff, bool showAttack, bool isDanger, bool isBuff) {
+	public void FindNeighbours(Queue<MapTile> progress, int currentDistance, SearchInfo info) {
 		MapTile tile = battlemap.GetTile(posx-1, posy);
-		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.currentClass.classType, weapon, staff, showAttack, isDanger, isBuff))
+		if (CheckTile(tile, currentDistance, info))
 			progress.Enqueue(tile);
 		tile = battlemap.GetTile(posx+1, posy);
-		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.currentClass.classType, weapon, staff, showAttack, isDanger, isBuff))
+		if (CheckTile(tile, currentDistance, info))
 			progress.Enqueue(tile);
 		tile = battlemap.GetTile(posx, posy-1);
-		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.currentClass.classType, weapon, staff, showAttack, isDanger, isBuff))
+		if (CheckTile(tile, currentDistance, info))
 			progress.Enqueue(tile);
 		tile = battlemap.GetTile(posx, posy+1);
-		if (CheckTile(tile, currentDistance, moveSpeed, tactics.faction, tactics.stats.currentClass.classType, weapon, staff, showAttack, isDanger, isBuff))
+		if (CheckTile(tile, currentDistance, info))
 			progress.Enqueue(tile);
 	}
 
-	public bool CheckTile(MapTile checkTile, int currentDistance, int moveSpeed, Faction faction, MovementType classType, WeaponRange weapon, WeaponRange support, bool showAttack, bool isDanger, bool isBuff) {
+	public bool CheckTile(MapTile checkTile, int currentDistance, SearchInfo info) {
 		if (checkTile == null)
 			return false;
-		
-		if (checkTile.currentCharacter != null && checkTile.currentCharacter.faction != faction) {
+		if (checkTile.currentCharacter != null && checkTile.currentCharacter.faction != info.tactics.faction) {
 			return false;
 		}
 
-		if (checkTile.GetRoughness(classType) == -1)
+		MovementType moveType = info.tactics.stats.currentClass.classType;
+		if (checkTile.GetRoughness(moveType) == -1)
 			return false;
-		currentDistance += checkTile.GetRoughness(classType);
+		currentDistance += checkTile.GetRoughness(moveType);
 		if (currentDistance >= checkTile.distance)
 			return false;
 
 		checkTile.distance = currentDistance;
-		if (currentDistance > moveSpeed)
+		if (currentDistance > info.moveSpeed)
 			return false;
 	
-		if (isDanger) {
+		if (info.isDanger) {
 			checkTile.dangerous = true;
 		}
 		else if (checkTile.currentCharacter == null) {
 			checkTile.selectable = (checkTile.currentCharacter == null);
 		}
 			
-		if (weapon != null && showAttack) {
-			battlemap.ShowAttackTiles(checkTile, weapon, faction, isDanger);
+		if (info.wpnRange != null && info.showAttack) {
+			battlemap.ShowAttackTiles(checkTile, info.wpnRange, info.tactics.faction, info.isDanger);
 		}
 			
-		if (support != null && showAttack) {
-			battlemap.ShowSupportTiles(checkTile, support, faction, isDanger, isBuff);
+		if (info.staff != null && info.showAttack) {
+			battlemap.ShowSupportTiles(checkTile, info.staff, info.tactics.faction, info.isDanger, info.isBuff);
 		}
 		
 		checkTile.parent = this;

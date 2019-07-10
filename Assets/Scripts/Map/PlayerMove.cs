@@ -38,13 +38,18 @@ public class PlayerMove : TacticsMove {
 	/// </summary>
 	/// <param name="range1"></param>
 	/// <param name="range2"></param>
-	public void ShowAttackTiles(WeaponRange range) {
+	public void ShowAttackTiles(WeaponRange range, int damage) {
 		if (!IsAlive())
 			return;
 
 		for (int i = 0; i < battleMap.tiles.Length; i++) {			
-			if (range.InRange(BattleMap.DistanceTo(this, battleMap.tiles[i])))
+			if (range.InRange(BattleMap.DistanceTo(this, battleMap.tiles[i]))) {
 				battleMap.tiles[i].attackable = true;
+				if (damage >= currentHealth) {
+					damage += 100;
+				}
+				battleMap.tiles[i].value = damage;
+			}
 		}
 	}
 }

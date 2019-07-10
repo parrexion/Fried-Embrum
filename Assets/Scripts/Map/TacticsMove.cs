@@ -138,8 +138,8 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// <summary>
 	/// Shows all the possible moves for the character.
 	/// </summary>
-	/// <param name="isDanger"></param>
-	public void FindAllMoveTiles(bool isDanger) {
+	/// <param name="attacking"></param>
+	public void FindAllMoveTiles(bool attacking) {
 		battleMap.ResetMap();
 		Queue<MapTile> process = new Queue<MapTile>();
 		process.Enqueue(currentTile);
@@ -148,15 +148,23 @@ public abstract class TacticsMove : MonoBehaviour {
 		currentTile.selectable = true;
 		currentTile.target = true;
 
-		WeaponRange weapon = inventory.GetReach(ItemCategory.WEAPON);
-		WeaponRange staff = inventory.GetReach(ItemCategory.SUPPORT);
+		SearchInfo info = new SearchInfo() {
+			tactics = this,
+			moveSpeed = GetMoveSpeed(),
 
-		bool isBuff = false;
-		if (weapon.max > 0)
-			battleMap.ShowAttackTiles(currentTile, weapon, faction, isDanger);
-		if (staff.max > 0) {
-			isBuff = (inventory.GetFirstUsableItemTuple(ItemCategory.SUPPORT) != null);
-			battleMap.ShowSupportTiles(currentTile, staff, faction, isDanger, isBuff);
+			wpnRange = inventory.GetReach(ItemCategory.WEAPON),
+			staff = inventory.GetReach(ItemCategory.SUPPORT),
+
+			showAttack = true,
+			isDanger = attacking,
+			//isBuff = false
+		};
+		
+		if (info.wpnRange.max > 0)
+			battleMap.ShowAttackTiles(currentTile, info.wpnRange, faction, info.isDanger);
+		if (info.staff.max > 0) {
+			info.isBuff = (inventory.GetFirstUsableItemTuple(ItemCategory.SUPPORT) != null);
+			battleMap.ShowSupportTiles(currentTile, info.staff, faction, info.isDanger, info.isBuff);
 		}
 
 		while (process.Count > 0) {
@@ -164,7 +172,7 @@ public abstract class TacticsMove : MonoBehaviour {
 			if (tile.distance >= (GetMoveSpeed()))
 				continue;
 
-			tile.FindNeighbours(process, tile.distance, this, GetMoveSpeed(), weapon, staff, true, isDanger, isBuff);
+			tile.FindNeighbours(process, tile.distance, info);
 		}
 	}
 
