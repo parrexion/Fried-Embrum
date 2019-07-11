@@ -1,0 +1,334 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4424ecce59954d349b8dc1a5714d0991, type: 3}
+  m_Name: StarMap3
+  m_EditorClassIdentifier: 
+  uuid: StarMap3
+  entryName: StarMap3
+  repColor: {r: 0.8962264, g: 0.32687083, b: 0.10568706, a: 1}
+  tag: 
+  sizeX: 25
+  sizeY: 13
+  mapSprite: {fileID: 2800000, guid: 5ce88c223bcbbae40b0db5b9d6635e46, type: 3}
+  mapLocation: 5
+  winCondition: 2
+  loseCondition: 0
+  reward:
+    money: 1000
+    scrap: 15
+    items: []
+  skipBattlePrep: 0
+  autoNextChapter: {fileID: 0}
+  mapDuration: 3
+  preDialogue: {fileID: 11400000, guid: 7c15c1421402cc64c9ccfc993467ed6d, type: 2}
+  introDialogue: {fileID: 11400000, guid: d717b540a6ef5c140939ac2fd1c5c6de, type: 2}
+  endDialogue: {fileID: 11400000, guid: 907685d88356e2246983e61e5fef1214, type: 2}
+  owMusic: {fileID: 11400000, guid: c5d55a00157aa9d45904a928008f24d0, type: 2}
+  battleMusic: {fileID: 11400000, guid: a157ae89a4b1e784cbe12bd1e184e2ea, type: 2}
+  healMusic: {fileID: 11400000, guid: c9ab7f5c344f22c458bafeb1c2e29d45, type: 2}
+  spawnPoints:
+  - x: 1
+    y: 6
+  - x: 1
+    y: 7
+  - x: 2
+    y: 5
+  - x: 2
+    y: 8
+  - x: 3
+    y: 6
+  - x: 3
+    y: 7
+  forcedCharacters:
+  - {fileID: 11400000, guid: cf951a3da37e1794b9cd29749c715911, type: 2}
+  lockedCharacters:
+  - {fileID: 11400000, guid: cf951a3da37e1794b9cd29749c715911, type: 2}
+  enemies:
+  - spawnTurn: 0
+    x: 21
+    y: 3
+    level: 9
+    charData: {fileID: 11400000, guid: e7ddc1c0c7e51884c9652b2b862a6be3, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 8bfe4e7540b44ea4ba7f828c58f0443c, type: 2}
+      droppable: 0
+    aggroType: 3
+    hasQuotes: 0
+    quotes: []
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 0
+    x: 22
+    y: 6
+    level: 6
+    charData: {fileID: 11400000, guid: 85f85ef8ed299964f91bddd6970e2a33, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 61b5282282d02b544a200d088100d5e3, type: 2}
+      droppable: 0
+    aggroType: 2
+    hasQuotes: 0
+    quotes: []
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 0
+    x: 23
+    y: 6
+    level: 6
+    charData: {fileID: 11400000, guid: 85f85ef8ed299964f91bddd6970e2a33, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 61b5282282d02b544a200d088100d5e3, type: 2}
+      droppable: 0
+    aggroType: 2
+    hasQuotes: 0
+    quotes: []
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 0
+    x: 18
+    y: 8
+    level: 5
+    charData: {fileID: 11400000, guid: 077a21a361e80834e8379f2a044ceab3, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: a150849ce79069d4396be1c09944a0df, type: 2}
+      droppable: 0
+    aggroType: 0
+    hasQuotes: 0
+    quotes: []
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 0
+    x: 18
+    y: 10
+    level: 5
+    charData: {fileID: 11400000, guid: 077a21a361e80834e8379f2a044ceab3, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: a150849ce79069d4396be1c09944a0df, type: 2}
+      droppable: 0
+    aggroType: 0
+    hasQuotes: 0
+    quotes: []
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 0
+    x: 6
+    y: 2
+    level: 4
+    charData: {fileID: 11400000, guid: 077a21a361e80834e8379f2a044ceab3, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: a150849ce79069d4396be1c09944a0df, type: 2}
+      droppable: 0
+    aggroType: 0
+    hasQuotes: 0
+    quotes: []
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 0
+    x: 6
+    y: 11
+    level: 4
+    charData: {fileID: 11400000, guid: 077a21a361e80834e8379f2a044ceab3, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: a150849ce79069d4396be1c09944a0df, type: 2}
+      droppable: 0
+    aggroType: 0
+    hasQuotes: 0
+    quotes: []
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 0
+    x: 14
+    y: 9
+    level: 4
+    charData: {fileID: 11400000, guid: 5f9fe78bb4b53eb468e1c36351f399b2, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 3c28909acccd4b343aed0cc878523d4d, type: 2}
+      droppable: 0
+    aggroType: 0
+    hasQuotes: 0
+    quotes: []
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 0
+    x: 10
+    y: 7
+    level: 4
+    charData: {fileID: 11400000, guid: 5f9fe78bb4b53eb468e1c36351f399b2, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 3c28909acccd4b343aed0cc878523d4d, type: 2}
+      droppable: 0
+    aggroType: 0
+    hasQuotes: 0
+    quotes: []
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 0
+    x: 13
+    y: 2
+    level: 4
+    charData: {fileID: 11400000, guid: 5f9fe78bb4b53eb468e1c36351f399b2, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 3c28909acccd4b343aed0cc878523d4d, type: 2}
+      droppable: 0
+    aggroType: 0
+    hasQuotes: 0
+    quotes: []
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 0
+    x: 7
+    y: 6
+    level: 4
+    charData: {fileID: 11400000, guid: 85f85ef8ed299964f91bddd6970e2a33, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 61b5282282d02b544a200d088100d5e3, type: 2}
+      droppable: 0
+    aggroType: 0
+    hasQuotes: 0
+    quotes: []
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 0
+    x: 11
+    y: 4
+    level: 4
+    charData: {fileID: 11400000, guid: 85f85ef8ed299964f91bddd6970e2a33, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 61b5282282d02b544a200d088100d5e3, type: 2}
+      droppable: 0
+    aggroType: 0
+    hasQuotes: 0
+    quotes: []
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 0
+    x: 16
+    y: 3
+    level: 4
+    charData: {fileID: 11400000, guid: 85f85ef8ed299964f91bddd6970e2a33, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 61b5282282d02b544a200d088100d5e3, type: 2}
+      droppable: 0
+    aggroType: 0
+    hasQuotes: 0
+    quotes: []
+    huntX: 0
+    huntY: 0
+  reinforcements:
+  - spawnTurn: 3
+    faction: 1
+    x: 0
+    y: 6
+    level: 12
+    charData: {fileID: 11400000, guid: 85f85ef8ed299964f91bddd6970e2a33, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 61b5282282d02b544a200d088100d5e3, type: 2}
+      droppable: 0
+    aggroType: 0
+    hasQuotes: 0
+    quotes: []
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 3
+    faction: 1
+    x: 0
+    y: 7
+    level: 12
+    charData: {fileID: 11400000, guid: 85f85ef8ed299964f91bddd6970e2a33, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 61b5282282d02b544a200d088100d5e3, type: 2}
+      droppable: 0
+    aggroType: 0
+    hasQuotes: 0
+    quotes: []
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 4
+    faction: 1
+    x: 0
+    y: 6
+    level: 13
+    charData: {fileID: 11400000, guid: 077a21a361e80834e8379f2a044ceab3, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: a150849ce79069d4396be1c09944a0df, type: 2}
+      droppable: 0
+    aggroType: 0
+    hasQuotes: 0
+    quotes: []
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 4
+    faction: 1
+    x: 0
+    y: 7
+    level: 13
+    charData: {fileID: 11400000, guid: 077a21a361e80834e8379f2a044ceab3, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: a150849ce79069d4396be1c09944a0df, type: 2}
+      droppable: 0
+    aggroType: 0
+    hasQuotes: 0
+    quotes: []
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 5
+    faction: 1
+    x: 0
+    y: 6
+    level: 14
+    charData: {fileID: 11400000, guid: 5f9fe78bb4b53eb468e1c36351f399b2, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 3c28909acccd4b343aed0cc878523d4d, type: 2}
+      droppable: 0
+    aggroType: 0
+    hasQuotes: 0
+    quotes: []
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 5
+    faction: 1
+    x: 0
+    y: 7
+    level: 14
+    charData: {fileID: 11400000, guid: 5f9fe78bb4b53eb468e1c36351f399b2, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 3c28909acccd4b343aed0cc878523d4d, type: 2}
+      droppable: 0
+    aggroType: 0
+    hasQuotes: 0
+    quotes: []
+    huntX: 0
+    huntY: 0
+  - spawnTurn: 6
+    faction: 1
+    x: 0
+    y: 7
+    level: 20
+    charData: {fileID: 11400000, guid: 2ab2e7901b5c79f419f48621964997e3, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 38fd8b94404c8b14aa921a520fa9a89d, type: 2}
+      droppable: 1
+    - item: {fileID: 11400000, guid: 1ac8402683511314aa06bbb96ef48203, type: 2}
+      droppable: 1
+    aggroType: 0
+    hasQuotes: 0
+    quotes: []
+    huntX: 0
+    huntY: 0
+  interactions: []
+  turnEvents:
+  - turn: 3
+    factionTurn: 0
+    type: 1
+    dialogue: {fileID: 0}
+    x: 0
+    y: 0
+    changeTerrain: {fileID: 0}

@@ -4,9 +4,8 @@ using UnityEngine;
 using UnityEngine.Events;
 
 public class MainMenuController : InputReceiverDelegate {
-	private enum State { MAIN, CONTROLS, LOAD, OPTIONS }
+	private enum State { MAIN, CONTROLS, LOAD, OPTIONS, CHANGELOG }
 
-	public GameObject startMenuView;
 	public HowToPlayController howTo;
 	public SaveFileController saveFileController;
 	public OptionsController optionsController;
@@ -14,7 +13,9 @@ public class MainMenuController : InputReceiverDelegate {
 	public BoolVariable lockControls;
 
 	[Header("Views")]
+	public GameObject startMenuView;
 	public GameObject saveView;
+	public GameObject changelogView;
 
 	[Header("Current Data")]
 	public StringVariable currentChapterIndex;
@@ -61,11 +62,13 @@ public class MainMenuController : InputReceiverDelegate {
 		lockControls.value = false;
 		startMenuView.SetActive(true);
 		saveView.SetActive(false);
+		changelogView.SetActive(false);
 
 		mainButtons.ResetButtons();
 		mainButtons.AddButton("NEW GAME");
 		mainButtons.AddButton("LOAD GAME");
 		mainButtons.AddButton("OPTIONS");
+		mainButtons.AddButton("CHANGELOG");
 		mainButtons.AddButton("QUIT");
 
 		musicFocus.value = true;
@@ -96,6 +99,12 @@ public class MainMenuController : InputReceiverDelegate {
 		currentState = State.OPTIONS;
 		startMenuView.SetActive(false);
 		optionsController.UpdateState(true);
+	}
+
+	private void ChangelogClicked() {
+		currentState = State.CHANGELOG;
+		startMenuView.SetActive(false);
+		changelogView.SetActive(true);
 	}
 
 	private void QuitClicked() {
@@ -216,6 +225,9 @@ public class MainMenuController : InputReceiverDelegate {
 					OptionsClicked();
 					break;
 				case 3:
+					ChangelogClicked();
+					break;
+				case 4:
 					QuitClicked();
 					break;
 			}
@@ -248,6 +260,12 @@ public class MainMenuController : InputReceiverDelegate {
 			optionsController.BackClicked();
 			startMenuView.SetActive(true);
 			saveGameEvent.Invoke();
+			menuBackEvent.Invoke();
+		}
+		else if (currentState == State.CHANGELOG) {
+			currentState = State.MAIN;
+			startMenuView.SetActive(true);
+			changelogView.SetActive(false);
 			menuBackEvent.Invoke();
 		}
 	}

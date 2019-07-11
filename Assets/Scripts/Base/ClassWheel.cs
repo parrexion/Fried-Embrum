@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum PlayerClassName { NONE = -1, SCOUT, ASSAULT, TANK, PSY, MEDIC }
-public enum EnemyClassName { GRUNT, SPIT, RUSH, XXX1, XXX2 }
+public enum EnemyClassName { GRUNT, SPIT, RUSH, NECROMANCER, XXX2 }
 
 [CreateAssetMenu]
 public class ClassWheel : ScriptableObject {
 
 	public const int CLASS_COUNT = 5;
-	public const int ENEMY_CLASS_COUNT = 3;
+	public const int ENEMY_CLASS_COUNT = 4;
 	public CharClass[] classes;
 	public ScrObjLibraryVariable classLibrary;
 
