@@ -10,7 +10,7 @@ public class BattlePrepController : InputReceiverDelegate {
 	public ScrObjEntryReference currentMapEntry;
 	public PlayerData playerData;
 	public PrepListVariable prepList;
-	
+
 	public UnityEvent nextStateEvent;
 	public UnityEvent respawnCharactersEvent;
 
@@ -21,7 +21,7 @@ public class BattlePrepController : InputReceiverDelegate {
 	[Header("Handlers")]
 	public PrepCharacterSelect characterSelect;
 	public PrepInventorySelect inventorySelect;
-	public ObjectiveController objective; 
+	public ObjectiveController objective;
 
 	[Header("Views")]
 	public GameObject menuCollectionView;
@@ -38,6 +38,7 @@ public class BattlePrepController : InputReceiverDelegate {
 	public AudioVariable mainMusic;
 	public MusicEntry prepMusic;
 	public UnityEvent playMusicEvent;
+	private bool changedMusic;
 
 
 	private void Start() {
@@ -57,12 +58,15 @@ public class BattlePrepController : InputReceiverDelegate {
 		mainButtons.ForcePosition(0);
 	}
 
-    public override void OnMenuModeChanged() {
+	public override void OnMenuModeChanged() {
 		bool active = UpdateState(MenuMode.PREP);
 		mainMenuView.SetActive(active);
 		if (active) {
-			mainMusic.value = prepMusic.clip;
-			playMusicEvent.Invoke();
+			if (!changedMusic) {
+				mainMusic.value = prepMusic.clip;
+				playMusicEvent.Invoke();
+				changedMusic = true;
+			}
 			menuCollectionView.SetActive(!active);
 			buttonMenuView.SetActive(true);
 			currentState = State.MAIN;
@@ -74,6 +78,22 @@ public class BattlePrepController : InputReceiverDelegate {
 		int playerCap = map.spawnPoints.Count;
 		prepList.values = new List<PrepCharacter>();
 		for (int i = 0; i < playerData.stats.Count; i++) {
+			if (!map.IsForced(playerData.stats[i].charData))
+				continue;
+			PrepCharacter pc = new PrepCharacter {
+				index = i,
+				forced = map.IsForced(playerData.stats[i].charData),
+				locked = map.IsLocked(playerData.stats[i].charData)
+			};
+			if (!pc.locked && playerCap > 0) {
+				pc.selected = (playerCap > 0);
+				playerCap--;
+			}
+			prepList.values.Add(pc);
+		}
+		for (int i = 0; i < playerData.stats.Count; i++) {
+			if (map.IsForced(playerData.stats[i].charData))
+				continue;
 			PrepCharacter pc = new PrepCharacter {
 				index = i,
 				forced = map.IsForced(playerData.stats[i].charData),
@@ -112,12 +132,12 @@ public class BattlePrepController : InputReceiverDelegate {
 		if (currentState == State.MAIN) {
 			mainButtons.Move(-1);
 			menuMoveEvent.Invoke();
-        }
-        else if (currentState == State.CHAR) {
+		}
+		else if (currentState == State.CHAR) {
 			characterSelect.MoveSelection(-1);
 			menuMoveEvent.Invoke();
 		}
-        else if (currentState == State.INVENTORY) {
+		else if (currentState == State.INVENTORY) {
 			inventorySelect.MoveSelection(-1);
 			menuMoveEvent.Invoke();
 		}
@@ -127,12 +147,12 @@ public class BattlePrepController : InputReceiverDelegate {
 		if (currentState == State.MAIN) {
 			mainButtons.Move(1);
 			menuMoveEvent.Invoke();
-        }
-        else if (currentState == State.CHAR) {
-            characterSelect.MoveSelection(1);
+		}
+		else if (currentState == State.CHAR) {
+			characterSelect.MoveSelection(1);
 			menuMoveEvent.Invoke();
-        }
-        else if (currentState == State.INVENTORY) {
+		}
+		else if (currentState == State.INVENTORY) {
 			inventorySelect.MoveSelection(1);
 			menuMoveEvent.Invoke();
 		}
@@ -154,7 +174,7 @@ public class BattlePrepController : InputReceiverDelegate {
 			inventorySelect.MoveHorizontal(1);
 			menuMoveEvent.Invoke();
 		}
-		else if(currentState == State.PROMPT) {
+		else if (currentState == State.PROMPT) {
 			startPrompt.Move(1);
 			menuMoveEvent.Invoke();
 		}
@@ -198,8 +218,13 @@ public class BattlePrepController : InputReceiverDelegate {
 			}
 		}
 		else if (currentState == State.CHAR) {
-			characterSelect.SelectCharacter();
-			menuAcceptEvent.Invoke();
+			bool res = characterSelect.SelectCharacter();
+			if (res) {
+				menuAcceptEvent.Invoke();
+			}
+			else {
+				menuFailEvent.Invoke();
+			}
 		}
 		//else if (currentState == State.FORMATION) { }
 		else if (currentState == State.INVENTORY) {
@@ -267,10 +292,10 @@ public class BattlePrepController : InputReceiverDelegate {
 	public void ReturnToMain() {
 		currentState = State.MAIN;
 	}
-	
 
-	public override void OnLButton() {}
-	public override void OnRButton() {}
-	public override void OnXButton() {}
-	public override void OnYButton() {}
+
+	public override void OnLButton() { }
+	public override void OnRButton() { }
+	public override void OnXButton() { }
+	public override void OnYButton() { }
 }

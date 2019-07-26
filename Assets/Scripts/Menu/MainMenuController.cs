@@ -21,6 +21,7 @@ public class MainMenuController : InputReceiverDelegate {
 	public StringVariable currentChapterIndex;
 	public IntVariable currentTotalDays;
 	public IntVariable currentPlayTime;
+	public IntVariable saveFileIndex;
 
 	[Header("Menu")]
 	public MyButtonList mainButtons;
@@ -47,16 +48,13 @@ public class MainMenuController : InputReceiverDelegate {
 	private State currentState;
 
 
-	private void Awake() {
-		StartCoroutine(WaitForInit());
-	}
-
-	private IEnumerator WaitForInit() {
-		while (InputDelegateController.instance == null) {
-			yield return null;
-		}
+	public override void OnMenuModeChanged() {
+		bool active = UpdateState(MenuMode.MAIN_MENU);
+		if (!active)
+			return;
 
 		currentState = State.MAIN;
+
 		currentChapterIndex.value = "";
 		currentTotalDays.value = 0;
 		lockControls.value = false;
@@ -75,16 +73,11 @@ public class MainMenuController : InputReceiverDelegate {
 		mainMusic.value = mainTheme.clip;
 		subMusic.value = null;
 		playBkgMusicEvent.Invoke();
-
-		InputDelegateController.instance.TriggerMenuChange(MenuMode.MAIN_MENU);
-	}
-
-	public override void OnMenuModeChanged() {
-		UpdateState(MenuMode.MAIN_MENU);
 	}
 
 	private void ControlsClicked() {
 		currentState = State.CONTROLS;
+		currentTotalDays.value = 0;
 		startMenuView.SetActive(false);
 		howTo.UpdateState(true);
 	}
@@ -103,7 +96,6 @@ public class MainMenuController : InputReceiverDelegate {
 
 	private void ChangelogClicked() {
 		currentState = State.CHANGELOG;
-		startMenuView.SetActive(false);
 		changelogView.SetActive(true);
 	}
 
@@ -118,6 +110,7 @@ public class MainMenuController : InputReceiverDelegate {
 	/// Called when starting a new game. Sets the starting values.
 	/// </summary>
 	private void NewGameClicked() {
+		saveFileIndex.value = -1;
 		currentChapterIndex.value = firstMission.uuid;
 		currentPlayTime.value = 0;
 		saveController.ResetCurrentData();
@@ -264,7 +257,6 @@ public class MainMenuController : InputReceiverDelegate {
 		}
 		else if (currentState == State.CHANGELOG) {
 			currentState = State.MAIN;
-			startMenuView.SetActive(true);
 			changelogView.SetActive(false);
 			menuBackEvent.Invoke();
 		}

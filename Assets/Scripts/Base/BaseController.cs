@@ -60,24 +60,28 @@ public class BaseController : InputReceiverDelegate {
 	public override void OnUpArrow() {
 		if (!promptMode) {
 			menuButtons.Move(-1);
+			menuMoveEvent.Invoke();
 		}
 	}
 
 	public override void OnDownArrow() {
 		if (!promptMode) {
 			menuButtons.Move(1);
+			menuMoveEvent.Invoke();
 		}
 	}
 
 	public override void OnLeftArrow() {
 		if (promptMode) {
 			prompt.Move(-1);
+			menuMoveEvent.Invoke();
 		}
 	}
 
 	public override void OnRightArrow() {
 		if (promptMode) {
 			prompt.Move(1);
+			menuMoveEvent.Invoke();
 		}
 	}
 

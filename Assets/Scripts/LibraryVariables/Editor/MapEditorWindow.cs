@@ -196,12 +196,15 @@ public class MapEditorWindow {
 
 		GUILayout.Space(10);
 
-		GUILayout.Label("Dialogues", EditorStyles.boldLabel);
+		GUILayout.Label("Chapter Linking", EditorStyles.boldLabel);
+		GUILayout.BeginHorizontal();
+		mapValues.mapDuration = EditorGUILayout.IntField("Map Duration", mapValues.mapDuration);
+		mapValues.unlockDay = EditorGUILayout.IntField("Unlocked on day", mapValues.unlockDay);
+		GUILayout.EndHorizontal();
 		GUILayout.BeginHorizontal();
 		mapValues.skipBattlePrep = EditorGUILayout.Toggle("Skip battle preps?", mapValues.skipBattlePrep);
-		mapValues.mapDuration = EditorGUILayout.IntField("Map Duration", mapValues.mapDuration);
-		GUILayout.EndHorizontal();
 		mapValues.autoNextChapter = (MapEntry)EditorGUILayout.ObjectField("Auto Next Chapter", mapValues.autoNextChapter, typeof(MapEntry), false);
+		GUILayout.EndHorizontal();
 
 		GUILayout.Label("Dialogues", EditorStyles.boldLabel);
 		mapValues.preDialogue = (DialogueEntry)EditorGUILayout.ObjectField("Mission dialogue",mapValues.preDialogue, typeof(DialogueEntry),false);

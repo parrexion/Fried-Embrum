@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public enum MenuMode { NONE, MAP, MAIN_MENU, INV, BATTLE, WEAPON, WWW, INGAME, NNN, TRADE, DIALOGUE, TOOLTIP, 
 						BASE_LAB, BASE_MISSION, BASE_HOUSE, BASE_TRAIN, BASE_SHOP, PREP, FORMATION, SAVE,
-						BASE_MAIN, BASE_EQUIP }
+						BASE_MAIN, BASE_EQUIP, PRE_CONTROLLER }
 
 public class InputDelegateController : MonoBehaviour {
 
@@ -16,6 +16,7 @@ public class InputDelegateController : MonoBehaviour {
 			Destroy(gameObject);
 		}
 		else {
+		Debug.Log("Awake " + gameObject.name);
 			instance = this;
 			StartCoroutine(CountPlayTime());
 			DontDestroyOnLoad(gameObject);

@@ -141,5 +141,8 @@ public class StorageList : MonoBehaviour {
 
 	public void RemoveEntry() {
 		entryList.RemoveEntry();
+		for (int i = 0; i < entryList.Size; i++) {
+			entryList.GetEntry(i).index = i;
+		}
 	}
 }

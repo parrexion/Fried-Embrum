@@ -10,15 +10,15 @@ public class BaseHousing : InputReceiverDelegate {
 
 	[Header("Button menu")]
 	public MyButtonList buttons;
-    public PlayerData playerData;
-    public UnityEvent housingChangedEvent;
+	public PlayerData playerData;
+	public UnityEvent housingChangedEvent;
 
 	[Header("Canvases")]
 	public GameObject basicCanvas;
 	public GameObject houseCanvas;
 	public GameObject supportCanvas;
 
-    [Header("Housing")]
+	[Header("Housing")]
 	public HousingController housingController;
 
 	[Header("Information")]
@@ -32,7 +32,7 @@ public class BaseHousing : InputReceiverDelegate {
 
 	[Header("Supports")]
 	public SupportList supportList;
-	
+
 	private State currentMenu;
 
 
@@ -47,7 +47,7 @@ public class BaseHousing : InputReceiverDelegate {
 		buttons.AddButton("CHECK SUPPORTS");
 	}
 
-    public override void OnMenuModeChanged() {
+	public override void OnMenuModeChanged() {
 		UpdateState(MenuMode.BASE_HOUSE);
 		buttons.ForcePosition(0);
 	}
@@ -85,6 +85,7 @@ public class BaseHousing : InputReceiverDelegate {
 	public override void OnBackButton() {
 		if (currentMenu == State.MAIN) {
 			MenuChangeDelay(MenuMode.BASE_MAIN);
+			menuBackEvent.Invoke();
 		}
 		else if (currentMenu == State.HOUSE) {
 			bool res = housingController.BackClicked();
@@ -106,7 +107,7 @@ public class BaseHousing : InputReceiverDelegate {
 		}
 	}
 
-    public override void OnUpArrow() {
+	public override void OnUpArrow() {
 		if (currentMenu == State.MAIN) {
 			buttons.Move(-1);
 			housingChangedEvent.Invoke();
@@ -123,7 +124,7 @@ public class BaseHousing : InputReceiverDelegate {
 		}
 	}
 
-    public override void OnDownArrow() {
+	public override void OnDownArrow() {
 		if (currentMenu == State.MAIN) {
 			buttons.Move(1);
 			housingChangedEvent.Invoke();
@@ -140,7 +141,7 @@ public class BaseHousing : InputReceiverDelegate {
 		}
 	}
 
-    public override void OnLeftArrow() {
+	public override void OnLeftArrow() {
 		if (currentMenu == State.HOUSE) {
 			housingController.MoveHorizontal(-1);
 			UpdateSelectedHouse();
@@ -151,8 +152,8 @@ public class BaseHousing : InputReceiverDelegate {
 			menuMoveEvent.Invoke();
 		}
 	}
-    
-    public override void OnRightArrow() {
+
+	public override void OnRightArrow() {
 		if (currentMenu == State.HOUSE) {
 			housingController.MoveHorizontal(1);
 			UpdateSelectedHouse();
@@ -216,9 +217,9 @@ public class BaseHousing : InputReceiverDelegate {
 	}
 
 
-    public override void OnLButton() { }
-    public override void OnRButton() { }
-    public override void OnStartButton() { }
-    public override void OnXButton() { }
-    public override void OnYButton() { }
+	public override void OnLButton() { }
+	public override void OnRButton() { }
+	public override void OnStartButton() { }
+	public override void OnXButton() { }
+	public override void OnYButton() { }
 }

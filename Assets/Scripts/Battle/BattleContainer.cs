@@ -203,11 +203,11 @@ public class BattleContainer : InputReceiverDelegate {
 
 		forecastUI.UpdateUI(true);
 
-		battleAnimationObject.transform.localPosition = new Vector3(
-			cameraPosX.value,
-			cameraPosY.value,
-			battleAnimationObject.transform.localPosition.z
-		);
+		//battleAnimationObject.transform.localPosition = new Vector3(
+		//	cameraPosX.value,
+		//	cameraPosY.value,
+		//	battleAnimationObject.transform.localPosition.z
+		//);
 		battleAnimationObject.SetActive(showBattleAnim);
 		uiCanvas.gameObject.SetActive(!showBattleAnim);
 		uiCanvas.gameObject.SetActive(false);

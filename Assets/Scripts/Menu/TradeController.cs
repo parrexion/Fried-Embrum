@@ -165,10 +165,10 @@ public class TradeController : InputReceiverDelegate {
 		tupRight = rightCharacter.inventory.GetTuple(rightIndex);
 		
 		if (leftCharacter != rightCharacter) {
-			if (string.IsNullOrEmpty(tupLeft.uuid) && rightIndex == 0 && !rightCharacter.inventory.CanEquip(tupLeft)) {
+			if (!string.IsNullOrEmpty(tupLeft.uuid) && rightIndex == 0 && !rightCharacter.inventory.CanEquip(tupLeft)) {
 				return;
 			}
-			if (string.IsNullOrEmpty(tupRight.uuid) && leftIndex == 0 && !leftCharacter.inventory.CanEquip(tupRight)) {
+			if (!string.IsNullOrEmpty(tupRight.uuid) && leftIndex == 0 && !leftCharacter.inventory.CanEquip(tupRight)) {
 				return;
 			}
 		}
@@ -184,9 +184,11 @@ public class TradeController : InputReceiverDelegate {
 		//tupRight.droppable = temp.droppable;
 		//tupRight.item = temp.item;
 		
-		InventoryTuple temp = tupLeft;
-		tupLeft = tupRight;
-		tupRight = temp;
+		//InventoryTuple temp = tupLeft;
+		//tupLeft = tupRight;
+		//tupRight = temp;
+		leftCharacter.inventory.SetTuple(leftIndex, tupRight);
+		rightCharacter.inventory.SetTuple(rightIndex, tupLeft);
 		
 		if (leftCharacter == rightCharacter)
 			selectedCharacter.value.canUndoMove = false;

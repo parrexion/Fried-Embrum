@@ -22,7 +22,7 @@ public class BaseTrainingArea : InputReceiverDelegate {
 	public ClassChangeController changeController;
 
 
-	private void Start () {
+	private void Start() {
 		menuTitle.text = "TRAINING";
 		basicView.SetActive(true);
 		bexpView.SetActive(false);
@@ -34,13 +34,13 @@ public class BaseTrainingArea : InputReceiverDelegate {
 		currentMenu = State.MAIN;
 	}
 
-    public override void OnMenuModeChanged() {
+	public override void OnMenuModeChanged() {
 		UpdateState(MenuMode.BASE_TRAIN);
 		buttons.ForcePosition(0);
 		currentMenu = State.MAIN;
 	}
 
-    public override void OnUpArrow() {
+	public override void OnUpArrow() {
 		if (currentMenu == State.MAIN) {
 			buttons.Move(-1);
 			menuMoveEvent.Invoke();
@@ -55,7 +55,7 @@ public class BaseTrainingArea : InputReceiverDelegate {
 		}
 	}
 
-    public override void OnDownArrow() {
+	public override void OnDownArrow() {
 		if (currentMenu == State.MAIN) {
 			buttons.Move(1);
 			menuMoveEvent.Invoke();
@@ -70,7 +70,7 @@ public class BaseTrainingArea : InputReceiverDelegate {
 		}
 	}
 
-    public override void OnOkButton() {
+	public override void OnOkButton() {
 		if (currentMenu == State.MAIN) {
 			int currentIndex = buttons.GetPosition();
 			if (currentIndex == 0) {
@@ -99,10 +99,10 @@ public class BaseTrainingArea : InputReceiverDelegate {
 		}
 	}
 
-    public override void OnBackButton() {
-
+	public override void OnBackButton() {
 		if (currentMenu == State.MAIN) {
 			MenuChangeDelay(MenuMode.BASE_MAIN);
+			menuBackEvent.Invoke();
 		}
 		else if (currentMenu == State.EXP) {
 			if (bexpController.DeselectCharacter()) {
@@ -124,13 +124,13 @@ public class BaseTrainingArea : InputReceiverDelegate {
 		}
 	}
 
-    public override void OnLeftArrow() {
+	public override void OnLeftArrow() {
 		if (currentMenu == State.EXP) {
 			bexpController.UpdateAwardExp(-1);
 			menuMoveEvent.Invoke();
 		}
 	}
-    public override void OnRightArrow() {
+	public override void OnRightArrow() {
 		if (currentMenu == State.EXP) {
 			bexpController.UpdateAwardExp(1);
 			menuMoveEvent.Invoke();
@@ -138,10 +138,10 @@ public class BaseTrainingArea : InputReceiverDelegate {
 	}
 
 
-    public override void OnLButton() { }
-    public override void OnRButton() { }
-    public override void OnStartButton() { }
-    public override void OnXButton() { }
-    public override void OnYButton() { }
+	public override void OnLButton() { }
+	public override void OnRButton() { }
+	public override void OnStartButton() { }
+	public override void OnXButton() { }
+	public override void OnYButton() { }
 }
 

@@ -7,6 +7,7 @@ public class MapPoints : MonoBehaviour {
 	public Transform[] mapLocations;
 	public IntVariable locationPointIndex;
 	public PlayerData playerData;
+	public IntVariable currentDay;
 	private SpriteRenderer[] highlights;
 
 	private void Start() {
@@ -16,7 +17,7 @@ public class MapPoints : MonoBehaviour {
 		}
 		ResetMap();
 		for (int i = 0; i < playerData.missions.Count; i++) {
-			if (playerData.missions[i].cleared)
+			if (playerData.missions[i].cleared || currentDay.value < playerData.missions[i].map.unlockDay)
 				continue;
 			SetLocation(playerData.missions[i].map.mapLocation, true);
 		}

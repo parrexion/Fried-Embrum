@@ -14,11 +14,13 @@ public static class BattleCalc {
 	public static int CalculateDamage(InventoryTuple weaponAtk, StatsContainer attacker) {
 		if (weaponAtk == null)
 			return -1;
+		float fatiguePercent = 1f - RETALIATE_DAMAGE_REDUCTION * attacker.fatigueAmount;
+
 		if (weaponAtk.attackType == AttackType.PHYSICAL) {
-			return (int)((weaponAtk.power + attacker.dmg) * (1 - RETALIATE_DAMAGE_REDUCTION * attacker.fatigueAmount));
+			return (int)((weaponAtk.power + attacker.dmg) * fatiguePercent);
 		}
 		else if (weaponAtk.attackType == AttackType.MENTAL) {
-			return (int)((weaponAtk.power + attacker.mnd) * (1 - RETALIATE_DAMAGE_REDUCTION * attacker.fatigueAmount));
+			return (int)((weaponAtk.power + attacker.mnd) * fatiguePercent);
 		}
 		return -1;
 	}
@@ -42,7 +44,8 @@ public static class BattleCalc {
 	public static int GetHitRate(InventoryTuple weaponAtk, StatsContainer attacker) {
 		if (weaponAtk == null)
 			return -1;
-		return weaponAtk.hitRate + attacker.skl * 2 + attacker.hitBoost - (int)(attacker.fatigueAmount * RETALIATE_HIT_REDUCTION);
+		int fatigue = (int)(attacker.fatigueAmount * RETALIATE_HIT_REDUCTION);
+		return weaponAtk.hitRate + attacker.skl * 2 + attacker.hitBoost - fatigue;
 	}
 
 	/// <summary>
@@ -54,7 +57,7 @@ public static class BattleCalc {
 	public static int GetCritRate(InventoryTuple weaponAtk, StatsContainer attacker) {
 		if (weaponAtk == null)
 			return -1;
-		return Mathf.Max(0, weaponAtk.critRate + attacker.critBoost - attacker.fatigueAmount);
+		return Mathf.Max(0, weaponAtk.critRate + attacker.critBoost - attacker.fatigueAmount * 2);
 	}
 
 	/// <summary>
@@ -63,7 +66,8 @@ public static class BattleCalc {
 	/// <param name="defender"></param>
 	/// <returns></returns>
 	public static int GetAvoid(StatsContainer defender) {
-		return defender.spd * 2 + defender.avoidBoost - (int)(defender.fatigueAmount * RETALIATE_AVOID_REDUCTION);
+		int fatigue = (int)(defender.fatigueAmount * RETALIATE_AVOID_REDUCTION);
+		return defender.spd * 2 + defender.avoidBoost - fatigue;
 	}
 
 	/// <summary>
@@ -82,8 +86,9 @@ public static class BattleCalc {
 		int pwr = (weaponAtk.attackType == AttackType.PHYSICAL) ? weaponAtk.power + attacker.dmg : weaponAtk.power + attacker.mnd;
 		int def = (weaponAtk.attackType == AttackType.PHYSICAL) ? defender.def + terrain.defense : defender.mnd + terrain.defense;
 		float weakness = GetWeaknessBonus(weaponAtk, defender);
+		float fatiguePercent = 1f - RETALIATE_DAMAGE_REDUCTION * attacker.fatigueAmount;
 
-		int damage = Mathf.Max(1, Mathf.FloorToInt(pwr * weakness) - def);
+		int damage = Mathf.Max(1, Mathf.FloorToInt(pwr * weakness * fatiguePercent) - def);
 		return damage;
 	}
 

@@ -215,7 +215,7 @@ public class InventoryContainer {
 		int pos = 0;
 
 		for (int i = 0; i < INVENTORY_SIZE; i++) {
-			if (string.IsNullOrEmpty(inventory[i].uuid)) {
+			if (string.IsNullOrEmpty(inventory[pos].uuid)) {
 				InventoryTuple tup = inventory[pos];
 				inventory.RemoveAt(pos);
 				inventory.Add(tup);
@@ -248,6 +248,15 @@ public class InventoryContainer {
 		for (int i = 0; i < INVENTORY_SIZE; i++) {
 			inventory[i].index = i;
 		}
+	}
+
+	/// <summary>
+	/// Sets the value of the given inventory tuple.
+	/// </summary>
+	/// <param name="index"></param>
+	/// <returns></returns>
+	public void SetTuple(int index, InventoryTuple tuple) {
+		inventory[index] = tuple;
 	}
 
 	/// <summary>

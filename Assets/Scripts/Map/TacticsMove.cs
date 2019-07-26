@@ -477,9 +477,9 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// <summary>
 	/// Refreshes the character and removes expired buffs.
 	/// </summary>
-	public void OnStartTurn() {
+	public bool OnStartTurn() {
 		if (!IsAlive())
-			return;
+			return false;
 
 		stats.fatigueAmount = 0;
 		stats.ClearBoosts(true);
@@ -497,6 +497,7 @@ public abstract class TacticsMove : MonoBehaviour {
 			TakeDamage(-diff, false);
 			Debug.Log("Damage");
 		}
+		return (diff != 0);
 	}
 
 	/// <summary>

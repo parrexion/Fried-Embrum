@@ -33,6 +33,7 @@ MonoBehaviour:
     eSpd: 11
     eSkl: 9
     eDef: 3
+    fatigueAmount: 0
     boosts: []
     supportBoost:
       boostType: 0
@@ -78,6 +79,99 @@ MonoBehaviour:
     eSpd: 4
     eSkl: 4
     eDef: 7
+    fatigueAmount: 0
+    boosts: []
+    supportBoost:
+      boostType: 0
+      hp: 0
+      dmg: 0
+      mnd: 0
+      spd: 0
+      skl: 0
+      def: 0
+      mov: 0
+      hit: 0
+      crit: 0
+      avoid: 0
+    currentBoost:
+      boostType: 0
+      hp: 0
+      dmg: 0
+      mnd: 0
+      spd: 0
+      skl: 0
+      def: 0
+      mov: 0
+      hit: 0
+      crit: 0
+      avoid: 0
+  - charData: {fileID: 11400000, guid: 0bf81bfd9c0d55f49a76297d05c3a788, type: 2}
+    currentClass: {fileID: 11400000, guid: 96d9f2b22e374ce4788766719cafc24d, type: 2}
+    classLevels: 0000000000000000010000000000000000000000
+    level: 1
+    currentExp: 0
+    hp: 27
+    dmg: 10
+    mnd: 1
+    spd: 6
+    skl: 3
+    def: 6
+    hitBoost: 0
+    critBoost: 0
+    avoidBoost: 0
+    eHp: 27
+    eDmg: 10
+    eMnd: 1
+    eSpd: 6
+    eSkl: 3
+    eDef: 6
+    fatigueAmount: 0
+    boosts: []
+    supportBoost:
+      boostType: 0
+      hp: 0
+      dmg: 0
+      mnd: 0
+      spd: 0
+      skl: 0
+      def: 0
+      mov: 0
+      hit: 0
+      crit: 0
+      avoid: 0
+    currentBoost:
+      boostType: 0
+      hp: 0
+      dmg: 0
+      mnd: 0
+      spd: 0
+      skl: 0
+      def: 0
+      mov: 0
+      hit: 0
+      crit: 0
+      avoid: 0
+  - charData: {fileID: 11400000, guid: 6587ac31779338744838102a4e36b2cd, type: 2}
+    currentClass: {fileID: 11400000, guid: f1944e0d7acbf3e488e1a0112cecc6f9, type: 2}
+    classLevels: 0000000000000000000000000000000001000000
+    level: 1
+    currentExp: 0
+    hp: 25
+    dmg: 5
+    mnd: 7
+    spd: 6
+    skl: 7
+    def: 3
+    hitBoost: 0
+    critBoost: 0
+    avoidBoost: 0
+    eHp: 25
+    eDmg: 5
+    eMnd: 7
+    eSpd: 6
+    eSkl: 7
+    eDef: 3
+    fatigueAmount: 0
     boosts: []
     supportBoost:
       boostType: 0
@@ -120,7 +214,7 @@ MonoBehaviour:
       currentCharges: 40
       range:
         min: 1
-        max: 1
+        max: 2
       itemCategory: 0
       weaponType: 2
       attackType: 0
@@ -478,6 +572,380 @@ MonoBehaviour:
       bonusCrit: 0
       bonusCharges: 0
       bonusCost: 0
+  - wpnSkills: 000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000
+    inventory:
+    - uuid: StandardRockets
+      index: 0
+      droppable: 0
+      icon: {fileID: 21300000, guid: 01cf25f98bfe62a44ae412a703a6be32, type: 3}
+      repColor: {r: 1, g: 1, b: 0, a: 1}
+      entryName: Std. Rockets
+      cost: 450
+      power: 5
+      hitRate: 75
+      critRate: 0
+      maxCharge: 30
+      currentCharges: 30
+      range:
+        min: 2
+        max: 2
+      itemCategory: 0
+      weaponType: 6
+      attackType: 0
+      advantageType: 
+      skillReq: 1
+      boost:
+        boostType: 0
+        hp: 0
+        dmg: 0
+        mnd: 0
+        spd: 0
+        skl: 0
+        def: 0
+        mov: 0
+        hit: 0
+        crit: 0
+        avoid: 0
+      bonusPower: 0
+      bonusHit: 0
+      bonusCrit: 0
+      bonusCharges: 0
+      bonusCost: 0
+    - uuid: 
+      index: 1
+      droppable: 0
+      icon: {fileID: 0}
+      repColor: {r: 1, g: 1, b: 1, a: 1}
+      entryName: 
+      cost: 0
+      power: 0
+      hitRate: 0
+      critRate: 0
+      maxCharge: 0
+      currentCharges: 0
+      range:
+        min: 1
+        max: 1
+      itemCategory: 2
+      weaponType: -1
+      attackType: 0
+      advantageType: 
+      skillReq: 0
+      boost:
+        boostType: 0
+        hp: 0
+        dmg: 0
+        mnd: 0
+        spd: 0
+        skl: 0
+        def: 0
+        mov: 0
+        hit: 0
+        crit: 0
+        avoid: 0
+      bonusPower: 0
+      bonusHit: 0
+      bonusCrit: 0
+      bonusCharges: 0
+      bonusCost: 0
+    - uuid: 
+      index: 2
+      droppable: 0
+      icon: {fileID: 0}
+      repColor: {r: 1, g: 1, b: 1, a: 1}
+      entryName: 
+      cost: 0
+      power: 0
+      hitRate: 0
+      critRate: 0
+      maxCharge: 0
+      currentCharges: 0
+      range:
+        min: 1
+        max: 1
+      itemCategory: 2
+      weaponType: -1
+      attackType: 0
+      advantageType: 
+      skillReq: 0
+      boost:
+        boostType: 0
+        hp: 0
+        dmg: 0
+        mnd: 0
+        spd: 0
+        skl: 0
+        def: 0
+        mov: 0
+        hit: 0
+        crit: 0
+        avoid: 0
+      bonusPower: 0
+      bonusHit: 0
+      bonusCrit: 0
+      bonusCharges: 0
+      bonusCost: 0
+    - uuid: 
+      index: 3
+      droppable: 0
+      icon: {fileID: 0}
+      repColor: {r: 1, g: 1, b: 1, a: 1}
+      entryName: 
+      cost: 0
+      power: 0
+      hitRate: 0
+      critRate: 0
+      maxCharge: 0
+      currentCharges: 0
+      range:
+        min: 1
+        max: 1
+      itemCategory: 2
+      weaponType: -1
+      attackType: 0
+      advantageType: 
+      skillReq: 0
+      boost:
+        boostType: 0
+        hp: 0
+        dmg: 0
+        mnd: 0
+        spd: 0
+        skl: 0
+        def: 0
+        mov: 0
+        hit: 0
+        crit: 0
+        avoid: 0
+      bonusPower: 0
+      bonusHit: 0
+      bonusCrit: 0
+      bonusCharges: 0
+      bonusCost: 0
+    - uuid: 
+      index: 4
+      droppable: 0
+      icon: {fileID: 0}
+      repColor: {r: 1, g: 1, b: 1, a: 1}
+      entryName: 
+      cost: 0
+      power: 0
+      hitRate: 0
+      critRate: 0
+      maxCharge: 0
+      currentCharges: 0
+      range:
+        min: 1
+        max: 1
+      itemCategory: 2
+      weaponType: -1
+      attackType: 0
+      advantageType: 
+      skillReq: 0
+      boost:
+        boostType: 0
+        hp: 0
+        dmg: 0
+        mnd: 0
+        spd: 0
+        skl: 0
+        def: 0
+        mov: 0
+        hit: 0
+        crit: 0
+        avoid: 0
+      bonusPower: 0
+      bonusHit: 0
+      bonusCrit: 0
+      bonusCharges: 0
+      bonusCost: 0
+  - wpnSkills: 000000000000000000000000000000000000000001000000000000000000000000000000010000000000000000000000000000000000000000000000
+    inventory:
+    - uuid: StandardPistol
+      index: 0
+      droppable: 0
+      icon: {fileID: 21300000, guid: b5cd4dbc0bebc8e42a7a5998cc4820e1, type: 3}
+      repColor: {r: 1, g: 1, b: 0, a: 1}
+      entryName: Std. Pistol
+      cost: 300
+      power: 1
+      hitRate: 95
+      critRate: 0
+      maxCharge: 24
+      currentCharges: 24
+      range:
+        min: 1
+        max: 1
+      itemCategory: 0
+      weaponType: 5
+      attackType: 0
+      advantageType: 
+      skillReq: 1
+      boost:
+        boostType: 0
+        hp: 0
+        dmg: 0
+        mnd: 0
+        spd: 0
+        skl: 0
+        def: 0
+        mov: 0
+        hit: 0
+        crit: 0
+        avoid: 0
+      bonusPower: 0
+      bonusHit: 0
+      bonusCrit: 0
+      bonusCharges: 0
+      bonusCost: 0
+    - uuid: StandardMedkit
+      index: 1
+      droppable: 0
+      icon: {fileID: 21300000, guid: 334c5f6fa77718143852c0440068b145, type: 3}
+      repColor: {r: 0.5, g: 1, b: 0.5, a: 1}
+      entryName: Std. Medkit
+      cost: 400
+      power: 8
+      hitRate: 0
+      critRate: 0
+      maxCharge: 18
+      currentCharges: 18
+      range:
+        min: 1
+        max: 1
+      itemCategory: 1
+      weaponType: 9
+      attackType: 2
+      advantageType: 
+      skillReq: 1
+      boost:
+        boostType: 0
+        hp: 0
+        dmg: 0
+        mnd: 0
+        spd: 0
+        skl: 0
+        def: 0
+        mov: 0
+        hit: 0
+        crit: 0
+        avoid: 0
+      bonusPower: 0
+      bonusHit: 0
+      bonusCrit: 0
+      bonusCharges: 0
+      bonusCost: 0
+    - uuid: 
+      index: 2
+      droppable: 0
+      icon: {fileID: 0}
+      repColor: {r: 1, g: 1, b: 1, a: 1}
+      entryName: 
+      cost: 0
+      power: 0
+      hitRate: 0
+      critRate: 0
+      maxCharge: 0
+      currentCharges: 0
+      range:
+        min: 1
+        max: 1
+      itemCategory: 2
+      weaponType: -1
+      attackType: 0
+      advantageType: 
+      skillReq: 0
+      boost:
+        boostType: 0
+        hp: 0
+        dmg: 0
+        mnd: 0
+        spd: 0
+        skl: 0
+        def: 0
+        mov: 0
+        hit: 0
+        crit: 0
+        avoid: 0
+      bonusPower: 0
+      bonusHit: 0
+      bonusCrit: 0
+      bonusCharges: 0
+      bonusCost: 0
+    - uuid: 
+      index: 3
+      droppable: 0
+      icon: {fileID: 0}
+      repColor: {r: 1, g: 1, b: 1, a: 1}
+      entryName: 
+      cost: 0
+      power: 0
+      hitRate: 0
+      critRate: 0
+      maxCharge: 0
+      currentCharges: 0
+      range:
+        min: 1
+        max: 1
+      itemCategory: 2
+      weaponType: -1
+      attackType: 0
+      advantageType: 
+      skillReq: 0
+      boost:
+        boostType: 0
+        hp: 0
+        dmg: 0
+        mnd: 0
+        spd: 0
+        skl: 0
+        def: 0
+        mov: 0
+        hit: 0
+        crit: 0
+        avoid: 0
+      bonusPower: 0
+      bonusHit: 0
+      bonusCrit: 0
+      bonusCharges: 0
+      bonusCost: 0
+    - uuid: 
+      index: 4
+      droppable: 0
+      icon: {fileID: 0}
+      repColor: {r: 1, g: 1, b: 1, a: 1}
+      entryName: 
+      cost: 0
+      power: 0
+      hitRate: 0
+      critRate: 0
+      maxCharge: 0
+      currentCharges: 0
+      range:
+        min: 1
+        max: 1
+      itemCategory: 2
+      weaponType: -1
+      attackType: 0
+      advantageType: 
+      skillReq: 0
+      boost:
+        boostType: 0
+        hp: 0
+        dmg: 0
+        mnd: 0
+        spd: 0
+        skl: 0
+        def: 0
+        mov: 0
+        hit: 0
+        crit: 0
+        avoid: 0
+      bonusPower: 0
+      bonusHit: 0
+      bonusCrit: 0
+      bonusCharges: 0
+      bonusCost: 0
   skills:
   - skills:
     - {fileID: 11400000, guid: 9045d3489dfc5374cafcd63d9901e7a3, type: 2}
@@ -491,6 +959,18 @@ MonoBehaviour:
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
+  - skills:
+    - {fileID: 11400000, guid: 8357579715960ac46b1a2dc2c6313379, type: 2}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+  - skills:
+    - {fileID: 11400000, guid: a1cb999ee49d1d74997d94115e5a68cc, type: 2}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
   baseInfo: []
   items:
   - item: {fileID: 11400000, guid: 2c6481630a321de4f97f98e24d095e8e, type: 2}
@@ -498,7 +978,7 @@ MonoBehaviour:
   - item: {fileID: 11400000, guid: 2c6481630a321de4f97f98e24d095e8e, type: 2}
     charges: 3
   upgrader:
-    listSize: 6
+    listSize: 5
     upgrades:
     - upgrade: {fileID: 11400000, guid: 4035965c954be614e8ec78461529e883, type: 2}
       researched: 0
@@ -509,8 +989,6 @@ MonoBehaviour:
     - upgrade: {fileID: 11400000, guid: 170d5cbfd40f8fc4f8591920d6fd3385, type: 2}
       researched: 0
     - upgrade: {fileID: 11400000, guid: 888645a9dd134f5499d3487214fd78ae, type: 2}
-      researched: 0
-    - upgrade: {fileID: 11400000, guid: 9d2da38534b02694e9fedba529517b94, type: 2}
       researched: 0
     developed: []
   missions:

@@ -24,6 +24,7 @@ public class MapEntry : ScrObjLibraryEntry {
 	public bool skipBattlePrep;
 	public MapEntry autoNextChapter;
 	public int mapDuration = 1;
+	public int unlockDay = 1;
 
 	[Header("Dialogues")]
 	public DialogueEntry preDialogue;
@@ -65,6 +66,7 @@ public class MapEntry : ScrObjLibraryEntry {
 		skipBattlePrep = false;
 		autoNextChapter = null;
 		mapDuration = 1;
+		unlockDay = 1;
 
 		preDialogue = null;
 		introDialogue = null;
@@ -99,6 +101,7 @@ public class MapEntry : ScrObjLibraryEntry {
 		skipBattlePrep = map.skipBattlePrep;
 		autoNextChapter = map.autoNextChapter;
 		mapDuration = map.mapDuration;
+		unlockDay = map.unlockDay;
 
 		preDialogue = map.preDialogue;
 		introDialogue = map.introDialogue;

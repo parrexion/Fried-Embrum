@@ -95,7 +95,7 @@ public class BaseEquipment : InputReceiverDelegate {
 
 	private void GenerateInventoryList() {
 		TotalMoneyText.text = "Money:  " + totalMoney.value;
-		
+
 		characters.GetEntry().invCon.CleanupInventory();
 		itemList.ResetList();
 
@@ -240,6 +240,7 @@ public class BaseEquipment : InputReceiverDelegate {
 		}
 		else if (currentMode == MenuState.MENU) {
 			MenuChangeDelay(MenuMode.BASE_MAIN);
+			menuBackEvent.Invoke();
 			return true;
 		}
 		else if (currentMode == MenuState.CHARACTER) {
@@ -298,10 +299,10 @@ public class BaseEquipment : InputReceiverDelegate {
 	}
 
 	private void TakeItem() {
-		Debug.Log("Take item");
 		ItemListEntry item = convoy.GetEntry();
 		if (!item)
 			return;
+		Debug.Log("Take item");
 
 		InventoryContainer invCon = characters.GetEntry().invCon;
 		if (!invCon.AddItem(playerData.items[item.index])) {
@@ -316,7 +317,8 @@ public class BaseEquipment : InputReceiverDelegate {
 	}
 
 	private void StoreItem() {
-		if (string.IsNullOrEmpty(itemList.GetEntry().tuple.uuid))
+		ItemListEntry item = itemList.GetEntry();
+		if (item == null || string.IsNullOrEmpty(item.tuple.uuid))
 			return;
 
 		Debug.Log("Store item");
@@ -324,7 +326,7 @@ public class BaseEquipment : InputReceiverDelegate {
 		InventoryTuple tuple = characters.GetEntry().invCon.GetTuple(index);
 		playerData.items.Add(tuple.StoreData());
 		characters.GetEntry().invCon.DropItem(index);
-		
+
 		GenerateInventoryList();
 		itemList.ForcePosition(index);
 		ShowItemInfo();
@@ -374,26 +376,32 @@ public class BaseEquipment : InputReceiverDelegate {
 
 	public override void OnUpArrow() {
 		MoveSelection(-1);
+		menuMoveEvent.Invoke();
 	}
 
 	public override void OnDownArrow() {
 		MoveSelection(1);
+		menuMoveEvent.Invoke();
 	}
 
 	public override void OnLeftArrow() {
 		MoveSide(-1);
+		menuMoveEvent.Invoke();
 	}
 
 	public override void OnRightArrow() {
 		MoveSide(1);
+		menuMoveEvent.Invoke();
 	}
 
 	public override void OnOkButton() {
 		SelectItem();
+		menuAcceptEvent.Invoke();
 	}
 
 	public override void OnBackButton() {
 		DeselectItem();
+		menuBackEvent.Invoke();
 	}
 
 	public override void OnLButton() { }

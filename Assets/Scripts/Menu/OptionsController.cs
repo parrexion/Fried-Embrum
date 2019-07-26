@@ -11,6 +11,10 @@ public class OptionsController : MonoBehaviour {
 	public OptionEntry[] options;
 	private EntryList<OptionEntry> optionList;
 
+	[Header("Save variables")]
+	public IntVariable controlSchemeIndex;
+	public IntVariable controlSchemeTemporary;
+
 
 	private void Start() {
 		optionList = new EntryList<OptionEntry>(options.Length);
@@ -50,6 +54,7 @@ public class OptionsController : MonoBehaviour {
 	/// Resets the help screen position back to the first one again.
 	/// </summary>
 	public void BackClicked() {
+		controlSchemeIndex.value = controlSchemeTemporary.value;
 		optionMenu.SetActive(false);
 	}
 

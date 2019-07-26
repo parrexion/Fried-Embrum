@@ -19,16 +19,17 @@ public class HowToPlayController : MonoBehaviour {
 	public int visibleSize;
 	public GameObject upArrow;
 	public GameObject downArrow;
-	private EntryList<TopicEntry> topicEntryList;
+	private EntryList<TopicEntry> topicEntryList = new EntryList<TopicEntry>(0);
 
 
 	private void Start() {
 		controlsObject.SetActive(false);
-		GenerateTopicList();
 	}
 
 	private void GenerateTopicList() {
+		topicEntryList.ResetList();
 		topicEntryList = new EntryList<TopicEntry>(visibleSize);
+
 		topics.Sort((x,y) => string.Compare(x.topic, y.topic));
 		for (int i = 0; i < topics.Count; i++) {
 			if (topics[i].unlockDay > currentDays.value)
@@ -48,7 +49,7 @@ public class HowToPlayController : MonoBehaviour {
 	/// <param name="active"></param>
     public void UpdateState(bool active) {
         controlsObject.SetActive(active);
-		UpdateTopicList();
+		GenerateTopicList();
 	}
 
 	/// <summary>

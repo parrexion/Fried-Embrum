@@ -5,7 +5,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class EnemyController : MonoBehaviour {
-	
+
 	[Header("References")]
 	public CharacterListVariable playerList;
 	public CharacterListVariable enemyList;
@@ -29,7 +29,7 @@ public class EnemyController : MonoBehaviour {
 	public UnityEvent charClicked;
 	public UnityEvent cursorMovedEvent;
 	public UnityEvent nextStateEvent;
-	
+
 	private NPCMove enemy;
 	private bool isRunning;
 	private bool waitForNextAction;
@@ -38,20 +38,23 @@ public class EnemyController : MonoBehaviour {
 	/// <summary>
 	/// Starts the loop which runs the enemies' turns.
 	/// </summary>
-	public void RunEnemies() {
+	public void RunEnemies(float startDelay) {
 		if (!isRunning)
-			StartCoroutine(RunEnemyTurn());
+			StartCoroutine(RunEnemyTurn(startDelay));
 	}
 
 	/// <summary>
 	/// Takes each enemy that is alive and runs their turn.
 	/// </summary>
 	/// <returns></returns>
-	private IEnumerator RunEnemyTurn() {
+	private IEnumerator RunEnemyTurn(float startDelay) {
 		isRunning = true;
+		yield return new WaitForSeconds(startDelay * slowGameSpeed.value / currentGameSpeed.value);
 
 		battleWeaponIndex.value = 0;
 		currentPage.value = 0;
+
+		yield return new WaitForSeconds(2f * slowGameSpeed.value / currentGameSpeed.value);
 
 		for (int i = 0; i < enemyList.values.Count; i++) {
 			if (!enemyList.values[i].IsAlive())
@@ -63,9 +66,9 @@ public class EnemyController : MonoBehaviour {
 			selectTile.value = selectCharacter.value.currentTile;
 			enemy = (NPCMove)enemyList.values[i];
 			// enemy.FindAllMoveTiles(false);
-				cursorX.value = enemy.posx;
-				cursorY.value = enemy.posy;
-				cursorMovedEvent.Invoke();
+			cursorX.value = enemy.posx;
+			cursorY.value = enemy.posy;
+			cursorMovedEvent.Invoke();
 
 			// Calculate the tile to move towards and wait for the character to move there if any
 			MapTile moveTile = enemy.CalculateMovement();
@@ -80,7 +83,7 @@ public class EnemyController : MonoBehaviour {
 			}
 
 			if (waitForNextAction) {
-				yield return new WaitForSeconds(1f * slowGameSpeed.value / currentGameSpeed.value);
+				yield return new WaitForSeconds(1.5f * slowGameSpeed.value / currentGameSpeed.value);
 				enemy.StartMove();
 			}
 			while (waitForNextAction)
@@ -95,7 +98,12 @@ public class EnemyController : MonoBehaviour {
 			// Finish the turn
 			// Debug.Log("End turn");
 			enemy.End();
+			cursorX.value = enemy.posx;
+			cursorY.value = enemy.posy;
+			cursorMovedEvent.Invoke();
 		}
+
+		yield return new WaitForSeconds(3f * slowGameSpeed.value / currentGameSpeed.value);
 
 		if (selectMainCharacter.value) {
 			cursorX.value = playerList.values[0].posx;
@@ -121,17 +129,17 @@ public class EnemyController : MonoBehaviour {
 			StartCoroutine(DestroyTile());
 		}
 	}
-	
+
 	/// <summary>
 	/// Runs the action of destroying the tile and showing a message to the player.
 	/// </summary>
 	/// <returns></returns>
 	private IEnumerator DestroyTile() {
 		string destroyType = (enemy.currentTile.interactType == InteractType.VILLAGE) ? "Village" : "???";
-		MySpinnerData data = new MySpinnerData(){
-			 icon = null,
-			 sfx = destroyedTileSfx,
-			 text = destroyType + " was destroyed!"
+		MySpinnerData data = new MySpinnerData() {
+			icon = null,
+			sfx = destroyedTileSfx,
+			text = destroyType + " was destroyed!"
 		};
 		yield return StartCoroutine(spinner.ShowSpinner(data));
 		waitForNextAction = false;

@@ -72,6 +72,10 @@ public class InventoryTuple {
 		}
 	}
 
+	public void Copy() {
+
+	}
+
 	public void UpdateUpgrades(UpgradeCalculator calculator) {
 		bonusPower = 0;
 		bonusHit = 0;

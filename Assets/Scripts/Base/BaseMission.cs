@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class BaseMission : InputReceiverDelegate {
 
 	public PlayerData playerData;
+	public IntVariable currentDay;
 	public MyButtonList buttons;
 	public IntVariable missionIndex;
 	public UnityEvent missionChangedEvent;
@@ -32,18 +33,21 @@ public class BaseMission : InputReceiverDelegate {
 	public StringVariable currentChapterId;
 
 
-	private void Start () {
+	private void Start() {
 		promptMode = false;
 		SetupButtons();
 	}
 
-    public override void OnMenuModeChanged() {
-		UpdateState(MenuMode.BASE_MISSION);
-		buttons.ForcePosition(0);
-		ShowMissionInfo();
+	public override void OnMenuModeChanged() {
+		bool active = UpdateState(MenuMode.BASE_MISSION);
+		if (active) {
+			SetupButtons();
+			buttons.ForcePosition(0);
+			ShowMissionInfo();
+		}
 	}
 
-    public override void OnUpArrow() {
+	public override void OnUpArrow() {
 		if (promptMode)
 			return;
 
@@ -53,7 +57,7 @@ public class BaseMission : InputReceiverDelegate {
 		menuMoveEvent.Invoke();
 	}
 
-    public override void OnDownArrow() {
+	public override void OnDownArrow() {
 		if (promptMode)
 			return;
 
@@ -63,7 +67,7 @@ public class BaseMission : InputReceiverDelegate {
 		menuMoveEvent.Invoke();
 	}
 
-    public override void OnOkButton() {
+	public override void OnOkButton() {
 		if (!promptMode) {
 			promptMode = true;
 			ChangePrompt(0);
@@ -79,24 +83,25 @@ public class BaseMission : InputReceiverDelegate {
 		}
 	}
 
-    public override void OnBackButton() {
+	public override void OnBackButton() {
 		if (promptMode) {
 			promptMode = false;
 			startPrompt.Click(false);
 		}
 		else {
 			MenuChangeDelay(MenuMode.BASE_MAIN);
+			menuBackEvent.Invoke();
 		}
 	}
 
-    public override void OnLeftArrow() {
+	public override void OnLeftArrow() {
 		if (!promptMode)
 			return;
 		ChangePrompt(-1);
 		menuMoveEvent.Invoke();
 	}
 
-    public override void OnRightArrow() {
+	public override void OnRightArrow() {
 		if (!promptMode)
 			return;
 		ChangePrompt(1);
@@ -105,7 +110,7 @@ public class BaseMission : InputReceiverDelegate {
 
 	private void SetupButtons() {
 		buttons.ResetButtons();
-		availableMaps = playerData.missions.FindAll(m => !m.cleared);
+		availableMaps = playerData.missions.FindAll(m => !m.cleared && m.map.unlockDay <= currentDay.value);
 		for (int i = 0; i < availableMaps.Count; i++) {
 			buttons.AddButton(availableMaps[i].map.entryName);
 		}
@@ -122,7 +127,7 @@ public class BaseMission : InputReceiverDelegate {
 		missionObjective.text = "Objective:  " + map.winCondition;
 		missionCondition.text = "Lose:    " + map.loseCondition;
 
-		missionRewardMoney.text =  "Money:  " + map.reward.money;
+		missionRewardMoney.text = "Money:  " + map.reward.money;
 		missionRewardMoney.gameObject.SetActive(map.reward.money > 0);
 		missionRewardScrap.text = "Scrap:  " + map.reward.scrap;
 		missionRewardScrap.gameObject.SetActive(map.reward.scrap > 0);
@@ -132,12 +137,12 @@ public class BaseMission : InputReceiverDelegate {
 		missionRewardItem2.gameObject.SetActive(map.reward.items.Count > 1);
 	}
 
-    public void ChangePrompt(int dir) {
-        if (!promptMode)
-            return;
+	public void ChangePrompt(int dir) {
+		if (!promptMode)
+			return;
 
 		startPrompt.Move(dir);
-    }
+	}
 
 	private void StartMission() {
 		currentChapterId.value = availableMaps[buttons.GetPosition()].map.uuid;
@@ -146,10 +151,10 @@ public class BaseMission : InputReceiverDelegate {
 	}
 
 
-    public override void OnLButton() { }
-    public override void OnRButton() { }
-    public override void OnStartButton() { }
-    public override void OnXButton() { }
-    public override void OnYButton() { }
+	public override void OnLButton() { }
+	public override void OnRButton() { }
+	public override void OnStartButton() { }
+	public override void OnXButton() { }
+	public override void OnYButton() { }
 }
 

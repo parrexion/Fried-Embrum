@@ -302,10 +302,12 @@ public class TurnController : MonoBehaviour {
 		currentState = TurnState.ACTION;
 		
 		if (currentFactionTurn.value == Faction.ENEMY) {
+			float wait = 0;
 			for (int i = 0; i < enemyList.values.Count; i++) {
-				enemyList.values[i].OnStartTurn();
+				if (enemyList.values[i].OnStartTurn())
+					wait = 2f;
 			}
-			enemyController.RunEnemies();
+			enemyController.RunEnemies(wait);
 		}
 		else if (currentFactionTurn.value == Faction.PLAYER) {
 			for (int i = 0; i < playerList.values.Count; i++) {
@@ -349,6 +351,9 @@ public class TurnController : MonoBehaviour {
 		currentState = TurnState.FINISHED;
 		notificationText.text = "BATTLE WON";
 		notificationObject.SetActive(true);
+		mainMusic.value = null;
+		musicFocus.value = true;
+		playBkgMusicEvent.Invoke();
 		sfxQueue.Enqueue(victoryFanfare);
 		playSfxEvent.Invoke();
 
@@ -404,11 +409,17 @@ public class TurnController : MonoBehaviour {
 		yield return new WaitForSeconds(2f);
 		InputDelegateController.instance.TriggerSceneChange(MenuMode.MAIN_MENU, "MainMenu");
 	}
-
+	
 
 	public void DamageAllPlayers() {
 		for (int i = 0; i < playerList.values.Count; i++) {
 			playerList.values[i].TakeDamage(5, false);
+		}
+	}
+
+	public void DamageAllEnemies() {
+		for (int i = 0; i < enemyList.values.Count; i++) {
+			enemyList.values[i].TakeDamage(5, false);
 		}
 	}
 }

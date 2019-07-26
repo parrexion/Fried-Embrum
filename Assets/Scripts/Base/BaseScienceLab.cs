@@ -19,14 +19,14 @@ public class BaseScienceLab : InputReceiverDelegate {
 
 	[Header("Visuals")]
 	public GameObject upgradeInfo;
-    public Image previousItem;
-    public Image upgradedItem;
-	
+	public Image previousItem;
+	public Image upgradedItem;
+
 	private int currentMenu;
-    public UnityEvent upgradeChangedEvent;
+	public UnityEvent upgradeChangedEvent;
 
 
-	private void Start () {
+	private void Start() {
 		menuTitle.text = "LAB";
 		currentMenu = 0;
 		basicView.SetActive(true);
@@ -36,7 +36,7 @@ public class BaseScienceLab : InputReceiverDelegate {
 		buttons.AddButton("INVENT ITEM");
 	}
 
-    public override void OnMenuModeChanged() {
+	public override void OnMenuModeChanged() {
 		UpdateState(MenuMode.BASE_LAB);
 		buttons.ForcePosition(0);
 	}
@@ -106,6 +106,7 @@ public class BaseScienceLab : InputReceiverDelegate {
 	public override void OnBackButton() {
 		if (currentMenu == 0) {
 			MenuChangeDelay(MenuMode.BASE_MAIN);
+			menuBackEvent.Invoke();
 		}
 		else if (currentMenu == 1 || currentMenu == 2) {
 			if (scienceController.DeselectItem()) {
@@ -119,10 +120,10 @@ public class BaseScienceLab : InputReceiverDelegate {
 	}
 
 
-    public override void OnLButton() { }
-    public override void OnRButton() { }
-    public override void OnStartButton() { }
-    public override void OnXButton() { }
-    public override void OnYButton() { }
+	public override void OnLButton() { }
+	public override void OnRButton() { }
+	public override void OnStartButton() { }
+	public override void OnXButton() { }
+	public override void OnYButton() { }
 }
 

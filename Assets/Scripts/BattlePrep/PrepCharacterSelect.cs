@@ -50,21 +50,28 @@ public class PrepCharacterSelect : MonoBehaviour {
 		entryList.Move(dir);
 	}
 
-	public void SelectCharacter() {
+	public bool SelectCharacter() {
 		PrepCharacter pc = prepList.values[entryList.GetPosition()];
+		if (pc.forced || pc.locked) {
+			return false;
+		}
 		int sum = CountSelected();
 		if (pc.selected) {
-			if (sum > 1 && !pc.forced) {
+			if (sum > 1) {
 				pc.selected = false;
 				changed = true;
 			}
 		}
-		else if (sum < playerCap && !pc.locked) {
+		else if (sum < playerCap) {
 			pc.selected = true;
 			changed = true;
 		}
-		entryList.GetEntry().SetDark(!pc.selected || pc.locked);
+		else {
+			return false;
+		}
+		entryList.GetEntry().SetDark(!pc.selected);
 		ShowInfo();
+		return true;
 	}
 
 	public bool LeaveMenu() {
