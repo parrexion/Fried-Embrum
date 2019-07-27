@@ -43908,6 +43908,25 @@ MonoBehaviour:
   - {fileID: 1989640573}
   - {fileID: 1386495909}
   screens: 0d0000000f00000010000000150000000c0000000e000000
+  baseMusic: {fileID: 11400000, guid: 5584e48f2c78cb0449dfc34ba6bd3746, type: 2}
+  mainMusic: {fileID: 11400000, guid: 40f826d9f1abd9e4f9f0972569193a0f, type: 2}
+  musicFocus: {fileID: 11400000, guid: 7293c60ce7ba5ec458d4ee7f2b4c5119, type: 2}
+  playMusicEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: a9dc149b32873a14f9addbdaec204b43, type: 2}
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
   menuButtons: {fileID: 1767797553}
   prompt: {fileID: 820718504}
 --- !u!4 &1826552768

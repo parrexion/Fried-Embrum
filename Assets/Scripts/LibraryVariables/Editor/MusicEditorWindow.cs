@@ -241,6 +241,9 @@ public class MusicEditorWindow {
 	}
 
 	void InstansiateMusic() {
+		if (string.IsNullOrEmpty(uuid))
+			return;
+
 		GUI.FocusControl(null);
 		if (musicLibrary.ContainsID(uuid)) {
 			Debug.Log("uuid already exists!");
@@ -251,11 +254,11 @@ public class MusicEditorWindow {
 		me.uuid = uuid;
 		me.entryName = uuid;
 		me.repColor = repColor;
-		string path = "Assets/LibraryData/Music/" + uuid + ".asset";
+		string path = "Assets/LibraryData/Music/music_" + uuid + ".asset";
 
 		AssetDatabase.CreateAsset(me, path);
 		musicLibrary.InsertEntry(me,0);
-		Undo.RecordObject(musicLibrary, "Added music");
+		Undo.RecordObject(musicLibrary, "Created music");
 		EditorUtility.SetDirty(musicLibrary);
 		AssetDatabase.SaveAssets();
 		AssetDatabase.Refresh();
@@ -267,6 +270,9 @@ public class MusicEditorWindow {
 	}
 	
 	void InstansiateSfx() {
+		if (string.IsNullOrEmpty(uuid))
+			return;
+
 		GUI.FocusControl(null);
 		if (sfxLibrary.ContainsID(uuid)) {
 			Debug.Log("uuid already exists!");
@@ -277,11 +283,11 @@ public class MusicEditorWindow {
 		se.uuid = uuid;
 		se.entryName = uuid;
 		se.repColor = repColor;
-		string path = "Assets/LibraryData/Sfx/" + uuid + ".asset";
+		string path = "Assets/LibraryData/Sfx/sfx_" + uuid + ".asset";
 
 		AssetDatabase.CreateAsset(se, path);
 		sfxLibrary.InsertEntry(se,0);
-		Undo.RecordObject(sfxLibrary, "Added sfxx");
+		Undo.RecordObject(sfxLibrary, "Created sfx");
 		EditorUtility.SetDirty(sfxLibrary);
 		AssetDatabase.SaveAssets();
 		AssetDatabase.Refresh();
@@ -295,7 +301,7 @@ public class MusicEditorWindow {
 	void DeleteMusic() {
 		GUI.FocusControl(null);
 		MusicEntry me = (MusicEntry)musicLibrary.GetEntryByIndex(selMusic);
-		string path = "Assets/LibraryData/Music/" + me.uuid + ".asset";
+		string path = "Assets/LibraryData/Music/music_" + me.uuid + ".asset";
 
 		musicLibrary.RemoveEntryByIndex(selMusic);
 		Undo.RecordObject(musicLibrary, "Deleted music");
@@ -315,7 +321,7 @@ public class MusicEditorWindow {
 	void DeleteSfx() {
 		GUI.FocusControl(null);
 		SfxEntry se = (SfxEntry)sfxLibrary.GetEntryByIndex(selMusic);
-		string path = "Assets/LibraryData/Sfx/" + se.uuid + ".asset";
+		string path = "Assets/LibraryData/Sfx/sfx_" + se.uuid + ".asset";
 
 		sfxLibrary.RemoveEntryByIndex(selMusic);
 		Undo.RecordObject(sfxLibrary, "Deleted sfx");

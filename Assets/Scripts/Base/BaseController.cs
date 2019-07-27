@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class BaseController : InputReceiverDelegate {
 
@@ -16,6 +17,13 @@ public class BaseController : InputReceiverDelegate {
 	//private int width;
 	//private int height;
 
+	[Header("Music")]
+	public MusicEntry baseMusic;
+	public AudioVariable mainMusic;
+	public BoolVariable musicFocus;
+	public UnityEvent playMusicEvent;
+
+	[Header("Prompt")]
 	public MyButtonList menuButtons;
 	public MyPrompt prompt;
 	private bool promptMode;
@@ -34,6 +42,10 @@ public class BaseController : InputReceiverDelegate {
 
 		SetupButtons();
 		MenuChangeDelay(MenuMode.BASE_MAIN);
+
+		mainMusic.value = baseMusic.clip;
+		musicFocus.value = true;
+		playMusicEvent.Invoke();
 	}
 
 	public override void OnMenuModeChanged() {
