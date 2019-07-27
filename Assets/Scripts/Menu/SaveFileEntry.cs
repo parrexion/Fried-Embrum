@@ -27,7 +27,9 @@ public class SaveFileEntry : ListEntry {
 	public void FillData(string mapName, int day, int time) {
 		entryName.text = (time > 0) ? mapName : "";
 		chapterText.text = "day  " + day;
+		chapterText.gameObject.SetActive(time != 0);
 		timeText.text = Utility.PlayTimeFromInt(time, false);
+		timeText.gameObject.SetActive(time != 0);
 		emptyFile.SetActive(time == 0);
 	}
 }

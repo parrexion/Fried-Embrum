@@ -24,7 +24,7 @@ public class ScrObjLibraryVariable : ScriptableObject {
 		}
 		if (list.Count != entries.Keys.Count)
 			Debug.Log("One or more uuids are not unique!.");
-		Debug.Log("Loaded " + list.Count + " entries into the " + pathToLibrary + " library");
+		//Debug.Log("Loaded " + list.Count + " entries into the " + pathToLibrary + " library");
 		initialized = true;
 	}
 

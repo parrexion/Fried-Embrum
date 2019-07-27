@@ -25,7 +25,7 @@ public class SaveController : MonoBehaviour {
 		}
 	}
 	#endregion
-	
+
 	public ScrObjEntryReference currentMap;
 	public ScrObjEntryReference currentDialogue;
 	public PlayerData playerData;
@@ -63,13 +63,13 @@ public class SaveController : MonoBehaviour {
 
 	public UnityEvent preLoadFinishedEvent;
 	public UnityEvent loadFinishedEvent;
-	
+
 	private string _savePath = "";
 	private SavePackage saveFileData;
 
 
 	private void Initialize() {
-		_savePath = Application.persistentDataPath+"/saveData2.xml";
+		_savePath = Application.persistentDataPath + "/saveData2.xml";
 		PreLoad();
 		//EmptySave();
 	}
@@ -80,9 +80,11 @@ public class SaveController : MonoBehaviour {
 			musicVolume = 10,
 			sfxVolume = 10,
 			gameSpeed = 5,
+			controlScheme = 0,
 			useAnimations = true,
 			trueHit = true,
-			autoEnd = true
+			autoEnd = true,
+			autoSelectCharacter = true
 		};
 		for (int i = 0; i < SAVE_FILES_COUNT; i++) {
 			saveFileData.saveFiles[i] = new SaveData();
@@ -152,14 +154,19 @@ public class SaveController : MonoBehaviour {
 			}
 			saveFileData.saveFiles[saveIndex.value] = data;
 		}
-		
+
 		//Write to file
 		XmlWriterSettings xmlWriterSettings = new XmlWriterSettings() { Indent = true };
 		XmlSerializer serializer = new XmlSerializer(typeof(SavePackage));
 		using (XmlWriter xmlWriter = XmlWriter.Create(_savePath, xmlWriterSettings)) {
 			serializer.Serialize(xmlWriter, saveFileData);
 		}
-		Debug.Log("Successfully saved the save data!\n" + _savePath);
+		if (onlyOptions) {
+			Debug.Log("Successfully saved the options data!\n" + _savePath);
+		}
+		else {
+			Debug.Log("Successfully saved the save data!\n" + _savePath);
+		}
 	}
 
 	/// <summary>
@@ -168,13 +175,13 @@ public class SaveController : MonoBehaviour {
 	/// </summary>
 	public void PreLoad() {
 		string path = _savePath;
-		if (!File.Exists(_savePath)){
+		if (!File.Exists(_savePath)) {
 			Debug.LogWarning("No save file found: " + path);
 			EmptySave();
 		}
 		else {
 			XmlSerializer serializer = new XmlSerializer(typeof(SavePackage));
-			FileStream file = File.Open(path,FileMode.Open);
+			FileStream file = File.Open(path, FileMode.Open);
 			saveFileData = serializer.Deserialize(file) as SavePackage;
 			file.Close();
 		}
@@ -192,7 +199,7 @@ public class SaveController : MonoBehaviour {
 		trueHit.value = saveFileData.trueHit;
 		autoEnd.value = saveFileData.autoEnd;
 
-		//Save files
+		//Load save files info
 		for (int i = 0; i < saveFileData.saveFiles.Length; i++) {
 			if (saveFileData.saveFiles[i] == null)
 				continue;
@@ -200,7 +207,7 @@ public class SaveController : MonoBehaviour {
 			simpleTotalDays[i].value = saveFileData.saveFiles[i].totalDays;
 			simplePlayTimes[i].value = saveFileData.saveFiles[i].playTime;
 		}
-		
+
 		Debug.Log("Successfully pre-loaded the save data!");
 
 		if (SceneManager.GetActiveScene().name == "BattleScene" || SceneManager.GetActiveScene().name == "BaseScene") {
@@ -219,7 +226,7 @@ public class SaveController : MonoBehaviour {
 			Debug.LogError("There's no file to read!");
 			return;
 		}
-		
+
 		// Set basic data
 		currentChapterId.value = simpleChapterId[saveIndex.value].value;
 		currentTotalDays.value = simpleTotalDays[saveIndex.value].value;
@@ -229,7 +236,7 @@ public class SaveController : MonoBehaviour {
 		SaveData loadedData = saveFileData.saveFiles[saveIndex.value];
 		currentMoney.value = loadedData.money;
 		currentScrap.value = loadedData.scrap;
-		
+
 		playerData.ResetData();
 		for (int i = 0; i < loadedData.upgrade.Count; i++) {
 			UpgradeEntry upgrade = (UpgradeEntry)upgradeLibrary.GetEntry(loadedData.upgrade[i].id);

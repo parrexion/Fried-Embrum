@@ -89,7 +89,6 @@ public class BaseController : InputReceiverDelegate {
 		if (promptMode) {
 			MyPrompt.Result res = prompt.Click(true);
 			if (res == MyPrompt.Result.OK1) {
-				Debug.Log("SAVE GAME");
 				currentMap.value = null;
 				nextLoadState.value = (int)SaveScreenController.NextState.MAIN;
 				SceneChangeDelay(MenuMode.SAVE, "SaveScene");

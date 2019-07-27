@@ -348,6 +348,7 @@ public class TurnController : MonoBehaviour {
 	/// </summary>
 	/// <returns></returns>
 	private IEnumerator EndGameWin() {
+		lockControls.value = true;
 		currentState = TurnState.FINISHED;
 		notificationText.text = "BATTLE WON";
 		notificationObject.SetActive(true);

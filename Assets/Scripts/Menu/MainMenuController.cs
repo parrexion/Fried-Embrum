@@ -21,7 +21,6 @@ public class MainMenuController : InputReceiverDelegate {
 	public StringVariable currentChapterIndex;
 	public IntVariable currentTotalDays;
 	public IntVariable currentPlayTime;
-	public IntVariable saveFileIndex;
 
 	[Header("Menu")]
 	public MyButtonList mainButtons;
@@ -66,6 +65,7 @@ public class MainMenuController : InputReceiverDelegate {
 		mainButtons.AddButton("NEW GAME");
 		mainButtons.AddButton("LOAD GAME");
 		mainButtons.AddButton("OPTIONS");
+		mainButtons.AddButton("CONTROLS");
 		mainButtons.AddButton("CHANGELOG");
 		mainButtons.AddButton("QUIT");
 
@@ -75,7 +75,7 @@ public class MainMenuController : InputReceiverDelegate {
 		playBkgMusicEvent.Invoke();
 	}
 
-	private void ControlsClicked() {
+	private void NewgameClicked() {
 		currentState = State.CONTROLS;
 		currentTotalDays.value = 0;
 		startMenuView.SetActive(false);
@@ -94,6 +94,11 @@ public class MainMenuController : InputReceiverDelegate {
 		optionsController.UpdateState(true);
 	}
 
+	private void ControlsClicked() {
+		ControllerController.shownControls = false;
+		MenuChangeDelay(MenuMode.PRE_CONTROLLER);
+	}
+
 	private void ChangelogClicked() {
 		currentState = State.CHANGELOG;
 		changelogView.SetActive(true);
@@ -110,7 +115,6 @@ public class MainMenuController : InputReceiverDelegate {
 	/// Called when starting a new game. Sets the starting values.
 	/// </summary>
 	private void NewGameClicked() {
-		saveFileIndex.value = -1;
 		currentChapterIndex.value = firstMission.uuid;
 		currentPlayTime.value = 0;
 		saveController.ResetCurrentData();
@@ -137,7 +141,6 @@ public class MainMenuController : InputReceiverDelegate {
 	/// </summary>
 	public void LoadGameFinished() {
 		if (currentChapterIndex.value == "") {
-			Debug.Log("Set DialogueC to:  BASE");
 			InputDelegateController.instance.TriggerSceneChange(MenuMode.NONE, "BaseScene");
 		}
 		else {
@@ -209,7 +212,7 @@ public class MainMenuController : InputReceiverDelegate {
 		if (currentState == State.MAIN) {
 			switch (mainButtons.GetPosition()) {
 				case 0:
-					ControlsClicked();
+					NewgameClicked();
 					break;
 				case 1:
 					LoadClicked();
@@ -218,9 +221,12 @@ public class MainMenuController : InputReceiverDelegate {
 					OptionsClicked();
 					break;
 				case 3:
-					ChangelogClicked();
+					ControlsClicked();
 					break;
 				case 4:
+					ChangelogClicked();
+					break;
+				case 5:
 					QuitClicked();
 					break;
 			}
@@ -228,6 +234,11 @@ public class MainMenuController : InputReceiverDelegate {
 		}
 		else if (currentState == State.LOAD) {
 			if (saveFileController.OkClicked()) {
+				menuAcceptEvent.Invoke();
+			}
+		}
+		else if (currentState == State.OPTIONS) {
+			if (optionsController.OKClicked()) {
 				menuAcceptEvent.Invoke();
 			}
 		}

@@ -147,35 +147,44 @@ public class BaseEquipment : InputReceiverDelegate {
 		itemList.Move(0);
 	}
 
-	public void MoveSelection(int dir) {
+	public bool MoveVertical(int dir) {
 		if (currentMode == MenuState.MENU) {
 			menuButtons.Move(dir);
+			return true;
 		}
 		else if (currentMode == MenuState.CHARACTER) {
 			characters.Move(dir);
 			ShowCharInfo();
+			return true;
 		}
 		else if (currentMode == MenuState.RECHARGE) {
 			itemList.Move(dir);
 			ShowItemInfo();
+			return true;
 		}
 		else if (currentMode == MenuState.TAKE) {
 			convoy.Move(dir);
 			ShowCharInfo();
+			return true;
 		}
 		else if (currentMode == MenuState.STORE) {
 			itemList.Move(dir);
 			ShowItemInfo();
+			return true;
 		}
+		return false;
 	}
 
-	public void MoveSide(int dir) {
+	public bool MoveHorizontal(int dir) {
 		if (promptMode) {
 			restockPrompt.Move(dir);
+			return true;
 		}
 		else if (currentMode == MenuState.TAKE) {
 			convoy.ChangeCategory(dir);
+			return true;
 		}
+		return false;
 	}
 
 	public void SelectItem() {
@@ -375,23 +384,23 @@ public class BaseEquipment : InputReceiverDelegate {
 	}
 
 	public override void OnUpArrow() {
-		MoveSelection(-1);
-		menuMoveEvent.Invoke();
+		if (MoveVertical(-1))
+			menuMoveEvent.Invoke();
 	}
 
 	public override void OnDownArrow() {
-		MoveSelection(1);
-		menuMoveEvent.Invoke();
+		if (MoveVertical(1))
+			menuMoveEvent.Invoke();
 	}
 
 	public override void OnLeftArrow() {
-		MoveSide(-1);
-		menuMoveEvent.Invoke();
+		if (MoveHorizontal(-1))
+			menuMoveEvent.Invoke();
 	}
 
 	public override void OnRightArrow() {
-		MoveSide(1);
-		menuMoveEvent.Invoke();
+		if (MoveHorizontal(1))
+			menuMoveEvent.Invoke();
 	}
 
 	public override void OnOkButton() {

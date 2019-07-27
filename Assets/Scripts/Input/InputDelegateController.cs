@@ -16,7 +16,6 @@ public class InputDelegateController : MonoBehaviour {
 			Destroy(gameObject);
 		}
 		else {
-		Debug.Log("Awake " + gameObject.name);
 			instance = this;
 			StartCoroutine(CountPlayTime());
 			DontDestroyOnLoad(gameObject);

@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class ControllerController : InputReceiverDelegate {
 
-	private static bool shownControls = false;
+	public static bool shownControls = false;
 
 	public GameObject view;
 	public IntVariable selectedScheme;

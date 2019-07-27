@@ -28,7 +28,7 @@ public class SaveFileController : MonoBehaviour {
 
 	public UnityEvent saveGameEvent;
 	public UnityEvent loadGameEvent;
-	
+
 
 	private void Start() {
 		SetupSaveFiles();
@@ -137,7 +137,15 @@ public class SaveFileController : MonoBehaviour {
 			}
 			else {
 				MapEntry map = (MapEntry)chapterLibrary.GetEntry(chapterIDs[i].value);
-				entry.FillData(map.entryName, totalDays[i].value, playTimes[i].value);
+				if (map != null) {
+					entry.FillData(map.entryName, totalDays[i].value, playTimes[i].value);
+				}
+				else {
+					chapterIDs[i].value = "";
+					totalDays[i].value = 0;
+					playTimes[i].value = 0;
+					entry.FillData("", 0, 0);
+				}
 			}
 		}
 		entryPrefab.gameObject.SetActive(false);

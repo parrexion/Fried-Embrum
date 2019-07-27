@@ -44,7 +44,6 @@ public abstract class InputReceiverDelegate : MonoBehaviour {
 	}
 
 	protected void OnEnable() {
-		Debug.Log("Enabled " + gameObject.name);
 		InputDelegateController.instance.menuModeChanged += OnMenuModeChanged;
 	}
 
