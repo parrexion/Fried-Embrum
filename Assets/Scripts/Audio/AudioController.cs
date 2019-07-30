@@ -65,6 +65,48 @@ public class AudioController : MonoBehaviour {
 		PlayBackgroundMusic(false, false);
 	}
 
+	public void ReplaceMusic() {
+		musicSubSource.clip = musicMainSource.clip;
+		musicSubSource.timeSamples = musicMainSource.timeSamples;
+		musicSubSource.volume = musicMainSource.volume;
+		musicSubSource.Play();
+
+		musicMainSource.clip = mainMusic.value;
+		musicMainSource.timeSamples = musicSubSource.timeSamples;
+		musicMainSource.volume = 0;
+		musicMainSource.Play();
+		StartCoroutine(CrossFade(1f, musicSubSource, musicMainSource, true));
+	}
+
+	public void PlayTransitionMusic() {
+		musicSubSource.clip = subMusic.value;
+		musicSubSource.timeSamples = musicMainSource.timeSamples;
+		musicSubSource.volume = 0;
+		musicSubSource.Play();
+		StartCoroutine(CrossFade(1f, musicMainSource, musicSubSource, false));
+	}
+
+	public void EndTransitionMusic() {
+		StartCoroutine(CrossFade(1f, musicSubSource, musicMainSource, true));
+	}
+
+	private IEnumerator CrossFade(float fadeDuration, AudioSource pre, AudioSource after, bool stop) {
+		float elapsed = 0;
+		float perc = 0;
+		float volume = 0.01f * Mathf.Clamp(musicVolume.value, 0, 100);
+		while (elapsed < fadeDuration) {
+			elapsed += Time.deltaTime;
+			perc = Mathf.Clamp01(elapsed / fadeDuration);
+			pre.volume = Mathf.Lerp(volume, 0, perc);
+			after.volume = Mathf.Lerp(0, volume, perc);
+			yield return null;
+		}
+		if (stop) {
+			pre.Stop();
+		}
+		yield break;
+	}
+
 	/// <summary>
 	/// Plays the music if the area has changed.
 	/// </summary>

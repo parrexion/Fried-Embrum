@@ -91,10 +91,13 @@ public class EnemyController : MonoBehaviour {
 
 			// Calculate which character to attack/support and waits for the battle scene to finish
 			// Debug.Log("Attack time");
-			waitForNextAction = enemy.CalculateAttacksHeals();
+			bool res = waitForNextAction = enemy.CalculateAttacksHeals();
 			while (waitForNextAction)
 				yield return null;
 
+			if (res) {
+				yield return new WaitForSeconds(1f * slowGameSpeed.value / currentGameSpeed.value);
+			}
 			// Finish the turn
 			// Debug.Log("End turn");
 			enemy.End();

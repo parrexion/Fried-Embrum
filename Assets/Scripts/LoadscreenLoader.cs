@@ -26,8 +26,8 @@ public class LoadscreenLoader : MonoBehaviour {
 	}
 
 	private IEnumerator LoadBattleScenes() {
-		AsyncOperation dia = SceneManager.LoadSceneAsync(DIALOGUE_SCENE, LoadSceneMode.Additive);
 		AsyncOperation bat = SceneManager.LoadSceneAsync(BATTLE_SCENE, LoadSceneMode.Additive);
+		AsyncOperation dia = SceneManager.LoadSceneAsync(DIALOGUE_SCENE, LoadSceneMode.Additive);
 
 		while(!dia.isDone || !bat.isDone) {
 			yield return null;

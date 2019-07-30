@@ -58,6 +58,7 @@ public class TurnController : MonoBehaviour {
 	public UnityEvent startDialogueEvent;
 	public UnityEvent gameLoseEvent;
 	public UnityEvent playBkgMusicEvent;
+	public UnityEvent replaceMusicEvent;
 	public UnityEvent playSfxEvent;
 	public UnityEvent checkReinforcementsEvent;
 	public UnityEvent checkDialoguesEvent;
@@ -151,7 +152,7 @@ public class TurnController : MonoBehaviour {
 	private void StartGameSetup() {
 		MapEntry map = (MapEntry)currentMap.value;
 		musicFocus.value = true;
-		mainMusic.value = map.owMusic.clip;
+		mainMusic.value = map.playerMusic.clip;
 		subMusic.value = null;
 		playBkgMusicEvent.Invoke();
 		checkReinforcementsEvent.Invoke();
@@ -283,6 +284,9 @@ public class TurnController : MonoBehaviour {
 		resetSelections.Invoke();
 		sfxQueue.Enqueue(turnChangeFanfare);
 		playSfxEvent.Invoke();
+		MapEntry map = (MapEntry)currentMap.value;
+		mainMusic.value = (currentFactionTurn.value == Faction.ENEMY) ? map.enemyMusic.clip : map.playerMusic.clip;
+		replaceMusicEvent.Invoke();
 
 		yield return new WaitForSeconds(duration);
 		

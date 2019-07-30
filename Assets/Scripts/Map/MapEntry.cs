@@ -32,7 +32,8 @@ public class MapEntry : ScrObjLibraryEntry {
 	public DialogueEntry endDialogue;
 
 	[Header("Music")]
-	public MusicEntry owMusic;
+	public MusicEntry playerMusic;
+	public MusicEntry enemyMusic;
 	public MusicEntry battleMusic;
 	public MusicEntry healMusic;
 
@@ -72,7 +73,8 @@ public class MapEntry : ScrObjLibraryEntry {
 		introDialogue = null;
 		endDialogue = null;
 
-		owMusic = null;
+		playerMusic = null;
+		enemyMusic = null;
 		battleMusic = null;
 		healMusic = null;
 
@@ -107,7 +109,8 @@ public class MapEntry : ScrObjLibraryEntry {
 		introDialogue = map.introDialogue;
 		endDialogue = map.endDialogue;
 
-		owMusic = map.owMusic;
+		playerMusic = map.playerMusic;
+		enemyMusic = map.enemyMusic;
 		battleMusic = map.battleMusic;
 		healMusic = map.healMusic;
 

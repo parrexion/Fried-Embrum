@@ -523,7 +523,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4963551257367080, guid: dd1d2ef58e78a094fa67c8f1df0b0f20, type: 3}
       propertyPath: m_RootOrder
-      value: 11
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dd1d2ef58e78a094fa67c8f1df0b0f20, type: 3}
@@ -12704,7 +12704,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4266850501585836, guid: 5d5e95f34e326d14b921746796c49961, type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5d5e95f34e326d14b921746796c49961, type: 3}
@@ -15153,7 +15153,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4575758833937932, guid: f32300c4ac5bcb847893cfc711aeaf01, type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f32300c4ac5bcb847893cfc711aeaf01, type: 3}
@@ -15564,7 +15564,6 @@ MonoBehaviour:
   rightDamageText: {fileID: 1784597212}
   subMusic: {fileID: 11400000, guid: a0a5dc1f59ad1aa42af7dd1c0b2ede36, type: 2}
   sfxQueue: {fileID: 11400000, guid: 20c2a8af0750fd24b9b1e5c73c95005d, type: 2}
-  musicFocus: {fileID: 11400000, guid: 7293c60ce7ba5ec458d4ee7f2b4c5119, type: 2}
   levelupFanfare: {fileID: 11400000, guid: 4fc14e47bebe94649bc49c826ed56e8f, type: 2}
   levelupFill: {fileID: 11400000, guid: 7ce17b4f6a58d814c946e3502586971d, type: 2}
   missedAttackSfx: {fileID: 11400000, guid: e71555a45ad0e884595085760babe61f, type: 2}
@@ -15623,10 +15622,26 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  playSubMusicEvent:
+  playTransitionMusicEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11400000, guid: 80ab7f36f20d07a41993cd0eb2f7bd76, type: 2}
+      - m_Target: {fileID: 11400000, guid: 253efc19d5c765e4488ffb15d4b57294, type: 2}
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  stopTransitionMusicEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 95ffa92beb852dd4687eff3f96617a4d, type: 2}
         m_MethodName: Raise
         m_Mode: 1
         m_Arguments:
@@ -16674,7 +16689,7 @@ RectTransform:
   - {fileID: 87511001}
   - {fileID: 2138244164}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -18419,7 +18434,7 @@ PrefabInstance:
     - target: {fileID: 224044498548728920, guid: 1cda06d3774b21c4eae234a9f5a129b9,
         type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 224044498548728920, guid: 1cda06d3774b21c4eae234a9f5a129b9,
         type: 3}
@@ -19159,7 +19174,7 @@ Transform:
   - {fileID: 2104238748}
   - {fileID: 2028001343}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &530389949
 GameObject:
@@ -25009,6 +25024,22 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  replaceMusicEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 7e2c2796ce723dd4aa482554b21e2f85, type: 2}
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
   playSfxEvent:
     m_PersistentCalls:
       m_Calls:
@@ -27222,8 +27253,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 7, y: 4.5, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 2025273338}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -37887,7 +37917,7 @@ RectTransform:
   - {fileID: 1102929062}
   - {fileID: 1672997531}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -43051,7 +43081,7 @@ Transform:
   - {fileID: 1195452609}
   - {fileID: 606035685}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1411918531
 GameObject:
@@ -65205,7 +65235,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2025273337}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 10}
+  m_LocalPosition: {x: 7, y: 4.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 496103368}
@@ -65214,8 +65244,8 @@ Transform:
   - {fileID: 1644028714}
   - {fileID: 55131487}
   - {fileID: 1870441273}
-  m_Father: {fileID: 821283307}
-  m_RootOrder: 0
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2026557335
 GameObject:
@@ -67663,7 +67693,7 @@ RectTransform:
   m_Children:
   - {fileID: 880382730}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

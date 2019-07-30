@@ -214,7 +214,8 @@ public class MapEditorWindow {
 		GUILayout.Space(10);
 
 		GUILayout.Label("Music", EditorStyles.boldLabel);
-		mapValues.owMusic = (MusicEntry)EditorGUILayout.ObjectField("OW music",mapValues.owMusic, typeof(MusicEntry),false);
+		mapValues.playerMusic = (MusicEntry)EditorGUILayout.ObjectField("Player music",mapValues.playerMusic, typeof(MusicEntry),false);
+		mapValues.enemyMusic = (MusicEntry)EditorGUILayout.ObjectField("Enemy music",mapValues.enemyMusic, typeof(MusicEntry),false);
 		mapValues.battleMusic = (MusicEntry)EditorGUILayout.ObjectField("Battle music",mapValues.battleMusic, typeof(MusicEntry),false);
 		mapValues.healMusic = (MusicEntry)EditorGUILayout.ObjectField("Heal music",mapValues.healMusic, typeof(MusicEntry),false);
 		

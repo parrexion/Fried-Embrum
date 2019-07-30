@@ -55,7 +55,6 @@ public class BattleContainer : InputReceiverDelegate {
 	[Header("Sound")]
 	public AudioVariable subMusic;
 	public AudioQueueVariable sfxQueue;
-	public BoolVariable musicFocus;
 	public SfxEntry levelupFanfare;
 	public SfxEntry levelupFill;
 	public SfxEntry missedAttackSfx;
@@ -71,7 +70,8 @@ public class BattleContainer : InputReceiverDelegate {
 	public UnityEvent updateHealthEvent;
 	public UnityEvent battleFinishedEvent;
 	public UnityEvent showDialogueEvent;
-	public UnityEvent playSubMusicEvent;
+	public UnityEvent playTransitionMusicEvent;
+	public UnityEvent stopTransitionMusicEvent;
 	public UnityEvent playSfxEvent;
 	public UnityEvent stopSfxEvent;
 
@@ -208,6 +208,9 @@ public class BattleContainer : InputReceiverDelegate {
 		//	cameraPosY.value,
 		//	battleAnimationObject.transform.localPosition.z
 		//);
+		TacticsCamera tacticsCamera = GameObject.FindObjectOfType<TacticsCamera>();
+		battleAnimationObject.transform.SetParent(tacticsCamera.transform);
+		battleAnimationObject.transform.localPosition = new Vector3(0, 0, 5);
 		battleAnimationObject.SetActive(showBattleAnim);
 		uiCanvas.gameObject.SetActive(!showBattleAnim);
 		uiCanvas.gameObject.SetActive(false);
@@ -215,12 +218,12 @@ public class BattleContainer : InputReceiverDelegate {
 		//Music
 		MapEntry map = (MapEntry)currentMap.value;
 		subMusic.value = (actions[0].type == BattleAction.Type.DAMAGE) ? map.battleMusic.clip : map.healMusic.clip;
-		musicFocus.value = false;
-		playSubMusicEvent.Invoke();
+		playTransitionMusicEvent.Invoke();
 	}
 
 	private IEnumerator ActionLoop() {
 		state = State.ACTION;
+		yield return new WaitForSeconds(2f * slowGameSpeed.value / currentGameSpeed.value);
 
 		for (int i = 0; i < actions.Count; i++) {
 			Debug.Log("Next action");
@@ -377,9 +380,7 @@ public class BattleContainer : InputReceiverDelegate {
 		yield return new WaitForSeconds(0.5f * slowGameSpeed.value / currentGameSpeed.value);
 
 		//Music
-		subMusic.value = null;
-		musicFocus.value = true;
-		playSubMusicEvent.Invoke();
+		stopTransitionMusicEvent.Invoke();
 
 		//Send game finished
 		battleFinishedEvent.Invoke();
