@@ -24,4 +24,8 @@ public class BlockMove : TacticsMove {
 		yield return new WaitForSeconds(1f);
 		currentTile.SetTerrain(currentTile.alternativeTerrain);
 	}
+
+	public override void ReceiveBuff(Boost boost, bool isBuff, bool useAnim) {
+		//No buffs for blocks.
+	}
 }

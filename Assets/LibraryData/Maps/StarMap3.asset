@@ -33,10 +33,10 @@ MonoBehaviour:
   preDialogue: {fileID: 11400000, guid: 7c15c1421402cc64c9ccfc993467ed6d, type: 2}
   introDialogue: {fileID: 11400000, guid: d717b540a6ef5c140939ac2fd1c5c6de, type: 2}
   endDialogue: {fileID: 11400000, guid: 907685d88356e2246983e61e5fef1214, type: 2}
-  playerMusic: {fileID: 11400000, guid: c5d55a00157aa9d45904a928008f24d0, type: 2}
-  enemyMusic: {fileID: 11400000, guid: c5d55a00157aa9d45904a928008f24d0, type: 2}
-  battleMusic: {fileID: 11400000, guid: a157ae89a4b1e784cbe12bd1e184e2ea, type: 2}
-  healMusic: {fileID: 11400000, guid: c9ab7f5c344f22c458bafeb1c2e29d45, type: 2}
+  playerMusic: {fileID: 11400000, guid: 26f8f96c1503a404a97d6e18a730ecd1, type: 2}
+  enemyMusic: {fileID: 11400000, guid: 2e004d17283fe7d45b7bd70e9ae56cc8, type: 2}
+  battleMusic: {fileID: 11400000, guid: 7b17f9dbff54970438f62ab06aa0fef9, type: 2}
+  healMusic: {fileID: 11400000, guid: 80c98026ee3b68b49a7cef3731cd2c32, type: 2}
   spawnPoints:
   - x: 1
     y: 6
@@ -325,12 +325,36 @@ MonoBehaviour:
     quotes: []
     huntX: 0
     huntY: 0
-  interactions: []
+  interactions:
+  - x: 16
+    y: 6
+    interactType: 1
+    health: 20
+    dialogue: {fileID: 0}
+    gift: {fileID: 0}
+    ally:
+      x: 0
+      y: 0
+      level: 1
+      charData: {fileID: 0}
+      inventory: []
+  - x: 17
+    y: 6
+    interactType: 1
+    health: 20
+    dialogue: {fileID: 0}
+    gift: {fileID: 0}
+    ally:
+      x: 0
+      y: 0
+      level: 1
+      charData: {fileID: 0}
+      inventory: []
   turnEvents:
   - turn: 3
     factionTurn: 0
     type: 1
-    dialogue: {fileID: 0}
+    dialogue: {fileID: 11400000, guid: 318e0b52da619a643961cece98d9aafe, type: 2}
     x: 0
     y: 0
     changeTerrain: {fileID: 0}

@@ -427,4 +427,8 @@ public class TurnController : MonoBehaviour {
 			enemyList.values[i].TakeDamage(5, false);
 		}
 	}
+
+	public void ToggleInfiniteSpeed() {
+		TacticsMove.infiniteMove = !TacticsMove.infiniteMove;
+	}
 }

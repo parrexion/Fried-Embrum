@@ -10,6 +10,9 @@ using UnityEngine.UI;
 /// characters on the map should have.
 /// </summary>
 public abstract class TacticsMove : MonoBehaviour {
+
+	public static bool infiniteMove = false;
+
 	public BoolVariable lockControls;
 	public BattleMap battleMap;
 	public MapTileVariable targetTile;
@@ -102,7 +105,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// Updates the healthbar if they are visible.
 	/// </summary>
 	private void UpdateHealth() {
-		healthBar.SetAmount(currentHealth, stats.hp);
+		healthBar?.SetAmount(currentHealth, stats.hp);
 	}
 
 	/// <summary>
@@ -406,7 +409,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// <param name="boost"></param>
 	/// <param name="isBuff"></param>
 	/// <param name="useAnim"></param>
-	public void ReceiveBuff(Boost boost, bool isBuff, bool useAnim) {
+	public virtual void ReceiveBuff(Boost boost, bool isBuff, bool useAnim) {
 		if (!IsAlive())
 			return;
 
@@ -471,7 +474,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// </summary>
 	/// <returns></returns>
 	protected virtual int GetMoveSpeed() {
-		return stats.GetMovespeed();
+		return (infiniteMove) ? 999 : stats.GetMovespeed();
 	}
 
 	/// <summary>
