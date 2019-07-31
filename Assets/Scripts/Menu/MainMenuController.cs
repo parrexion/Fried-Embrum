@@ -47,6 +47,13 @@ public class MainMenuController : InputReceiverDelegate {
 	private State currentState;
 
 
+	private void Start() {
+		musicFocus.value = true;
+		mainMusic.value = mainTheme.clip;
+		subMusic.value = null;
+		playBkgMusicEvent.Invoke();
+	}
+
 	public override void OnMenuModeChanged() {
 		bool active = UpdateState(MenuMode.MAIN_MENU);
 		if (!active)
@@ -68,11 +75,6 @@ public class MainMenuController : InputReceiverDelegate {
 		mainButtons.AddButton("CONTROLS");
 		mainButtons.AddButton("CHANGELOG");
 		mainButtons.AddButton("QUIT");
-
-		musicFocus.value = true;
-		mainMusic.value = mainTheme.clip;
-		subMusic.value = null;
-		playBkgMusicEvent.Invoke();
 	}
 
 	private void NewgameClicked() {

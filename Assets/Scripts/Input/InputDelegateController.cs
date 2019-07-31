@@ -166,10 +166,10 @@ public class InputDelegateController : MonoBehaviour {
 		if (Input.GetKeyDown(cs.cancel) || Input.GetKeyDown(KeyCode.JoystickButton1)) {
 			cancelButtonDelegate?.Invoke();
 		}
-		if (Input.GetKeyDown(cs.optionLeft) || Input.GetKeyDown(KeyCode.JoystickButton3)) {
+		if (Input.GetKeyDown(cs.optionLeft) || Input.GetKeyDown(KeyCode.JoystickButton2)) {
 			opLButtonDelegate?.Invoke();
 		}
-		if (Input.GetKeyDown(cs.optionRight) || Input.GetKeyDown(KeyCode.JoystickButton2)) {
+		if (Input.GetKeyDown(cs.optionRight) || Input.GetKeyDown(KeyCode.JoystickButton3)) {
 			opRButtonDelegate?.Invoke();
 		}
 		if (Input.GetKeyDown(cs.triggerLeft) || Input.GetKeyDown(KeyCode.JoystickButton4)) {
