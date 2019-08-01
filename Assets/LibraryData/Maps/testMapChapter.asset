@@ -19,7 +19,8 @@ MonoBehaviour:
   sizeX: 15
   sizeY: 10
   mapSprite: {fileID: 2800000, guid: 71a81984eeb21744c9c3e04b4c1ac25f, type: 3}
-  mapLocation: 1
+  mapLocation: 0
+  mapDescription: 
   winCondition: 1
   loseCondition: 0
   reward:
@@ -29,12 +30,14 @@ MonoBehaviour:
   skipBattlePrep: 0
   autoNextChapter: {fileID: 11400000, guid: 0f56603fc1210214b8765fb795b877b6, type: 2}
   mapDuration: 4
+  unlockDay: 1
   preDialogue: {fileID: 11400000, guid: 60b2b588570390f4fa5614660432dbbb, type: 2}
   introDialogue: {fileID: 11400000, guid: 3a3dfd1a96530fd4aa92c93c01ac7041, type: 2}
   endDialogue: {fileID: 11400000, guid: 3437291ceec4cd64c8b13b3d61dde437, type: 2}
-  owMusic: {fileID: 11400000, guid: c5d55a00157aa9d45904a928008f24d0, type: 2}
-  battleMusic: {fileID: 11400000, guid: a157ae89a4b1e784cbe12bd1e184e2ea, type: 2}
-  healMusic: {fileID: 11400000, guid: c9ab7f5c344f22c458bafeb1c2e29d45, type: 2}
+  playerMusic: {fileID: 0}
+  enemyMusic: {fileID: 0}
+  battleMusic: {fileID: 0}
+  healMusic: {fileID: 0}
   spawnPoints:
   - x: 6
     y: 5
@@ -55,7 +58,7 @@ MonoBehaviour:
     level: 1
     charData: {fileID: 11400000, guid: e073228f081b5ec48b55e2e1ac4062f9, type: 2}
     inventory:
-    - item: {fileID: 11400000, guid: 5d5e0c27d71f7334582f303ff4483c8a, type: 2}
+    - item: {fileID: 0}
       droppable: 0
     aggroType: 0
     hasQuotes: 0
@@ -68,7 +71,7 @@ MonoBehaviour:
     level: 1
     charData: {fileID: 11400000, guid: e073228f081b5ec48b55e2e1ac4062f9, type: 2}
     inventory:
-    - item: {fileID: 11400000, guid: 5d5e0c27d71f7334582f303ff4483c8a, type: 2}
+    - item: {fileID: 0}
       droppable: 0
     aggroType: 3
     hasQuotes: 0
@@ -81,15 +84,15 @@ MonoBehaviour:
     level: 2
     charData: {fileID: 11400000, guid: e073228f081b5ec48b55e2e1ac4062f9, type: 2}
     inventory:
-    - item: {fileID: 11400000, guid: 21e0cdf65dcd3c64f99de572c0526714, type: 2}
+    - item: {fileID: 0}
       droppable: 0
-    - item: {fileID: 11400000, guid: a2e37062da4ad09429243928a67e726e, type: 2}
+    - item: {fileID: 0}
       droppable: 1
     aggroType: 3
     hasQuotes: 1
     quotes:
     - triggerer: {fileID: 0}
-      quote: {fileID: 11400000, guid: 00d834485ff097e419184cc797ba8cc7, type: 2}
+      quote: {fileID: 0}
       activated: 0
     huntX: 0
     huntY: 0
@@ -101,7 +104,7 @@ MonoBehaviour:
     level: 1
     charData: {fileID: 0}
     inventory:
-    - item: {fileID: 11400000, guid: 5d5e0c27d71f7334582f303ff4483c8a, type: 2}
+    - item: {fileID: 0}
       droppable: 0
     aggroType: 0
     hasQuotes: 0
@@ -115,7 +118,7 @@ MonoBehaviour:
     level: 3
     charData: {fileID: 0}
     inventory:
-    - item: {fileID: 11400000, guid: 21e0cdf65dcd3c64f99de572c0526714, type: 2}
+    - item: {fileID: 0}
       droppable: 1
     aggroType: 0
     hasQuotes: 0
@@ -129,7 +132,7 @@ MonoBehaviour:
     level: 2
     charData: {fileID: 0}
     inventory:
-    - item: {fileID: 11400000, guid: 5d5e0c27d71f7334582f303ff4483c8a, type: 2}
+    - item: {fileID: 0}
       droppable: 1
     aggroType: 0
     hasQuotes: 0
@@ -143,7 +146,7 @@ MonoBehaviour:
     level: 1
     charData: {fileID: 0}
     inventory:
-    - item: {fileID: 11400000, guid: 0f3a39b4943c3394d894979e1c3bea9d, type: 2}
+    - item: {fileID: 0}
       droppable: 0
     aggroType: 0
     hasQuotes: 0
@@ -155,7 +158,7 @@ MonoBehaviour:
     y: 6
     interactType: 3
     health: 0
-    dialogue: {fileID: 11400000, guid: 804ff175e828ac84fa21c3960e65cb07, type: 2}
+    dialogue: {fileID: 0}
     gift: {fileID: 0}
     ally:
       x: 0
@@ -163,7 +166,7 @@ MonoBehaviour:
       level: 1
       charData: {fileID: 0}
       inventory:
-      - item: {fileID: 11400000, guid: b5bd3591f1336194b8b8162e489bc133, type: 2}
+      - item: {fileID: 0}
         droppable: 0
   - x: 1
     y: 2
@@ -181,8 +184,8 @@ MonoBehaviour:
     y: 7
     interactType: 3
     health: 0
-    dialogue: {fileID: 11400000, guid: 6035377f5a1c88543abe60b340e7b8fe, type: 2}
-    gift: {fileID: 11400000, guid: 893385ff6ea1c6d46a059ef8c34e1cc9, type: 2}
+    dialogue: {fileID: 0}
+    gift: {fileID: 0}
     ally:
       x: 0
       y: 0
@@ -193,7 +196,7 @@ MonoBehaviour:
     y: 9
     interactType: 3
     health: 0
-    dialogue: {fileID: 11400000, guid: 00d834485ff097e419184cc797ba8cc7, type: 2}
+    dialogue: {fileID: 0}
     gift: {fileID: 0}
     ally:
       x: 0
@@ -218,7 +221,7 @@ MonoBehaviour:
     interactType: 3
     health: 0
     dialogue: {fileID: 11400000, guid: 4ca399a4972b5c14fbb5c99c0306417e, type: 2}
-    gift: {fileID: 11400000, guid: 5cfe55ac3336e614fa5dd18b43fd5a73, type: 2}
+    gift: {fileID: 0}
     ally:
       x: 0
       y: 0
@@ -229,7 +232,7 @@ MonoBehaviour:
   - turn: 1
     factionTurn: 1
     type: 1
-    dialogue: {fileID: 11400000, guid: 63210ff322763a543ac58e498a81397b, type: 2}
+    dialogue: {fileID: 0}
     x: 0
     y: 0
     changeTerrain: {fileID: 0}

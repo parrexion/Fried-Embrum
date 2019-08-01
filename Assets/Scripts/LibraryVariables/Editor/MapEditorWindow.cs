@@ -150,7 +150,13 @@ public class MapEditorWindow {
 
 		EditorGUILayout.SelectableLabel("Selected Map:   " + mapValues.uuid, EditorStyles.boldLabel);
 		mapValues.entryName = EditorGUILayout.TextField("Map Name", mapValues.entryName);
+		
+		GUILayout.Space(10);
 		mapValues.mapLocation = (MapLocation)EditorGUILayout.EnumPopup("Location",mapValues.mapLocation);
+		GUILayout.Label("Mission description");
+		EditorStyles.textField.wordWrap = true;
+		mapValues.mapDescription = EditorGUILayout.TextArea(mapValues.mapDescription, GUILayout.Width(500), GUILayout.Height(30));
+		EditorStyles.textField.wordWrap = false;
 
 		GUILayout.Space(10);
 		GUILayout.Label("Map objectives", EditorStyles.boldLabel);

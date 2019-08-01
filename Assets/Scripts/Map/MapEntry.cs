@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum WinCondition { ROUT, SEIZE, BOSS, ESCAPE, DEFEND }
 public enum LoseCondition { NORMAL, SEIZE, PROTECT }
-public enum MapLocation { UNKNOWN, RYERDE, KHATHELET, THRIA, BADON, TASCANA }
+public enum MapLocation { UNKNOWN = -1, DEBES, GHART, THARSONIS, VILJIA, WALNIA_REX }
 
 [CreateAssetMenu(menuName = "LibraryEntries/MapEntry")]
 public class MapEntry : ScrObjLibraryEntry {
@@ -13,7 +13,10 @@ public class MapEntry : ScrObjLibraryEntry {
 	public int sizeX;
 	public int sizeY;
 	public Texture2D mapSprite;
+
+	[Header("Map Info")]
 	public MapLocation mapLocation;
+	public string mapDescription;
 
 	[Header("Objectives")]
 	public WinCondition winCondition;
@@ -58,7 +61,9 @@ public class MapEntry : ScrObjLibraryEntry {
 		sizeX = 0;
 		sizeY = 0;
 		mapSprite = null;
+
 		mapLocation = MapLocation.UNKNOWN;
+		mapDescription = "";
 
 		winCondition = WinCondition.ROUT;
 		loseCondition = LoseCondition.NORMAL;
@@ -94,7 +99,9 @@ public class MapEntry : ScrObjLibraryEntry {
 		sizeX = map.sizeX;
 		sizeY = map.sizeY;
 		mapSprite = map.mapSprite;
+
 		mapLocation = map.mapLocation;
+		mapDescription = map.mapDescription;
 
 		winCondition = map.winCondition;
 		loseCondition = map.loseCondition;

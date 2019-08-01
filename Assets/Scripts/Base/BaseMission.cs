@@ -9,16 +9,12 @@ public class BaseMission : InputReceiverDelegate {
 	public PlayerData playerData;
 	public IntVariable currentDay;
 	public MyButtonList buttons;
-	public IntVariable missionIndex;
-	public UnityEvent missionChangedEvent;
 
 	private List<MissionContainer> availableMaps = new List<MissionContainer>();
 
 	[Header("Mission Info")]
 	public Text missionName;
-	public Text missionLocation;
-	public Text missionObjective;
-	public Text missionCondition;
+	public Text missionDesc;
 	public Text missionRewardMoney;
 	public Text missionRewardScrap;
 	public Text missionRewardItem;
@@ -31,6 +27,12 @@ public class BaseMission : InputReceiverDelegate {
 
 	[Header("Selected Mission")]
 	public StringVariable currentChapterId;
+
+	[Header("Planets")]
+	public Image planetImage;
+	public Text planetName;
+	public PlanetInfo[] planets;
+	public UnityEvent missionChangedEvent;
 
 
 	private void Start() {
@@ -123,10 +125,9 @@ public class BaseMission : InputReceiverDelegate {
 
 		MapEntry map = availableMaps[currentIndex].map;
 		missionName.text = map.entryName;
-		missionLocation.text = "Location:  " + map.mapLocation;
-		missionObjective.text = "Objective:  " + map.winCondition;
-		missionCondition.text = "Lose:    " + map.loseCondition;
+		missionDesc.text = map.mapDescription;
 
+		//Reward
 		missionRewardMoney.text = "Money:  " + map.reward.money;
 		missionRewardMoney.gameObject.SetActive(map.reward.money > 0);
 		missionRewardScrap.text = "Scrap:  " + map.reward.scrap;
@@ -135,6 +136,12 @@ public class BaseMission : InputReceiverDelegate {
 		missionRewardItem.gameObject.SetActive(map.reward.items.Count > 0);
 		missionRewardItem2.text = (map.reward.items.Count > 1) ? "Item2:  " + map.reward.items[1].entryName : "";
 		missionRewardItem2.gameObject.SetActive(map.reward.items.Count > 1);
+
+		//Planet info
+		PlanetInfo info = planets[(int)map.mapLocation];
+		planetImage.color = info.planetColor;
+		planetImage.transform.localScale = new Vector3(info.size, info.size, info.size);
+		planetName.text = map.mapLocation.ToString();
 	}
 
 	public void ChangePrompt(int dir) {
