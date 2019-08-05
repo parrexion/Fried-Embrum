@@ -5,6 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "List Variables/Prep List")]
 public class PrepListVariable : ScriptableObject {
 
+	public int Count { get { return values.Count; } }
+
 	// Characters
 	public List<PrepCharacter> values = new List<PrepCharacter>();
 
@@ -15,7 +17,7 @@ public class PrepListVariable : ScriptableObject {
 
 	public void SortListIndex() {
 		Debug.Log("SORT index");
-		values.Sort((x,y) => x.index - y.index);
+		values.Sort((x, y) => x.index - y.index);
 	}
 
 	private const int XIsBetter = -1;
@@ -34,4 +36,4 @@ public class PrepListVariable : ScriptableObject {
 			return x.index - y.index;
 		});
 	}
-} 
+}

@@ -15,6 +15,7 @@ public class EntryList<T> where T : ListEntry {
 	private List<T> entries = new List<T>();
 	private List<T> original = new List<T>();
 	private int visibleSize;
+	private bool isSelected = true;
 	private int position;
 	private int top;
 	private int bot;
@@ -91,6 +92,9 @@ public class EntryList<T> where T : ListEntry {
 	/// </summary>
 	/// <param name="dir"></param>
 	public void Move(int dir) {
+		if (!isSelected)
+			return;
+
 		if (entries.Count == 0) {
 			position = 0;
 			return;
@@ -161,12 +165,22 @@ public class EntryList<T> where T : ListEntry {
 	}
 
 	/// <summary>
+	/// Selects of deselects the list. 
+	/// The position is saved but there is not highligh and the position can't be updated.
+	/// </summary>
+	/// <param name="state"></param>
+	public void SetSelection(bool state) {
+		isSelected = state;
+		UpdateEntries();
+	}
+
+	/// <summary>
 	/// Updates all the entries' highlights and hide the entries out of focus.
 	/// </summary>
 	private void UpdateEntries() {
 		for (int i = 0; i < entries.Count; i++) {
 			entries[i].gameObject.SetActive(bot <= i && i < top);
-			entries[i].SetHighlight(i == position);
+			entries[i].SetHighlight(i == position && isSelected);
 		}
 	}
 
