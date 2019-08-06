@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public enum MenuMode { NONE, MAP, MAIN_MENU, INV, BATTLE, WEAPON, WWW, INGAME, NNN, TRADE, DIALOGUE, TOOLTIP, 
+public enum MenuMode { NONE, MAP, MAIN_MENU, INV, BATTLE, WEAPON, GAMEOVER, INGAME, NNN, TRADE, DIALOGUE, TOOLTIP, 
 						BASE_LAB, BASE_MISSION, BASE_HOUSE, BASE_TRAIN, BASE_SHOP, PREP, FORMATION, SAVE,
 						BASE_MAIN, BASE_EQUIP, PRE_CONTROLLER }
 

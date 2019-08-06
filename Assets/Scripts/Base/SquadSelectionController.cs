@@ -21,7 +21,7 @@ public class SquadSelectionController : MonoBehaviour {
 	private int targetX = -1, targetY = -1;
 	private bool selectMode;
 	private int squadCount = 1;
-	private int[] squadLimits = new int[]{ 0, 3, 1};
+	private int[] squadLimits = new int[] { 0, 3, 1 };
 
 
 	private void Start() {
@@ -147,7 +147,7 @@ public class SquadSelectionController : MonoBehaviour {
 		targetX = -1;
 		targetY = -1;
 		GenerateLists();
-		selectionY = squadLists[selectionX].Count-1;
+		selectionY = squadLists[selectionX].Count - 1;
 		characters[selectionX].ForcePosition(selectionY);
 		return true;
 	}
@@ -156,7 +156,7 @@ public class SquadSelectionController : MonoBehaviour {
 		if (selectionY != -1)
 			return false;
 		bool hasMembers = true;
-		for (int i = 1; i < squadCount+1; i++) {
+		for (int i = 1; i < squadCount + 1; i++) {
 			if (squadLists[i].Count == 0) {
 				hasMembers = false;
 			}

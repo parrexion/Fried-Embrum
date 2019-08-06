@@ -33,12 +33,12 @@ public class TurnController : MonoBehaviour {
 	public TurnState currentState;
 
 	[Header("Rewards")]
-	public MySpinner spinner;
+	public IntVariable totalKills;
+	public IntVariable totalDeaths;
 	public IntVariable totalMoney;
 	public IntVariable totalScrap;
 	public PlayerData playerData;
 	public IntVariable nextLoadState;
-	public SfxEntry droppedItemFanfare;
 
 	[Header("UI")]
 	public GameObject notificationObject;
@@ -57,6 +57,7 @@ public class TurnController : MonoBehaviour {
 	public UnityEvent resetSelections;
 	public UnityEvent startDialogueEvent;
 	public UnityEvent gameLoseEvent;
+	public UnityEvent showVictoryScreenEvent;
 	public UnityEvent playBkgMusicEvent;
 	public UnityEvent replaceMusicEvent;
 	public UnityEvent playSfxEvent;
@@ -76,6 +77,7 @@ public class TurnController : MonoBehaviour {
 	private void Start() {
 		currentState = TurnState.INIT;
 		currentTurn.value = 0;
+		totalKills.value = 0;
 		currentFactionTurn.value = Faction.ENEMY;
 		triggeredWin.value = false;
 		playerList.values.Clear();
@@ -159,10 +161,47 @@ public class TurnController : MonoBehaviour {
 	}
 
 	/// <summary>
+	/// Runs at the start of each turn.
+	/// Activates all the characters on the current faction.
+	/// </summary>
+	private void StartTurn() {
+		if (gameover)
+			return;
+
+		Debug.Log("New turn");
+		currentState = TurnState.ACTION;
+
+		if (currentFactionTurn.value == Faction.ENEMY) {
+			float wait = 0;
+			for (int i = 0; i < enemyList.values.Count; i++) {
+				if (enemyList.values[i].OnStartTurn())
+					wait = 2f;
+			}
+			enemyController.RunEnemies(wait);
+		}
+		else if (currentFactionTurn.value == Faction.PLAYER) {
+			for (int i = 0; i < playerList.values.Count; i++) {
+				playerList.values[i].OnStartTurn();
+			}
+			if (selectMainCharacter.value) {
+				cursorX.value = playerList.values[0].posx;
+				cursorY.value = playerList.values[0].posy;
+				moveCursorEvent.Invoke();
+			}
+			lockControls.value = false;
+			currentAction.value = ActionMode.NONE;
+			InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
+		}
+		else {
+			Debug.LogError("Wrong state!");
+		}
+	}
+
+	/// <summary>
 	/// Auto-ends the turn if all the player characters have taken their turn if enabled.
 	/// </summary>
 	public void CheckEndTurn() {
-		if (!autoEndTurn.value || currentFactionTurn.value != Faction.PLAYER || currentState == TurnState.FINISHED)
+		if (!autoEndTurn.value || currentFactionTurn.value != Faction.PLAYER || currentState == TurnState.FINISHED || gameover)
 			return;
 
 		for (int i = 0; i < playerList.values.Count; i++) {
@@ -192,6 +231,40 @@ public class TurnController : MonoBehaviour {
 			}
 		}
 	}
+
+	/// <summary>
+	/// Coroutine which locks the controls and shows the turn change display.
+	/// </summary>
+	/// <param name="duration"></param>
+	/// <returns></returns>
+	private IEnumerator DisplayTurnChange(float duration) {
+		currentFactionTurn.value = (currentFactionTurn.value == Faction.PLAYER) ? Faction.ENEMY : Faction.PLAYER;
+		if (currentFactionTurn.value == Faction.PLAYER)
+			currentTurn.value++;
+
+		currentAction.value = ActionMode.LOCK;
+		InputDelegateController.instance.TriggerMenuChange(MenuMode.NONE);
+		notificationText.text = currentFactionTurn.value + " TURN";
+
+		yield return null;
+
+		notificationObject.SetActive(true);
+		resetSelections.Invoke();
+		sfxQueue.Enqueue(turnChangeFanfare);
+		playSfxEvent.Invoke();
+		MapEntry map = (MapEntry)currentMap.value;
+		mainMusic.value = (currentFactionTurn.value == Faction.ENEMY) ? map.enemyMusic.clip : map.playerMusic.clip;
+		replaceMusicEvent.Invoke();
+
+		yield return new WaitForSeconds(duration);
+		
+		notificationObject.SetActive(false);
+		StartTurn();
+	}
+
+
+	//Different functions regarding winning and losing the mission
+	#region VictoryDefeat
 
 	/// <summary>
 	/// Checks to see if the win/lose condition has been met, displays a message and ends the game.
@@ -243,7 +316,7 @@ public class TurnController : MonoBehaviour {
 				}
 			}
 		}
-		else if (map.winCondition == WinCondition.SEIZE){
+		else if (map.winCondition == WinCondition.SEIZE) {
 			gameFinished = (triggeredWin.value);
 		}
 		else {
@@ -262,73 +335,6 @@ public class TurnController : MonoBehaviour {
 		}
 
 		gameover = false;
-	}
-
-	/// <summary>
-	/// Coroutine which locks the controls and shows the turn change display.
-	/// </summary>
-	/// <param name="duration"></param>
-	/// <returns></returns>
-	private IEnumerator DisplayTurnChange(float duration) {
-		currentFactionTurn.value = (currentFactionTurn.value == Faction.PLAYER) ? Faction.ENEMY : Faction.PLAYER;
-		if (currentFactionTurn.value == Faction.PLAYER)
-			currentTurn.value++;
-
-		currentAction.value = ActionMode.LOCK;
-		InputDelegateController.instance.TriggerMenuChange(MenuMode.NONE);
-		notificationText.text = currentFactionTurn.value + " TURN";
-
-		yield return null;
-
-		notificationObject.SetActive(true);
-		resetSelections.Invoke();
-		sfxQueue.Enqueue(turnChangeFanfare);
-		playSfxEvent.Invoke();
-		MapEntry map = (MapEntry)currentMap.value;
-		mainMusic.value = (currentFactionTurn.value == Faction.ENEMY) ? map.enemyMusic.clip : map.playerMusic.clip;
-		replaceMusicEvent.Invoke();
-
-		yield return new WaitForSeconds(duration);
-		
-		notificationObject.SetActive(false);
-		StartTurn();
-	}
-
-	/// <summary>
-	/// Runs at the start of each turn.
-	/// Activates all the characters on the current faction.
-	/// </summary>
-	private void StartTurn() {
-		if (gameover)
-			return;
-
-		Debug.Log("New turn");
-		currentState = TurnState.ACTION;
-		
-		if (currentFactionTurn.value == Faction.ENEMY) {
-			float wait = 0;
-			for (int i = 0; i < enemyList.values.Count; i++) {
-				if (enemyList.values[i].OnStartTurn())
-					wait = 2f;
-			}
-			enemyController.RunEnemies(wait);
-		}
-		else if (currentFactionTurn.value == Faction.PLAYER) {
-			for (int i = 0; i < playerList.values.Count; i++) {
-				playerList.values[i].OnStartTurn();
-			}
-			if (selectMainCharacter.value) {
-				cursorX.value = playerList.values[0].posx;
-				cursorY.value = playerList.values[0].posy;
-				moveCursorEvent.Invoke();
-			}
-			lockControls.value = false;
-			currentAction.value = ActionMode.NONE;
-			InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
-		}
-		else {
-			Debug.LogError("Wrong state!");
-		}
 	}
 
 	public void InstaWin() {
@@ -362,7 +368,11 @@ public class TurnController : MonoBehaviour {
 		sfxQueue.Enqueue(victoryFanfare);
 		playSfxEvent.Invoke();
 
+		//Count dead enemies
+		totalKills.value = enemyController.NumberOfKilledEnemies();
+
 		//Remove dead characters
+		totalDeaths.value = 0;
 		for (int i = 0; i < playerList.values.Count; i++) {
 			if (!playerList.values[i].IsAlive()) {
 				playerData.stats.RemoveAt(i);
@@ -371,6 +381,7 @@ public class TurnController : MonoBehaviour {
 				playerData.baseInfo.RemoveAt(i);
 				playerList.values.RemoveAt(i);
 				i--;
+				totalDeaths.value++;
 			}
 		}
 
@@ -379,26 +390,19 @@ public class TurnController : MonoBehaviour {
 		notificationObject.SetActive(false);
 		notificationText.gameObject.SetActive(false);
 
-		// Award all the rewards
+		// Save all rewards
 		MapEntry map = (MapEntry)currentMap.value;
 		if (map.reward.money > 0) {
 			totalMoney.value += map.reward.money;
-			yield return StartCoroutine(spinner.ShowSpinner(null, "Gained " + map.reward.money + " Money", droppedItemFanfare));
 		}
 		if (map.reward.scrap > 0) {
 			totalScrap.value += map.reward.scrap;
-			yield return StartCoroutine(spinner.ShowSpinner(null, "Gained " + map.reward.scrap + " Scrap", droppedItemFanfare));
 		}
 		for (int i = 0; i < map.reward.items.Count; i++) {
 			playerData.items.Add(new InventoryItem(map.reward.items[i]));
-			yield return StartCoroutine(spinner.ShowSpinner(map.reward.items[i].icon, "Gained " + map.reward.items[i].entryName, droppedItemFanfare));
 		}
 
-		//Move to the ending dialogue
-		currentDialogueMode.value = (int)DialogueMode.ENDING;
-		currentDialogue.value = ((MapEntry)currentMap.value).endDialogue;
-		nextLoadState.value = (int)SaveScreenController.NextState.BASE;
-		startDialogueEvent.Invoke();
+		showVictoryScreenEvent.Invoke();
 	}
 
 	/// <summary>
@@ -414,7 +418,12 @@ public class TurnController : MonoBehaviour {
 		yield return new WaitForSeconds(2f);
 		InputDelegateController.instance.TriggerSceneChange(MenuMode.MAIN_MENU, "MainMenu");
 	}
-	
+
+	#endregion
+
+
+	//Debug functions called by buttons and other events.
+	#region Debug
 
 	public void DamageAllPlayers() {
 		for (int i = 0; i < playerList.values.Count; i++) {
@@ -431,4 +440,6 @@ public class TurnController : MonoBehaviour {
 	public void ToggleInfiniteSpeed() {
 		TacticsMove.infiniteMove = !TacticsMove.infiniteMove;
 	}
+
+	#endregion
 }

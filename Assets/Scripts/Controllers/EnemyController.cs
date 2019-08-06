@@ -56,7 +56,7 @@ public class EnemyController : MonoBehaviour {
 
 		yield return new WaitForSeconds(2f * slowGameSpeed.value / currentGameSpeed.value);
 
-		for (int i = 0; i < enemyList.values.Count; i++) {
+		for (int i = 0; i < enemyList.Count; i++) {
 			if (!enemyList.values[i].IsAlive())
 				continue;
 
@@ -146,5 +146,17 @@ public class EnemyController : MonoBehaviour {
 		};
 		yield return StartCoroutine(spinner.ShowSpinner(data));
 		waitForNextAction = false;
+	}
+
+	public int NumberOfKilledEnemies() {
+		int sum = 0;
+
+		for (int i = 0; i < enemyList.Count; i++) {
+			if (!enemyList.values[i].IsAlive()) {
+				sum++;
+			}
+		}
+
+		return sum;
 	}
 }
