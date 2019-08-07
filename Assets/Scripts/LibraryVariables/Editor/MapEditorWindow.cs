@@ -589,7 +589,13 @@ public class MapEditorWindow {
 					break;
 				case InteractType.VILLAGE:
 					pos.dialogue = (DialogueEntry)EditorGUILayout.ObjectField("Dialogue",pos.dialogue, typeof(DialogueEntry),false);
-					pos.gift = (ItemEntry)EditorGUILayout.ObjectField("Gift",pos.gift, typeof(ItemEntry),false);
+					GUILayout.BeginHorizontal();
+					pos.gift.money = EditorGUILayout.IntField("Money",pos.gift.money);
+					pos.gift.scrap = EditorGUILayout.IntField("Scrap",pos.gift.scrap);
+					GUILayout.EndHorizontal();
+					if (pos.gift.items.Count < 1)
+						pos.gift.items.Add(null);
+					pos.gift.items[0] = (ItemEntry)EditorGUILayout.ObjectField("Item", pos.gift.items[0], typeof(ItemEntry), false);
 					pos.ally.charData = (CharData)EditorGUILayout.ObjectField("New ally",pos.ally.charData, typeof(CharData),false);
 					if (pos.ally.charData != null) {
 						pos.ally.level = EditorGUILayout.IntField("Level", pos.ally.level);
@@ -613,6 +619,15 @@ public class MapEditorWindow {
 						}
 						GUILayout.EndHorizontal();
 					}
+					break;
+				case InteractType.CHEST:
+					GUILayout.BeginHorizontal();
+					pos.gift.money = EditorGUILayout.IntField("Money", pos.gift.money);
+					pos.gift.scrap = EditorGUILayout.IntField("Scrap", pos.gift.scrap);
+					GUILayout.EndHorizontal();
+					if (pos.gift.items.Count < 1)
+						pos.gift.items.Add(null);
+					pos.gift.items[0] = (ItemEntry)EditorGUILayout.ObjectField("Item", pos.gift.items[0], typeof(ItemEntry), false);
 					break;
 			}
 

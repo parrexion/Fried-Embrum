@@ -34,10 +34,10 @@ MonoBehaviour:
   preDialogue: {fileID: 11400000, guid: 60b2b588570390f4fa5614660432dbbb, type: 2}
   introDialogue: {fileID: 11400000, guid: 3a3dfd1a96530fd4aa92c93c01ac7041, type: 2}
   endDialogue: {fileID: 11400000, guid: 3437291ceec4cd64c8b13b3d61dde437, type: 2}
-  playerMusic: {fileID: 0}
-  enemyMusic: {fileID: 0}
-  battleMusic: {fileID: 0}
-  healMusic: {fileID: 0}
+  playerMusic: {fileID: 11400000, guid: 26f8f96c1503a404a97d6e18a730ecd1, type: 2}
+  enemyMusic: {fileID: 11400000, guid: 2e004d17283fe7d45b7bd70e9ae56cc8, type: 2}
+  battleMusic: {fileID: 11400000, guid: 7b17f9dbff54970438f62ab06aa0fef9, type: 2}
+  healMusic: {fileID: 11400000, guid: 80c98026ee3b68b49a7cef3731cd2c32, type: 2}
   spawnPoints:
   - x: 6
     y: 5
@@ -58,7 +58,7 @@ MonoBehaviour:
     level: 1
     charData: {fileID: 11400000, guid: e073228f081b5ec48b55e2e1ac4062f9, type: 2}
     inventory:
-    - item: {fileID: 0}
+    - item: {fileID: 11400000, guid: 61b5282282d02b544a200d088100d5e3, type: 2}
       droppable: 0
     aggroType: 0
     hasQuotes: 0
@@ -71,7 +71,7 @@ MonoBehaviour:
     level: 1
     charData: {fileID: 11400000, guid: e073228f081b5ec48b55e2e1ac4062f9, type: 2}
     inventory:
-    - item: {fileID: 0}
+    - item: {fileID: 11400000, guid: 61b5282282d02b544a200d088100d5e3, type: 2}
       droppable: 0
     aggroType: 3
     hasQuotes: 0
@@ -84,15 +84,15 @@ MonoBehaviour:
     level: 2
     charData: {fileID: 11400000, guid: e073228f081b5ec48b55e2e1ac4062f9, type: 2}
     inventory:
-    - item: {fileID: 0}
+    - item: {fileID: 11400000, guid: bb93947bced453f4cbba944f33781d64, type: 2}
       droppable: 0
-    - item: {fileID: 0}
+    - item: {fileID: 11400000, guid: 2c6481630a321de4f97f98e24d095e8e, type: 2}
       droppable: 1
     aggroType: 3
     hasQuotes: 1
     quotes:
     - triggerer: {fileID: 0}
-      quote: {fileID: 0}
+      quote: {fileID: 11400000, guid: b5139b7988475d24f8299cab08cf5c2f, type: 2}
       activated: 0
     huntX: 0
     huntY: 0
@@ -159,7 +159,11 @@ MonoBehaviour:
     interactType: 3
     health: 0
     dialogue: {fileID: 0}
-    gift: {fileID: 0}
+    gift:
+      money: 0
+      scrap: 0
+      items:
+      - {fileID: 0}
     ally:
       x: 0
       y: 0
@@ -173,7 +177,10 @@ MonoBehaviour:
     interactType: 4
     health: 0
     dialogue: {fileID: 0}
-    gift: {fileID: 0}
+    gift:
+      money: 0
+      scrap: 0
+      items: []
     ally:
       x: 0
       y: 0
@@ -185,7 +192,11 @@ MonoBehaviour:
     interactType: 3
     health: 0
     dialogue: {fileID: 0}
-    gift: {fileID: 0}
+    gift:
+      money: 0
+      scrap: 0
+      items:
+      - {fileID: 0}
     ally:
       x: 0
       y: 0
@@ -197,7 +208,11 @@ MonoBehaviour:
     interactType: 3
     health: 0
     dialogue: {fileID: 0}
-    gift: {fileID: 0}
+    gift:
+      money: 0
+      scrap: 0
+      items:
+      - {fileID: 0}
     ally:
       x: 0
       y: 0
@@ -209,7 +224,10 @@ MonoBehaviour:
     interactType: 1
     health: 20
     dialogue: {fileID: 0}
-    gift: {fileID: 0}
+    gift:
+      money: 0
+      scrap: 0
+      items: []
     ally:
       x: 0
       y: 0
@@ -221,11 +239,31 @@ MonoBehaviour:
     interactType: 3
     health: 0
     dialogue: {fileID: 11400000, guid: 4ca399a4972b5c14fbb5c99c0306417e, type: 2}
-    gift: {fileID: 0}
+    gift:
+      money: 0
+      scrap: 0
+      items:
+      - {fileID: 0}
     ally:
       x: 0
       y: 0
       level: 0
+      charData: {fileID: 0}
+      inventory: []
+  - x: 6
+    y: 8
+    interactType: 5
+    health: 0
+    dialogue: {fileID: 0}
+    gift:
+      money: 2000
+      scrap: 0
+      items:
+      - {fileID: 0}
+    ally:
+      x: 0
+      y: 0
+      level: 1
       charData: {fileID: 0}
       inventory: []
   turnEvents:

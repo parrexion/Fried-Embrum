@@ -37,7 +37,7 @@ public class MapTile : MonoBehaviour {
 	public BlockMove blockMove;
 	public bool interacted;
 	public DialogueEntry dialogue;
-	public InventoryItem gift;
+	public Reward gift;
 	public TacticsMove ally;
 
 	private SpriteRenderer _rendHighlight;

@@ -283,7 +283,7 @@ public class InteractPosition {
 	public InteractType interactType;
 	public int health;
 	public DialogueEntry dialogue;
-	public ItemEntry gift;
+	public Reward gift = new Reward();
 	public PlayerPosition ally = new PlayerPosition();
 }
 

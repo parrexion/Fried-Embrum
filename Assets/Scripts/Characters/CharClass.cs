@@ -31,6 +31,7 @@ public class CharClass : ScrObjLibraryEntry {
 	public int gDef;
 
 	[Header("Skills")]
+	public bool lockTouch;
 	public List<WeaponType> weaponSkills = new List<WeaponType>();
 	public List<CharacterSkill> skills = new List<CharacterSkill>();
 	public int bonusHp;
@@ -63,6 +64,7 @@ public class CharClass : ScrObjLibraryEntry {
 		gSpd = 0;
 		gDef = 0;
 
+		lockTouch = false;
 		weaponSkills = new List<WeaponType>();
 		skills = new List<CharacterSkill>();
 
@@ -97,6 +99,7 @@ public class CharClass : ScrObjLibraryEntry {
 		gSpd = cc.gSpd;
 		gDef = cc.gDef;
 
+		lockTouch = cc.lockTouch;
 		weaponSkills = new List<WeaponType>();
 		for (int i = 0; i < cc.weaponSkills.Count; i++) {
 			weaponSkills.Add(cc.weaponSkills[i]);

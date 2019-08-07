@@ -184,6 +184,7 @@ public class ClassEditorWindow {
 		GUILayout.Space(10);
 
 		GUILayout.Label("Skill Gains", EditorStyles.boldLabel);
+		classValues.lockTouch = EditorGUILayout.Toggle("Locktouch", classValues.lockTouch);
 		for (int i = 0; i < classValues.skills.Count; i++) {
 			GUILayout.BeginHorizontal();
 			classValues.skills[i] = (CharacterSkill)EditorGUILayout.ObjectField("Skill",classValues.skills[i], typeof(CharacterSkill),false);

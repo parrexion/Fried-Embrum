@@ -54,6 +54,7 @@ public class MapCreator : MonoBehaviour {
 	public TerrainTile tileWall;
 	public TerrainTile tileThrone;
 	public TerrainTile tilePillar;
+	public TerrainTile tileChest;
 
 	//Map size
 	private int _sizeX;
@@ -126,7 +127,7 @@ public class MapCreator : MonoBehaviour {
 					tempTile.interactType = InteractType.VILLAGE;
 					tempTile.alternativeTerrain = GetTerrainFromPixel(colorData[pos]);
 					tempTile.dialogue = interPos.dialogue;
-					tempTile.gift = (interPos.gift != null) ? new InventoryItem(interPos.gift) : null;
+					tempTile.gift = interPos.gift;
 					if (interPos.ally.charData != null) {
 						StatsContainer stats = new StatsContainer(interPos.ally);
 						InventoryContainer inventory = new InventoryContainer(playerClassWheel.GetWpnSkillFromLevel(interPos.ally.charData.startClassLevels), interPos.ally.inventory);
@@ -139,6 +140,12 @@ public class MapCreator : MonoBehaviour {
 				else if (interPos.interactType == InteractType.SEIZE) {
 					tempTile.SetTerrain(GetTerrainFromPixel(colorData[pos]));
 					tempTile.interactType = InteractType.SEIZE;
+				}
+				else if (interPos.interactType == InteractType.CHEST) {
+					tempTile.SetTerrain(tileChest);
+					tempTile.alternativeTerrain = tileChest.substitueTile;
+					tempTile.interactType = InteractType.CHEST;
+					tempTile.gift = interPos.gift;
 				}
 				else {
 					Debug.LogError("Unimplemented interact type   " + interPos.interactType);

@@ -4,12 +4,14 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public enum ActionInputType { SEIZE, ATTACK, HEAL, VISIT, TRADE, ITEM, WAIT }
+public enum ActionInputType { SEIZE, ATTACK, HEAL, VISIT, HACK, TRADE, ITEM, WAIT }
 
 public class ActionInputController : MonoBehaviour {
 
 	[Header("References")]
 	public PlayerData playerData;
+	public IntVariable totalMoney;
+	public IntVariable totalScrap;
 	public TacticsMoveVariable selectedCharacter;
 	public ScrObjEntryReference currentMap;
 	public IntVariable currentMenuMode;
@@ -80,6 +82,14 @@ public class ActionInputController : MonoBehaviour {
 				villageVisitor1.value = selectedCharacter.value.stats.charData.portraitSet;
 				startDialogue.Invoke();
 				break;
+			case ActionInputType.HACK:
+				MapTile tile = selectedCharacter.value.currentTile;
+				tile.interacted = true;
+				tile.SetTerrain(tile.alternativeTerrain);
+				currentActionMode.value = ActionMode.NONE;
+				InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
+				StartCoroutine(WaitForItemGain());
+				break;
 			case ActionInputType.TRADE: // TRADE
 				targetList.values = selectedCharacter.value.FindAdjacentCharacters(Faction.PLAYER);
 				currentActionMode.value = ActionMode.TRADE;
@@ -120,14 +130,31 @@ public class ActionInputController : MonoBehaviour {
 	}
 
 	private IEnumerator WaitForItemGain() {
-		InventoryItem item = selectedCharacter.value.currentTile.gift;
-		string message = "Received " + item.item.entryName;
-		yield return StartCoroutine(spinner.ShowSpinner(item.item.icon, message, gainItemSfx));
 
-		bool res = selectedCharacter.value.inventory.AddItem(item);
-		if (!res) {
-			playerData.items.Add(item);
+		if (selectedCharacter.value.currentTile.gift.money > 0) {
+			string message = "Received " + selectedCharacter.value.currentTile.gift.money + " money";
+			yield return StartCoroutine(spinner.ShowSpinner(null, message, gainItemSfx));
+			totalMoney.value += selectedCharacter.value.currentTile.gift.money;
 		}
+
+		if (selectedCharacter.value.currentTile.gift.scrap > 0) {
+			string message = "Received " + selectedCharacter.value.currentTile.gift.scrap + " scrap";
+			yield return StartCoroutine(spinner.ShowSpinner(null, message, gainItemSfx));
+			totalScrap.value += selectedCharacter.value.currentTile.gift.scrap;
+		}
+
+		for (int i = 0; i < selectedCharacter.value.currentTile.gift.items.Count; i++) {
+			if (selectedCharacter.value.currentTile.gift.items[i] == null)
+				continue;
+			InventoryItem item = new InventoryItem(selectedCharacter.value.currentTile.gift.items[i]);
+			string message = "Received " + item.item.entryName;
+			yield return StartCoroutine(spinner.ShowSpinner(item.item.icon, message, gainItemSfx));
+			bool res = selectedCharacter.value.inventory.AddItem(item);
+			if (!res) {
+				playerData.items.Add(item);
+			}
+		}
+
 		selectedCharacter.value.End();
 	}
 
@@ -142,6 +169,8 @@ public class ActionInputController : MonoBehaviour {
 			actionButtons.AddButton("HEAL", (int)ActionInputType.HEAL);
 		if (selectedCharacter.value.CanVisit())
 			actionButtons.AddButton("VISIT", (int)ActionInputType.VISIT);
+		if (selectedCharacter.value.CanHack())
+			actionButtons.AddButton("HACK", (int)ActionInputType.HACK);
 		if (selectedCharacter.value.CanTrade())
 			actionButtons.AddButton("TRADE", (int)ActionInputType.TRADE);
 

@@ -598,6 +598,15 @@ public abstract class TacticsMove : MonoBehaviour {
 		return (traders.Count > 0);
 	}
 
+	/// <summary>
+	/// Checks if the character can hack on the current tile.
+	/// </summary>
+	/// <returns></returns>
+	public bool CanHack() {
+		return (currentTile.interactType == InteractType.CHEST && !currentTile.interacted && stats.currentClass.lockTouch);
+	}
+
+
 	//Inventory
 
 	/// <summary>
