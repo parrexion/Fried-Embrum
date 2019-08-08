@@ -10,7 +10,8 @@ public class MapCreator : MonoBehaviour {
 	public ClassWheel playerClassWheel;
 	public ClassWheel enemyClassWheel;
 	public CharacterListVariable playerList;
-	public PrepListVariable prepList;
+	public PrepListVariable prepList1;
+	public PrepListVariable prepList2;
 	public BattleMap battleMap;
 	public MapCursor mapClicker;
 
@@ -79,8 +80,8 @@ public class MapCreator : MonoBehaviour {
 		TacticsCamera.boxActive = true;
 		
 		GenerateMap(map.mapSprite);
-		cursorX.value = map.spawnPoints[0].x;
-		cursorY.value = map.spawnPoints[0].y;
+		cursorX.value = map.spawnPoints1[0].x;
+		cursorY.value = map.spawnPoints1[0].y;
 		cursorMoveEvent.Invoke();
 		SpawnPlayers();
 		SpawnEnemies();
@@ -184,20 +185,38 @@ public class MapCreator : MonoBehaviour {
 		
 		//Players
 		int prepPos = 0;
-		for (int i = 0; i < map.spawnPoints.Count; i++) {
-			Position pos = map.spawnPoints[i];
+		for (int i = 0; i < map.spawnPoints1.Count; i++) {
+			Position pos = map.spawnPoints1[i];
 
-			if (prepPos >= prepList.values.Count || !prepList.values[prepPos].selected) {
+			if (prepPos >= prepList1.values.Count || !prepList1.values[prepPos].selected) {
 				battleMap.GetTile(pos.x, pos.y).selectable = true;
 				continue;
 			}
 
-			int index = prepList.values[prepPos].index;
+			int index = prepList1.values[prepPos].index;
 			StatsContainer stats = playerData.stats[index];
 			InventoryContainer inventory = playerData.inventory[index];
 			SkillsContainer skills = playerData.skills[index];
 			prepPos++;
 			
+			SpawnPlayerCharacter(pos.x, pos.y, stats, inventory, skills, true);
+		}
+
+		prepPos = 0;
+		for (int i = 0; i < map.spawnPoints2.Count; i++) {
+			Position pos = map.spawnPoints2[i];
+
+			if (prepPos >= prepList2.values.Count || !prepList2.values[prepPos].selected) {
+				battleMap.GetTile(pos.x, pos.y).selectable = true;
+				continue;
+			}
+
+			int index = prepList2.values[prepPos].index;
+			StatsContainer stats = playerData.stats[index];
+			InventoryContainer inventory = playerData.inventory[index];
+			SkillsContainer skills = playerData.skills[index];
+			prepPos++;
+
 			SpawnPlayerCharacter(pos.x, pos.y, stats, inventory, skills, true);
 		}
 	}

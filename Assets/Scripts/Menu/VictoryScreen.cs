@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class VictoryScreen : InputReceiverDelegate {
 
-	public ScrObjEntryReference currentMap;
+	public ScrObjEntryReference currentMission;
 	public IntVariable totalTurns;
 	public IntVariable totalKills;
 	public IntVariable totalDeaths;
@@ -36,7 +36,7 @@ public class VictoryScreen : InputReceiverDelegate {
 	}
 
 	public void SetInformation() {
-		Reward reward = ((MapEntry)currentMap.value).reward;
+		Reward reward = ((MissionEntry)currentMission.value).reward;
 		turnText.text = "Turns:  " + totalTurns.value;
 		killText.text = "Kills:  " + totalKills.value;
 		deathText.text = "Deaths:  " + totalDeaths.value;
@@ -49,7 +49,7 @@ public class VictoryScreen : InputReceiverDelegate {
 	public override void OnOkButton() {
 		//Move to the ending dialogue
 		currentDialogueMode.value = (int)DialogueMode.ENDING;
-		currentDialogue.value = ((MapEntry)currentMap.value).endDialogue;
+		currentDialogue.value = ((MapEntry)currentMission.value).endDialogue;
 		nextLoadState.value = (int)SaveScreenController.NextState.BASE;
 		startDialogueEvent.Invoke();
 	}

@@ -40,8 +40,8 @@ public class FormationController : InputReceiverDelegate {
 			cursorMovedEvent.Invoke();
 		}
 		
-		for (int i = 0; i < map.spawnPoints.Count; i++) {
-			battleMap.GetTile(map.spawnPoints[i].x, map.spawnPoints[i].y).deployable = active;
+		for (int i = 0; i < map.spawnPoints1.Count; i++) {
+			battleMap.GetTile(map.spawnPoints1[i].x, map.spawnPoints1[i].y).deployable = active;
 		}
     }
 

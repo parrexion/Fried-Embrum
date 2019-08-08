@@ -31,13 +31,13 @@ public class MissionInfoController : MonoBehaviour {
 
 	public void SetupList() {
 		buttons.ResetButtons();
-		availableMaps = playerData.missions.FindAll(m => !m.cleared && m.map.unlockDay <= currentDay.value);
+		availableMaps = playerData.missions.FindAll(m => !m.cleared && m.mission.unlockDay <= currentDay.value);
 		for (int i = 0; i < availableMaps.Count; i++) {
-			buttons.AddButton(availableMaps[i].map.entryName);
+			buttons.AddButton(availableMaps[i].mission.entryName);
 		}
 
 		buttons.ForcePosition(0);
-		locationIndex.value = (int)availableMaps[0].map.mapLocation;
+		locationIndex.value = (int)availableMaps[0].mission.mapLocation;
 		missionChangedEvent.Invoke();
 		ShowMissionInfo();
 	}
@@ -46,13 +46,13 @@ public class MissionInfoController : MonoBehaviour {
 		int prevPos = buttons.GetPosition();
 		int newPos = buttons.Move(dir);
 		ShowMissionInfo();
-		locationIndex.value = (int)availableMaps[newPos].map.mapLocation;
+		locationIndex.value = (int)availableMaps[newPos].mission.mapLocation;
 		missionChangedEvent.Invoke();
 		return (prevPos != newPos);
 	}
 
 	public bool Select() {
-		currentChapterId.value = availableMaps[buttons.GetPosition()].map.uuid;
+		currentChapterId.value = availableMaps[buttons.GetPosition()].mission.uuid;
 		return true;
 	}
 	
@@ -61,24 +61,24 @@ public class MissionInfoController : MonoBehaviour {
 		if (currentIndex == -1)
 			return;
 
-		MapEntry map = availableMaps[currentIndex].map;
-		missionName.text = map.entryName;
-		missionDesc.text = map.mapDescription;
+		MissionEntry mission = availableMaps[currentIndex].mission;
+		missionName.text = mission.entryName;
+		missionDesc.text = mission.mapDescription;
 
 		//Reward
-		missionRewardMoney.text = "Money:  " + map.reward.money;
-		missionRewardMoney.gameObject.SetActive(map.reward.money > 0);
-		missionRewardScrap.text = "Scrap:  " + map.reward.scrap;
-		missionRewardScrap.gameObject.SetActive(map.reward.scrap > 0);
-		missionRewardItem.text = (map.reward.items.Count > 0) ? "Item:  " + map.reward.items[0].entryName : "";
-		missionRewardItem.gameObject.SetActive(map.reward.items.Count > 0);
-		missionRewardItem2.text = (map.reward.items.Count > 1) ? "Item2:  " + map.reward.items[1].entryName : "";
-		missionRewardItem2.gameObject.SetActive(map.reward.items.Count > 1);
+		missionRewardMoney.text = "Money:  " + mission.reward.money;
+		missionRewardMoney.gameObject.SetActive(mission.reward.money > 0);
+		missionRewardScrap.text = "Scrap:  " + mission.reward.scrap;
+		missionRewardScrap.gameObject.SetActive(mission.reward.scrap > 0);
+		missionRewardItem.text = (mission.reward.items.Count > 0) ? "Item:  " + mission.reward.items[0].entryName : "";
+		missionRewardItem.gameObject.SetActive(mission.reward.items.Count > 0);
+		missionRewardItem2.text = (mission.reward.items.Count > 1) ? "Item2:  " + mission.reward.items[1].entryName : "";
+		missionRewardItem2.gameObject.SetActive(mission.reward.items.Count > 1);
 
 		//Planet info
-		PlanetInfo info = planets[(int)map.mapLocation];
+		PlanetInfo info = planets[(int)mission.mapLocation];
 		planetImage.color = info.planetColor;
 		planetImage.transform.localScale = new Vector3(info.size, info.size, info.size);
-		planetName.text = map.mapLocation.ToString();
+		planetName.text = mission.mapLocation.ToString();
 	}
 }

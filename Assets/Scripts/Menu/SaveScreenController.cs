@@ -10,7 +10,8 @@ public class SaveScreenController : InputReceiverDelegate {
 	public SaveFileController saveFileController;
 	public ScrObjLibraryVariable chapterLibrary;
 	public IntVariable nextState;
-	public ScrObjEntryReference currentMap;
+	public ScrObjEntryReference currentMission;
+	public IntVariable mapIndex;
 	public StringVariable currentChapterId;
 	public IntVariable currentPlayDays;
 	public BoolVariable lockControls;
@@ -25,18 +26,19 @@ public class SaveScreenController : InputReceiverDelegate {
 	private void Start() {
 		MenuChangeDelay(MenuMode.SAVE);
 		stopMusicEvent.Invoke();
-		if (currentMap.value == null) {
+		if (currentMission.value == null) {
 			currentChapterId.value = "";
 			return;
 		}
 
-		currentPlayDays.value += ((MapEntry)currentMap.value).mapDuration;
-		MapEntry nextEntry = ((MapEntry)currentMap.value).autoNextChapter;
-		if (nextEntry == null) {
+		MissionEntry mission = (MissionEntry)currentMission.value;
+		mapIndex.value++;
+		if (mapIndex.value >= mission.maps.Count) {
+			currentPlayDays.value += mission.duration;
 			currentChapterId.value = "";
 		}
 		else {
-			currentChapterId.value = nextEntry.uuid;
+			currentChapterId.value = mission.maps[mapIndex.value].uuid;
 		}
 	}
 
@@ -45,9 +47,9 @@ public class SaveScreenController : InputReceiverDelegate {
 	}
 
 	public void NextLevel() {
-		currentMap.value = ((MapEntry)currentMap.value)?.autoNextChapter;
+		MissionEntry mission = (MissionEntry)currentMission.value;
 
-		if (currentMap.value == null) {
+		if (mapIndex.value >= mission.maps.Count) {
 			NextState next = ((NextState)nextState.value);
 			if (next == NextState.MAIN) {
 				InputDelegateController.instance.TriggerSceneChange(MenuMode.MAIN_MENU, "MainMenu");
@@ -59,7 +61,7 @@ public class SaveScreenController : InputReceiverDelegate {
 			}
 		}
 
-		currentChapterId.value = currentMap.value.uuid;
+		currentChapterId.value = currentMission.value.uuid;
 
 		if (currentChapterId.value == SaveFileController.CLEAR_GAME_ID) {
 			InputDelegateController.instance.TriggerSceneChange(MenuMode.MAIN_MENU, "MainMenu");

@@ -15,21 +15,12 @@ public class MapEntry : ScrObjLibraryEntry {
 	public Texture2D mapSprite;
 
 	[Header("Map Info")]
-	public MapLocation mapLocation;
-	public string mapDescription;
-
-	[Header("Objectives")]
 	public WinCondition winCondition;
 	public LoseCondition loseCondition;
-	public Reward reward = new Reward();
-
-	[Header("Chapter Linking")]
-	public bool skipBattlePrep;
-	public MapEntry autoNextChapter;
-	public int mapDuration = 1;
-	public int unlockDay = 1;
+	public string mapDescription;
 
 	[Header("Dialogues")]
+	public bool skipBattlePrep;
 	public DialogueEntry preDialogue;
 	public DialogueEntry introDialogue;
 	public DialogueEntry endDialogue;
@@ -41,7 +32,8 @@ public class MapEntry : ScrObjLibraryEntry {
 	public MusicEntry healMusic;
 
 	[Header("Players")]
-	public List<Position> spawnPoints = new List<Position>();
+	public List<Position> spawnPoints1 = new List<Position>();
+	public List<Position> spawnPoints2 = new List<Position>();
 	public List<CharData> forcedCharacters = new List<CharData>();
 	public List<CharData> lockedCharacters = new List<CharData>();
 	
@@ -61,19 +53,13 @@ public class MapEntry : ScrObjLibraryEntry {
 		sizeX = 0;
 		sizeY = 0;
 		mapSprite = null;
-
-		mapLocation = MapLocation.UNKNOWN;
+		
 		mapDescription = "";
 
 		winCondition = WinCondition.ROUT;
 		loseCondition = LoseCondition.NORMAL;
-		reward = new Reward();
-
+		
 		skipBattlePrep = false;
-		autoNextChapter = null;
-		mapDuration = 1;
-		unlockDay = 1;
-
 		preDialogue = null;
 		introDialogue = null;
 		endDialogue = null;
@@ -83,7 +69,8 @@ public class MapEntry : ScrObjLibraryEntry {
 		battleMusic = null;
 		healMusic = null;
 
-		spawnPoints = new List<Position>();
+		spawnPoints1 = new List<Position>();
+		spawnPoints2 = new List<Position>();
 		forcedCharacters = new List<CharData>();
 		lockedCharacters = new List<CharData>();
 		enemies = new List<EnemyPosition>();
@@ -99,19 +86,12 @@ public class MapEntry : ScrObjLibraryEntry {
 		sizeX = map.sizeX;
 		sizeY = map.sizeY;
 		mapSprite = map.mapSprite;
-
-		mapLocation = map.mapLocation;
-		mapDescription = map.mapDescription;
-
+		
 		winCondition = map.winCondition;
 		loseCondition = map.loseCondition;
-		reward = map.reward;
-
+		mapDescription = map.mapDescription;
+		
 		skipBattlePrep = map.skipBattlePrep;
-		autoNextChapter = map.autoNextChapter;
-		mapDuration = map.mapDuration;
-		unlockDay = map.unlockDay;
-
 		preDialogue = map.preDialogue;
 		introDialogue = map.introDialogue;
 		endDialogue = map.endDialogue;
@@ -121,9 +101,13 @@ public class MapEntry : ScrObjLibraryEntry {
 		battleMusic = map.battleMusic;
 		healMusic = map.healMusic;
 
-		spawnPoints = new List<Position>();
-		for (int i = 0; i < map.spawnPoints.Count; i++) {
-			spawnPoints.Add(map.spawnPoints[i]);
+		spawnPoints1 = new List<Position>();
+		for (int i = 0; i < map.spawnPoints1.Count; i++) {
+			spawnPoints1.Add(map.spawnPoints1[i]);
+		}
+		spawnPoints2 = new List<Position>();
+		for (int i = 0; i < map.spawnPoints2.Count; i++) {
+			spawnPoints2.Add(map.spawnPoints2[i]);
 		}
 		forcedCharacters = new List<CharData>();
 		for (int i = 0; i < map.forcedCharacters.Count; i++) {

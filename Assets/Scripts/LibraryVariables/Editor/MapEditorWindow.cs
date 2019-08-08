@@ -28,7 +28,6 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 		mapValues.entryName = EditorGUILayout.TextField("Map Name", mapValues.entryName);
 
 		GUILayout.Space(10);
-		mapValues.mapLocation = (MapLocation)EditorGUILayout.EnumPopup("Location", mapValues.mapLocation);
 		GUILayout.Label("Mission description");
 		EditorStyles.textField.wordWrap = true;
 		mapValues.mapDescription = EditorGUILayout.TextArea(mapValues.mapDescription, GUILayout.Width(500), GUILayout.Height(30));
@@ -42,27 +41,6 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 		GUILayout.Space(20);
 		mapValues.loseCondition = (LoseCondition)EditorGUILayout.EnumPopup("Lose", mapValues.loseCondition);
 		GUILayout.EndHorizontal();
-
-		GUILayout.Label("Rewards", EditorStyles.boldLabel);
-		GUILayout.BeginHorizontal();
-		mapValues.reward.money = EditorGUILayout.IntField("Money", mapValues.reward.money);
-		mapValues.reward.scrap = EditorGUILayout.IntField("Scrap", mapValues.reward.scrap);
-		GUILayout.EndHorizontal();
-		GUILayout.Space(5);
-		for(int i = 0; i < mapValues.reward.items.Count; i++) {
-			GUILayout.BeginHorizontal();
-			mapValues.reward.items[i] = (ItemEntry)EditorGUILayout.ObjectField("Item", mapValues.reward.items[i], typeof(ItemEntry), false);
-			if(GUILayout.Button("X", GUILayout.Width(50))) {
-				GUI.FocusControl(null);
-				mapValues.reward.items.RemoveAt(i);
-				i--;
-				continue;
-			}
-			GUILayout.EndHorizontal();
-		}
-		if(GUILayout.Button("+")) {
-			mapValues.reward.items.Add(null);
-		}
 
 		GUILayout.Space(10);
 
@@ -78,17 +56,8 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 
 		GUILayout.Space(10);
 
-		GUILayout.Label("Chapter Linking", EditorStyles.boldLabel);
-		GUILayout.BeginHorizontal();
-		mapValues.mapDuration = EditorGUILayout.IntField("Map Duration", mapValues.mapDuration);
-		mapValues.unlockDay = EditorGUILayout.IntField("Unlocked on day", mapValues.unlockDay);
-		GUILayout.EndHorizontal();
-		GUILayout.BeginHorizontal();
-		mapValues.skipBattlePrep = EditorGUILayout.Toggle("Skip battle preps?", mapValues.skipBattlePrep);
-		mapValues.autoNextChapter = (MapEntry)EditorGUILayout.ObjectField("Auto Next Chapter", mapValues.autoNextChapter, typeof(MapEntry), false);
-		GUILayout.EndHorizontal();
-
 		GUILayout.Label("Dialogues", EditorStyles.boldLabel);
+		mapValues.skipBattlePrep = EditorGUILayout.Toggle("Skip battle preps?", mapValues.skipBattlePrep);
 		mapValues.preDialogue = (DialogueEntry)EditorGUILayout.ObjectField("Mission dialogue", mapValues.preDialogue, typeof(DialogueEntry), false);
 		mapValues.introDialogue = (DialogueEntry)EditorGUILayout.ObjectField("On mission start", mapValues.introDialogue, typeof(DialogueEntry), false);
 		mapValues.endDialogue = (DialogueEntry)EditorGUILayout.ObjectField("After win", mapValues.endDialogue, typeof(DialogueEntry), false);
@@ -183,23 +152,47 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 	private void DrawPlayerStuff() {
 		MapEntry mapValues = (MapEntry)entryValues;
 		GUILayout.Space(5);
-		for(int i = 0; i < mapValues.spawnPoints.Count; i++) {
+		GUILayout.Label("Squad 1");
+		for (int i = 0; i < mapValues.spawnPoints1.Count; i++) {
 			GUILayout.BeginHorizontal();
 			EditorGUIUtility.labelWidth = 70;
 			GUILayout.Label("Position");
-			mapValues.spawnPoints[i].x = EditorGUILayout.IntField("X", mapValues.spawnPoints[i].x);
-			mapValues.spawnPoints[i].y = EditorGUILayout.IntField("Y", mapValues.spawnPoints[i].y);
-			if(GUILayout.Button("X", GUILayout.Width(50))) {
+			mapValues.spawnPoints1[i].x = EditorGUILayout.IntField("X", mapValues.spawnPoints1[i].x);
+			mapValues.spawnPoints1[i].y = EditorGUILayout.IntField("Y", mapValues.spawnPoints1[i].y);
+			if (GUILayout.Button("X", GUILayout.Width(50))) {
 				GUI.FocusControl(null);
-				mapValues.spawnPoints.RemoveAt(i);
+				mapValues.spawnPoints1.RemoveAt(i);
 				i--;
 			}
 			EditorGUIUtility.labelWidth = 120;
 			GUILayout.EndHorizontal();
 			LibraryEditorWindow.HorizontalLine(Color.black);
 		}
-		if(GUILayout.Button("+")) {
-			mapValues.spawnPoints.Add(new Position());
+		if (GUILayout.Button("+")) {
+			mapValues.spawnPoints1.Add(new Position());
+		}
+
+		LibraryEditorWindow.HorizontalLine(Color.black);
+
+		GUILayout.Space(5);
+		GUILayout.Label("Squad 2");
+		for (int i = 0; i < mapValues.spawnPoints2.Count; i++) {
+			GUILayout.BeginHorizontal();
+			EditorGUIUtility.labelWidth = 70;
+			GUILayout.Label("Position");
+			mapValues.spawnPoints2[i].x = EditorGUILayout.IntField("X", mapValues.spawnPoints2[i].x);
+			mapValues.spawnPoints2[i].y = EditorGUILayout.IntField("Y", mapValues.spawnPoints2[i].y);
+			if (GUILayout.Button("X", GUILayout.Width(50))) {
+				GUI.FocusControl(null);
+				mapValues.spawnPoints2.RemoveAt(i);
+				i--;
+			}
+			EditorGUIUtility.labelWidth = 120;
+			GUILayout.EndHorizontal();
+			LibraryEditorWindow.HorizontalLine(Color.black);
+		}
+		if (GUILayout.Button("+")) {
+			mapValues.spawnPoints2.Add(new Position());
 		}
 	}
 

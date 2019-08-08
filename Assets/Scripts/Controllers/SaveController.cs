@@ -255,8 +255,8 @@ public class SaveController : MonoBehaviour {
 			playerData.items.Add(new InventoryItem(item, loadedData.items[i].charges));
 		}
 		for (int i = 0; i < loadedData.missions.Count; i++) {
-			MapEntry map = (MapEntry)missionLibrary.GetEntry(loadedData.missions[i].id);
-			playerData.missions.Add(new MissionContainer(map, loadedData.missions[i].cleared));
+			MissionEntry mission = (MissionEntry)missionLibrary.GetEntry(loadedData.missions[i].id);
+			playerData.missions.Add(new MissionContainer(mission, loadedData.missions[i].cleared));
 		}
 		playerData.upgrader.CalculateResearch();
 		Debug.Log("Successfully loaded the save data!");

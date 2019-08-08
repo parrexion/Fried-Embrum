@@ -75,7 +75,7 @@ public class BattlePrepController : InputReceiverDelegate {
 
 	private void GeneratePrepList() {
 		MapEntry map = (MapEntry)currentMapEntry.value;
-		int playerCap = map.spawnPoints.Count;
+		int playerCap = map.spawnPoints1.Count;
 		prepList.values = new List<PrepCharacter>();
 		for (int i = 0; i < playerData.stats.Count; i++) {
 			if (!map.IsForced(playerData.stats[i].charData))

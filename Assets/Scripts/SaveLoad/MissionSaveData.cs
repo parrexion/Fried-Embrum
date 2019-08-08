@@ -10,7 +10,7 @@ public class MissionSaveData {
 
 
 	public void StoreData(MissionContainer mission) {
-		id = mission.map.uuid;
+		id = mission.mission.uuid;
 		cleared = mission.cleared;
 	}
 }

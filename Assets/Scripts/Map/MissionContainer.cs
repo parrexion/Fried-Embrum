@@ -5,12 +5,12 @@ using UnityEngine;
 [System.Serializable]
 public class MissionContainer {
 
-	public MapEntry map;
+	public MissionEntry mission;
 	public bool cleared;
 
 
-	public MissionContainer(MapEntry map, bool cleared = false) {
-		this.map = map;
+	public MissionContainer(MissionEntry mission, bool cleared = false) {
+		this.mission = mission;
 		this.cleared = cleared;
 	}
 }

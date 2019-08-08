@@ -29,7 +29,7 @@ public class PrepCharacterSelect : MonoBehaviour {
 		entryList.ResetList();
 
 		MapEntry map = (MapEntry)currentMap.value;
-		playerCap = map.spawnPoints.Count;
+		playerCap = map.spawnPoints1.Count;
 
 		for (int i = 0; i < prepList.values.Count; i++) {
 			Transform entry = Instantiate(entryPrefab, listParent.transform);

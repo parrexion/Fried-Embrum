@@ -40,7 +40,7 @@ public class MainMenuController : InputReceiverDelegate {
 	public PlayerPosition[] startingCharacters;
 	public ItemEntry[] startItems;
 	public UpgradeEntry[] startUpgrade;
-	public MapEntry[] startMissions;
+	public MissionEntry startMission;
 
 	public UnityEvent saveGameEvent;
 
@@ -132,9 +132,8 @@ public class MainMenuController : InputReceiverDelegate {
 		for (int i = 0; i < startUpgrade.Length; i++) {
 			playerData.upgrader.AddEntry(new UpgradeItem(startUpgrade[i]));
 		}
-		for (int i = 0; i < startMissions.Length; i++) {
-			playerData.missions.Add(new MissionContainer(startMissions[i]));
-		}
+		playerData.missions.Add(new MissionContainer(startMission));
+
 		InputDelegateController.instance.TriggerSceneChange(MenuMode.NONE, "LoadingScreen");
 	}
 
@@ -282,7 +281,7 @@ public class MainMenuController : InputReceiverDelegate {
 		}
 	}
 
-	
+
 	public override void OnStartButton() { }
 	public override void OnYButton() { }
 	public override void OnLButton() { }
