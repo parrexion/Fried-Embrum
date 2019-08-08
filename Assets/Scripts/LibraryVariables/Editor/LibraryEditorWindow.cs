@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 public class LibraryEditorWindow : EditorWindow {
 
-	private enum State { MAPS, CHARACTERS, CLASSES, ITEMS, UPGRADE, SKILLS, BACKGROUND, PORTRAITS }
+	private enum State { MISSIONS, MAPS, CHARACTERS, CLASSES, ITEMS, UPGRADE, SKILLS, BACKGROUND, PORTRAITS }
 
 	// Header
 	Rect headerRect = new Rect();
@@ -14,6 +14,10 @@ public class LibraryEditorWindow : EditorWindow {
 	static GUIStyle horizontalLine;
 
 	public IntVariable currentWindow;
+
+	public MissionEditorWindow missionEditor;
+	public ScrObjLibraryVariable missionLibrary;
+	public MissionEntry missionContainer;
 
 	public MapEditorWindow mapEditor;
 	public ScrObjLibraryVariable mapLibrary;
@@ -48,7 +52,7 @@ public class LibraryEditorWindow : EditorWindow {
 	public PortraitEntry portraitContainer;
 	public SpriteListVariable poseList;
 
-	private string[] toolbarStrings = new string[] {"Maps", "Characters", "Classes", "Items", "Upgrades", "Skills", "Background", "Portraits"};
+	private string[] toolbarStrings = new string[] {"Missions", "Maps", "Characters", "Classes", "Items", "Upgrades", "Skills", "Background", "Portraits"};
 
 
 	[MenuItem("Window/LibraryEditor")]
@@ -74,6 +78,9 @@ public class LibraryEditorWindow : EditorWindow {
 		int height = (int)position.height;
 		switch ((State)currentWindow.value)
 		{
+			case State.MISSIONS:
+				missionEditor.DrawWindow(width, height);
+				break;
 			case State.MAPS:
 				mapEditor.DrawWindow(width, height);
 				break;
@@ -116,6 +123,7 @@ public class LibraryEditorWindow : EditorWindow {
 	/// Loads all the libraries for the editors.
 	/// </summary>
 	void LoadLibraries() {
+		missionEditor = new MissionEditorWindow(missionLibrary, missionContainer);
 		mapEditor = new MapEditorWindow(mapLibrary, mapContainer);
 		characterEditor = new CharacterEditorWindow(characterLibrary, characterContainer);
 		classEditor = new ClassEditorWindow(classLibrary, classContainer);
@@ -142,6 +150,7 @@ public class LibraryEditorWindow : EditorWindow {
 		horizontalLine.margin = new RectOffset( 0, 0, 4, 4 );
 		horizontalLine.fixedHeight = 1;
 
+		missionEditor.InitializeWindow();
 		mapEditor.InitializeWindow();
 		characterEditor.InitializeWindow();
 		classEditor.InitializeWindow();

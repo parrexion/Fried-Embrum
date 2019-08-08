@@ -6,7 +6,7 @@ public enum WinCondition { ROUT, SEIZE, BOSS, ESCAPE, DEFEND }
 public enum LoseCondition { NORMAL, SEIZE, PROTECT }
 public enum MapLocation { UNKNOWN = -1, DEBES, GHART, THARSONIS, VILJIA, WALNIA_REX }
 
-[CreateAssetMenu(menuName = "LibraryEntries/MapEntry")]
+[CreateAssetMenu(menuName = "LibraryEntries/Map")]
 public class MapEntry : ScrObjLibraryEntry {
 
 	[Header("Map")]
