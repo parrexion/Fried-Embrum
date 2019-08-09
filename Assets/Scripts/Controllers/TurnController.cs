@@ -19,6 +19,7 @@ public class TurnController : MonoBehaviour {
 	[Header("References")]
 	public BoolVariable lockControls;
 	public ScrObjEntryReference currentMission;
+	public ScrObjEntryReference currentMap;
 	public IntVariable currentTurn;
 	public FactionVariable currentFactionTurn;
 	public ActionModeVariable currentAction;
@@ -89,15 +90,15 @@ public class TurnController : MonoBehaviour {
 		switch (currentState)
 		{
 		case TurnState.INIT:
-			Debug.Log("Show story 1");
+			//Debug.Log("Show story 1");
 			currentState = TurnState.STORY;
 			currentDialogueMode.value = (int)DialogueMode.PRELUDE;
-			currentDialogue.value = ((MapEntry)currentMission.value).preDialogue;
+			currentDialogue.value = ((MapEntry)currentMap.value).preDialogue;
 			startDialogueEvent.Invoke();
 			break;
 		case TurnState.STORY:
-			Debug.Log("Show prep?");
-			if (((MapEntry)currentMission.value).skipBattlePrep) {
+			//Debug.Log("Show prep?");
+			if (((MapEntry)currentMap.value).skipBattlePrep) {
 				currentState = TurnState.INTRO;
 				TriggerNextStep();
 				break;
@@ -106,25 +107,25 @@ public class TurnController : MonoBehaviour {
 			InputDelegateController.instance.TriggerMenuChange(MenuMode.PREP);
 			break;
 		case TurnState.PREP:
-			Debug.Log("Show story 2");
+			//Debug.Log("Show story 2");
 			currentState = TurnState.INTRO;
 			currentDialogueMode.value = (int)DialogueMode.INTRO;
-			currentDialogue.value = ((MapEntry)currentMission.value).introDialogue;
+			currentDialogue.value = ((MapEntry)currentMap.value).introDialogue;
 			startDialogueEvent.Invoke();
 			break;
 		case TurnState.INTRO:
-			Debug.Log("Start game");
+			//Debug.Log("Start game");
 			currentState = TurnState.EVENTS;
 			StartGameSetup();
 			break;
 		case TurnState.ACTION:
 			EndChangeTurn();
-			Debug.Log("Check dialogue");
+			//Debug.Log("Check dialogue");
 			currentState = TurnState.DIALOGUE;
 			checkDialoguesEvent.Invoke();
 			break;
 		case TurnState.DIALOGUE:
-			Debug.Log("Check reinforcements");
+			//Debug.Log("Check reinforcements");
 			currentState = TurnState.REINFORCE;
 			if (currentFactionTurn.value == Faction.ENEMY) {
 				checkReinforcementsEvent.Invoke();
@@ -134,16 +135,16 @@ public class TurnController : MonoBehaviour {
 			}
 			break;
 		case TurnState.REINFORCE:
-			Debug.Log("Check events");
+			//Debug.Log("Check events");
 			currentState = TurnState.EVENTS;
 			checkMapChangeEvent.Invoke();
 			break;
 		case TurnState.EVENTS:
-			Debug.Log("Next turn");
+			//Debug.Log("Next turn");
 			StartCoroutine(DisplayTurnChange(1.5f));
 			break;
 		case TurnState.FINISHED:
-			Debug.Log("Game finished!");
+			//Debug.Log("Game finished!");
 			break;
 		}
 	}
@@ -152,7 +153,7 @@ public class TurnController : MonoBehaviour {
 	/// Starts the game and enables the music and shows the turn change.
 	/// </summary>
 	private void StartGameSetup() {
-		MapEntry map = (MapEntry)currentMission.value;
+		MapEntry map = (MapEntry)currentMap.value;
 		musicFocus.value = true;
 		mainMusic.value = map.playerMusic.clip;
 		subMusic.value = null;
@@ -167,8 +168,7 @@ public class TurnController : MonoBehaviour {
 	private void StartTurn() {
 		if (gameover)
 			return;
-
-		Debug.Log("New turn");
+		
 		currentState = TurnState.ACTION;
 
 		if (currentFactionTurn.value == Faction.ENEMY) {
@@ -252,7 +252,7 @@ public class TurnController : MonoBehaviour {
 		resetSelections.Invoke();
 		sfxQueue.Enqueue(turnChangeFanfare);
 		playSfxEvent.Invoke();
-		MapEntry map = (MapEntry)currentMission.value;
+		MapEntry map = (MapEntry)currentMap.value;
 		mainMusic.value = (currentFactionTurn.value == Faction.ENEMY) ? map.enemyMusic.clip : map.playerMusic.clip;
 		replaceMusicEvent.Invoke();
 
@@ -275,7 +275,7 @@ public class TurnController : MonoBehaviour {
 
 		// Check if any players are alive
 		bool gameFinished = false;
-		MapEntry map = (MapEntry)currentMission.value;
+		MapEntry map = (MapEntry)currentMap.value;
 		// Normal lose condition
 		if (map.loseCondition == LoseCondition.NORMAL) {
 			for (int i = 0; i < playerList.values.Count; i++) {

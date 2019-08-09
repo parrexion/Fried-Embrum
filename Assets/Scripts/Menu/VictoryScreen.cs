@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class VictoryScreen : InputReceiverDelegate {
 
 	public ScrObjEntryReference currentMission;
+	public ScrObjEntryReference currentMap;
 	public IntVariable totalTurns;
 	public IntVariable totalKills;
 	public IntVariable totalDeaths;
@@ -49,7 +50,7 @@ public class VictoryScreen : InputReceiverDelegate {
 	public override void OnOkButton() {
 		//Move to the ending dialogue
 		currentDialogueMode.value = (int)DialogueMode.ENDING;
-		currentDialogue.value = ((MapEntry)currentMission.value).endDialogue;
+		currentDialogue.value = ((MapEntry)currentMap.value).endDialogue;
 		nextLoadState.value = (int)SaveScreenController.NextState.BASE;
 		startDialogueEvent.Invoke();
 	}

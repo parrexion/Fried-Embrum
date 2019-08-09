@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class BattlePrepController : InputReceiverDelegate {
 
-	private enum State { MAIN, CHAR, FORMATION, INVENTORY, OBJECTIVE, PROMPT }
+	private enum State { MAIN, FORMATION, INVENTORY, OBJECTIVE, PROMPT }
 
 	public ScrObjEntryReference currentMapEntry;
 	public PlayerData playerData;
@@ -86,7 +86,6 @@ public class BattlePrepController : InputReceiverDelegate {
 				locked = map.IsLocked(playerData.stats[i].charData)
 			};
 			if (!pc.locked && playerCap > 0) {
-				pc.selected = (playerCap > 0);
 				playerCap--;
 			}
 			prepList.values.Add(pc);
@@ -100,7 +99,6 @@ public class BattlePrepController : InputReceiverDelegate {
 				locked = map.IsLocked(playerData.stats[i].charData)
 			};
 			if (!pc.locked && playerCap > 0) {
-				pc.selected = (playerCap > 0);
 				playerCap--;
 			}
 			prepList.values.Add(pc);
@@ -133,10 +131,6 @@ public class BattlePrepController : InputReceiverDelegate {
 			mainButtons.Move(-1);
 			menuMoveEvent.Invoke();
 		}
-		else if (currentState == State.CHAR) {
-			characterSelect.MoveSelection(-1);
-			menuMoveEvent.Invoke();
-		}
 		else if (currentState == State.INVENTORY) {
 			inventorySelect.MoveSelection(-1);
 			menuMoveEvent.Invoke();
@@ -146,10 +140,6 @@ public class BattlePrepController : InputReceiverDelegate {
 	public override void OnDownArrow() {
 		if (currentState == State.MAIN) {
 			mainButtons.Move(1);
-			menuMoveEvent.Invoke();
-		}
-		else if (currentState == State.CHAR) {
-			characterSelect.MoveSelection(1);
 			menuMoveEvent.Invoke();
 		}
 		else if (currentState == State.INVENTORY) {
@@ -183,14 +173,7 @@ public class BattlePrepController : InputReceiverDelegate {
 	public override void OnOkButton() {
 		if (currentState == State.MAIN) {
 			int mainIndex = mainButtons.GetPosition();
-			if (mainIndex == 0) {
-				currentState = State.CHAR;
-				buttonMenuView.SetActive(false);
-				characterSelectView.SetActive(true);
-				characterSelect.GenerateList();
-				menuAcceptEvent.Invoke();
-			}
-			else if (mainIndex == 1) {
+			if (mainIndex == 1) {
 				currentState = State.FORMATION;
 				InputDelegateController.instance.TriggerMenuChange(MenuMode.FORMATION);
 				mainMenuView.SetActive(false);
@@ -217,15 +200,6 @@ public class BattlePrepController : InputReceiverDelegate {
 				menuAcceptEvent.Invoke();
 			}
 		}
-		else if (currentState == State.CHAR) {
-			bool res = characterSelect.SelectCharacter();
-			if (res) {
-				menuAcceptEvent.Invoke();
-			}
-			else {
-				menuFailEvent.Invoke();
-			}
-		}
 		//else if (currentState == State.FORMATION) { }
 		else if (currentState == State.INVENTORY) {
 			inventorySelect.SelectItem();
@@ -248,17 +222,7 @@ public class BattlePrepController : InputReceiverDelegate {
 	}
 
 	public override void OnBackButton() {
-		if (currentState == State.CHAR) {
-			currentState = State.MAIN;
-			bool res = characterSelect.LeaveMenu();
-			buttonMenuView.SetActive(true);
-			characterSelectView.SetActive(false);
-			if (res) {
-				respawnCharactersEvent.Invoke();
-				menuBackEvent.Invoke();
-			}
-		}
-		else if (currentState == State.INVENTORY) {
+		if (currentState == State.INVENTORY) {
 			if (inventorySelect.DeselectItem()) {
 				buttonMenuView.SetActive(true);
 				inventoryView.SetActive(false);

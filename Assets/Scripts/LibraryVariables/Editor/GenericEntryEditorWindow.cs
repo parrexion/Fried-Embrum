@@ -74,8 +74,8 @@ public abstract class GenericEntryEditorWindow {
 	public void DrawWindow(int screenWidth, int screenHeight) {
 		GUILayout.BeginHorizontal();
 		GUILayout.Label(NameString + " Editor", EditorStyles.boldLabel);
-		if(selIndex != -1) {
-			if(GUILayout.Button("Save " + NameString)) {
+		if (selIndex != -1) {
+			if (GUILayout.Button("Save " + NameString)) {
 				SaveSelectedEntry();
 			}
 		}
@@ -84,12 +84,12 @@ public abstract class GenericEntryEditorWindow {
 		GenerateAreas(screenWidth, screenHeight);
 		DrawBackgrounds();
 		DrawEntryList();
-		if(selIndex != -1)
+		if (selIndex != -1)
 			DrawDisplayWindow();
 	}
 
 	protected void DrawBackgrounds() {
-		if(selectTex == null || dispTex == null)
+		if (selectTex == null || dispTex == null)
 			InitializeWindow();
 		GUI.DrawTexture(selectRect, selectTex);
 		GUI.DrawTexture(dispRect, dispTex);
@@ -102,7 +102,7 @@ public abstract class GenericEntryEditorWindow {
 
 		string oldFilter = filterStr;
 		filterStr = EditorGUILayout.TextField("Filter", filterStr);
-		if(filterStr != oldFilter)
+		if (filterStr != oldFilter)
 			currentEntryList = entryLibrary.GetRepresentations("", filterStr);
 
 		selScrollPos = EditorGUILayout.BeginScrollView(selScrollPos, GUILayout.Width(selectRect.width),
@@ -112,7 +112,7 @@ public abstract class GenericEntryEditorWindow {
 		selIndex = GUILayout.SelectionGrid(selIndex, currentEntryList, 1);
 		EditorGUILayout.EndScrollView();
 
-		if(oldSelected != selIndex) {
+		if (oldSelected != selIndex) {
 			GUI.FocusControl(null);
 			SelectEntry();
 		}
@@ -123,10 +123,10 @@ public abstract class GenericEntryEditorWindow {
 		repColor = EditorGUILayout.ColorField("Display Color", repColor);
 		ExtraEntrySettings();
 
-		if(GUILayout.Button("Create new")) {
+		if (GUILayout.Button("Create new")) {
 			InstansiateEntry();
 		}
-		if(GUILayout.Button("Delete entry")) {
+		if (GUILayout.Button("Delete entry")) {
 			DeleteEntry();
 		}
 		EditorGUIUtility.labelWidth = 0;
@@ -159,9 +159,10 @@ public abstract class GenericEntryEditorWindow {
 
 	protected void SelectEntry() {
 		// Nothing selected
-		if(selIndex == -1) {
+		if (selIndex == -1) {
 			entryValues.ResetValues();
-		} else {
+		}
+		else {
 			// Something selected
 			ScrObjLibraryEntry entry = entryLibrary.GetEntryByIndex(selIndex);
 			entryValues.CopyValues(entry);
@@ -177,8 +178,12 @@ public abstract class GenericEntryEditorWindow {
 
 	protected void InstansiateEntry() {
 		GUI.FocusControl(null);
-		if(entryLibrary.ContainsID(uuid)) {
-			Debug.Log("uuid already exists!");
+		if (string.IsNullOrEmpty(uuid)) {
+			Debug.LogError("uuid is empty!");
+			return;
+		}
+		if (entryLibrary.ContainsID(uuid)) {
+			Debug.LogError("uuid already exists!");
 			return;
 		}
 		ScrObjLibraryEntry entry = CreateInstance;
@@ -186,7 +191,7 @@ public abstract class GenericEntryEditorWindow {
 		entry.uuid = uuid;
 		entry.repColor = repColor;
 		entry.entryName = uuid;
-		string path = "Assets/LibraryData/" + NameString + "/" + uuid + ".asset";
+		string path = "Assets/LibraryData/" + NameString + "/" + NameString + "_" + uuid + ".asset";
 
 		entryLibrary.InsertEntry(entry, 0);
 		Undo.RecordObject(entryLibrary, "Added entry");
@@ -204,7 +209,7 @@ public abstract class GenericEntryEditorWindow {
 	protected void DeleteEntry() {
 		GUI.FocusControl(null);
 		ScrObjLibraryEntry entry = entryLibrary.GetEntryByIndex(selIndex);
-		string path = "Assets/LibraryData/" + NameString + "/" + entry.uuid + ".asset";
+		string path = "Assets/LibraryData/" + NameString + "/" + NameString + "_" + entry.uuid + ".asset";
 
 		entryLibrary.RemoveEntryByIndex(selIndex);
 		Undo.RecordObject(entryLibrary, "Deleted entry");
@@ -215,7 +220,7 @@ public abstract class GenericEntryEditorWindow {
 
 		currentEntryList = entryLibrary.GetRepresentations("", filterStr);
 
-		if(res) {
+		if (res) {
 			Debug.Log("Removed entry: " + entry.uuid);
 			selIndex = -1;
 		}

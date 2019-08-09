@@ -19,18 +19,10 @@ MonoBehaviour:
   sizeX: 24
   sizeY: 16
   mapSprite: {fileID: 2800000, guid: d96350fd6a89b994ab23a164c8a9506f, type: 3}
-  mapLocation: 1
-  mapDescription: We need to help our friends!
   winCondition: 1
   loseCondition: 0
-  reward:
-    money: 1000
-    scrap: 5
-    items: []
+  mapDescription: We need to help our friends!
   skipBattlePrep: 0
-  autoNextChapter: {fileID: 11400000, guid: 0f56603fc1210214b8765fb795b877b6, type: 2}
-  mapDuration: 2
-  unlockDay: 1
   preDialogue: {fileID: 11400000, guid: dfabaf67b57a0284dac50cb991978de5, type: 2}
   introDialogue: {fileID: 11400000, guid: 3487bc3256d035a4cb46c369c0415d7a, type: 2}
   endDialogue: {fileID: 11400000, guid: 6d0039154d618d34cbf2f5bd1f9670c2, type: 2}
@@ -38,13 +30,10 @@ MonoBehaviour:
   enemyMusic: {fileID: 11400000, guid: 2e004d17283fe7d45b7bd70e9ae56cc8, type: 2}
   battleMusic: {fileID: 11400000, guid: 7b17f9dbff54970438f62ab06aa0fef9, type: 2}
   healMusic: {fileID: 11400000, guid: 80c98026ee3b68b49a7cef3731cd2c32, type: 2}
-  spawnPoints:
+  spawnPoints1:
   - x: 0
-    y: 1
-  - x: 1
-    y: 3
-  - x: 3
-    y: 1
+    y: 0
+  spawnPoints2: []
   forcedCharacters:
   - {fileID: 11400000, guid: ebe64c7e451dc494fbc8211be6f10d6a, type: 2}
   lockedCharacters: []
@@ -328,7 +317,10 @@ MonoBehaviour:
     interactType: 1
     health: 30
     dialogue: {fileID: 0}
-    gift: {fileID: 0}
+    gift:
+      money: 0
+      scrap: 0
+      items: []
     ally:
       x: 0
       y: 0
@@ -340,7 +332,10 @@ MonoBehaviour:
     interactType: 3
     health: 0
     dialogue: {fileID: 11400000, guid: fb5247d31c14dc546b044f6714dccd55, type: 2}
-    gift: {fileID: 0}
+    gift:
+      money: 0
+      scrap: 0
+      items: []
     ally:
       x: 0
       y: 0
@@ -354,7 +349,10 @@ MonoBehaviour:
     interactType: 3
     health: 0
     dialogue: {fileID: 11400000, guid: 242045d3d2d827a4293ef77702f8722a, type: 2}
-    gift: {fileID: 11400000, guid: 38fd8b94404c8b14aa921a520fa9a89d, type: 2}
+    gift:
+      money: 0
+      scrap: 0
+      items: []
     ally:
       x: 0
       y: 0
@@ -366,7 +364,10 @@ MonoBehaviour:
     interactType: 3
     health: 0
     dialogue: {fileID: 11400000, guid: 4ca399a4972b5c14fbb5c99c0306417e, type: 2}
-    gift: {fileID: 0}
+    gift:
+      money: 0
+      scrap: 0
+      items: []
     ally:
       x: 0
       y: 0
@@ -378,7 +379,10 @@ MonoBehaviour:
     interactType: 3
     health: 0
     dialogue: {fileID: 11400000, guid: 518bc3f193a675a439e6f4c696cf45a7, type: 2}
-    gift: {fileID: 11400000, guid: 2c6481630a321de4f97f98e24d095e8e, type: 2}
+    gift:
+      money: 0
+      scrap: 0
+      items: []
     ally:
       x: 0
       y: 0
@@ -390,7 +394,10 @@ MonoBehaviour:
     interactType: 3
     health: 0
     dialogue: {fileID: 11400000, guid: e81888ec135add149b578621985bcfe3, type: 2}
-    gift: {fileID: 0}
+    gift:
+      money: 0
+      scrap: 0
+      items: []
     ally:
       x: 0
       y: 0
@@ -402,7 +409,10 @@ MonoBehaviour:
     interactType: 4
     health: 0
     dialogue: {fileID: 0}
-    gift: {fileID: 0}
+    gift:
+      money: 0
+      scrap: 0
+      items: []
     ally:
       x: 0
       y: 0

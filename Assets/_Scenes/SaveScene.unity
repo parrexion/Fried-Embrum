@@ -204,13 +204,31 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  menuFailEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 5b882ed488044f74d92c3818ac29c97b, type: 2}
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  lockControls: {fileID: 11400000, guid: b8d06aee0ad3bce4daa463a8433439f4, type: 2}
   saveFileController: {fileID: 1390417964838664431}
   chapterLibrary: {fileID: 11400000, guid: 39d7402c7da68f84b988205345a2103b, type: 2}
   nextState: {fileID: 11400000, guid: 9b7825b9326414e42a8df295903f802e, type: 2}
-  currentMap: {fileID: 11400000, guid: 188cfd11b445e1244a89510ca126c756, type: 2}
+  currentMission: {fileID: 11400000, guid: a149375abc4af2948b0b40ba31472a06, type: 2}
+  mapIndex: {fileID: 11400000, guid: 85b195634400b964cac3fff2db4f7d42, type: 2}
+  playerData: {fileID: 11400000, guid: cf29fce9ee9388e4290741fe2d10bab5, type: 2}
   currentChapterId: {fileID: 11400000, guid: ea8e97ad79eaebf48a34de3a63caf61a, type: 2}
   currentPlayDays: {fileID: 11400000, guid: 0be785060eb41a44ba8f54f6e31b14e9, type: 2}
-  lockControls: {fileID: 11400000, guid: b8d06aee0ad3bce4daa463a8433439f4, type: 2}
   savePrompt: {fileID: 1390417964838664430}
   stopMusicEvent:
     m_PersistentCalls:

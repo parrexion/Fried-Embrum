@@ -61,7 +61,7 @@ public class EnemyController : MonoBehaviour {
 				continue;
 
 			// Select the next enemy and show its movement
-			Debug.Log(enemyList.values[i].gameObject.name + " turn");
+			//Debug.Log(enemyList.values[i].gameObject.name + " turn");
 			selectCharacter.value = enemyList.values[i];
 			selectTile.value = selectCharacter.value.currentTile;
 			enemy = (NPCMove)enemyList.values[i];
@@ -73,7 +73,6 @@ public class EnemyController : MonoBehaviour {
 			// Calculate the tile to move towards and wait for the character to move there if any
 			MapTile moveTile = enemy.CalculateMovement();
 			if (moveTile == null) {
-				Debug.Log("No tiles!");
 				enemy.EndMovement();
 				waitForNextAction = false;
 			}

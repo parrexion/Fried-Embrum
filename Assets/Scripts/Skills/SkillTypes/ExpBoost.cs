@@ -6,7 +6,6 @@ using UnityEngine;
 public class ExpBoost : CharacterSkill {
 
     public override int EditValue(int value, TacticsMove user) {
-		Debug.Log(percent.ToString(), this);
         return Mathf.FloorToInt(value * percent);
     }
 }

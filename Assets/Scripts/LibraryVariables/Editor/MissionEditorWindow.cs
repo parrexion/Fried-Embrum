@@ -36,9 +36,9 @@ public class MissionEditorWindow : GenericEntryEditorWindow {
 		missionValues.duration = EditorGUILayout.IntField("Map Duration", missionValues.duration);
 		missionValues.unlockDay = EditorGUILayout.IntField("Unlocked on day", missionValues.unlockDay);
 		GUILayout.EndHorizontal();
-		
+
 		GUILayout.Space(10);
-		
+
 		GUILayout.Label("Rewards", EditorStyles.boldLabel);
 		GUILayout.BeginHorizontal();
 		missionValues.reward.money = EditorGUILayout.IntField("Money", missionValues.reward.money);
@@ -62,7 +62,7 @@ public class MissionEditorWindow : GenericEntryEditorWindow {
 
 		GUILayout.Space(20);
 
-		GUILayout.Label("Squads", EditorStyles.boldLabel);
+		GUILayout.Label("Maps", EditorStyles.boldLabel);
 
 		for (int i = 0; i < missionValues.maps.Count; i++) {
 			LibraryEditorWindow.HorizontalLine(Color.black);
@@ -79,24 +79,19 @@ public class MissionEditorWindow : GenericEntryEditorWindow {
 				continue;
 
 			MapEntry map = missionValues.maps[i];
-			if (map.spawnPoints2.Count == 0) {
-				int size = map.spawnPoints1.Count;
-				int selected = (missionValues.squads[i].squad2Size > 0) ? 2 : 1;
-				GUILayout.BeginHorizontal();
-				selected = EditorGUILayout.IntPopup(selected, squadSelectionStr, squadSelectionInt);
-				missionValues.squads[i].squad1Size = (selected == 1) ? size : 0;
-				missionValues.squads[i].squad2Size = (selected == 2) ? size : 0;
-				GUILayout.Label("Squad size: " + size);
-				GUILayout.EndHorizontal();
-			}
-			else {
-				missionValues.squads[i].squad1Size = map.spawnPoints1.Count;
-				missionValues.squads[i].squad2Size = map.spawnPoints2.Count;
-				GUILayout.BeginHorizontal();
+			missionValues.squads[i].squad1Size = map.spawnPoints1.Count;
+			missionValues.squads[i].squad2Size = map.spawnPoints2.Count;
+			GUILayout.BeginHorizontal();
+			if (missionValues.squads[i].squad1Size > 0) {
 				GUILayout.Label("Squad 1 size: " + missionValues.squads[i].squad1Size);
-				GUILayout.Label("Squad 2 size: " + missionValues.squads[i].squad2Size);
-				GUILayout.EndHorizontal();
 			}
+			if (missionValues.squads[i].squad2Size > 0) {
+				GUILayout.Label("Squad 2 size: " + missionValues.squads[i].squad2Size);
+			}
+			if (missionValues.squads[i].squad1Size == 0 && missionValues.squads[i].squad2Size == 0) {
+				GUILayout.Label("No spawn points added!", EditorStyles.boldLabel);
+			}
+			GUILayout.EndHorizontal();
 		}
 		LibraryEditorWindow.HorizontalLine(Color.black);
 		if (GUILayout.Button("+")) {

@@ -10,12 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 23faaaeffbc68194c8a5681b1182ac97, type: 3}
-  m_Name: asdf
+  m_Name: Mission_FirstMission
   m_EditorClassIdentifier: 
-  uuid: asdf
-  entryName: asdf
-  repColor: {r: 0, g: 0, b: 0, a: 1}
+  uuid: FirstMission
+  entryName: FirstMission
+  repColor: {r: 0.0744927, g: 0.509434, b: 0.108932704, a: 1}
   tag: 
+  mapLocation: 1
+  mapDescription: The colony is under attack! Good thing you guys were doing your
+    guard jobs properly.
   maps:
   - {fileID: 11400000, guid: 8a7a41e0ecb60c44d9087d38d5c7a20d, type: 2}
-  - {fileID: 11400000, guid: 2de2a75e7ea063945b028444cb2291cd, type: 2}
+  squads:
+  - squad1Size: 2
+    squad2Size: 0
+  duration: 1
+  unlockDay: 0
+  reward:
+    money: 2500
+    scrap: 25
+    items:
+    - {fileID: 11400000, guid: 2c6481630a321de4f97f98e24d095e8e, type: 2}

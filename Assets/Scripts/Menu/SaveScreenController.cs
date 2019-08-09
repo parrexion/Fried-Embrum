@@ -7,14 +7,16 @@ public class SaveScreenController : InputReceiverDelegate {
 
 	public enum NextState { MAIN, BASE, LOADSCREEN }
 
+	public BoolVariable lockControls;
 	public SaveFileController saveFileController;
 	public ScrObjLibraryVariable chapterLibrary;
 	public IntVariable nextState;
 	public ScrObjEntryReference currentMission;
 	public IntVariable mapIndex;
+
+	public PlayerData playerData;
 	public StringVariable currentChapterId;
 	public IntVariable currentPlayDays;
-	public BoolVariable lockControls;
 
 	[Header("Save Popup")]
 	public MyPrompt savePrompt;
@@ -34,6 +36,12 @@ public class SaveScreenController : InputReceiverDelegate {
 		MissionEntry mission = (MissionEntry)currentMission.value;
 		mapIndex.value++;
 		if (mapIndex.value >= mission.maps.Count) {
+			for (int i = 0; i < playerData.missions.Count; i++) {
+				if (playerData.missions[i].mission.uuid == mission.uuid) {
+					playerData.missions[i].cleared = true;
+					break;
+				}
+			}
 			currentPlayDays.value += mission.duration;
 			currentChapterId.value = "";
 		}

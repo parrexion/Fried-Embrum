@@ -324,7 +324,6 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// <param name="target"></param>
 	public void Attack(MapTile target) {
 		lockControls.value = true;
-		Debug.Log("Fighting with weapon no. " + battleWeaponIndex.value);
 		inventory.EquipItem(battleWeaponIndex.value);
 		battleWeaponIndex.value = 0;
 		characterClicked.Invoke();

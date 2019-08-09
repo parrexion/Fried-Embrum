@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class PrepCharacterSelect : MonoBehaviour {
-
+	/*
 	public PlayerData playerData;
 	public PrepListVariable prepList;
 	public ScrObjEntryReference currentMap;
@@ -88,4 +88,5 @@ public class PrepCharacterSelect : MonoBehaviour {
 		}
 		return selected;
 	}
+	*/
 }

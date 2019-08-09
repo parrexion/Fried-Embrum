@@ -218,7 +218,6 @@ public class StatsContainer {
 	}
 
 	public void ClearBoosts(bool isStartTurn) {
-		Debug.Log("Clearing boosts  " + boosts.Count);
 		for (int i = 0; i < boosts.Count; i++) {
 			if (isStartTurn)
 				boosts[i].StartTurn();

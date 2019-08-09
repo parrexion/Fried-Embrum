@@ -10,6 +10,9 @@ public class BaseMission : InputReceiverDelegate {
 	public SquadSelectionController squadSelection;
 	private State state = State.INFO;
 
+	public ScrObjEntryReference currentMission;
+	public StringVariable currentChapterId;
+
 	[Header("Views")]
 	public GameObject infoView;
 	public GameObject squadView;
@@ -17,7 +20,6 @@ public class BaseMission : InputReceiverDelegate {
 	[Header("Mission Prompt")]
 	public MyPrompt startPrompt;
 	public UnityEvent startMissionEvent;
-
 
 
 	private void Start() {
@@ -47,8 +49,9 @@ public class BaseMission : InputReceiverDelegate {
 			if (squadSelection.LaunchMission()) {
 				state = State.PROMPT;
 				startPrompt.ShowYesNoPopup("Start mission?", false);
-					menuAcceptEvent.Invoke();
-			} else {
+				menuAcceptEvent.Invoke();
+			}
+			else {
 				if (squadSelection.Select()) {
 					menuAcceptEvent.Invoke();
 				}
@@ -59,6 +62,7 @@ public class BaseMission : InputReceiverDelegate {
 		}
 		else if (state == State.PROMPT) {
 			if (startPrompt.Click(true) == MyPrompt.Result.OK1) {
+				currentChapterId.value = ((MissionEntry)currentMission.value).maps[0].uuid;
 				menuAcceptEvent.Invoke();
 				startMissionEvent.Invoke();
 			}

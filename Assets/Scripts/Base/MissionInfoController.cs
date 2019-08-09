@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class MissionInfoController : MonoBehaviour {
 	
 	public PlayerData playerData;
-	public StringVariable currentChapterId;
+	public ScrObjEntryReference currentMission;
 	public IntVariable locationIndex;
 	public IntVariable currentDay;
 	public MyButtonList buttons;
@@ -52,7 +52,7 @@ public class MissionInfoController : MonoBehaviour {
 	}
 
 	public bool Select() {
-		currentChapterId.value = availableMaps[buttons.GetPosition()].mission.uuid;
+		currentMission.value = availableMaps[buttons.GetPosition()].mission;
 		return true;
 	}
 	

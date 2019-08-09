@@ -5,6 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "LibraryEntries/Mission")]
 public class MissionEntry : ScrObjLibraryEntry {
 
+	[System.Serializable]
 	public class SquadGroup {
 		public int squad1Size;
 		public int squad2Size;
@@ -27,6 +28,7 @@ public class MissionEntry : ScrObjLibraryEntry {
 
 
 	public override void ResetValues() {
+		base.ResetValues();
 		mapLocation = MapLocation.UNKNOWN;
 		mapDescription = "";
 
@@ -40,6 +42,7 @@ public class MissionEntry : ScrObjLibraryEntry {
 	}
 
 	public override void CopyValues(ScrObjLibraryEntry other) {
+		base.CopyValues(other);
 		MissionEntry mission = (MissionEntry)other;
 
 		mapLocation = mission.mapLocation;
@@ -70,4 +73,37 @@ public class MissionEntry : ScrObjLibraryEntry {
 		squads.RemoveAt(index);
 	}
 
+	public int Squad1Size() {
+		int smallest = 100;
+		for (int i = 0; i < squads.Count; i++) {
+			if (squads[i].squad1Size > 0)
+				smallest = Mathf.Min(smallest, squads[i].squad1Size);
+		}
+		return (smallest == 100) ? 0 : smallest;
+	}
+
+	public int Squad2Size() {
+		int smallest = 100;
+		for (int i = 0; i < squads.Count; i++) {
+			if (squads[i].squad2Size > 0)
+				smallest = Mathf.Min(smallest, squads[i].squad2Size);
+		}
+		return (smallest == 100) ? 0 : smallest;
+	}
+
+	public bool IsCharacterForced(CharData character) {
+		for (int i = 0; i < maps.Count; i++) {
+			if (maps[i].IsForced(character))
+				return true;
+		}
+		return false;
+	}
+
+	public bool IsCharacterLocked(CharData character) {
+		for (int i = 0; i < maps.Count; i++) {
+			if (maps[i].IsLocked(character))
+				return true;
+		}
+		return false;
+	}
 }

@@ -26,8 +26,6 @@ public class SaveController : MonoBehaviour {
 	}
 	#endregion
 
-	public ScrObjEntryReference currentMap;
-	public ScrObjEntryReference currentDialogue;
 	public PlayerData playerData;
 	public IntVariable saveIndex;
 
@@ -37,6 +35,11 @@ public class SaveController : MonoBehaviour {
 	public IntVariable[] simplePlayTimes;
 
 	[Header("Current Data")]
+	public ScrObjEntryReference currentMission;
+	public ScrObjEntryReference currentMap;
+	public ScrObjEntryReference currentDialogue;
+	public PrepListVariable squad1;
+	public PrepListVariable squad2;
 	public StringVariable currentChapterId;
 	public IntVariable currentTotalDays;
 	public IntVariable currentPlayTime;
@@ -249,7 +252,6 @@ public class SaveController : MonoBehaviour {
 			playerData.inventory.Add(new InventoryContainer(itemLibrary, loadedData.characters[i], playerData.upgrader));
 			playerData.skills.Add(new SkillsContainer(skillLibrary, loadedData.characters[i]));
 		}
-		Debug.Log("Successfully loaded " + loadedData.characters.Count + " characters");
 		for (int i = 0; i < loadedData.items.Count; i++) {
 			ItemEntry item = (ItemEntry)itemLibrary.GetEntry(loadedData.items[i].id);
 			playerData.items.Add(new InventoryItem(item, loadedData.items[i].charges));

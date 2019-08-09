@@ -22300,26 +22300,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 1703260066666274981, guid: 2fbd8db6ec9acb54a9ef3c12d61ef84e,
-        type: 3}
-      propertyPath: m_Layer
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2851499356494787521, guid: 2fbd8db6ec9acb54a9ef3c12d61ef84e,
-        type: 3}
-      propertyPath: m_Layer
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1327240730758872586, guid: 2fbd8db6ec9acb54a9ef3c12d61ef84e,
-        type: 3}
-      propertyPath: m_havePropertiesChanged
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1327240730758872586, guid: 2fbd8db6ec9acb54a9ef3c12d61ef84e,
-        type: 3}
-      propertyPath: m_isInputParsingRequired
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2050651191223087694, guid: 2fbd8db6ec9acb54a9ef3c12d61ef84e,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -22419,6 +22399,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.x
       value: 102.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1703260066666274981, guid: 2fbd8db6ec9acb54a9ef3c12d61ef84e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2851499356494787521, guid: 2fbd8db6ec9acb54a9ef3c12d61ef84e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1327240730758872586, guid: 2fbd8db6ec9acb54a9ef3c12d61ef84e,
+        type: 3}
+      propertyPath: m_havePropertiesChanged
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1327240730758872586, guid: 2fbd8db6ec9acb54a9ef3c12d61ef84e,
+        type: 3}
+      propertyPath: m_isInputParsingRequired
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2fbd8db6ec9acb54a9ef3c12d61ef84e, type: 3}
@@ -23375,7 +23375,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerData: {fileID: 11400000, guid: cf29fce9ee9388e4290741fe2d10bab5, type: 2}
-  currentMap: {fileID: 11400000, guid: 188cfd11b445e1244a89510ca126c756, type: 2}
+  currentMission: {fileID: 11400000, guid: a149375abc4af2948b0b40ba31472a06, type: 2}
   squadLists:
   - {fileID: 11400000, guid: 1babe3dad7c399541ad9241c9f16d121, type: 2}
   - {fileID: 11400000, guid: 8918db7c8316b2048968883d5e79479a, type: 2}
@@ -30032,7 +30032,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerData: {fileID: 11400000, guid: cf29fce9ee9388e4290741fe2d10bab5, type: 2}
-  currentChapterId: {fileID: 11400000, guid: ea8e97ad79eaebf48a34de3a63caf61a, type: 2}
+  currentMission: {fileID: 11400000, guid: a149375abc4af2948b0b40ba31472a06, type: 2}
   locationIndex: {fileID: 11400000, guid: 74bf53fe3eb262d49ba14eea0edec010, type: 2}
   currentDay: {fileID: 11400000, guid: 0be785060eb41a44ba8f54f6e31b14e9, type: 2}
   buttons: {fileID: 775644578}
@@ -48152,6 +48152,8 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   missionInfo: {fileID: 1182526871}
   squadSelection: {fileID: 918647553}
+  currentMission: {fileID: 11400000, guid: a149375abc4af2948b0b40ba31472a06, type: 2}
+  currentChapterId: {fileID: 11400000, guid: ea8e97ad79eaebf48a34de3a63caf61a, type: 2}
   infoView: {fileID: 1182526869}
   squadView: {fileID: 918647551}
   startPrompt: {fileID: 166481721}
@@ -49266,26 +49268,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 1703260066666274981, guid: 2fbd8db6ec9acb54a9ef3c12d61ef84e,
-        type: 3}
-      propertyPath: m_Layer
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2851499356494787521, guid: 2fbd8db6ec9acb54a9ef3c12d61ef84e,
-        type: 3}
-      propertyPath: m_Layer
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1327240730758872586, guid: 2fbd8db6ec9acb54a9ef3c12d61ef84e,
-        type: 3}
-      propertyPath: m_havePropertiesChanged
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1327240730758872586, guid: 2fbd8db6ec9acb54a9ef3c12d61ef84e,
-        type: 3}
-      propertyPath: m_isInputParsingRequired
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2050651191223087694, guid: 2fbd8db6ec9acb54a9ef3c12d61ef84e,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -49385,6 +49367,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.x
       value: 102.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1703260066666274981, guid: 2fbd8db6ec9acb54a9ef3c12d61ef84e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2851499356494787521, guid: 2fbd8db6ec9acb54a9ef3c12d61ef84e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1327240730758872586, guid: 2fbd8db6ec9acb54a9ef3c12d61ef84e,
+        type: 3}
+      propertyPath: m_havePropertiesChanged
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1327240730758872586, guid: 2fbd8db6ec9acb54a9ef3c12d61ef84e,
+        type: 3}
+      propertyPath: m_isInputParsingRequired
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2fbd8db6ec9acb54a9ef3c12d61ef84e, type: 3}

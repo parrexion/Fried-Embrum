@@ -85,7 +85,7 @@ public class MapCreator : MonoBehaviour {
 		cursorMoveEvent.Invoke();
 		SpawnPlayers();
 		SpawnEnemies();
-		Debug.Log("Finished creating map");
+		Debug.Log("Finished spawning and creating map");
 	}
 
 	/// <summary>
@@ -188,7 +188,7 @@ public class MapCreator : MonoBehaviour {
 		for (int i = 0; i < map.spawnPoints1.Count; i++) {
 			Position pos = map.spawnPoints1[i];
 
-			if (prepPos >= prepList1.values.Count || !prepList1.values[prepPos].selected) {
+			if (prepPos >= prepList1.values.Count) {
 				battleMap.GetTile(pos.x, pos.y).selectable = true;
 				continue;
 			}
@@ -206,7 +206,7 @@ public class MapCreator : MonoBehaviour {
 		for (int i = 0; i < map.spawnPoints2.Count; i++) {
 			Position pos = map.spawnPoints2[i];
 
-			if (prepPos >= prepList2.values.Count || !prepList2.values[prepPos].selected) {
+			if (prepPos >= prepList2.values.Count) {
 				battleMap.GetTile(pos.x, pos.y).selectable = true;
 				continue;
 			}
@@ -315,7 +315,6 @@ public class MapCreator : MonoBehaviour {
 	/// Is triggered by event and checks the map to see if any reinforcements should be spawned.
 	/// </summary>
 	public void SpawnReinforcements() {
-		Debug.Log("Show some reinforcements!");
 		StartCoroutine(SpawnReinforcementsLoop());
 	}
 
@@ -355,7 +354,6 @@ public class MapCreator : MonoBehaviour {
 				}
 			}
 		}
-		Debug.Log("Check reinforcements - DONE   " + currentTurn.value);
 		nextTurnStateEvent.Invoke();
 		yield break;
 	}
@@ -375,7 +373,6 @@ public class MapCreator : MonoBehaviour {
 				return;
 			}
 		}
-		Debug.Log("Check dialogues - DONE");
 		nextTurnStateEvent.Invoke();
 	}
 
@@ -387,12 +384,10 @@ public class MapCreator : MonoBehaviour {
 		for (int i = 0; i < map.turnEvents.Count; i++) {
 			TurnEvent pos = map.turnEvents[i];
 			if (currentTurn.value == pos.turn && currentFaction.value == pos.factionTurn && pos.type == TurnEventType.MAPCHANGE) {
-				Debug.Log("It's time!");
 				MapTile tile = battleMap.GetTile(pos.x, pos.y);
 				tile.SetTerrain(pos.changeTerrain);
 			}
 		}
-		Debug.Log("Check events - DONE");
 		nextTurnStateEvent.Invoke();
 	}
 

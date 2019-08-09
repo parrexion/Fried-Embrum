@@ -226,7 +226,6 @@ public class BattleContainer : InputReceiverDelegate {
 		yield return new WaitForSeconds(2f * slowGameSpeed.value / currentGameSpeed.value);
 
 		for (int i = 0; i < actions.Count; i++) {
-			Debug.Log("Next action");
 			BattleAction act = actions[i];
 			if (act.type == BattleAction.Type.DAMAGE && act.attacker.inventory.GetFirstUsableItemTuple(ItemCategory.WEAPON).currentCharges <= 0) {
 				continue; //Broken weapon
@@ -410,7 +409,7 @@ public class BattleContainer : InputReceiverDelegate {
 		}
 
 		if (player == null) {
-			Debug.Log("Nothing to give exp for");
+			//Debug.Log("Nothing to give exp for");
 			yield return new WaitForSeconds(0.5f * slowGameSpeed.value / currentGameSpeed.value);
 			yield break;
 		}
@@ -420,7 +419,6 @@ public class BattleContainer : InputReceiverDelegate {
 		if (exp > 0) {
 			expMeter.gameObject.SetActive(true);
 			expMeter.currentExp = player.stats.currentExp;
-			Debug.Log("Exp is currently: " + player.stats.currentExp);
 			yield return new WaitForSeconds(0.5f * slowGameSpeed.value / currentGameSpeed.value);
 			sfxQueue.Enqueue(levelupFill);
 			playSfxEvent.Invoke();
@@ -433,7 +431,6 @@ public class BattleContainer : InputReceiverDelegate {
 					yield return new WaitForSeconds(1f * slowGameSpeed.value / currentGameSpeed.value);
 					expMeter.gameObject.SetActive(false);
 					levelupScript.SetupStats(player.stats, true);
-					Debug.Log("LEVELUP!");
 					player.stats.GainLevel();
 					sfxQueue.Enqueue(levelupFanfare);
 					playSfxEvent.Invoke();
@@ -448,7 +445,6 @@ public class BattleContainer : InputReceiverDelegate {
 			yield return new WaitForSeconds(0.5f * slowGameSpeed.value / currentGameSpeed.value);
 			expMeter.gameObject.SetActive(false);
 			player.stats.currentExp = expMeter.currentExp;
-			Debug.Log("Exp is now: " + player.stats.currentExp);
 		}
 	}
 

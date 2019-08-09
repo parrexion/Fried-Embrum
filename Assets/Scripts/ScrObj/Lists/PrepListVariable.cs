@@ -27,9 +27,6 @@ public class PrepListVariable : ScriptableObject {
 			if (x.forced != y.forced) {
 				return (x.forced) ? XIsBetter : YIsBetter;
 			}
-			else if (x.selected != y.selected) {
-				return (x.selected) ? XIsBetter : YIsBetter;
-			}
 			else if (x.locked != y.locked) {
 				return (!x.locked) ? XIsBetter : YIsBetter;
 			}

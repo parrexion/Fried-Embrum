@@ -36,7 +36,6 @@ public class PrepCharacterEntry : ListEntry {
 		hp.text = stats.hp.ToString();
 
 		entryName.color = (prep.forced) ? Color.green : Color.black;
-		SetDark(!prep.selected && !prep.forced);
 	}
 
 }

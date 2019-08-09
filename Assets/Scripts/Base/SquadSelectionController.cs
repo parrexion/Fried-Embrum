@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class SquadSelectionController : MonoBehaviour {
 
 	public PlayerData playerData;
-	public ScrObjEntryReference currentMap;
+	public ScrObjEntryReference currentMission;
 
 	public PrepListVariable[] squadLists;
 	public GameObject buttonHighlight;
@@ -31,16 +31,19 @@ public class SquadSelectionController : MonoBehaviour {
 	}
 
 	public void ResetLists() {
+		MissionEntry mission = (MissionEntry)currentMission.value;
 		selectionX = selectionY = 0;
 		selectMode = false;
-
-		MapEntry map = (MapEntry)currentMap.value;
+		squadLimits[1] = mission.Squad1Size();
+		squadLimits[2] = mission.Squad2Size();
+		squadCount = (squadLimits[2] > 0) ? 2 : 1;
 		squadLists[0].ResetData();
+
 		for (int i = 0; i < playerData.stats.Count; i++) {
 			PrepCharacter pc = new PrepCharacter {
 				index = i,
-				forced = map.IsForced(playerData.stats[i].charData),
-				locked = map.IsLocked(playerData.stats[i].charData)
+				forced = mission.IsCharacterForced(playerData.stats[i].charData),
+				locked = mission.IsCharacterLocked(playerData.stats[i].charData)
 			};
 			squadLists[0].values.Add(pc);
 		}
