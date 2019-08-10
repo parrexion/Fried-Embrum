@@ -6,13 +6,16 @@ using UnityEngine.UI;
 
 public class MissionInfoController : MonoBehaviour {
 	
+	public ScrObjLibraryVariable missionLibrary;
 	public PlayerData playerData;
 	public ScrObjEntryReference currentMission;
 	public IntVariable locationIndex;
 	public IntVariable currentDay;
 	public MyButtonList buttons;
 
-	private List<MissionContainer> availableMaps = new List<MissionContainer>();
+	private List<MissionEntry> availableMaps = new List<MissionEntry>();
+
+	public Text currentDayText;
 
 	[Header("Planets")]
 	public Image planetImage;
@@ -31,13 +34,20 @@ public class MissionInfoController : MonoBehaviour {
 
 	public void SetupList() {
 		buttons.ResetButtons();
-		availableMaps = playerData.missions.FindAll(m => !m.cleared && m.mission.unlockDay <= currentDay.value);
+		availableMaps.Clear();
+		for (int i = 0; i < missionLibrary.Size(); i++) {
+			MissionEntry mission = (MissionEntry)missionLibrary.GetEntryByIndex(i);
+			MissionProgress progress = playerData.GetMissionProgress(mission.uuid);
+			if (!progress.cleared && mission.unlockDay <= currentDay.value) {
+				availableMaps.Add(mission);
+			}
+		}
 		for (int i = 0; i < availableMaps.Count; i++) {
-			buttons.AddButton(availableMaps[i].mission.entryName);
+			buttons.AddButton(availableMaps[i].entryName);
 		}
 
 		buttons.ForcePosition(0);
-		locationIndex.value = (int)availableMaps[0].mission.mapLocation;
+		locationIndex.value = (int)availableMaps[0].mapLocation;
 		missionChangedEvent.Invoke();
 		ShowMissionInfo();
 	}
@@ -46,13 +56,13 @@ public class MissionInfoController : MonoBehaviour {
 		int prevPos = buttons.GetPosition();
 		int newPos = buttons.Move(dir);
 		ShowMissionInfo();
-		locationIndex.value = (int)availableMaps[newPos].mission.mapLocation;
+		locationIndex.value = (int)availableMaps[newPos].mapLocation;
 		missionChangedEvent.Invoke();
 		return (prevPos != newPos);
 	}
 
 	public bool Select() {
-		currentMission.value = availableMaps[buttons.GetPosition()].mission;
+		currentMission.value = availableMaps[buttons.GetPosition()];
 		return true;
 	}
 	
@@ -61,7 +71,9 @@ public class MissionInfoController : MonoBehaviour {
 		if (currentIndex == -1)
 			return;
 
-		MissionEntry mission = availableMaps[currentIndex].mission;
+		currentDayText.text = "Day:  " + currentDay.value;
+
+		MissionEntry mission = availableMaps[currentIndex];
 		missionName.text = mission.entryName;
 		missionDesc.text = mission.mapDescription;
 

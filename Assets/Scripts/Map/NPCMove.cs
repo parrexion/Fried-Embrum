@@ -33,7 +33,7 @@ public class NPCMove : TacticsMove {
 	/// <summary>
 	/// Additional setup for enemy characters.
 	/// </summary>
-	protected override void SetupLists() {
+	protected override void ExtraSetup() {
 		bossCrest.enabled = (aggroType == AggroType.BOSS);
 
 		enemyList.values.Add(this);

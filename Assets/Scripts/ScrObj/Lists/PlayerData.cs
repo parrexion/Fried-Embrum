@@ -18,7 +18,7 @@ public class PlayerData : ScriptableObject {
 	public UpgradeCalculator upgrader = new UpgradeCalculator();
 
 	// Missions
-	public List<MissionContainer> missions = new List<MissionContainer>();
+	public List<MissionProgress> missions = new List<MissionProgress>();
 
 
 	public void ResetData() {
@@ -31,12 +31,30 @@ public class PlayerData : ScriptableObject {
 
 		upgrader = new UpgradeCalculator();
 
-		missions = new List<MissionContainer>();
+		missions = new List<MissionProgress>();
 	}
 
 	public void UpdateUpgrades() {
 		for (int i = 0; i < inventory.Count; i++) {
 			inventory[i].RefreshUpgrades(upgrader);
 		}
+	}
+
+	public void AddNewPlayer(TacticsMove player) {
+		stats.Add(player.stats);
+		inventory.Add(player.inventory);
+		skills.Add(player.skills);
+		baseInfo.Add(new SupportContainer(null));
+	}
+
+	public MissionProgress GetMissionProgress(string uuid) {
+		for (int i = 0; i < missions.Count; i++) {
+			if (missions[i].uuid == uuid) {
+				return missions[i];
+			}
+		}
+		MissionProgress progress = new MissionProgress(uuid);
+		missions.Add(progress);
+		return progress;
 	}
 } 

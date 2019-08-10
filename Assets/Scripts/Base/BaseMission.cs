@@ -12,6 +12,7 @@ public class BaseMission : InputReceiverDelegate {
 
 	public ScrObjEntryReference currentMission;
 	public StringVariable currentChapterId;
+	public IntVariable mapIndex;
 
 	[Header("Views")]
 	public GameObject infoView;
@@ -63,6 +64,7 @@ public class BaseMission : InputReceiverDelegate {
 		else if (state == State.PROMPT) {
 			if (startPrompt.Click(true) == MyPrompt.Result.OK1) {
 				currentChapterId.value = ((MissionEntry)currentMission.value).maps[0].uuid;
+				mapIndex.value = 0;
 				menuAcceptEvent.Invoke();
 				startMissionEvent.Invoke();
 			}

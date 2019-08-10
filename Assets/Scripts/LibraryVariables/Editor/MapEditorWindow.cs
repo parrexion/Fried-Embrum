@@ -363,6 +363,11 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 			pos.y = EditorGUILayout.IntField("Y", pos.y, GUILayout.Width(90));
 			EditorGUIUtility.labelWidth = 70;
 			pos.faction = (Faction)EditorGUILayout.EnumPopup("Faction", pos.faction);
+			if (pos.faction == Faction.PLAYER) {
+				EditorGUIUtility.labelWidth = 40;
+				pos.joiningSquad = EditorGUILayout.IntField("Squad", pos.joiningSquad, GUILayout.Width(80));
+				EditorGUIUtility.labelWidth = 70;
+			}
 			GUILayout.EndHorizontal();
 
 			GUILayout.BeginHorizontal();

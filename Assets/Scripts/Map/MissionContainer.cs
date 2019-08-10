@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class MissionContainer {
+public class MissionProgress {
 
-	public MissionEntry mission;
+	public string uuid;
 	public bool cleared;
 
 
-	public MissionContainer(MissionEntry mission, bool cleared = false) {
-		this.mission = mission;
+	public MissionProgress(string missionUuid, bool cleared = false) {
+		this.uuid = missionUuid;
 		this.cleared = cleared;
 	}
 }

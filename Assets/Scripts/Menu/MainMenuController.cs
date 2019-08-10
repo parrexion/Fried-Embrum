@@ -9,7 +9,6 @@ public class MainMenuController : InputReceiverDelegate {
 	public HowToPlayController howTo;
 	public SaveFileController saveFileController;
 	public OptionsController optionsController;
-	public MapInfoListVariable chapterList;
 	public BoolVariable lockControls;
 
 	[Header("Views")]
@@ -18,7 +17,7 @@ public class MainMenuController : InputReceiverDelegate {
 	public GameObject changelogView;
 
 	[Header("Current Data")]
-	public StringVariable currentChapterIndex;
+	public StringVariable loadMapID;
 	public IntVariable currentTotalDays;
 	public IntVariable currentPlayTime;
 
@@ -34,13 +33,17 @@ public class MainMenuController : InputReceiverDelegate {
 
 	[Header("New Game Data")]
 	public SaveController saveController;
-	public MapEntry firstMission;
+	public ScrObjEntryReference currentMission;
+	public IntVariable mapIndex;
+	public PrepListVariable squad1;
+	public PrepListVariable squad2;
 	public PlayerData playerData;
 	public ClassWheel classWheel;
+	public MissionEntry startMission;
 	public PlayerPosition[] startingCharacters;
 	public ItemEntry[] startItems;
 	public UpgradeEntry[] startUpgrade;
-	public MissionEntry startMission;
+	public MissionEntry[] otherMissions;
 
 	public UnityEvent saveGameEvent;
 
@@ -61,9 +64,8 @@ public class MainMenuController : InputReceiverDelegate {
 
 		currentState = State.MAIN;
 
-		currentChapterIndex.value = "";
-		currentTotalDays.value = 0;
 		lockControls.value = false;
+		currentTotalDays.value = 0;
 		startMenuView.SetActive(true);
 		saveView.SetActive(false);
 		changelogView.SetActive(false);
@@ -79,7 +81,6 @@ public class MainMenuController : InputReceiverDelegate {
 
 	private void NewgameClicked() {
 		currentState = State.CONTROLS;
-		currentTotalDays.value = 0;
 		startMenuView.SetActive(false);
 		howTo.UpdateState(true);
 	}
@@ -117,14 +118,19 @@ public class MainMenuController : InputReceiverDelegate {
 	/// Called when starting a new game. Sets the starting values.
 	/// </summary>
 	private void NewGameClicked() {
-		currentChapterIndex.value = firstMission.uuid;
+		currentMission.value = startMission;
+		mapIndex.value = 0;
+		loadMapID.value = startMission.maps[0].uuid;
 		currentPlayTime.value = 0;
 		saveController.ResetCurrentData();
+		squad1.values.Clear();
+		squad2.values.Clear();
 		for (int i = 0; i < startingCharacters.Length; i++) {
 			playerData.stats.Add(new StatsContainer(startingCharacters[i]));
 			playerData.inventory.Add(new InventoryContainer(classWheel.GetWpnSkillFromLevel(startingCharacters[i].charData.startClassLevels), startingCharacters[i].inventory));
 			playerData.skills.Add(new SkillsContainer(classWheel.GetSkillsFromLevel(startingCharacters[i].charData.startClassLevels, startingCharacters[i].charData.startClass, startingCharacters[i].level)));
 			playerData.baseInfo.Add(new SupportContainer(null));
+			squad1.values.Add(new PrepCharacter(i));
 		}
 		for (int i = 0; i < startItems.Length; i++) {
 			playerData.items.Add(new InventoryItem(startItems[i]));
@@ -132,7 +138,9 @@ public class MainMenuController : InputReceiverDelegate {
 		for (int i = 0; i < startUpgrade.Length; i++) {
 			playerData.upgrader.AddEntry(new UpgradeItem(startUpgrade[i]));
 		}
-		playerData.missions.Add(new MissionContainer(startMission));
+		for (int i = 0; i < otherMissions.Length; i++) {
+			playerData.missions.Add(new MissionProgress(otherMissions[i].uuid));
+		}
 
 		InputDelegateController.instance.TriggerSceneChange(MenuMode.NONE, "LoadingScreen");
 	}
@@ -141,7 +149,7 @@ public class MainMenuController : InputReceiverDelegate {
 	/// Called when starting a new game. Sets the starting values.
 	/// </summary>
 	public void LoadGameFinished() {
-		if (currentChapterIndex.value == "") {
+		if (loadMapID.value == "") {
 			InputDelegateController.instance.TriggerSceneChange(MenuMode.NONE, "BaseScene");
 		}
 		else {

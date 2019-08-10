@@ -8,7 +8,7 @@ public class BlockMove : TacticsMove {
 	/// <summary>
 	/// Additional setup for player characters.
 	/// </summary>
-	protected override void SetupLists() { }
+	protected override void ExtraSetup() { }
 	
 	/// <summary>
 	/// Additional functions which run when the player ends their turn.

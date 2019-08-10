@@ -3535,15 +3535,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: LoadGame Canvas
       objectReference: {fileID: 0}
-    - target: {fileID: 1708912850470516, guid: 54b7ce48319d74544940f54420359663, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114459560469236114, guid: 54b7ce48319d74544940f54420359663,
-        type: 3}
-      propertyPath: usedForLoad
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 224740703705661992, guid: 54b7ce48319d74544940f54420359663,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3672,6 +3663,15 @@ PrefabInstance:
     - target: {fileID: 224989744490679686, guid: 54b7ce48319d74544940f54420359663,
         type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114459560469236114, guid: 54b7ce48319d74544940f54420359663,
+        type: 3}
+      propertyPath: usedForLoad
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1708912850470516, guid: 54b7ce48319d74544940f54420359663, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -4191,19 +4191,28 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   menuFailEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 5b882ed488044f74d92c3818ac29c97b, type: 2}
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   howTo: {fileID: 277129778}
   saveFileController: {fileID: 851388646}
   optionsController: {fileID: 1405510729}
-  chapterList: {fileID: 11400000, guid: e0b362093008b934c9b0197a928f5e95, type: 2}
   lockControls: {fileID: 11400000, guid: b8d06aee0ad3bce4daa463a8433439f4, type: 2}
   startMenuView: {fileID: 264288710}
   saveView: {fileID: 160850941}
   changelogView: {fileID: 891839871}
-  currentChapterIndex: {fileID: 11400000, guid: ea8e97ad79eaebf48a34de3a63caf61a,
-    type: 2}
+  loadMapID: {fileID: 11400000, guid: ea8e97ad79eaebf48a34de3a63caf61a, type: 2}
   currentTotalDays: {fileID: 11400000, guid: 0be785060eb41a44ba8f54f6e31b14e9, type: 2}
   currentPlayTime: {fileID: 11400000, guid: 1777461650df39a4cb5b7ff0b6dedf81, type: 2}
   mainButtons: {fileID: 717149155}
@@ -4228,9 +4237,13 @@ MonoBehaviour:
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   saveController: {fileID: 1829959294}
-  firstMission: {fileID: 11400000, guid: 8a7a41e0ecb60c44d9087d38d5c7a20d, type: 2}
+  currentMission: {fileID: 11400000, guid: a149375abc4af2948b0b40ba31472a06, type: 2}
+  mapIndex: {fileID: 11400000, guid: 85b195634400b964cac3fff2db4f7d42, type: 2}
+  squad1: {fileID: 11400000, guid: 8918db7c8316b2048968883d5e79479a, type: 2}
+  squad2: {fileID: 11400000, guid: df66b25f4fd355241bdd1e0139be1eaf, type: 2}
   playerData: {fileID: 11400000, guid: cf29fce9ee9388e4290741fe2d10bab5, type: 2}
   classWheel: {fileID: 11400000, guid: d29c1242cf6052c43bfa5c9fb5fdb98b, type: 2}
+  startMission: {fileID: 11400000, guid: b6f28ef2f5c3be740bd39c74ea1b6924, type: 2}
   startingCharacters:
   - x: 0
     y: 0
@@ -4260,9 +4273,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b09902473c3c96940942ae49da97fc4d, type: 2}
   - {fileID: 11400000, guid: 170d5cbfd40f8fc4f8591920d6fd3385, type: 2}
   - {fileID: 11400000, guid: 888645a9dd134f5499d3487214fd78ae, type: 2}
-  startMissions:
-  - {fileID: 11400000, guid: fd35f25322a2d3b4ebdb9eaa5433b197, type: 2}
-  - {fileID: 11400000, guid: 172dc4c1fcd3908419808a23594888b7, type: 2}
+  otherMissions:
+  - {fileID: 11400000, guid: c481d208e5ae7004b9663c8ba6739736, type: 2}
   saveGameEvent:
     m_PersistentCalls:
       m_Calls:

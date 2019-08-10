@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class BattlePrepController : InputReceiverDelegate {
 
-	private enum State { MAIN, FORMATION, INVENTORY, OBJECTIVE, PROMPT }
+	private enum State { MAIN, OBJECTIVE, FORMATION, INVENTORY, PROMPT }
 
 	public ScrObjEntryReference currentMapEntry;
 	public PlayerData playerData;
@@ -48,11 +48,10 @@ public class BattlePrepController : InputReceiverDelegate {
 		inventoryView.SetActive(false);
 
 		mainButtons.ResetButtons();
-		mainButtons.AddButton("Select characters");
-		mainButtons.AddButton("Change formation");
-		mainButtons.AddButton("Change equipment");
-		mainButtons.AddButton("Map objective");
-		mainButtons.AddButton("Start game");
+		mainButtons.AddButton("Map objective", 0);
+		mainButtons.AddButton("Change formation", 1);
+		mainButtons.AddButton("Change equipment", 2);
+		mainButtons.AddButton("Start game", 3);
 
 		GeneratePrepList();
 		mainButtons.ForcePosition(0);
@@ -80,11 +79,7 @@ public class BattlePrepController : InputReceiverDelegate {
 		for (int i = 0; i < playerData.stats.Count; i++) {
 			if (!map.IsForced(playerData.stats[i].charData))
 				continue;
-			PrepCharacter pc = new PrepCharacter {
-				index = i,
-				forced = map.IsForced(playerData.stats[i].charData),
-				locked = map.IsLocked(playerData.stats[i].charData)
-			};
+			PrepCharacter pc = new PrepCharacter(i, map.IsForced(playerData.stats[i].charData), map.IsLocked(playerData.stats[i].charData));
 			if (!pc.locked && playerCap > 0) {
 				playerCap--;
 			}
@@ -93,11 +88,7 @@ public class BattlePrepController : InputReceiverDelegate {
 		for (int i = 0; i < playerData.stats.Count; i++) {
 			if (map.IsForced(playerData.stats[i].charData))
 				continue;
-			PrepCharacter pc = new PrepCharacter {
-				index = i,
-				forced = map.IsForced(playerData.stats[i].charData),
-				locked = map.IsLocked(playerData.stats[i].charData)
-			};
+			PrepCharacter pc = new PrepCharacter(i, map.IsForced(playerData.stats[i].charData), map.IsLocked(playerData.stats[i].charData));
 			if (!pc.locked && playerCap > 0) {
 				playerCap--;
 			}
@@ -173,7 +164,14 @@ public class BattlePrepController : InputReceiverDelegate {
 	public override void OnOkButton() {
 		if (currentState == State.MAIN) {
 			int mainIndex = mainButtons.GetPosition();
-			if (mainIndex == 1) {
+			if (mainIndex == 0) {
+				currentState = State.OBJECTIVE;
+				buttonMenuView.SetActive(false);
+				objectiveView.SetActive(true);
+				objective.UpdateState(true);
+				menuAcceptEvent.Invoke();
+			}
+			else if (mainIndex == 1) {
 				currentState = State.FORMATION;
 				InputDelegateController.instance.TriggerMenuChange(MenuMode.FORMATION);
 				mainMenuView.SetActive(false);
@@ -188,13 +186,6 @@ public class BattlePrepController : InputReceiverDelegate {
 				menuAcceptEvent.Invoke();
 			}
 			else if (mainIndex == 3) {
-				currentState = State.OBJECTIVE;
-				buttonMenuView.SetActive(false);
-				objectiveView.SetActive(true);
-				objective.UpdateState(true);
-				menuAcceptEvent.Invoke();
-			}
-			else if (mainIndex == 4) {
 				currentState = State.PROMPT;
 				startPrompt.ShowYesNoPopup("Start mission?", false);
 				menuAcceptEvent.Invoke();

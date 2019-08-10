@@ -37,13 +37,14 @@ public class SaveScreenController : InputReceiverDelegate {
 		mapIndex.value++;
 		if (mapIndex.value >= mission.maps.Count) {
 			for (int i = 0; i < playerData.missions.Count; i++) {
-				if (playerData.missions[i].mission.uuid == mission.uuid) {
+				if (playerData.missions[i].uuid == mission.uuid) {
 					playerData.missions[i].cleared = true;
 					break;
 				}
 			}
 			currentPlayDays.value += mission.duration;
 			currentChapterId.value = "";
+			mapIndex.value = 0;
 		}
 		else {
 			currentChapterId.value = mission.maps[mapIndex.value].uuid;
@@ -68,8 +69,6 @@ public class SaveScreenController : InputReceiverDelegate {
 				return;
 			}
 		}
-
-		currentChapterId.value = currentMission.value.uuid;
 
 		if (currentChapterId.value == SaveFileController.CLEAR_GAME_ID) {
 			InputDelegateController.instance.TriggerSceneChange(MenuMode.MAIN_MENU, "MainMenu");

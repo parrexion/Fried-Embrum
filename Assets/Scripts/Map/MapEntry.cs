@@ -228,6 +228,8 @@ public class ReinforcementPosition {
 	public int level;
 	public CharData charData;
 	public List<WeaponTuple> inventory = new List<WeaponTuple>();
+	//Player only
+	public int joiningSquad;
 	// Enemy only
 	public AggroType aggroType;
 	public bool hasQuotes;
@@ -246,6 +248,7 @@ public class ReinforcementPosition {
 				item = other.inventory[i].item, droppable = other.inventory[i].droppable
 			});
 		}
+		joiningSquad = other.joiningSquad;
 		aggroType = other.aggroType;
 		hasQuotes = other.hasQuotes;
 		for (int i = 0; i < other.quotes.Count; i++) {
@@ -299,4 +302,17 @@ public class Reward {
 	public int money;
 	public int scrap;
 	public List<ItemEntry> items = new List<ItemEntry>();
+
+
+	public bool IsEmpty() {
+		if (money != 0 || scrap != 0)
+			return false;
+
+		for (int i = 0; i < items.Count; i++) {
+			if (items[i] != null)
+				return false;
+		}
+
+		return true;
+	}
 }

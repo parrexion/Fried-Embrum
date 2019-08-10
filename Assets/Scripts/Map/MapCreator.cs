@@ -22,13 +22,13 @@ public class MapCreator : MonoBehaviour {
 	public float reinforcementDelay = 0.75f;
 	public IntVariable slowGameSpeed;
 	public IntVariable currentGameSpeed;
-	
+
 	[Header("Prefabs")]
 	public Transform playerPrefab;
 	public Transform enemyPrefab;
 	public Transform tilePrefab;
 	public Transform blockTilePrefab;
-	
+
 	[Header("Dialogues")]
 	public BoolVariable lockControls;
 	public IntVariable currentDialogueMode;
@@ -38,7 +38,7 @@ public class MapCreator : MonoBehaviour {
 	public UnityEvent cursorMoveEvent;
 	public UnityEvent nextTurnStateEvent;
 	public UnityEvent startDialogueEvent;
-	
+
 	[Header("Terrain Tiles")]
 	public TerrainTile tileNormal;
 	public TerrainTile tileDirt;
@@ -74,11 +74,11 @@ public class MapCreator : MonoBehaviour {
 		_sizeX = map.sizeX;
 		_sizeY = map.sizeY;
 		battleMap.SetupMap(map);
-		
-		TacticsCamera.boxCollider.size = new Vector2(_sizeX+1, _sizeY+1);
-		TacticsCamera.boxCollider.center = new Vector3((_sizeX-1)/2.0f, (_sizeY-1)/2.0f, 0);
+
+		TacticsCamera.boxCollider.size = new Vector2(_sizeX + 1, _sizeY + 1);
+		TacticsCamera.boxCollider.center = new Vector3((_sizeX - 1) / 2.0f, (_sizeY - 1) / 2.0f, 0);
 		TacticsCamera.boxActive = true;
-		
+
 		GenerateMap(map.mapSprite);
 		cursorX.value = map.spawnPoints1[0].x;
 		cursorY.value = map.spawnPoints1[0].y;
@@ -98,12 +98,12 @@ public class MapCreator : MonoBehaviour {
 		int pos = 0;
 		List<MapTile> mappus = new List<MapTile>();
 		battleMap.breakables.Clear();
-		
+
 		for (int j = 0; j < _sizeY; j++) {
 			for (int i = 0; i < _sizeX; i++) {
 				InteractPosition interPos = GetInteractable(map, i, j);
 				Transform tile = (interPos != null && interPos.interactType == InteractType.BLOCK) ? Instantiate(blockTilePrefab) : Instantiate(tilePrefab);
-				tile.position = new Vector3(i,j,0);
+				tile.position = new Vector3(i, j, 0);
 				tile.SetParent(battleMap.tileParent);
 
 				MapTile tempTile = tile.GetComponent<MapTile>();
@@ -118,7 +118,7 @@ public class MapCreator : MonoBehaviour {
 					tempTile.SetTerrain(tileBreakable);
 					tempTile.alternativeTerrain = GetTerrainFromPixel(colorData[pos]);
 					battleMap.breakables.Add(tempTile);
-					
+
 					BlockMove block = tempTile.GetComponent<BlockMove>();
 					block.currentTile = tempTile;
 					block.stats.hp = interPos.health;
@@ -133,7 +133,8 @@ public class MapCreator : MonoBehaviour {
 						StatsContainer stats = new StatsContainer(interPos.ally);
 						InventoryContainer inventory = new InventoryContainer(playerClassWheel.GetWpnSkillFromLevel(interPos.ally.charData.startClassLevels), interPos.ally.inventory);
 						SkillsContainer skills = new SkillsContainer(playerClassWheel.GetSkillsFromLevel(interPos.ally.charData.startClassLevels, interPos.ally.charData.startClass, interPos.ally.level));
-						tempTile.ally = SpawnPlayerCharacter(interPos.x, interPos.y, stats, inventory, skills, false);
+						tempTile.ally = SpawnPlayerCharacter(interPos.x, interPos.y, stats, inventory, skills, 0, false);
+						Debug.Log("Spawned ally:  " + tempTile.ally.name);
 					}
 					TerrainTile terrain = (interPos.gift == null && interPos.ally == null) ? tileHouse : tileHouseReward;
 					tempTile.SetTerrain(terrain);
@@ -182,7 +183,7 @@ public class MapCreator : MonoBehaviour {
 	/// </summary>
 	private void SpawnPlayers() {
 		MapEntry map = (MapEntry)currentMap.value;
-		
+
 		//Players
 		int prepPos = 0;
 		for (int i = 0; i < map.spawnPoints1.Count; i++) {
@@ -198,8 +199,8 @@ public class MapCreator : MonoBehaviour {
 			InventoryContainer inventory = playerData.inventory[index];
 			SkillsContainer skills = playerData.skills[index];
 			prepPos++;
-			
-			SpawnPlayerCharacter(pos.x, pos.y, stats, inventory, skills, true);
+
+			SpawnPlayerCharacter(pos.x, pos.y, stats, inventory, skills, 1, true);
 		}
 
 		prepPos = 0;
@@ -217,7 +218,7 @@ public class MapCreator : MonoBehaviour {
 			SkillsContainer skills = playerData.skills[index];
 			prepPos++;
 
-			SpawnPlayerCharacter(pos.x, pos.y, stats, inventory, skills, true);
+			SpawnPlayerCharacter(pos.x, pos.y, stats, inventory, skills, 2, true);
 		}
 	}
 
@@ -226,7 +227,7 @@ public class MapCreator : MonoBehaviour {
 	/// </summary>
 	private void SpawnEnemies() {
 		MapEntry map = (MapEntry)currentMap.value;
-		
+
 		//Enemies
 		for (int i = 0; i < map.enemies.Count; i++) {
 			EnemyPosition pos = map.enemies[i];
@@ -242,7 +243,7 @@ public class MapCreator : MonoBehaviour {
 				fight.activated = false;
 				quotes.Add(fight);
 			}
-			MapTile huntTile = (pos.aggroType == AggroType.HUNT) ? battleMap.GetTile(pos.huntX, pos.huntY) : null; 
+			MapTile huntTile = (pos.aggroType == AggroType.HUNT) ? battleMap.GetTile(pos.huntX, pos.huntY) : null;
 
 			SpawnEnemyCharacter(pos.x, pos.y, stats, inventory, skills, quotes, pos.aggroType, huntTile);
 		}
@@ -265,20 +266,22 @@ public class MapCreator : MonoBehaviour {
 	/// <param name="stats"></param>
 	/// <param name="inventory"></param>
 	/// <param name="skills"></param>
-	private TacticsMove SpawnPlayerCharacter(int x, int y, StatsContainer stats, InventoryContainer inventory, SkillsContainer skills, bool active) {
+	private TacticsMove SpawnPlayerCharacter(int x, int y, StatsContainer stats, InventoryContainer inventory, SkillsContainer skills, int squad, bool active) {
 		Transform playerTransform = Instantiate(playerPrefab, battleMap.playerParent);
 		playerTransform.position = new Vector3(x, y);
+		playerTransform.name = stats.charData.entryName;
 
-		TacticsMove tactics = playerTransform.GetComponent<TacticsMove>();
+		PlayerMove tactics = playerTransform.GetComponent<PlayerMove>();
 		tactics.battleMap = battleMap;
 		tactics.posx = x;
 		tactics.posy = y;
 		tactics.stats = stats;
 		tactics.inventory = inventory;
 		tactics.skills = skills;
+		tactics.squad = squad;
 		if (active)
 			tactics.Setup();
-		else 
+		else
 			playerTransform.gameObject.SetActive(false);
 
 		return tactics;
@@ -310,7 +313,7 @@ public class MapCreator : MonoBehaviour {
 		tactics.huntTile = huntTile;
 		tactics.Setup();
 	}
-	
+
 	/// <summary>
 	/// Is triggered by event and checks the map to see if any reinforcements should be spawned.
 	/// </summary>
@@ -334,11 +337,15 @@ public class MapCreator : MonoBehaviour {
 					InventoryContainer inventory = new InventoryContainer(wheel.GetWpnSkillFromLevel(pos.charData.startClassLevels), pos.inventory);
 					SkillsContainer skills = new SkillsContainer(wheel.GetSkillsFromLevel(pos.charData.startClassLevels, pos.charData.startClass, pos.level));
 					if (pos.faction == Faction.PLAYER) {
-						TacticsMove tm = SpawnPlayerCharacter(pos.x, pos.y, stats, inventory, skills, true);
-						playerData.stats.Add(tm.stats);
-						playerData.inventory.Add(tm.inventory);
-						playerData.skills.Add(tm.skills);
-						playerData.baseInfo.Add(null);
+						TacticsMove tm = SpawnPlayerCharacter(pos.x, pos.y, stats, inventory, skills, pos.joiningSquad, true);
+						playerData.AddNewPlayer(tm);
+						PrepCharacter prep = new PrepCharacter(playerData.stats.Count - 1);
+						if (pos.joiningSquad == 2) {
+							prepList2.values.Add(prep);
+						}
+						else {
+							prepList1.values.Add(prep);
+						}
 					}
 					else if (pos.faction == Faction.ENEMY) {
 						SpawnEnemyCharacter(pos.x, pos.y, stats, inventory, skills, pos.quotes, pos.aggroType, battleMap.GetTile(pos.huntX, pos.huntY));
@@ -403,25 +410,25 @@ public class MapCreator : MonoBehaviour {
 		else if (pixelColor.r == 128 && pixelColor.g == 128 && pixelColor.b == 128) {
 			terrain = tileFloor;
 		}
-		else if (pixelColor == new Color(0f,0f,0f,1f)) {
+		else if (pixelColor == new Color(0f, 0f, 0f, 1f)) {
 			terrain = tileWall;
 		}
-		else if (pixelColor == new Color(0f,1f,0f,1f)) {
+		else if (pixelColor == new Color(0f, 1f, 0f, 1f)) {
 			terrain = tileForest;
 		}
-		else if (pixelColor == new Color(0f,0f,1f,1f)) {
+		else if (pixelColor == new Color(0f, 0f, 1f, 1f)) {
 			terrain = tileRiver;
 		}
-		else if (pixelColor == new Color(1f,0f,0f,1f)) {
+		else if (pixelColor == new Color(1f, 0f, 0f, 1f)) {
 			terrain = tileMountain;
 		}
-		else if (pixelColor == new Color(1f,1f,0f,1f)) {
+		else if (pixelColor == new Color(1f, 1f, 0f, 1f)) {
 			terrain = tileBridge;
 		}
-		else if (pixelColor == new Color(1f,0f,1f,1f)) {
+		else if (pixelColor == new Color(1f, 0f, 1f, 1f)) {
 			terrain = tileLedge;
 		}
-		else if (pixelColor == new Color(0f,1f,1f,1f)) {
+		else if (pixelColor == new Color(0f, 1f, 1f, 1f)) {
 			terrain = tileFort;
 		}
 		else if (pixelColor.r == 255 && pixelColor.g == 128 && pixelColor.b == 0) {

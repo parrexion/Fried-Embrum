@@ -6,6 +6,8 @@ using UnityEngine.Events;
 public class PlayerMove : TacticsMove {
 
 	public IntVariable currentMenuMode;
+	public int squad = 0;
+
 	public UnityEvent playerFinishedMoveEvent;
 	public UnityEvent prepMoveEndEvent;
 
@@ -13,7 +15,7 @@ public class PlayerMove : TacticsMove {
 	/// <summary>
 	/// Additional setup for player characters.
 	/// </summary>
-	protected override void SetupLists() {
+	protected override void ExtraSetup() {
 		playerList.values.Add(this);
 		//Debug.Log("Spawned " + stats.charData.entryName);
 	}

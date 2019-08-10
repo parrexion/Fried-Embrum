@@ -9,8 +9,8 @@ public class MissionSaveData {
 	public bool cleared;
 
 
-	public void StoreData(MissionContainer mission) {
-		id = mission.mission.uuid;
+	public void StoreData(MissionProgress mission) {
+		id = mission.uuid;
 		cleared = mission.cleared;
 	}
 }

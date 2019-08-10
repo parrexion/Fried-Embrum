@@ -30,17 +30,17 @@ public class SaveController : MonoBehaviour {
 	public IntVariable saveIndex;
 
 	[Header("Simple Data")]
-	public StringVariable[] simpleChapterId;
+	public StringVariable[] simpleChapterName;
 	public IntVariable[] simpleTotalDays;
 	public IntVariable[] simplePlayTimes;
 
 	[Header("Current Data")]
 	public ScrObjEntryReference currentMission;
-	public ScrObjEntryReference currentMap;
-	public ScrObjEntryReference currentDialogue;
+	public IntVariable mapIndex;
 	public PrepListVariable squad1;
 	public PrepListVariable squad2;
-	public StringVariable currentChapterId;
+	public ScrObjEntryReference currentDialogue;
+	public StringVariable loadMapID;
 	public IntVariable currentTotalDays;
 	public IntVariable currentPlayTime;
 	public IntVariable currentMoney;
@@ -79,16 +79,7 @@ public class SaveController : MonoBehaviour {
 
 	public void EmptySave() {
 		// Setup save data
-		saveFileData = new SavePackage {
-			musicVolume = 10,
-			sfxVolume = 10,
-			gameSpeed = 5,
-			controlScheme = 0,
-			useAnimations = true,
-			trueHit = true,
-			autoEnd = true,
-			autoSelectCharacter = true
-		};
+		saveFileData = new SavePackage();
 		for (int i = 0; i < SAVE_FILES_COUNT; i++) {
 			saveFileData.saveFiles[i] = new SaveData();
 		}
@@ -110,29 +101,44 @@ public class SaveController : MonoBehaviour {
 
 	public void Save(bool onlyOptions) {
 		// Options
-		saveFileData.musicVolume = musicVolume.value;
-		saveFileData.sfxVolume = sfxVolume.value;
-		saveFileData.gameSpeed = gameSpeed.value;
-		saveFileData.useAnimations = useAnimations.value;
-		saveFileData.trueHit = trueHit.value;
-		saveFileData.autoEnd = autoEnd.value;
-		saveFileData.autoSelectCharacter = autoSelectCharacter.value;
-		saveFileData.controlScheme = controlScheme.value;
+		saveFileData.options.musicVolume = musicVolume.value;
+		saveFileData.options.sfxVolume = sfxVolume.value;
+		saveFileData.options.gameSpeed = gameSpeed.value;
+		saveFileData.options.controlScheme = controlScheme.value;
+		saveFileData.options.useAnimations = useAnimations.value;
+		saveFileData.options.trueHit = trueHit.value;
+		saveFileData.options.autoEnd = autoEnd.value;
+		saveFileData.options.autoSelectCharacter = autoSelectCharacter.value;
 
 		if (!onlyOptions) {
-			// Update data
-			simpleChapterId[saveIndex.value].value = currentChapterId.value;
+			saveFileData.lastSaveFileIndex = saveIndex.value;
+			// Update simple data
+			simpleChapterName[saveIndex.value].value = loadMapID.value;
 			simpleTotalDays[saveIndex.value].value = currentTotalDays.value;
 			simplePlayTimes[saveIndex.value].value = currentPlayTime.value;
 
-			// Setup save data
+			// Setup save file data
 			SaveData data = new SaveData {
-				chapterIndex = simpleChapterId[saveIndex.value].value,
+				chapterName = simpleChapterName[saveIndex.value].value,
 				totalDays = simpleTotalDays[saveIndex.value].value,
 				playTime = simplePlayTimes[saveIndex.value].value,
 				money = currentMoney.value,
 				scrap = currentScrap.value
 			};
+
+			//Map data
+			data.mapData = new MapSavePackage() {
+				missionString = currentMission.value.uuid,
+				mapIndex = mapIndex.value
+			};
+			for (int i = 0; i < squad1.Count; i++) {
+				data.mapData.squad1.Add(squad1.values[i].index);
+			}
+			for (int i = 0; i < squad2.Count; i++) {
+				data.mapData.squad2.Add(squad2.values[i].index);
+			}
+
+			//Player data
 			for (int i = 0; i < playerData.stats.Count; i++) {
 				if (playerData.stats[i].charData == null)
 					continue;
@@ -194,19 +200,23 @@ public class SaveController : MonoBehaviour {
 			return;
 		}
 
+		saveIndex.value = saveFileData.lastSaveFileIndex;
+
 		// Options
-		musicVolume.value = saveFileData.musicVolume;
-		sfxVolume.value = saveFileData.sfxVolume;
-		gameSpeed.value = saveFileData.gameSpeed;
-		useAnimations.value = saveFileData.useAnimations;
-		trueHit.value = saveFileData.trueHit;
-		autoEnd.value = saveFileData.autoEnd;
+		musicVolume.value = saveFileData.options.musicVolume;
+		sfxVolume.value = saveFileData.options.sfxVolume;
+		gameSpeed.value = saveFileData.options.gameSpeed;
+		controlScheme.value = saveFileData.options.controlScheme;
+		useAnimations.value = saveFileData.options.useAnimations;
+		trueHit.value = saveFileData.options.trueHit;
+		autoEnd.value = saveFileData.options.autoEnd;
+		autoSelectCharacter.value = saveFileData.options.autoSelectCharacter;
 
 		//Load save files info
 		for (int i = 0; i < saveFileData.saveFiles.Length; i++) {
 			if (saveFileData.saveFiles[i] == null)
 				continue;
-			simpleChapterId[i].value = saveFileData.saveFiles[i].chapterIndex;
+			simpleChapterName[i].value = saveFileData.saveFiles[i].chapterName;
 			simpleTotalDays[i].value = saveFileData.saveFiles[i].totalDays;
 			simplePlayTimes[i].value = saveFileData.saveFiles[i].playTime;
 		}
@@ -230,8 +240,7 @@ public class SaveController : MonoBehaviour {
 			return;
 		}
 
-		// Set basic data
-		currentChapterId.value = simpleChapterId[saveIndex.value].value;
+		// Read simple data
 		currentTotalDays.value = simpleTotalDays[saveIndex.value].value;
 		currentPlayTime.value = simplePlayTimes[saveIndex.value].value;
 
@@ -240,6 +249,20 @@ public class SaveController : MonoBehaviour {
 		currentMoney.value = loadedData.money;
 		currentScrap.value = loadedData.scrap;
 
+		// Read map data
+		currentMission.value = missionLibrary.GetEntry(loadedData.mapData.missionString);
+		mapIndex.value = loadedData.mapData.mapIndex;
+		loadMapID.value = ((MissionEntry)currentMission.value).maps[mapIndex.value].uuid;
+		squad1.values.Clear();
+		for (int i = 0; i < loadedData.mapData.squad1.Count; i++) {
+			squad1.values.Add(new PrepCharacter(loadedData.mapData.squad1[i]));
+		}
+		squad2.values.Clear();
+		for (int i = 0; i < loadedData.mapData.squad2.Count; i++) {
+			squad2.values.Add(new PrepCharacter(loadedData.mapData.squad2[i]));
+		}
+
+		// Read player data
 		playerData.ResetData();
 		for (int i = 0; i < loadedData.upgrade.Count; i++) {
 			UpgradeEntry upgrade = (UpgradeEntry)upgradeLibrary.GetEntry(loadedData.upgrade[i].id);
@@ -257,8 +280,7 @@ public class SaveController : MonoBehaviour {
 			playerData.items.Add(new InventoryItem(item, loadedData.items[i].charges));
 		}
 		for (int i = 0; i < loadedData.missions.Count; i++) {
-			MissionEntry mission = (MissionEntry)missionLibrary.GetEntry(loadedData.missions[i].id);
-			playerData.missions.Add(new MissionContainer(mission, loadedData.missions[i].cleared));
+			playerData.missions.Add(new MissionProgress(loadedData.missions[i].id, loadedData.missions[i].cleared));
 		}
 		playerData.upgrader.CalculateResearch();
 		Debug.Log("Successfully loaded the save data!");
@@ -268,25 +290,38 @@ public class SaveController : MonoBehaviour {
 
 [System.Serializable]
 public class SavePackage {
-	public int musicVolume;
-	public int sfxVolume;
-	public int gameSpeed;
-	public bool useAnimations;
-	public bool trueHit;
-	public bool autoEnd;
-	public bool autoSelectCharacter;
-	public int controlScheme;
+	public int lastSaveFileIndex;
+	public OptionPackage options = new OptionPackage();
 	public SaveData[] saveFiles = new SaveData[SaveController.SAVE_FILES_COUNT];
+}
+
+public class OptionPackage {
+	public int musicVolume = 30;
+	public int sfxVolume = 10;
+	public int gameSpeed = 5;
+	public int controlScheme = 0;
+	public bool useAnimations = true;
+	public bool trueHit = true;
+	public bool autoEnd = true;
+	public bool autoSelectCharacter = true;
+}
+
+public class MapSavePackage {
+	public string missionString = "";
+	public int mapIndex = 0;
+	public List<int> squad1 = new List<int>();
+	public List<int> squad2 = new List<int>();
 }
 
 [System.Serializable]
 public class SaveData {
-	public string chapterIndex;
-	public string levelName;
+	public string chapterName;
 	public int totalDays;
 	public int playTime;
+
 	public int money;
 	public int scrap;
+	public MapSavePackage mapData;
 	public List<CharacterSaveData> characters = new List<CharacterSaveData>();
 	public List<ItemSaveData> items = new List<ItemSaveData>();
 	public List<UpgradeSaveData> upgrade = new List<UpgradeSaveData>();

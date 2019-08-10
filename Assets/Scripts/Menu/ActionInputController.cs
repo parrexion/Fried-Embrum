@@ -20,6 +20,8 @@ public class ActionInputController : MonoBehaviour {
 	public MapTileListVariable targetList;
 	public IntVariable inventoryIndex;
 	public BoolVariable triggeredWin;
+	public PrepListVariable squad1;
+	public PrepListVariable squad2;
 
 	[Header("Unit Action Menu")]
 	public GameObject actionMenu;
@@ -33,29 +35,29 @@ public class ActionInputController : MonoBehaviour {
 	public UnityEvent startDialogue;
 
 
-    public void ShowMenu(bool active, bool reset) {
+	public void ShowMenu(bool active, bool reset) {
 		actionMenu.SetActive(active);
 		if (active) {
 			int previousPosition = (reset) ? 0 : actionButtons.GetPosition();
 			ButtonSetup();
 			actionButtons.ForcePosition(previousPosition);
 		}
-    }
+	}
 
-    public bool MoveVertical(int dir) {
+	public bool MoveVertical(int dir) {
 		int startPos = actionButtons.GetPosition();
 		int endPos = actionButtons.Move(dir);
 		return (startPos != endPos);
-    }
+	}
 
-    public bool BackButton() {
+	public bool BackButton() {
 		if (selectedCharacter.value.canUndoMove) {
 			actionButtons.ForcePosition(0);
 		}
 		return (selectedCharacter.value.canUndoMove);
-    }
+	}
 
-    public void OkButton() {
+	public void OkButton() {
 		switch ((ActionInputType)actionButtons.GetValue()) {
 			case ActionInputType.SEIZE:
 				triggeredWin.value = true;
@@ -105,24 +107,34 @@ public class ActionInputController : MonoBehaviour {
 				selectedCharacter.value.End();
 				break;
 		}
-    }
-	
+	}
+
 	public void ReturnFromVisit() {
 		currentActionMode.value = ActionMode.NONE;
 		InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
-		if (selectedCharacter.value.currentTile.gift != null) {
+		if (!selectedCharacter.value.currentTile.gift.IsEmpty()) {
 			StartCoroutine(WaitForItemGain());
 		}
 		else if (selectedCharacter.value.currentTile.ally != null) {
 			MapTile closest = selectedCharacter.value.battleMap.GetClosestEmptyTile(selectedCharacter.value.currentTile);
-			TacticsMove tactics = selectedCharacter.value.currentTile.ally;
+			PlayerMove tactics = (PlayerMove)selectedCharacter.value.currentTile.ally;
 			tactics.posx = closest.posx;
 			tactics.posy = closest.posy;
 			tactics.Setup();
+			playerData.AddNewPlayer(tactics);
+			int recruitSquad = ((PlayerMove)selectedCharacter.value).squad;
+			if (recruitSquad == 1) {
+				tactics.squad = 1;
+				squad1.values.Add(new PrepCharacter(playerData.stats.Count - 1));
+			}
+			else if (recruitSquad == 2) {
+				tactics.squad = 2;
+				squad2.values.Add(new PrepCharacter(playerData.stats.Count - 1));
+			}
+			else { Debug.LogError("Squad is invalid!"); }
 			selectedCharacter.value.End();
 		}
 		else {
-			Debug.Log("OK");
 			selectedCharacter.value.End();
 		}
 

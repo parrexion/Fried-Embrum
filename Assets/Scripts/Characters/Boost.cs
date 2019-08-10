@@ -90,7 +90,6 @@ public class Boost {
 	}
 
 	public void StartTurn() {
-		Debug.Log(boostType.ToString());
 		switch (boostType) {
 			case BoostType.PASSIVE:
 			case BoostType.ENDTURN:

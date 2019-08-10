@@ -24,13 +24,15 @@ public class SquadSelectionController : MonoBehaviour {
 	private int[] squadLimits = new int[] { 0, 3, 1 };
 
 
-	private void Start() {
-		characters[0] = new EntryList<SquadMemberEntry>(8);
-		characters[1] = new EntryList<SquadMemberEntry>(8);
-		characters[2] = new EntryList<SquadMemberEntry>(8);
-	}
-
 	public void ResetLists() {
+		if (characters[0] == null) {
+			characters[0] = new EntryList<SquadMemberEntry>(8);
+			characters[1] = new EntryList<SquadMemberEntry>(8);
+			characters[2] = new EntryList<SquadMemberEntry>(8);
+		}
+		characters[0].ResetList();
+		characters[1].ResetList();
+		characters[2].ResetList();
 		MissionEntry mission = (MissionEntry)currentMission.value;
 		selectionX = selectionY = 0;
 		selectMode = false;
@@ -40,11 +42,7 @@ public class SquadSelectionController : MonoBehaviour {
 		squadLists[0].ResetData();
 
 		for (int i = 0; i < playerData.stats.Count; i++) {
-			PrepCharacter pc = new PrepCharacter {
-				index = i,
-				forced = mission.IsCharacterForced(playerData.stats[i].charData),
-				locked = mission.IsCharacterLocked(playerData.stats[i].charData)
-			};
+			PrepCharacter pc = new PrepCharacter(i, mission.IsCharacterForced(playerData.stats[i].charData), mission.IsCharacterLocked(playerData.stats[i].charData));
 			squadLists[0].values.Add(pc);
 		}
 		for (int i = 1; i < squadLists.Length; i++) {
@@ -144,7 +142,7 @@ public class SquadSelectionController : MonoBehaviour {
 
 		PrepCharacter prep = squadLists[targetX].values[targetY];
 		squadLists[targetX].values.RemoveAt(targetY);
-		squadLists[selectionX].values.Add(new PrepCharacter() { index = prep.index });
+		squadLists[selectionX].values.Add(new PrepCharacter(prep.index));
 
 		selectMode = false;
 		targetX = -1;

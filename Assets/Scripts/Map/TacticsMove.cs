@@ -86,13 +86,13 @@ public abstract class TacticsMove : MonoBehaviour {
 		currentTile.currentCharacter = this;
 		transform.position = new Vector3(currentTile.transform.position.x, currentTile.transform.position.y, 0);
 		gameObject.SetActive(true);
-		SetupLists();
+		ExtraSetup();
 	}
 
 	/// <summary>
 	/// Additional functions which should be run by children.
 	/// </summary>
-	protected abstract void SetupLists();
+	protected abstract void ExtraSetup();
 
 	/// <summary>
 	/// Additional functions which should be run when movement ends.

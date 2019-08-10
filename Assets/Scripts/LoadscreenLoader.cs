@@ -10,9 +10,9 @@ public class LoadscreenLoader : MonoBehaviour {
 	const string BATTLE_SCENE = "BattleScene";
 
 	[Header("Chapter")]
-	public StringVariable currentChapterId;
+	public StringVariable loadMapID;
 	public ScrObjEntryReference currentMap;
-	public ScrObjLibraryVariable chapterLibrary;
+	public ScrObjLibraryVariable mapLibrary;
 
 	[Header("Loading")]
 	public GameObject loadCanvas;
@@ -21,7 +21,7 @@ public class LoadscreenLoader : MonoBehaviour {
 	
 
 	private void Start () {
-		currentMap.value = chapterLibrary.GetEntry(currentChapterId.value);
+		currentMap.value = mapLibrary.GetEntry(loadMapID.value);
 		StartCoroutine(LoadBattleScenes());
 	}
 
