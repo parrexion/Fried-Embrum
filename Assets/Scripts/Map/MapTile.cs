@@ -19,7 +19,7 @@ public class MapTile : MonoBehaviour {
 	public bool attackable;
 	public bool supportable;
 	public bool dangerous;
-	public bool deployable;
+	public int deployable;
 
 	[Header("Map values")]
 	public int posx;
@@ -71,7 +71,7 @@ public class MapTile : MonoBehaviour {
 			tileColor = Color.cyan;
 			tileColor.a = 0.35f;
 		}
-		else if (pathable || deployable) {
+		else if (pathable || deployable > 0) {
 			tileColor = Color.yellow;
 			tileColor.a = 0.35f;
 		}
@@ -93,7 +93,7 @@ public class MapTile : MonoBehaviour {
 
 		_rendHighlight.color = tileColor;
 		dangerZone.SetActive(dangerous);
-		spawnPoint.SetActive(deployable);
+		spawnPoint.SetActive(deployable > 0);
 	}
 
 	public void SetTerrain(TerrainTile terrainData) {

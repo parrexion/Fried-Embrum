@@ -213,7 +213,7 @@ public class MapCursor : MonoBehaviour {
 			return playing;
 		}
 		else {
-			if (!playing && !selectCharacter.value.currentTile.deployable)
+			if (!playing && selectCharacter.value.currentTile.deployable == 0)
 				return false;
 			currentActionMode.value = ActionMode.MOVE;
 			moveTile.value = battleMap.GetTile(cursorX.value, cursorY.value);
@@ -228,7 +228,7 @@ public class MapCursor : MonoBehaviour {
 	/// </summary>
 	private bool SelectMoveTile(bool playing) {
 		if (!playing) {
-			if (moveTile.value.deployable) {
+			if (moveTile.value.deployable > 0 && selectCharacter.value.currentTile.deployable == moveTile.value.deployable) {
 				TacticsMove dual = moveTile.value.currentCharacter;
 				MapTile startTile = selectCharacter.value.currentTile;
 				selectCharacter.value.MoveDirectSwap(moveTile.value);

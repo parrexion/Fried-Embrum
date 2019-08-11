@@ -31,7 +31,7 @@ public class BattleMap : MonoBehaviour {
 
 	public void ClearDeployment() {
 		for (int i = 0; i < tiles.Length; i++) {
-			tiles[i].deployable = false;
+			tiles[i].deployable = 0;
 		}
 	}
 
