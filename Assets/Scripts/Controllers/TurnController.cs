@@ -241,6 +241,7 @@ public class TurnController : MonoBehaviour {
 		currentFactionTurn.value = (currentFactionTurn.value == Faction.PLAYER) ? Faction.ENEMY : Faction.PLAYER;
 		if (currentFactionTurn.value == Faction.PLAYER)
 			currentTurn.value++;
+		skicka event för turn change
 
 		currentAction.value = ActionMode.LOCK;
 		InputDelegateController.instance.TriggerMenuChange(MenuMode.NONE);
