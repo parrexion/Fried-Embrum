@@ -42,6 +42,7 @@ public class TurnController : MonoBehaviour {
 	public IntVariable nextLoadState;
 
 	[Header("UI")]
+	public StatusBarController statusBar;
 	public GameObject notificationObject;
 	public Text notificationText;
 
@@ -241,7 +242,6 @@ public class TurnController : MonoBehaviour {
 		currentFactionTurn.value = (currentFactionTurn.value == Faction.PLAYER) ? Faction.ENEMY : Faction.PLAYER;
 		if (currentFactionTurn.value == Faction.PLAYER)
 			currentTurn.value++;
-		skicka event för turn change
 
 		currentAction.value = ActionMode.LOCK;
 		InputDelegateController.instance.TriggerMenuChange(MenuMode.NONE);
@@ -260,6 +260,7 @@ public class TurnController : MonoBehaviour {
 		yield return new WaitForSeconds(duration);
 		
 		notificationObject.SetActive(false);
+		statusBar.UpdateTurn();
 		StartTurn();
 	}
 

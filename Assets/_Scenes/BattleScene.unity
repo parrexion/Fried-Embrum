@@ -25726,6 +25726,7 @@ MonoBehaviour:
   totalScrap: {fileID: 11400000, guid: be3b7679469cfe040923ce4e32a08c75, type: 2}
   playerData: {fileID: 11400000, guid: cf29fce9ee9388e4290741fe2d10bab5, type: 2}
   nextLoadState: {fileID: 11400000, guid: 9b7825b9326414e42a8df295903f802e, type: 2}
+  statusBar: {fileID: 1045604594}
   notificationObject: {fileID: 1102929061}
   notificationText: {fileID: 189031125}
   mainMusic: {fileID: 11400000, guid: 40f826d9f1abd9e4f9f0972569193a0f, type: 2}
@@ -34895,7 +34896,6 @@ GameObject:
   - component: {fileID: 1045604593}
   - component: {fileID: 1045604592}
   - component: {fileID: 1045604594}
-  - component: {fileID: 1045604596}
   - component: {fileID: 1045604595}
   m_Layer: 0
   m_Name: StatusBar
@@ -34999,35 +34999,6 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1045604594}
         m_MethodName: UpdateCash
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
---- !u!114 &1045604596
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1045604590}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14602ab6441821f43883d0b13d4f57c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  evnt: {fileID: 11400000, guid: 69c3f8f0ba50da54f85f11632f92f61e, type: 2}
-  response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1045604594}
-        m_MethodName: UpdateTurn
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

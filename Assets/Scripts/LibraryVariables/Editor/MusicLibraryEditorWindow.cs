@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 public class MusicLibraryEditorWindow : EditorWindow {
 
-	private enum State { CLIP = 0, SONGLIST = 1, AREA = 2 }
+	private enum State { MUSIC = 0, SFX = 1, SONGLIST = 2 }
 
 	// Header
 	Rect headerRect = new Rect();
@@ -17,21 +17,23 @@ public class MusicLibraryEditorWindow : EditorWindow {
 	public MusicEditorWindow musicEditor;
 	public ScrObjLibraryVariable musicLibrary;
 	public MusicEntry musicContainer;
+
+	public SfxEditorWindow sfxEditor;
 	public ScrObjLibraryVariable sfxLibrary;
 	public SfxEntry sfxContainer;
 
 	public SonglistEditorWindow songlistEditor;
 	public ScrObjLibraryVariable musicListLibrary;
-	public MusicList musicListContainer;
+	public MusicSetEntry musicListContainer;
 	public ScrObjLibraryVariable sfxListLibrary;
 	public SfxList sfxListContainer;
 
-	private string[] toolbarStrings = new string[] {"Clips", "Songlists", "Areas"};
+	private string[] toolbarStrings = new string[] { "Music", "SFX", "Songlist" };
 
 
-	[MenuItem("Window/MusicEditor")]
+	[MenuItem("Window/Sound Editor")]
 	public static void ShowWindow() {
-		GetWindow<MusicLibraryEditorWindow>("Music Editor");
+		GetWindow<MusicLibraryEditorWindow>("Sound Editor");
 	}
 
 	void OnEnable() {
@@ -51,16 +53,15 @@ public class MusicLibraryEditorWindow : EditorWindow {
 		int width = (int)position.width;
 		int height = (int)position.height;
 
-		switch ((State)currentWindow.value)
-		{
-			case State.CLIP:
+		switch((State)currentWindow.value) {
+			case State.MUSIC:
 				musicEditor.DrawWindow(width, height);
+				break;
+			case State.SFX:
+				sfxEditor.DrawWindow(width, height);
 				break;
 			case State.SONGLIST:
 				songlistEditor.DrawWindow(width, height);
-				break;
-			case State.AREA:
-				// areaMusicEditor.DrawWindow();
 				break;
 		}
 	}
@@ -79,8 +80,9 @@ public class MusicLibraryEditorWindow : EditorWindow {
 	/// Loads all the libraries for the editors.
 	/// </summary>
 	void LoadLibraries() {
-		musicEditor = new MusicEditorWindow(musicLibrary, musicContainer, sfxLibrary, sfxContainer);
-		songlistEditor = new SonglistEditorWindow(musicListLibrary, musicListContainer, sfxListLibrary, sfxListContainer);
+		musicEditor = new MusicEditorWindow(musicLibrary, musicContainer);
+		sfxEditor = new SfxEditorWindow(sfxLibrary, sfxContainer);
+		songlistEditor = new SonglistEditorWindow(musicListLibrary, musicListContainer);
 
 		InitializeWindow();
 	}
