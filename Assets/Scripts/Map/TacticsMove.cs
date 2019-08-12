@@ -602,7 +602,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// </summary>
 	/// <returns></returns>
 	public bool CanHack() {
-		return (currentTile.interactType == InteractType.CHEST && !currentTile.interacted && stats.currentClass.lockTouch);
+		return (currentTile.interactType == InteractType.DATABASE && !currentTile.interacted && stats.currentClass.lockTouch);
 	}
 
 

@@ -305,9 +305,6 @@ public class SimpleCharacterUI : MonoBehaviour {
 
 		if (tile.interactType == InteractType.BLOCK) {
 			StatsContainer stats = tile.blockMove.stats;
-			//		colorBackground.color = (tactics.faction == Faction.PLAYER) ? 
-			//			new Color(0.2f,0.2f,0.5f) : new Color(0.5f,0.2f,0.2f);
-
 			characterName.text = stats.charData.entryName;
 			portrait.enabled = true;
 			portrait.sprite = stats.charData.portrait;
@@ -319,6 +316,14 @@ public class SimpleCharacterUI : MonoBehaviour {
 			portrait.sprite = tile.terrain.sprite;
 			string text = (tile.interacted) ? "Visited" : "Not Visited";
 			float fill = (tile.interacted) ? 1 : 0;
+			healthBar.SetCustomText(fill, text);
+		}
+		else if (tile.interactType == InteractType.DATABASE) {
+			characterName.text = "Database";
+			portrait.enabled = true;
+			portrait.sprite = tile.terrain.sprite;
+			string text = (tile.interacted) ? "Empty" : "Available";
+			float fill = (tile.interacted) ? 0 : 1;
 			healthBar.SetCustomText(fill, text);
 		}
 

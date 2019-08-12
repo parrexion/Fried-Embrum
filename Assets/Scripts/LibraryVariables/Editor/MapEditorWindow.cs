@@ -493,7 +493,7 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 						GUILayout.EndHorizontal();
 					}
 					break;
-				case InteractType.CHEST:
+				case InteractType.DATABASE:
 					GUILayout.BeginHorizontal();
 					pos.gift.money = EditorGUILayout.IntField("Money", pos.gift.money);
 					pos.gift.scrap = EditorGUILayout.IntField("Scrap", pos.gift.scrap);

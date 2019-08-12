@@ -9,11 +9,13 @@ public class StatusBarController : MonoBehaviour {
 	public Text turnCountText;
 	public Text totalMoneyText;
 	public Text totalScrapText;
+	public Text currentFactionText;
 
 	[Header("Variables")]
 	public IntVariable currentTurn;
 	public IntVariable totalMoney;
 	public IntVariable totalScrap;
+	public FactionVariable currentFaction;
 
 
 	void Start() {
@@ -23,6 +25,7 @@ public class StatusBarController : MonoBehaviour {
 
 	public void UpdateTurn() {
 		turnCountText.text = "Turn:  " + currentTurn.value;
+		currentFactionText.text = currentFaction.value.ToString();
 	}
 
 	public void UpdateCash() {

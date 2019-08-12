@@ -143,10 +143,10 @@ public class MapCreator : MonoBehaviour {
 					tempTile.SetTerrain(GetTerrainFromPixel(colorData[pos]));
 					tempTile.interactType = InteractType.SEIZE;
 				}
-				else if (interPos.interactType == InteractType.CHEST) {
+				else if (interPos.interactType == InteractType.DATABASE) {
 					tempTile.SetTerrain(tileChest);
 					tempTile.alternativeTerrain = tileChest.substitueTile;
-					tempTile.interactType = InteractType.CHEST;
+					tempTile.interactType = InteractType.DATABASE;
 					tempTile.gift = interPos.gift;
 				}
 				else {
