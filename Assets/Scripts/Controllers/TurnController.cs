@@ -206,7 +206,7 @@ public class TurnController : MonoBehaviour {
 			return;
 
 		for (int i = 0; i < playerList.values.Count; i++) {
-			if (playerList.values[i].IsAlive() && !playerList.values[i].hasMoved) {
+			if (playerList.values[i].IsAlive() && !playerList.values[i].hasMoved && !playerList.values[i].hasEscaped) {
 				return;
 			}
 		}
@@ -320,6 +320,19 @@ public class TurnController : MonoBehaviour {
 		}
 		else if (map.winCondition == WinCondition.CAPTURE) {
 			gameFinished = (triggeredWin.value);
+		}
+		else if (map.winCondition == WinCondition.ESCAPE) {
+			gameFinished = true;
+			bool escaped = false;
+			for (int i = 0; i < playerList.values.Count; i++) {
+				if (playerList.values[i].hasEscaped) {
+					escaped = true;
+				}
+				else if (playerList.values[i].IsAlive()) {
+					gameFinished = false;
+				}
+			}
+			gameFinished &= escaped;
 		}
 		else {
 			Debug.LogError("Undefined win condition:   " + map.winCondition);

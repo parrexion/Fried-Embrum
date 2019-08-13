@@ -29,6 +29,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	public int posx, posy;
 	public Stack<MapTile> path = new Stack<MapTile>();
 	public MapTile currentTile;
+	public bool hasEscaped;
 	private Vector3 _velocity;
 	private Vector3 _heading;
 	private MapTile startTile;
@@ -101,14 +102,6 @@ public abstract class TacticsMove : MonoBehaviour {
 
 
 	/// <summary>
-	/// Update loop.
-	/// Updates the healthbar if they are visible.
-	/// </summary>
-	private void UpdateHealth() {
-		healthBar?.SetAmount(currentHealth, stats.hp);
-	}
-
-	/// <summary>
 	/// Runs the physics loop if the character isMoving and follows the path until the end.
 	/// </summary>
 	private void FixedUpdate() {
@@ -139,6 +132,14 @@ public abstract class TacticsMove : MonoBehaviour {
 	}
 
 	/// <summary>
+	/// Update loop.
+	/// Updates the healthbar if they are visible.
+	/// </summary>
+	private void UpdateHealth() {
+		healthBar?.SetAmount(currentHealth, stats.hp);
+	}
+
+	/// <summary>
 	/// Shows all the possible moves for the character.
 	/// </summary>
 	/// <param name="attacking"></param>
@@ -162,7 +163,7 @@ public abstract class TacticsMove : MonoBehaviour {
 			isDanger = attacking,
 			//isBuff = false
 		};
-		
+
 		if (info.wpnRange.max > 0)
 			battleMap.ShowAttackTiles(currentTile, info.wpnRange, faction, info.isDanger);
 		if (info.staff.max > 0) {
@@ -343,7 +344,16 @@ public abstract class TacticsMove : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Ends the turn for the character and darkens it.null Also cleans up the map.
+	/// Makes the character escape from the map.
+	/// </summary>
+	public void Escape() {
+		hasEscaped = true;
+		currentTile.currentCharacter = null;
+		gameObject.SetActive(false);
+	}
+
+	/// <summary>
+	/// Ends the turn for the character and darkens it. Also cleans up the map.
 	/// </summary>
 	public void End() {
 		hasMoved = true;
@@ -358,6 +368,9 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// </summary>
 	/// <param name="damage"></param>
 	public void TakeDamage(int damage, bool isCrit) {
+		if (!IsAlive() || hasEscaped)
+			return;
+
 		if (damage > 0) {
 			currentHealth -= damage;
 			currentHealth = Mathf.Max(0, currentHealth);
@@ -442,7 +455,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// </summary>
 	/// <returns></returns>
 	public bool IsInjured() {
-		return currentHealth != stats.hp;
+		return currentHealth != stats.hp && !hasEscaped;
 	}
 
 	/// <summary>
@@ -511,98 +524,6 @@ public abstract class TacticsMove : MonoBehaviour {
 		stats.fatigueAmount = 0;
 		stats.ClearBoosts(false);
 		GetComponent<SpriteRenderer>().color = Color.white;
-	}
-
-	/// <summary>
-	/// Takes the range of the character's weapons and checks if any enemy is in range.
-	/// </summary>
-	/// <returns></returns>
-	public bool CanAttack() {
-		WeaponRange range = inventory.GetReach(ItemCategory.WEAPON);
-		if (range.max == 0)
-			return false;
-		for (int i = 0; i < enemyList.values.Count; i++) {
-			if (!enemyList.values[i].IsAlive())
-				continue;
-			int distance = BattleMap.DistanceTo(this, enemyList.values[i]);
-			if (range.InRange(distance)) {
-				return true;
-			}
-		}
-		for (int i = 0; i < battleMap.breakables.Count; i++) {
-			if (!battleMap.breakables[i].blockMove.IsAlive())
-				continue;
-			int distance = BattleMap.DistanceTo(this, battleMap.breakables[i]);
-			if (range.InRange(distance)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/// <summary>
-	/// Takes the range of the character's staffs and checks if any supportable is in range.
-	/// </summary>
-	/// <returns></returns>
-	public bool CanSupport() {
-		WeaponRange range = inventory.GetReach(ItemCategory.SUPPORT);
-		if (range.max == 0)
-			return false;
-
-		List<InventoryTuple> staffs = inventory.GetAllUsableItemTuple(ItemCategory.SUPPORT);
-		bool isBuff = false;
-		for (int i = 0; i < staffs.Count; i++) {
-			if (staffs[i].weaponType == WeaponType.BARRIER) {
-				isBuff = true;
-				break;
-			}
-		}
-
-		for (int i = 0; i < playerList.values.Count; i++) {
-			bool usable = (playerList.values[i].IsAlive() && playerList.values[i].IsInjured() || isBuff);
-			if (!usable || playerList.values[i] == this)
-				continue;
-			int distance = BattleMap.DistanceTo(this, playerList.values[i]);
-			if (range.InRange(distance)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/// <summary>
-	/// Checks if the character can visit a village or other buildings.
-	/// </summary>
-	/// <returns></returns>
-	public bool CanVisit() {
-		return (currentTile.interactType == InteractType.VILLAGE && !currentTile.interacted);
-	}
-
-	/// <summary>
-	/// Checks if the character can visit a village or other buildings.
-	/// </summary>
-	/// <returns></returns>
-	public bool CanCapture() {
-		return (currentTile.interactType == InteractType.CAPTURE);
-	}
-
-	/// <summary>
-	/// Checks if the character can trade with anyone.
-	/// </summary>
-	/// <returns></returns>
-	public bool CanTrade() {
-		if (!canUndoMove)
-			return false;
-		List<MapTile> traders = FindAdjacentCharacters(Faction.PLAYER);
-		return (traders.Count > 0);
-	}
-
-	/// <summary>
-	/// Checks if the character can hack on the current tile.
-	/// </summary>
-	/// <returns></returns>
-	public bool CanHack() {
-		return (currentTile.interactType == InteractType.DATABASE && !currentTile.interacted && stats.currentClass.lockTouch);
 	}
 
 

@@ -65,7 +65,7 @@ public class MapCursor : MonoBehaviour {
 		if (selectCharacter.value == null) {
 			// No selected character - move to next character to move
 			for (int i = 0; i < playerCharacters.values.Count; i++) {
-				if (!playerCharacters.values[i].hasMoved) {
+				if (!playerCharacters.values[i].hasMoved && !playerCharacters.values[i].hasEscaped) {
 					cursorX.value = playerCharacters.values[i].posx;
 					cursorY.value = playerCharacters.values[i].posy;
 					cursorMovedEvent.Invoke();
@@ -85,7 +85,7 @@ public class MapCursor : MonoBehaviour {
 			int startPos = pos;
 			do {
 				pos = OPMath.FullLoop(0, playerCharacters.values.Count, pos + 1);
-			} while (startPos != pos && playerCharacters.values[pos].hasMoved);
+			} while (startPos != pos && playerCharacters.values[pos].hasMoved && playerCharacters.values[pos].hasEscaped);
 
 			cursorX.value = playerCharacters.values[pos].posx;
 			cursorY.value = playerCharacters.values[pos].posy;

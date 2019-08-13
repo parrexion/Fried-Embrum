@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public enum ActionInputType { CAPTURE, ATTACK, HEAL, VISIT, HACK, TRADE, ITEM, WAIT }
+public enum ActionInputType { CAPTURE, ESCAPE, ATTACK, HEAL, VISIT, HACK, TRADE, ITEM, WAIT }
 
 public class ActionInputController : MonoBehaviour {
 
@@ -63,6 +63,12 @@ public class ActionInputController : MonoBehaviour {
 				triggeredWin.value = true;
 				currentActionMode.value = ActionMode.NONE;
 				InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
+				selectedCharacter.value.End();
+				break;
+			case ActionInputType.ESCAPE:
+				currentActionMode.value = ActionMode.NONE;
+				InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
+				selectedCharacter.value.Escape();
 				selectedCharacter.value.End();
 				break;
 			case ActionInputType.ATTACK:
@@ -171,19 +177,23 @@ public class ActionInputController : MonoBehaviour {
 	}
 
 	private void ButtonSetup() {
+		PlayerMove player = (PlayerMove)selectedCharacter.value;
 		actionButtons.ResetButtons();
 		bool seizeWin = ((MapEntry)currentMap.value).winCondition == WinCondition.CAPTURE;
-		if (seizeWin && selectedCharacter.value.CanCapture())
+		bool escapeWin = ((MapEntry)currentMap.value).winCondition == WinCondition.ESCAPE;
+		if (seizeWin && player.CanCapture())
 			actionButtons.AddButton("CAPTURE", (int)ActionInputType.CAPTURE);
-		if (selectedCharacter.value.CanAttack())
+		if (escapeWin && player.CanEscape())
+			actionButtons.AddButton("ESCAPE", (int)ActionInputType.ESCAPE);
+		if (player.CanAttack())
 			actionButtons.AddButton("ATTACK", (int)ActionInputType.ATTACK);
-		if (selectedCharacter.value.CanSupport())
+		if (player.CanSupport())
 			actionButtons.AddButton("HEAL", (int)ActionInputType.HEAL);
-		if (selectedCharacter.value.CanVisit())
+		if (player.CanVisit())
 			actionButtons.AddButton("VISIT", (int)ActionInputType.VISIT);
-		if (selectedCharacter.value.CanHack())
+		if (player.CanHack())
 			actionButtons.AddButton("HACK", (int)ActionInputType.HACK);
-		if (selectedCharacter.value.CanTrade())
+		if (player.CanTrade())
 			actionButtons.AddButton("TRADE", (int)ActionInputType.TRADE);
 
 		actionButtons.AddButton("ITEM", (int)ActionInputType.ITEM);

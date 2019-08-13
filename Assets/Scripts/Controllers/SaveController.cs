@@ -143,7 +143,7 @@ public class SaveController : MonoBehaviour {
 				if (playerData.stats[i].charData == null)
 					continue;
 				CharacterSaveData c = new CharacterSaveData();
-				c.StoreData(playerData.stats[i], playerData.inventory[i], playerData.skills[i]);
+				c.StoreData(playerData.stats[i], playerData.inventory[i], playerData.skills[i], playerData.baseInfo[i]);
 				data.characters.Add(c);
 			}
 			for (int i = 0; i < playerData.items.Count; i++) {
@@ -274,6 +274,7 @@ public class SaveController : MonoBehaviour {
 			playerData.stats.Add(new StatsContainer(loadedData.characters[i], cStats, cClass));
 			playerData.inventory.Add(new InventoryContainer(itemLibrary, loadedData.characters[i], playerData.upgrader));
 			playerData.skills.Add(new SkillsContainer(skillLibrary, loadedData.characters[i]));
+			playerData.baseInfo.Add(new SupportContainer(loadedData.characters[i]));
 		}
 		for (int i = 0; i < loadedData.items.Count; i++) {
 			ItemEntry item = (ItemEntry)itemLibrary.GetEntry(loadedData.items[i].id);

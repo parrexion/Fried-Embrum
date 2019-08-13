@@ -36,7 +36,7 @@ public class CharacterSaveData {
 		level = -1;
 	}
 
-	public void StoreData(StatsContainer stats, InventoryContainer invCon, SkillsContainer skillCont) {
+	public void StoreData(StatsContainer stats, InventoryContainer invCon, SkillsContainer skillCont, SupportContainer supportCont) {
 		id = stats.charData.uuid;
 		currentClass = stats.currentClass.uuid;
 		classLevels = new int[ClassWheel.CLASS_COUNT];
@@ -77,11 +77,11 @@ public class CharacterSaveData {
 		eSkl = stats.eSkl;
 		eDef = stats.eDef;
 
-		//roomNo = stats.roomNo;
-		//supports = new List<SupportValue>();
-		//for (int i = 0; i < stats.supportValues.Count; i++) {
-		//	supports.Add(stats.supportValues[i]);
-		//}
+		roomNo = supportCont.roomNo;
+		supports = new List<SupportValue>();
+		for (int i = 0; i < supportCont.supportValues.Count; i++) {
+			supports.Add(supportCont.supportValues[i]);
+		}
 	}
 
 }

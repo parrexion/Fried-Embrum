@@ -49,11 +49,19 @@ public class ObjectiveController : MonoBehaviour {
 				break;
 
 			case WinCondition.CAPTURE:
-				explanation.text = "Capture command room.";
+				explanation.text = "Capture command point.";
 				break;
 
 			case WinCondition.BOSS:
 				explanation.text = "Defeat boss.";
+				break;
+
+			case WinCondition.ESCAPE:
+				explanation.text = "Escape with everyone.";
+				break;
+
+			default:
+				Debug.LogError("Unsupported explanation type  " + map.winCondition);
 				break;
 		}
 

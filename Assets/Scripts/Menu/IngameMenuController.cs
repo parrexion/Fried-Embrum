@@ -8,6 +8,7 @@ public class IngameMenuController : InputReceiverDelegate {
 
 	private enum State { MAIN, CONTROLS, OPTION, POPUP }
 	public Image overlay;
+	public BoolVariable autoEndTurn;
 
 	[Header("Ingame Menu")]
 	public GameObject ingameMenu;
@@ -21,6 +22,7 @@ public class IngameMenuController : InputReceiverDelegate {
 	public ObjectiveController objective;
 
 	[Header("Events")]
+	public UnityEvent waitPlayerEvent;
 	public UnityEvent nextStateEvent;
 
 
@@ -165,7 +167,10 @@ public class IngameMenuController : InputReceiverDelegate {
 	/// </summary>
 	private void EndTurn() {
 		objective.UpdateState(false);
-		nextStateEvent.Invoke();
+		waitPlayerEvent.Invoke();
+		if (!autoEndTurn.value) {
+			nextStateEvent.Invoke();
+		}
 	}
 
 	public override void OnLeftArrow() {

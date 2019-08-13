@@ -261,7 +261,7 @@ public class ReinforcementPosition {
 	}
 }
 
-public enum InteractType { NONE, BLOCK, DIALOGUE, VILLAGE, CAPTURE, DATABASE }
+public enum InteractType { NONE, BLOCK, DIALOGUE, VILLAGE, CAPTURE, DATABASE, ESCAPE }
 
 [System.Serializable]
 public class InteractPosition {

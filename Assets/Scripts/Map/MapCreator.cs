@@ -143,6 +143,10 @@ public class MapCreator : MonoBehaviour {
 					tempTile.SetTerrain(GetTerrainFromPixel(colorData[pos]));
 					tempTile.interactType = InteractType.CAPTURE;
 				}
+				else if (interPos.interactType == InteractType.ESCAPE) {
+					tempTile.SetTerrain(GetTerrainFromPixel(colorData[pos]));
+					tempTile.interactType = InteractType.ESCAPE;
+				}
 				else if (interPos.interactType == InteractType.DATABASE) {
 					tempTile.SetTerrain(tileChest);
 					tempTile.alternativeTerrain = tileChest.substitueTile;
@@ -336,7 +340,7 @@ public class MapCreator : MonoBehaviour {
 					ClassWheel wheel = (stats.charData.faction == Faction.PLAYER) ? playerClassWheel : enemyClassWheel;
 					InventoryContainer inventory = new InventoryContainer(wheel.GetWpnSkillFromLevel(pos.charData.startClassLevels), pos.inventory);
 					SkillsContainer skills = new SkillsContainer(wheel.GetSkillsFromLevel(pos.charData.startClassLevels, pos.charData.startClass, pos.level));
-					if (pos.faction == Faction.PLAYER) {
+					if (pos.charData.faction == Faction.PLAYER) {
 						TacticsMove tm = SpawnPlayerCharacter(pos.x, pos.y, stats, inventory, skills, pos.joiningSquad, true);
 						playerData.AddNewPlayer(tm);
 						PrepCharacter prep = new PrepCharacter(playerData.stats.Count - 1);
@@ -347,7 +351,7 @@ public class MapCreator : MonoBehaviour {
 							prepList1.values.Add(prep);
 						}
 					}
-					else if (pos.faction == Faction.ENEMY) {
+					else if (pos.charData.faction == Faction.ENEMY) {
 						SpawnEnemyCharacter(pos.x, pos.y, stats, inventory, skills, pos.quotes, pos.aggroType, battleMap.GetTile(pos.huntX, pos.huntY));
 					}
 					else {

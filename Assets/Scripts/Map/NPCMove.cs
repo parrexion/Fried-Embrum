@@ -189,6 +189,8 @@ public class NPCMove : TacticsMove {
 			int damage = BattleCalc.CalculateDamage(weapons[0], stats);
 			WeaponRange reach = inventory.GetReach(ItemCategory.WEAPON);
 			for (int i = 0; i < playerList.values.Count; i++) {
+				if (!playerList.values[i].IsAlive() || playerList.values[i].hasEscaped)
+					continue;
 				int defense = (weapons[0].attackType == AttackType.PHYSICAL) ? playerList.values[i].stats.def : playerList.values[i].stats.mnd;
 				((PlayerMove)playerList.values[i]).ShowAttackTiles(reach, damage - defense);
 			}
@@ -196,7 +198,7 @@ public class NPCMove : TacticsMove {
 		else {
 			WeaponRange reach = inventory.GetReach(ItemCategory.SUPPORT);
 			for (int i = 0; i < enemyList.values.Count; i++) {
-				if (this == enemyList.values[i])
+				if (this == enemyList.values[i] || !enemyList.values[i].IsAlive() || enemyList.values[i].hasEscaped)
 					continue;
 				bool isBuff = (weapons[0].weaponType == WeaponType.BARRIER);
 				if (isBuff || enemyList.values[i].IsInjured())

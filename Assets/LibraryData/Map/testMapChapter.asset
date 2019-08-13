@@ -19,9 +19,9 @@ MonoBehaviour:
   sizeX: 15
   sizeY: 10
   mapSprite: {fileID: 2800000, guid: 71a81984eeb21744c9c3e04b4c1ac25f, type: 3}
-  winCondition: 1
+  winCondition: 3
   loseCondition: 0
-  mapDescription: 
+  mapDescription: TESTING TESTING
   skipBattlePrep: 0
   preDialogue: {fileID: 11400000, guid: 60b2b588570390f4fa5614660432dbbb, type: 2}
   introDialogue: {fileID: 11400000, guid: 3a3dfd1a96530fd4aa92c93c01ac7041, type: 2}
@@ -93,9 +93,9 @@ MonoBehaviour:
     x: 1
     y: 8
     level: 1
-    charData: {fileID: 0}
+    charData: {fileID: 11400000, guid: e073228f081b5ec48b55e2e1ac4062f9, type: 2}
     inventory:
-    - item: {fileID: 0}
+    - item: {fileID: 11400000, guid: 61b5282282d02b544a200d088100d5e3, type: 2}
       droppable: 0
     joiningSquad: 0
     aggroType: 0
@@ -108,9 +108,9 @@ MonoBehaviour:
     x: 2
     y: 8
     level: 3
-    charData: {fileID: 0}
+    charData: {fileID: 11400000, guid: e073228f081b5ec48b55e2e1ac4062f9, type: 2}
     inventory:
-    - item: {fileID: 0}
+    - item: {fileID: 11400000, guid: 61b5282282d02b544a200d088100d5e3, type: 2}
       droppable: 1
     joiningSquad: 0
     aggroType: 0
@@ -123,9 +123,9 @@ MonoBehaviour:
     x: 2
     y: 8
     level: 2
-    charData: {fileID: 0}
+    charData: {fileID: 11400000, guid: e073228f081b5ec48b55e2e1ac4062f9, type: 2}
     inventory:
-    - item: {fileID: 0}
+    - item: {fileID: 11400000, guid: 61b5282282d02b544a200d088100d5e3, type: 2}
       droppable: 1
     joiningSquad: 0
     aggroType: 0
@@ -138,9 +138,9 @@ MonoBehaviour:
     x: 11
     y: 3
     level: 1
-    charData: {fileID: 0}
+    charData: {fileID: 11400000, guid: e073228f081b5ec48b55e2e1ac4062f9, type: 2}
     inventory:
-    - item: {fileID: 0}
+    - item: {fileID: 11400000, guid: 61b5282282d02b544a200d088100d5e3, type: 2}
       droppable: 0
     joiningSquad: 0
     aggroType: 0
@@ -261,11 +261,26 @@ MonoBehaviour:
       level: 1
       charData: {fileID: 0}
       inventory: []
+  - x: 0
+    y: 4
+    interactType: 6
+    health: 0
+    dialogue: {fileID: 0}
+    gift:
+      money: 0
+      scrap: 0
+      items: []
+    ally:
+      x: 0
+      y: 0
+      level: 1
+      charData: {fileID: 0}
+      inventory: []
   turnEvents:
   - turn: 1
     factionTurn: 1
     type: 1
-    dialogue: {fileID: 0}
+    dialogue: {fileID: 11400000, guid: 5b358354d20ddca41a71d469a025c8cd, type: 2}
     x: 0
     y: 0
     changeTerrain: {fileID: 0}

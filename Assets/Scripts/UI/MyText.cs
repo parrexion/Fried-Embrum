@@ -12,6 +12,10 @@ public class MyText : MonoBehaviour {
     
 	public void SetStyle(TextStyle style, Font font) {
 		Text text = GetComponent<Text>();
+		if (text == null) {
+			Debug.LogError("Missing text in object:  " + name);
+			return;
+		}
 		text.color = style.color;
 		text.font = font;
 		text.resizeTextMinSize = 10;
