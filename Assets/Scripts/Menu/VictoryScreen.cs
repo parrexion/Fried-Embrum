@@ -38,12 +38,12 @@ public class VictoryScreen : InputReceiverDelegate {
 
 	public void SetInformation() {
 		Reward reward = ((MissionEntry)currentMission.value).reward;
-		turnText.text = "Turns:  " + totalTurns.value;
-		killText.text = "Kills:  " + totalKills.value;
-		deathText.text = "Deaths:  " + totalDeaths.value;
+		turnText.text = totalTurns.value.ToString();
+		killText.text = totalKills.value.ToString();
+		deathText.text = totalDeaths.value.ToString();
 
-		moneyText.text = "Money:  " + reward.money;
-		scrapText.text = "Scrap:     " + reward.scrap;
+		moneyText.text = reward.money.ToString();
+		scrapText.text = reward.scrap.ToString();
 		itemText.text = (reward.items.Count > 0) ? reward.items[0].entryName : "";
 	}
 	

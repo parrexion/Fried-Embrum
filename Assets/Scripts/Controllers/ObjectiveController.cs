@@ -48,8 +48,8 @@ public class ObjectiveController : MonoBehaviour {
 				explanation.text = "Rout the enemy.";
 				break;
 
-			case WinCondition.SEIZE:
-				explanation.text = "Seize command room.";
+			case WinCondition.CAPTURE:
+				explanation.text = "Capture command room.";
 				break;
 
 			case WinCondition.BOSS:

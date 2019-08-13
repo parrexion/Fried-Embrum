@@ -139,9 +139,9 @@ public class MapCreator : MonoBehaviour {
 					TerrainTile terrain = (interPos.gift == null && interPos.ally == null) ? tileHouse : tileHouseReward;
 					tempTile.SetTerrain(terrain);
 				}
-				else if (interPos.interactType == InteractType.SEIZE) {
+				else if (interPos.interactType == InteractType.CAPTURE) {
 					tempTile.SetTerrain(GetTerrainFromPixel(colorData[pos]));
-					tempTile.interactType = InteractType.SEIZE;
+					tempTile.interactType = InteractType.CAPTURE;
 				}
 				else if (interPos.interactType == InteractType.DATABASE) {
 					tempTile.SetTerrain(tileChest);

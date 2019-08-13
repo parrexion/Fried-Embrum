@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public enum ActionInputType { SEIZE, ATTACK, HEAL, VISIT, HACK, TRADE, ITEM, WAIT }
+public enum ActionInputType { CAPTURE, ATTACK, HEAL, VISIT, HACK, TRADE, ITEM, WAIT }
 
 public class ActionInputController : MonoBehaviour {
 
@@ -59,7 +59,7 @@ public class ActionInputController : MonoBehaviour {
 
 	public void OkButton() {
 		switch ((ActionInputType)actionButtons.GetValue()) {
-			case ActionInputType.SEIZE:
+			case ActionInputType.CAPTURE:
 				triggeredWin.value = true;
 				currentActionMode.value = ActionMode.NONE;
 				InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
@@ -172,9 +172,9 @@ public class ActionInputController : MonoBehaviour {
 
 	private void ButtonSetup() {
 		actionButtons.ResetButtons();
-		bool seizeWin = ((MapEntry)currentMap.value).winCondition == WinCondition.SEIZE;
-		if (seizeWin && selectedCharacter.value.CanSeize())
-			actionButtons.AddButton("SEIZE", (int)ActionInputType.SEIZE);
+		bool seizeWin = ((MapEntry)currentMap.value).winCondition == WinCondition.CAPTURE;
+		if (seizeWin && selectedCharacter.value.CanCapture())
+			actionButtons.AddButton("CAPTURE", (int)ActionInputType.CAPTURE);
 		if (selectedCharacter.value.CanAttack())
 			actionButtons.AddButton("ATTACK", (int)ActionInputType.ATTACK);
 		if (selectedCharacter.value.CanSupport())

@@ -326,6 +326,10 @@ public class SimpleCharacterUI : MonoBehaviour {
 			float fill = (tile.interacted) ? 0 : 1;
 			healthBar.SetCustomText(fill, text);
 		}
+		else {
+			HideStats();
+			return;
+		}
 
 		levelClass.text = "";
 		expBar.gameObject.SetActive(false);

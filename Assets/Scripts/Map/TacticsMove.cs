@@ -582,8 +582,8 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// Checks if the character can visit a village or other buildings.
 	/// </summary>
 	/// <returns></returns>
-	public bool CanSeize() {
-		return (currentTile.interactType == InteractType.SEIZE);
+	public bool CanCapture() {
+		return (currentTile.interactType == InteractType.CAPTURE);
 	}
 
 	/// <summary>

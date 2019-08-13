@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum WinCondition { ROUT, SEIZE, BOSS, ESCAPE, DEFEND }
-public enum LoseCondition { NORMAL, SEIZE, PROTECT }
+public enum WinCondition { ROUT, CAPTURE, BOSS, ESCAPE, DEFEND }
+public enum LoseCondition { NORMAL, CAPTURE, PROTECT }
 public enum MapLocation { UNKNOWN = -1, DEBES, GHART, THARSONIS, VILJIA, WALNIA_REX }
 
 [CreateAssetMenu(menuName = "LibraryEntries/Map")]
@@ -261,7 +261,7 @@ public class ReinforcementPosition {
 	}
 }
 
-public enum InteractType { NONE, BLOCK, DIALOGUE, VILLAGE, SEIZE, DATABASE }
+public enum InteractType { NONE, BLOCK, DIALOGUE, VILLAGE, CAPTURE, DATABASE }
 
 [System.Serializable]
 public class InteractPosition {

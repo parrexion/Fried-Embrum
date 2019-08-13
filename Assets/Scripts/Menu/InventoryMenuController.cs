@@ -7,20 +7,23 @@ public class InventoryMenuController : InputReceiverDelegate {
 
 	public TacticsMoveVariable selectedCharacter;
 	public ActionModeVariable currentMode;
-
-	[Header("Extra sounds")]
-	public AudioQueueVariable sfxQueue;
-	public SfxEntry healItemSfx;
-	public SfxEntry boostItemSfx;
 	
 	[Header("Inventory Menu")]
 	public GameObject inventoryMenu;
 	public IntVariable inventoryIndex;
 	public IntVariable itemMenuPosition;
 
+	public MyPrompt prompt;
+	private bool popupMode;
 	public MyButtonList inventoryButtons;
 	private bool selectMode;
 
+	[Header("Extra sounds")]
+	public AudioQueueVariable sfxQueue;
+	public SfxEntry healItemSfx;
+	public SfxEntry boostItemSfx;
+
+	[Header("Events")]
 	public UnityEvent inventoryChangedEvent;
 	public UnityEvent playSfxEvent;
 	
@@ -80,7 +83,18 @@ public class InventoryMenuController : InputReceiverDelegate {
     }
 
     public override void OnOkButton() {
-		if (!selectMode) {
+		if (popupMode) {
+			popupMode = false;
+			MyPrompt.Result res = prompt.Click(true);
+			if (res == MyPrompt.Result.OK1) {
+				DropItem();
+				menuAcceptEvent.Invoke();
+			}
+			else {
+				menuBackEvent.Invoke();
+			}
+		}
+		else if (!selectMode) {
 			InventoryTuple tuple = selectedCharacter.value.inventory.GetTuple(inventoryIndex.value);
 			if (!string.IsNullOrEmpty(tuple.uuid)) {
 				selectMode = true;
@@ -98,7 +112,9 @@ public class InventoryMenuController : InputReceiverDelegate {
 					UseItem();
 					break;
 				case 2:
-					DropItem();
+					InventoryTuple tup = selectedCharacter.value.inventory.GetTuple(inventoryIndex.value);
+					prompt.ShowYesNoPopup("Drop " + tup.entryName + "?", false);
+					popupMode = true;
 					break;
 			}
 			menuAcceptEvent.Invoke();
@@ -116,6 +132,16 @@ public class InventoryMenuController : InputReceiverDelegate {
 		}
 		menuBackEvent.Invoke();
     }
+
+	public override void OnLeftArrow() {
+		if(popupMode)
+			prompt.Move(-1);
+	}
+
+	public override void OnRightArrow() {
+		if(popupMode)
+			prompt.Move(1);
+	}
 
 	/// <summary>
 	/// Equips the selected item and moves the cursor to the new position.
@@ -158,8 +184,6 @@ public class InventoryMenuController : InputReceiverDelegate {
 	}
 
 
-    public override void OnLeftArrow() { }
-    public override void OnRightArrow() { }
     public override void OnLButton() { }
     public override void OnRButton() { }
     public override void OnXButton() { }

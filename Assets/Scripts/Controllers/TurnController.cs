@@ -318,7 +318,7 @@ public class TurnController : MonoBehaviour {
 				}
 			}
 		}
-		else if (map.winCondition == WinCondition.SEIZE) {
+		else if (map.winCondition == WinCondition.CAPTURE) {
 			gameFinished = (triggeredWin.value);
 		}
 		else {
