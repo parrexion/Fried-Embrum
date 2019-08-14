@@ -116,8 +116,8 @@ public abstract class TacticsMove : MonoBehaviour {
 		else if (path.Count > 0) {
 			MapTile tile = path.Pop();
 			_heading = new Vector3(tile.transform.position.x, tile.transform.position.y, 0);
-			//posx = currentTile.posx;
-			//posy = currentTile.posy;
+			posx = tile.posx;
+			posy = tile.posy;
 			cameraFollowEvent.Invoke();
 		}
 		else {

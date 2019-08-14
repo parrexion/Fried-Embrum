@@ -10,28 +10,51 @@ using UnityEngine.UI;
 public class ExplanationGroup : MonoBehaviour {
 
 	public Text tooltip;
-	public ExplanationObject[] explanations;
-
-	private int currentIndex;
-
+	public ExplanationObject selectedObject;
 
 	private void Start () {
 		UpdateSelection(false);
 	}
 
-	public void Move(int dir) {
-		do {
-			currentIndex = OPMath.FullLoop(0, explanations.Length, currentIndex + dir);
-		} while (!explanations[currentIndex].IsActive());
+	public void MoveLeft() {
+		if(selectedObject.leftObject != null) {
+			selectedObject.highlight.enabled = false;
+			selectedObject = selectedObject.leftObject;
+			selectedObject.highlight.enabled = true;
+		}
+		UpdateSelection(true);
+	}
+
+	public void MoveRight() {
+		if(selectedObject.rightObject != null) {
+			selectedObject.highlight.enabled = false;
+			selectedObject = selectedObject.rightObject;
+			selectedObject.highlight.enabled = true;
+		}
+		UpdateSelection(true);
+	}
+
+	public void MoveUp() {
+		if(selectedObject.upObject != null) {
+			selectedObject.highlight.enabled = false;
+			selectedObject = selectedObject.upObject;
+			selectedObject.highlight.enabled = true;
+		}
+		UpdateSelection(true);
+	}
+
+	public void MoveDown() {
+		if(selectedObject.downObject != null) {
+			selectedObject.highlight.enabled = false;
+			selectedObject = selectedObject.downObject;
+			selectedObject.highlight.enabled = true;
+		}
 		UpdateSelection(true);
 	}
 
 	public void UpdateSelection(bool active) {
-		int index = (active) ? currentIndex : -1;
-		for (int i = 0; i < explanations.Length; i++) {
-			explanations[i].highlight.enabled = (index == i && active);
-			if (index == i)
-				tooltip.text = explanations[i].GetTooltip();
-		}
+		selectedObject.highlight.enabled = active;
+		if (active)
+			tooltip.text = selectedObject.GetTooltip();
 	}
 }

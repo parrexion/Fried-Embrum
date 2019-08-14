@@ -61,30 +61,60 @@ public class ExplanationController : InputReceiverDelegate {
 
     public override void OnDownArrow() {
         if (page == StatsPage.BASIC) {
-            baseStats.Move(1);
+            baseStats.MoveDown();
 			menuMoveEvent.Invoke();
         }
         else if (page == StatsPage.STATS) {
-            statsStats.Move(1);
+            statsStats.MoveDown();
 			menuMoveEvent.Invoke();
         }
         else if (page == StatsPage.INVENTORY) {
-            inventoryStats.Move(1);
+            inventoryStats.MoveDown();
 			menuMoveEvent.Invoke();
         }
     }
 
     public override void OnUpArrow() {
         if (page == StatsPage.BASIC) {
-            baseStats.Move(-1);
+            baseStats.MoveUp();
 			menuMoveEvent.Invoke();
         }
         else if (page == StatsPage.STATS) {
-            statsStats.Move(-1);
+            statsStats.MoveUp();
 			menuMoveEvent.Invoke();
         }
         else if (page == StatsPage.INVENTORY) {
-            inventoryStats.Move(-1);
+            inventoryStats.MoveUp();
+			menuMoveEvent.Invoke();
+        }
+    }
+
+    public override void OnLeftArrow() {
+        if (page == StatsPage.BASIC) {
+            baseStats.MoveLeft();
+			menuMoveEvent.Invoke();
+        }
+        else if (page == StatsPage.STATS) {
+            statsStats.MoveLeft();
+			menuMoveEvent.Invoke();
+        }
+        else if (page == StatsPage.INVENTORY) {
+            inventoryStats.MoveLeft();
+			menuMoveEvent.Invoke();
+        }
+    }
+
+    public override void OnRightArrow() {
+        if (page == StatsPage.BASIC) {
+            baseStats.MoveRight();
+			menuMoveEvent.Invoke();
+        }
+        else if (page == StatsPage.STATS) {
+            statsStats.MoveRight();
+			menuMoveEvent.Invoke();
+        }
+        else if (page == StatsPage.INVENTORY) {
+            inventoryStats.MoveRight();
 			menuMoveEvent.Invoke();
         }
     }
@@ -124,8 +154,6 @@ public class ExplanationController : InputReceiverDelegate {
 	}
 	
 	
-    public override void OnLeftArrow() { }
-    public override void OnRightArrow() { }
     public override void OnOkButton() { }
     public override void OnRButton() { }
     public override void OnStartButton() { }

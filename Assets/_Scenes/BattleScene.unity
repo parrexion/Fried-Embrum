@@ -333,6 +333,10 @@ MonoBehaviour:
   highlight: {fileID: 14573286}
   scrObject: {fileID: 0}
   fallbackString: Damage dealt by the character in battle.
+  upObject: {fileID: 498271153}
+  downObject: {fileID: 545049110}
+  leftObject: {fileID: 1274400327}
+  rightObject: {fileID: 1274400327}
 --- !u!1 &22469988
 GameObject:
   m_ObjectHideFlags: 0
@@ -6310,6 +6314,10 @@ MonoBehaviour:
   highlight: {fileID: 67752379}
   scrObject: {fileID: 0}
   fallbackString: Currently level and class
+  upObject: {fileID: 2012185953}
+  downObject: {fileID: 293164096}
+  leftObject: {fileID: 0}
+  rightObject: {fileID: 0}
 --- !u!222 &67752381
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7633,6 +7641,10 @@ MonoBehaviour:
   highlight: {fileID: 118259674}
   scrObject: {fileID: 11400000, guid: 1e836ccfbd2398d45918f779af26995b, type: 2}
   fallbackString: Skill 3
+  upObject: {fileID: 240899496}
+  downObject: {fileID: 1274400327}
+  leftObject: {fileID: 1267824653}
+  rightObject: {fileID: 841325775}
 --- !u!1 &99296291
 GameObject:
   m_ObjectHideFlags: 0
@@ -7776,7 +7788,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 30
+    m_MaxSize: 32
     m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -7880,6 +7892,10 @@ MonoBehaviour:
   highlight: {fileID: 1804699334}
   scrObject: {fileID: 0}
   fallbackString: Current level. Advanced classes have +20 to their level.
+  upObject: {fileID: 1397442004}
+  downObject: {fileID: 699958376}
+  leftObject: {fileID: 0}
+  rightObject: {fileID: 0}
 --- !u!1 &102152790
 GameObject:
   m_ObjectHideFlags: 0
@@ -8647,6 +8663,10 @@ MonoBehaviour:
   highlight: {fileID: 437690756}
   scrObject: {fileID: 0}
   fallbackString: Attack power. Determines how much damage and power of spells.
+  upObject: {fileID: 1660277173}
+  downObject: {fileID: 630099183}
+  leftObject: {fileID: 0}
+  rightObject: {fileID: 0}
 --- !u!1 &137418003
 GameObject:
   m_ObjectHideFlags: 0
@@ -10569,7 +10589,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 4
-    m_MaxSize: 40
+    m_MaxSize: 44
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -11247,6 +11267,10 @@ MonoBehaviour:
   scrObject: {fileID: 0}
   fallbackString: Constitution. Indicates how heavy weapons the character can use
     without penalties.
+  upObject: {fileID: 0}
+  downObject: {fileID: 0}
+  leftObject: {fileID: 0}
+  rightObject: {fileID: 0}
 --- !u!1 &211418200
 GameObject:
   m_ObjectHideFlags: 0
@@ -11889,7 +11913,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 30
+    m_MaxSize: 32
     m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -12103,6 +12127,10 @@ MonoBehaviour:
   highlight: {fileID: 240899494}
   scrObject: {fileID: 0}
   fallbackString: Currently equipped weapon
+  upObject: {fileID: 1800400969}
+  downObject: {fileID: 498271153}
+  leftObject: {fileID: 0}
+  rightObject: {fileID: 0}
 --- !u!1 &249943728
 GameObject:
   m_ObjectHideFlags: 0
@@ -12254,6 +12282,10 @@ MonoBehaviour:
   highlight: {fileID: 1508157713}
   scrObject: {fileID: 0}
   fallbackString: Inventory 1
+  upObject: {fileID: 1251783288}
+  downObject: {fileID: 595989763}
+  leftObject: {fileID: 0}
+  rightObject: {fileID: 0}
 --- !u!114 &254229803
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13122,7 +13154,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 50
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -13691,6 +13723,10 @@ MonoBehaviour:
   highlight: {fileID: 293164097}
   scrObject: {fileID: 0}
   fallbackString: Current health. A unit dies if this reaches 0.
+  upObject: {fileID: 67752380}
+  downObject: {fileID: 1800400969}
+  leftObject: {fileID: 0}
+  rightObject: {fileID: 0}
 --- !u!114 &293164097
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14281,7 +14317,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 4
-    m_MaxSize: 40
+    m_MaxSize: 44
     m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -14514,7 +14550,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 48
     m_Alignment: 2
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -17215,7 +17251,18 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   menuFailEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 5b882ed488044f74d92c3818ac29c97b, type: 2}
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   selectedCharacter: {fileID: 11400000, guid: 9514266d05ac5174781ef48f42fe570e, type: 2}
@@ -19289,7 +19336,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 4
-    m_MaxSize: 40
+    m_MaxSize: 44
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -19788,6 +19835,10 @@ MonoBehaviour:
   highlight: {fileID: 1196574687}
   scrObject: {fileID: 11400000, guid: 3c6bad1316bb0ef48a24da3232da3d04, type: 2}
   fallbackString: Skill 1
+  upObject: {fileID: 240899496}
+  downObject: {fileID: 14573288}
+  leftObject: {fileID: 1648793156}
+  rightObject: {fileID: 1267824653}
 --- !u!1 &507948704
 GameObject:
   m_ObjectHideFlags: 0
@@ -21050,6 +21101,10 @@ MonoBehaviour:
   highlight: {fileID: 545049109}
   scrObject: {fileID: 0}
   fallbackString: Fatigue from getting attacked. Lowers SPD,PWR,HIT,AVO
+  upObject: {fileID: 14573288}
+  downObject: {fileID: 67752380}
+  leftObject: {fileID: 1639702232}
+  rightObject: {fileID: 1639702232}
 --- !u!222 &545049111
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -21904,7 +21959,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 30
+    m_MaxSize: 40
     m_Alignment: 1
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -22142,6 +22197,10 @@ MonoBehaviour:
   highlight: {fileID: 1536610262}
   scrObject: {fileID: 0}
   fallbackString: Inventory 2
+  upObject: {fileID: 254229801}
+  downObject: {fileID: 1626358423}
+  leftObject: {fileID: 0}
+  rightObject: {fileID: 0}
 --- !u!114 &595989765
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23115,6 +23174,10 @@ MonoBehaviour:
   highlight: {fileID: 1219248289}
   scrObject: {fileID: 0}
   fallbackString: Attack power. Determines how much damage and power of spells.
+  upObject: {fileID: 132860759}
+  downObject: {fileID: 1149291027}
+  leftObject: {fileID: 0}
+  rightObject: {fileID: 0}
 --- !u!114 &630099184
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24457,14 +24520,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tooltip: {fileID: 111132476}
-  explanations:
-  - {fileID: 254229801}
-  - {fileID: 595989763}
-  - {fileID: 1626358423}
-  - {fileID: 2085129103}
-  - {fileID: 1095512175}
-  - {fileID: 1251783288}
-  - {fileID: 201147603}
+  selectedObject: {fileID: 254229801}
 --- !u!1 &687566876
 GameObject:
   m_ObjectHideFlags: 0
@@ -24960,6 +25016,10 @@ MonoBehaviour:
   highlight: {fileID: 1887313829}
   scrObject: {fileID: 0}
   fallbackString: Current experience. Characters level up when they reach 100 experience.
+  upObject: {fileID: 101719014}
+  downObject: {fileID: 1660277173}
+  leftObject: {fileID: 0}
+  rightObject: {fileID: 0}
 --- !u!1 &702398887
 GameObject:
   m_ObjectHideFlags: 0
@@ -27202,7 +27262,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 24
+    m_MaxSize: 26
     m_Alignment: 5
     m_AlignByGeometry: 0
     m_RichText: 0
@@ -28234,7 +28294,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 30
+    m_MaxSize: 32
     m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -29840,6 +29900,10 @@ MonoBehaviour:
   highlight: {fileID: 1769591390}
   scrObject: {fileID: 11400000, guid: da5d8cfda209ff541a83aac12dc111a0, type: 2}
   fallbackString: Skill 4
+  upObject: {fileID: 240899496}
+  downObject: {fileID: 1274400327}
+  leftObject: {fileID: 98282707}
+  rightObject: {fileID: 1648793156}
 --- !u!1 &849901082
 GameObject:
   m_ObjectHideFlags: 0
@@ -31667,7 +31731,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 45
     m_Alignment: 5
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -32547,21 +32611,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tooltip: {fileID: 111132476}
-  explanations:
-  - {fileID: 2012185953}
-  - {fileID: 67752380}
-  - {fileID: 293164096}
-  - {fileID: 1800400969}
-  - {fileID: 240899496}
-  - {fileID: 498271153}
-  - {fileID: 1267824653}
-  - {fileID: 98282707}
-  - {fileID: 841325775}
-  - {fileID: 1648793156}
-  - {fileID: 14573288}
-  - {fileID: 1274400327}
-  - {fileID: 545049110}
-  - {fileID: 1639702232}
+  selectedObject: {fileID: 293164096}
 --- !u!1 &932522321
 GameObject:
   m_ObjectHideFlags: 0
@@ -35262,6 +35312,10 @@ MonoBehaviour:
   scrObject: {fileID: 0}
   fallbackString: Speed. Determines avoid chance and allows character to double attack
     if their speed is at least 4 higher than their opponent.
+  upObject: {fileID: 1149291027}
+  downObject: {fileID: 2033105233}
+  leftObject: {fileID: 0}
+  rightObject: {fileID: 0}
 --- !u!1 &1007064916
 GameObject:
   m_ObjectHideFlags: 0
@@ -35699,7 +35753,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 24
+    m_MaxSize: 26
     m_Alignment: 5
     m_AlignByGeometry: 0
     m_RichText: 0
@@ -36752,15 +36806,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tooltip: {fileID: 111132476}
-  explanations:
-  - {fileID: 101719014}
-  - {fileID: 699958376}
-  - {fileID: 1660277173}
-  - {fileID: 132860759}
-  - {fileID: 1149291027}
-  - {fileID: 1007044720}
-  - {fileID: 2033105233}
-  - {fileID: 1397442004}
+  selectedObject: {fileID: 101719014}
 --- !u!1 &1069078430
 GameObject:
   m_ObjectHideFlags: 0
@@ -37374,6 +37420,10 @@ MonoBehaviour:
   highlight: {fileID: 1335471398}
   scrObject: {fileID: 0}
   fallbackString: Inventory 5
+  upObject: {fileID: 2085129103}
+  downObject: {fileID: 1251783288}
+  leftObject: {fileID: 0}
+  rightObject: {fileID: 0}
 --- !u!114 &1095512177
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38040,7 +38090,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 4
-    m_MaxSize: 40
+    m_MaxSize: 44
     m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -39071,6 +39121,10 @@ MonoBehaviour:
   highlight: {fileID: 707239646}
   scrObject: {fileID: 0}
   fallbackString: Skill. Determines hit rate and critical hit rate.
+  upObject: {fileID: 630099183}
+  downObject: {fileID: 1007044720}
+  leftObject: {fileID: 0}
+  rightObject: {fileID: 0}
 --- !u!1 &1155224363
 GameObject:
   m_ObjectHideFlags: 0
@@ -39365,7 +39419,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 50
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -40962,6 +41016,10 @@ MonoBehaviour:
   scrObject: {fileID: 0}
   fallbackString: Weapon skills. Ranges from E to A. A - means there are no ranks
     for that weapon type.
+  upObject: {fileID: 1095512175}
+  downObject: {fileID: 254229801}
+  leftObject: {fileID: 0}
+  rightObject: {fileID: 0}
 --- !u!1 &1253221166
 GameObject:
   m_ObjectHideFlags: 0
@@ -41657,6 +41715,10 @@ MonoBehaviour:
   highlight: {fileID: 1857116134}
   scrObject: {fileID: 11400000, guid: 3b5358512d6061c46af9f591e0b8aa80, type: 2}
   fallbackString: Skill 2
+  upObject: {fileID: 240899496}
+  downObject: {fileID: 14573288}
+  leftObject: {fileID: 498271153}
+  rightObject: {fileID: 98282707}
 --- !u!1 &1269378278
 GameObject:
   m_ObjectHideFlags: 0
@@ -41827,6 +41889,10 @@ MonoBehaviour:
   highlight: {fileID: 1274400325}
   scrObject: {fileID: 0}
   fallbackString: Base hit rate with the currently equipped weapon.
+  upObject: {fileID: 841325775}
+  downObject: {fileID: 1639702232}
+  leftObject: {fileID: 14573288}
+  rightObject: {fileID: 14573288}
 --- !u!1 &1275327585
 GameObject:
   m_ObjectHideFlags: 0
@@ -42612,7 +42678,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 48
     m_Alignment: 2
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -43427,7 +43493,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 55
+    m_MaxSize: 70
     m_Alignment: 1
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -44679,7 +44745,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 50
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -45560,6 +45626,10 @@ MonoBehaviour:
   scrObject: {fileID: 0}
   fallbackString: Movement. Indicates how many tiles the unit can move when not slowed
     down by terrain.
+  upObject: {fileID: 2033105233}
+  downObject: {fileID: 101719014}
+  leftObject: {fileID: 0}
+  rightObject: {fileID: 0}
 --- !u!1 &1398830983
 GameObject:
   m_ObjectHideFlags: 0
@@ -46799,7 +46869,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 24
+    m_MaxSize: 26
     m_Alignment: 5
     m_AlignByGeometry: 0
     m_RichText: 0
@@ -51887,6 +51957,10 @@ MonoBehaviour:
   highlight: {fileID: 1602517456}
   scrObject: {fileID: 0}
   fallbackString: Inventory 3
+  upObject: {fileID: 595989763}
+  downObject: {fileID: 2085129103}
+  leftObject: {fileID: 0}
+  rightObject: {fileID: 0}
 --- !u!114 &1626358425
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -52245,6 +52319,10 @@ MonoBehaviour:
   scrObject: {fileID: 0}
   fallbackString: Avoidance with the currently equipped weapon. A + indicates a boost
     from the terrain.
+  upObject: {fileID: 1274400327}
+  downObject: {fileID: 2012185953}
+  leftObject: {fileID: 545049110}
+  rightObject: {fileID: 545049110}
 --- !u!1 &1641943786
 GameObject:
   m_ObjectHideFlags: 0
@@ -52309,7 +52387,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 30
+    m_MaxSize: 32
     m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -57823,6 +57901,10 @@ MonoBehaviour:
   highlight: {fileID: 1621012074}
   scrObject: {fileID: 11400000, guid: 4eb86292f59cbb143bb4ca0b0ea283e1, type: 2}
   fallbackString: Skill 5
+  upObject: {fileID: 240899496}
+  downObject: {fileID: 1274400327}
+  leftObject: {fileID: 841325775}
+  rightObject: {fileID: 498271153}
 --- !u!1 &1649081220
 GameObject:
   m_ObjectHideFlags: 0
@@ -58086,6 +58168,10 @@ MonoBehaviour:
   scrObject: {fileID: 0}
   fallbackString: Maximum health. A character dies when the current health reaches
     0.
+  upObject: {fileID: 699958376}
+  downObject: {fileID: 132860759}
+  leftObject: {fileID: 0}
+  rightObject: {fileID: 0}
 --- !u!1 &1665334939
 GameObject:
   m_ObjectHideFlags: 0
@@ -60040,7 +60126,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 48
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -60312,7 +60398,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 50
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -61738,6 +61824,10 @@ MonoBehaviour:
   highlight: {fileID: 1800400970}
   scrObject: {fileID: 0}
   fallbackString: Current exp. A unit levels up at 100.
+  upObject: {fileID: 293164096}
+  downObject: {fileID: 240899496}
+  leftObject: {fileID: 0}
+  rightObject: {fileID: 0}
 --- !u!114 &1800400970
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62930,7 +63020,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 4
-    m_MaxSize: 40
+    m_MaxSize: 44
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -63010,7 +63100,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 48
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -67587,7 +67677,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 50
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -67846,7 +67936,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 4
-    m_MaxSize: 40
+    m_MaxSize: 44
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -68353,6 +68443,10 @@ MonoBehaviour:
   scrObject: {fileID: 0}
   fallbackString: Weaknesses of the character. Weapons with any of these icons deals
     a lot more damage.
+  upObject: {fileID: 1639702232}
+  downObject: {fileID: 67752380}
+  leftObject: {fileID: 0}
+  rightObject: {fileID: 0}
 --- !u!1 &2012933596
 GameObject:
   m_ObjectHideFlags: 0
@@ -68846,7 +68940,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 30
+    m_MaxSize: 32
     m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -69263,6 +69357,10 @@ MonoBehaviour:
   highlight: {fileID: 1905799971}
   scrObject: {fileID: 0}
   fallbackString: Defense. Reduces damage taken by physical attacks.
+  upObject: {fileID: 1007044720}
+  downObject: {fileID: 1397442004}
+  leftObject: {fileID: 0}
+  rightObject: {fileID: 0}
 --- !u!1 &2038814788
 GameObject:
   m_ObjectHideFlags: 0
@@ -70854,7 +70952,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 50
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -70977,6 +71075,10 @@ MonoBehaviour:
   highlight: {fileID: 1538612140}
   scrObject: {fileID: 0}
   fallbackString: Inventory 4
+  upObject: {fileID: 1626358423}
+  downObject: {fileID: 1095512175}
+  leftObject: {fileID: 0}
+  rightObject: {fileID: 0}
 --- !u!114 &2085129105
 MonoBehaviour:
   m_ObjectHideFlags: 0

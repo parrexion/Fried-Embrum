@@ -9,6 +9,12 @@ public class ExplanationObject : MonoBehaviour {
 	public ScrObjEntryReference scrObject;
 	public string fallbackString;
 
+	[Header("Directions")]
+	public ExplanationObject upObject;
+	public ExplanationObject downObject;
+	public ExplanationObject leftObject;
+	public ExplanationObject rightObject;
+
 
 	private void Start () {
 		highlight.enabled = false;
