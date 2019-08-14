@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Text))]
 public class MyText : MonoBehaviour {
 
 	public enum StyleType { NONE, HUGE, TITLE, SUBTITLE, BREAD, OBJECTIVE, MENU_TITLE,
