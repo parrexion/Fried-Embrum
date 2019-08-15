@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class BackgroundEditorWindow : GenericEntryEditorWindow {
 
 	protected override string NameString => "Background";
-	protected override ScrObjLibraryEntry CreateInstance => Editor.CreateInstance<MissionEntry>();
+	protected override ScrObjLibraryEntry CreateInstance => Editor.CreateInstance<BackgroundEntry>();
 	protected override Color BackgroundColor => new Color(0.8f, 0.5f, 0.8f);
 
 
