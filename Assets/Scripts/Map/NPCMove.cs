@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public enum AggroType { WAIT, CHARGE, GUARD, BOSS, HUNT }
+public enum AggroType { WAIT, CHARGE, GUARD, BOSS, HUNT, PATROL }
 
 public class SearchInfo {
 	public TacticsMove tactics;
@@ -18,13 +18,14 @@ public class SearchInfo {
 }
 
 public class NPCMove : TacticsMove {
-
-
+	
 	public ActionModeVariable currentMode;
 	public AggroType aggroType;
 	public MapTileVariable moveTile;
 	public SpriteRenderer bossCrest;
 	public MapTile huntTile;
+	public MapTile[] patrolTiles;
+	private int patrolIndex;
 
 	public UnityEvent finishedMovingEvent;
 	public UnityEvent destroyedTileEvent;
@@ -155,11 +156,29 @@ public class NPCMove : TacticsMove {
 			if (aggroType == AggroType.WAIT)
 				aggroType = AggroType.CHARGE;
 		}
-		else if (!goodTile || aggroType != AggroType.CHARGE) {
+		else if (goodTile && aggroType == AggroType.CHARGE) {
 			//Have no weapons that can be used
 			currentMode.value = ActionMode.NONE;
 			tileBest = null;
 			tileGood = null;
+		}
+		else if (aggroType == AggroType.PATROL) {
+			tileBest = null;
+			tileGood = patrolTiles[patrolIndex];
+			while(tileGood != null && (tileGood.distance > moveSpeed || !tileGood.selectable)) {
+				tileGood = tileGood.parent;
+			}
+			if(tileGood != null) {
+				tileGood.PrintPos();
+				currentMode.value = ActionMode.MOVE;
+				patrolIndex = OPMath.FullLoop(0, patrolTiles.Length, patrolIndex + 1);
+				return;
+			}
+			else {
+				currentMode.value = ActionMode.NONE;
+				tileGood = null;
+				return;
+			}
 		}
 		else {
 			//The finds the tile which takes the character towards the good tile

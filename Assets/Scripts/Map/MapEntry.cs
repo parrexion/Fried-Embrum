@@ -195,6 +195,8 @@ public class EnemyPosition {
 	public bool hasQuotes;
 	public List<FightQuote> quotes = new List<FightQuote>();
 	public int huntX, huntY;
+	public List<Position> patrolPositions = new List<Position>();
+
 
 	public void Copy(EnemyPosition other) {
 		spawnTurn = other.spawnTurn;
@@ -216,6 +218,10 @@ public class EnemyPosition {
 		}
 		huntX = other.huntX;
 		huntY = other.huntY;
+		patrolPositions = new List<Position>();
+		for(int i = 0; i < other.patrolPositions.Count; i++) {
+			patrolPositions.Add(new Position() { x = other.patrolPositions[i].x, y = other.patrolPositions[i].y });
+		}
 	}
 }
 

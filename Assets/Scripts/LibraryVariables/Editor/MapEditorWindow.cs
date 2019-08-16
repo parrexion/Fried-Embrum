@@ -278,6 +278,27 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 					mapValues.enemies[i].huntX = EditorGUILayout.IntField("", mapValues.enemies[i].huntX);
 					mapValues.enemies[i].huntY = EditorGUILayout.IntField("", mapValues.enemies[i].huntY);
 					GUILayout.EndHorizontal();
+				} 
+				else if(mapValues.enemies[i].aggroType == AggroType.PATROL) {
+					for(int pos = 0; pos < mapValues.enemies[i].patrolPositions.Count; pos++) {
+						GUILayout.BeginHorizontal();
+						GUILayout.Label("Patrol tile");
+						mapValues.enemies[i].patrolPositions[pos].x = EditorGUILayout.IntField("", mapValues.enemies[i].patrolPositions[pos].x);
+						mapValues.enemies[i].patrolPositions[pos].y = EditorGUILayout.IntField("", mapValues.enemies[i].patrolPositions[pos].y);
+						if(GUILayout.Button("X", GUILayout.Width(50))) {
+							GUI.FocusControl(null);
+							mapValues.enemies[i].patrolPositions.RemoveAt(i);
+							i--;
+							continue;
+						}
+						GUILayout.EndHorizontal();
+					}
+					GUILayout.BeginHorizontal();
+					GUILayout.Label("Add Tile");
+					if (GUILayout.Button("+")) {
+						mapValues.enemies[i].patrolPositions.Add(new Position());
+					}
+					GUILayout.EndHorizontal();
 				}
 
 				// Inventory
