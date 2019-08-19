@@ -18,6 +18,9 @@ public class SearchInfo {
 }
 
 public class NPCMove : TacticsMove {
+	
+	private static List<TacticsMove> enemies = new List<TacticsMove>();
+	private static List<TacticsMove> friends = new List<TacticsMove>();
 
 	public ActionModeVariable currentMode;
 	public AggroType aggroType;
@@ -207,27 +210,55 @@ public class NPCMove : TacticsMove {
 	private void GenerateHitTiles(List<InventoryTuple> weapons) {
 		battleMap.ResetMap();
 
+		//Sort characters
+		enemies.Clear();
+		friends.Clear();
+		if (faction == Faction.ALLY) {
+			for (int i = 0; i < enemyList.values.Count; i++) {
+				if (enemyList.values[i].IsAlive() && !enemyList.values[i].hasEscaped)
+					enemies.Add(enemyList.values[i]);
+			}
+			for (int i = 0; i < playerList.Count; i++) {
+				if (playerList.values[i].IsAlive() && !playerList.values[i].hasEscaped)
+					friends.Add(playerList.values[i]);
+			}
+			for (int i = 0; i < allyList.Count; i++) {
+				if (this != allyList.values[i] && allyList.values[i].IsAlive() && !allyList.values[i].hasEscaped)
+					friends.Add(allyList.values[i]);
+			}
+		}
+		else if (faction == Faction.ENEMY) {
+			for (int i = 0; i < enemyList.values.Count; i++) {
+				if (this != enemyList.values[i] && enemyList.values[i].IsAlive() && !enemyList.values[i].hasEscaped)
+					friends.Add(enemyList.values[i]);
+			}
+			for (int i = 0; i < playerList.Count; i++) {
+				if (playerList.values[i].IsAlive() && !playerList.values[i].hasEscaped)
+					enemies.Add(playerList.values[i]);
+			}
+			for (int i = 0; i < allyList.Count; i++) {
+				if (allyList.values[i].IsAlive() && !allyList.values[i].hasEscaped)
+					enemies.Add(allyList.values[i]);
+			}
+		}
+
 		//Calculate range
 
 		//Generate attack/support tiles
 		if (weapons[0].itemCategory == ItemCategory.WEAPON) {
 			int damage = BattleCalc.CalculateDamage(weapons[0], stats);
 			WeaponRange reach = inventory.GetReach(ItemCategory.WEAPON);
-			for (int i = 0; i < playerList.values.Count; i++) {
-				if (!playerList.values[i].IsAlive() || playerList.values[i].hasEscaped)
-					continue;
-				int defense = (weapons[0].attackType == AttackType.PHYSICAL) ? playerList.values[i].stats.def : playerList.values[i].stats.mnd;
-				((PlayerMove)playerList.values[i]).ShowAttackTiles(reach, damage - defense);
+			for (int i = 0; i < enemies.Count; i++) {
+				int defense = (weapons[0].attackType == AttackType.PHYSICAL) ? enemies[i].stats.def : enemies[i].stats.mnd;
+				enemies[i].ShowAttackTiles(reach, damage - defense);
 			}
 		}
 		else {
 			WeaponRange reach = inventory.GetReach(ItemCategory.SUPPORT);
-			for (int i = 0; i < enemyList.values.Count; i++) {
-				if (this == enemyList.values[i] || !enemyList.values[i].IsAlive() || enemyList.values[i].hasEscaped)
-					continue;
+			for (int i = 0; i < friends.Count; i++) {
 				bool isBuff = (weapons[0].weaponType == WeaponType.BARRIER);
-				if (isBuff || enemyList.values[i].IsInjured())
-					((NPCMove)enemyList.values[i]).ShowSupportTiles(reach, isBuff);
+				if (isBuff || friends[i].IsInjured())
+					friends[i].ShowSupportTiles(reach, isBuff);
 			}
 		}
 	}
@@ -258,6 +289,9 @@ public class NPCMove : TacticsMove {
 		if (info.staff.max > 0)
 			info.isBuff = (inventory.GetFirstUsableItemTuple(WeaponType.BARRIER) != null);
 
+		currentTile.CheckTile(currentTile, 0, info);
+		currentTile.parent = null;
+
 		while (process.Count > 0) {
 			MapTile tile = process.Dequeue();
 			tile.FindNeighbours(process, tile.distance, info);
@@ -277,6 +311,9 @@ public class NPCMove : TacticsMove {
 		if (challenger.value != current.value)
 			return challenger.value > current.value;
 
+		if (challenger.terrain.avoid + challenger.terrain.defense * 10 != current.terrain.avoid + current.terrain.defense * 10)
+			return challenger.terrain.avoid + challenger.terrain.defense * 10 > current.terrain.avoid + current.terrain.defense * 10;
+
 		return challenger.distance < current.distance;
 	}
 
@@ -294,7 +331,7 @@ public class NPCMove : TacticsMove {
 			huntTile.SetTerrain(huntTile.alternativeTerrain);
 			destroyedTileEvent.Invoke();
 		}
-		else if(aggroType == AggroType.ESCAPE && currentTile == huntTile) {
+		else if (aggroType == AggroType.ESCAPE && currentTile == huntTile) {
 			escapeEvent.Invoke();
 			Escape();
 		}
@@ -314,13 +351,13 @@ public class NPCMove : TacticsMove {
 			return false;
 
 		if (currentMode.value == ActionMode.ATTACK) {
-			targetTile.value = FindRandomTarget(playerList, ItemCategory.WEAPON, false);
+			targetTile.value = FindRandomTarget(enemies, ItemCategory.WEAPON, false);
 			int distance = BattleMap.DistanceTo(this, targetTile.value);
 			inventory.EquipFirstInRangeItem(ItemCategory.WEAPON, distance);
 			Attack(targetTile.value);
 		}
 		else {
-			targetTile.value = FindRandomTarget(enemyList, ItemCategory.SUPPORT, true);
+			targetTile.value = FindRandomTarget(friends, ItemCategory.SUPPORT, true);
 			int distance = BattleMap.DistanceTo(this, targetTile.value);
 			inventory.EquipFirstInRangeItem(ItemCategory.SUPPORT, distance);
 			Heal(targetTile.value);
@@ -336,42 +373,20 @@ public class NPCMove : TacticsMove {
 	/// <param name="category"></param>
 	/// <param name="checkInjured"></param>
 	/// <returns></returns>
-	private MapTile FindRandomTarget(CharacterListVariable list, ItemCategory category, bool checkInjured) {
+	private MapTile FindRandomTarget(List<TacticsMove> list, ItemCategory category, bool checkInjured) {
 		List<MapTile> hits = new List<MapTile>();
 		WeaponRange range = inventory.GetReach(category);
 
-		for (int i = 0; i < list.values.Count; i++) {
-			if (list.values[i] == this || !list.values[i].IsAlive() || (checkInjured && !list.values[i].IsInjured()))
+		for (int i = 0; i < list.Count; i++) {
+			if (list[i] == this || !list[i].IsAlive() || (checkInjured && !list[i].IsInjured()))
 				continue;
-			int distance = BattleMap.DistanceTo(this, list.values[i]);
+			int distance = BattleMap.DistanceTo(this, list[i]);
 			if (range.InRange(distance)) {
-				hits.Add(list.values[i].currentTile);
+				hits.Add(list[i].currentTile);
 			}
 		}
 
 		hits.Shuffle();
 		return hits[0];
-	}
-
-	/// <summary>
-	/// Adds supportable to all tiles surrounding the character depending on range.
-	/// </summary>
-	/// <param name="range1"></param>
-	/// <param name="range2"></param>
-	public void ShowSupportTiles(WeaponRange range, bool isBuff) {
-		if (!IsAlive())
-			return;
-
-		for (int i = 0; i < battleMap.tiles.Length; i++) {
-			if (range.InRange(BattleMap.DistanceTo(this, battleMap.tiles[i]))) {
-				battleMap.tiles[i].supportable = true;
-				if (isBuff) {
-					battleMap.tiles[i].value = 5;
-				}
-				else {
-					battleMap.tiles[i].value = stats.hp - currentHealth;
-				}
-			}
-		}
 	}
 }

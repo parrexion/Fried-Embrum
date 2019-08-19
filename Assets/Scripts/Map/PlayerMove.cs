@@ -36,26 +36,6 @@ public class PlayerMove : TacticsMove {
 	}
 	
 	/// <summary>
-	/// Adds attackable to all tiles surrounding the character depending on range.
-	/// </summary>
-	/// <param name="range1"></param>
-	/// <param name="range2"></param>
-	public void ShowAttackTiles(WeaponRange range, int damage) {
-		if (!IsAlive())
-			return;
-
-		for (int i = 0; i < battleMap.tiles.Length; i++) {			
-			if (range.InRange(BattleMap.DistanceTo(this, battleMap.tiles[i]))) {
-				battleMap.tiles[i].attackable = true;
-				if (damage >= currentHealth) {
-					damage += 100;
-				}
-				battleMap.tiles[i].value = damage;
-			}
-		}
-	}
-	
-	/// <summary>
 	/// Finds all the allies around the character which can be supported with the staff.
 	/// </summary>
 	/// <returns></returns>

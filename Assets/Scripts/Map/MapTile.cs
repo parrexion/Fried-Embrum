@@ -164,8 +164,8 @@ public class MapTile : MonoBehaviour {
 		if (info.isDanger) {
 			checkTile.dangerous = true;
 		}
-		else if (checkTile.currentCharacter == null) {
-			checkTile.selectable = (checkTile.currentCharacter == null);
+		else if (checkTile.currentCharacter == null || checkTile.currentCharacter == info.tactics) {
+			checkTile.selectable = true;
 		}
 
 		if (info.wpnRange != null && info.showAttack) {

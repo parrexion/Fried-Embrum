@@ -140,6 +140,10 @@ public abstract class TacticsMove : MonoBehaviour {
 		healthBar?.SetAmount(currentHealth, stats.hp);
 	}
 
+
+	//Functions for movement and the display of it
+	#region Movement
+
 	/// <summary>
 	/// Shows all the possible moves for the character.
 	/// </summary>
@@ -236,6 +240,50 @@ public abstract class TacticsMove : MonoBehaviour {
 		transform.position = new Vector3(startTile.transform.position.x, startTile.transform.position.y, 0);
 	}
 
+	#endregion
+
+	/// <summary>
+	/// Adds attackable to all tiles surrounding the character depending on range.
+	/// </summary>
+	/// <param name="range1"></param>
+	/// <param name="range2"></param>
+	public void ShowAttackTiles(WeaponRange range, int damage) {
+		if (!IsAlive())
+			return;
+
+		for (int i = 0; i < battleMap.tiles.Length; i++) {
+			if (range.InRange(BattleMap.DistanceTo(this, battleMap.tiles[i]))) {
+				battleMap.tiles[i].attackable = true;
+				if (damage >= currentHealth) {
+					damage += 100;
+				}
+				battleMap.tiles[i].value = damage;
+			}
+		}
+	}
+
+	/// <summary>
+	/// Adds supportable to all tiles surrounding the character depending on range.
+	/// </summary>
+	/// <param name="range1"></param>
+	/// <param name="range2"></param>
+	public void ShowSupportTiles(WeaponRange range, bool isBuff) {
+		if (!IsAlive())
+			return;
+
+		for (int i = 0; i < battleMap.tiles.Length; i++) {
+			if (range.InRange(BattleMap.DistanceTo(this, battleMap.tiles[i]))) {
+				battleMap.tiles[i].supportable = true;
+				if (isBuff) {
+					battleMap.tiles[i].value = 5;
+				}
+				else {
+					battleMap.tiles[i].value = stats.hp - currentHealth;
+				}
+			}
+		}
+	}
+
 	/// <summary>
 	/// Takes the current position and makes a list of all enemies which can be reached from 
 	/// there using the character's weapons.
@@ -299,6 +347,9 @@ public abstract class TacticsMove : MonoBehaviour {
 		return supportables;
 	}
 
+	//Different functions regarding actions the character can take.
+	#region Actions
+
 	/// <summary>
 	/// Makes the character attack with the currently selected weapon.
 	/// </summary>
@@ -342,6 +393,11 @@ public abstract class TacticsMove : MonoBehaviour {
 		currentTile.current = true;
 		waitEvent.Invoke();
 	}
+
+	#endregion
+
+	//Functions for taking damage, healing and receiving buffs.
+	#region Damage and Status
 
 	/// <summary>
 	/// Reduces the current health by the damage taken and displays the damage in a popup.
@@ -459,6 +515,8 @@ public abstract class TacticsMove : MonoBehaviour {
 		yield return new WaitForSeconds(1f);
 		gameObject.SetActive(false);
 	}
+
+#endregion
 
 	/// <summary>
 	/// Returns the current movement speed. Virtual so that other classes

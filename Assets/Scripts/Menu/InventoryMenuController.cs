@@ -122,7 +122,11 @@ public class InventoryMenuController : InputReceiverDelegate {
     }
 
     public override void OnBackButton() {
-		if (!selectMode) {
+		if (popupMode) {
+			popupMode = false;
+			MyPrompt.Result res = prompt.Click(false);
+		}
+		else if (!selectMode) {
 			InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
 			inventoryIndex.value = -1;
 		}

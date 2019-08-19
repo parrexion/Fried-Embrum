@@ -438,6 +438,11 @@ public class TurnController : MonoBehaviour {
 				totalDeaths.value++;
 			}
 		}
+		for (int i = 0; i < allyList.values.Count; i++) {
+			if (!allyList.values[i].IsAlive()) {
+				totalDeaths.value++;
+			}
+		}
 
 		yield return new WaitForSeconds(4f);
 
