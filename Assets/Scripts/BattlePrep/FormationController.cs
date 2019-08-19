@@ -41,10 +41,10 @@ public class FormationController : InputReceiverDelegate {
 		}
 		
 		for (int i = 0; i < map.spawnPoints1.Count; i++) {
-			battleMap.GetTile(map.spawnPoints1[i].x, map.spawnPoints1[i].y).deployable = (active) ? 1 : 0;
+			battleMap.GetTile(map.spawnPoints1[i]).deployable = (active) ? 1 : 0;
 		}
 		for (int i = 0; i < map.spawnPoints2.Count; i++) {
-			battleMap.GetTile(map.spawnPoints2[i].x, map.spawnPoints2[i].y).deployable = (active) ? 2 : 0;
+			battleMap.GetTile(map.spawnPoints2[i]).deployable = (active) ? 2 : 0;
 		}
     }
 

@@ -18,6 +18,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	public MapTileVariable targetTile;
 	public CharacterListVariable playerList;
 	public CharacterListVariable enemyList;
+	public CharacterListVariable allyList;
 	public CharacterListVariable interactList;
 	public IntVariable battleWeaponIndex;
 
@@ -269,27 +270,6 @@ public abstract class TacticsMove : MonoBehaviour {
 			}
 		}
 		return enemies;
-	}
-
-	/// <summary>
-	/// Finds all the allies around the character which can be supported with the staff.
-	/// </summary>
-	/// <returns></returns>
-	public List<MapTile> FindSupportablesInRange() {
-		InventoryTuple staff = inventory.GetFirstUsableItemTuple(ItemCategory.SUPPORT);
-		if (string.IsNullOrEmpty(staff.uuid))
-			return new List<MapTile>();
-
-		List<MapTile> supportables = new List<MapTile>();
-		for (int i = 0; i < playerList.values.Count; i++) {
-			if (this == playerList.values[i] || !playerList.values[i].IsInjured() || !playerList.values[i].IsAlive())
-				continue;
-
-			int tempDist = BattleMap.DistanceTo(this, playerList.values[i]);
-			if (staff.InRange(tempDist) && faction == playerList.values[i].faction)
-				supportables.Add(playerList.values[i].currentTile);
-		}
-		return supportables;
 	}
 
 	/// <summary>
@@ -562,6 +542,9 @@ public abstract class TacticsMove : MonoBehaviour {
 		}
 		else if (faction == Faction.ENEMY) {
 			skills.ForEachSkills(activation, this, enemyList);
+		}
+		else if (faction == Faction.ALLY) {
+			skills.ForEachSkills(activation, this, allyList);
 		}
 	}
 }

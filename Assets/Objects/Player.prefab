@@ -179,6 +179,7 @@ MonoBehaviour:
   targetTile: {fileID: 11400000, guid: e8b7dd401b514bc4981715e9cfe766fc, type: 2}
   playerList: {fileID: 11400000, guid: 8943adc57d10eb547a5f30311d9c9f90, type: 2}
   enemyList: {fileID: 11400000, guid: 267060ebaf58f1a45bfa555220142569, type: 2}
+  allyList: {fileID: 11400000, guid: a9c6a027daa40934dafcf4cd271c0260, type: 2}
   interactList: {fileID: 11400000, guid: 9f537683207ebc948a571b8a58af4290, type: 2}
   battleWeaponIndex: {fileID: 11400000, guid: b325086f4f856bb42b4a1d6407137bfe, type: 2}
   movementVelocity: {fileID: 11400000, guid: 956f89e305f8cf743a1cdd2a56705734, type: 2}
@@ -188,6 +189,7 @@ MonoBehaviour:
   posx: 4
   posy: 4
   currentTile: {fileID: 0}
+  hasEscaped: 0
   faction: 0
   currentHealth: 0
   stats:
@@ -202,12 +204,16 @@ MonoBehaviour:
     spd: 0
     skl: 0
     def: 0
+    hitBoost: 0
+    critBoost: 0
+    avoidBoost: 0
     eHp: 0
     eDmg: 0
     eMnd: 0
     eSpd: 0
     eSkl: 0
     eDef: 0
+    fatigueAmount: 0
     boosts: []
     supportBoost:
       boostType: 0
@@ -217,6 +223,22 @@ MonoBehaviour:
       spd: 0
       skl: 0
       def: 0
+      mov: 0
+      hit: 0
+      crit: 0
+      avoid: 0
+    currentBoost:
+      boostType: 0
+      hp: 0
+      dmg: 0
+      mnd: 0
+      spd: 0
+      skl: 0
+      def: 0
+      mov: 0
+      hit: 0
+      crit: 0
+      avoid: 0
   inventory:
     wpnSkills: 
     inventory: []
@@ -297,6 +319,7 @@ MonoBehaviour:
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   currentMenuMode: {fileID: 11400000, guid: 67e3bf56b86dc2f49a9bd4d641b3339a, type: 2}
+  squad: 0
   playerFinishedMoveEvent:
     m_PersistentCalls:
       m_Calls:
@@ -332,7 +355,7 @@ MonoBehaviour:
 --- !u!199 &199488906334835018
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}

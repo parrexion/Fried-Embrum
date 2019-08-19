@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public enum AggroType { WAIT, CHARGE, GUARD, BOSS, HUNT, PATROL }
+public enum AggroType { WAIT, CHARGE, GUARD, BOSS, HUNT, PATROL, ESCAPE }
 
 public class SearchInfo {
 	public TacticsMove tactics;
@@ -18,17 +18,18 @@ public class SearchInfo {
 }
 
 public class NPCMove : TacticsMove {
-	
+
 	public ActionModeVariable currentMode;
 	public AggroType aggroType;
 	public MapTileVariable moveTile;
 	public SpriteRenderer bossCrest;
 	public MapTile huntTile;
-	public MapTile[] patrolTiles;
+	public List<MapTile> patrolTiles = new List<MapTile>();
 	private int patrolIndex;
 
 	public UnityEvent finishedMovingEvent;
 	public UnityEvent destroyedTileEvent;
+	public UnityEvent escapeEvent;
 
 
 	/// <summary>
@@ -37,7 +38,11 @@ public class NPCMove : TacticsMove {
 	protected override void ExtraSetup() {
 		bossCrest.enabled = (aggroType == AggroType.BOSS);
 
-		enemyList.values.Add(this);
+		if (faction == Faction.ENEMY)
+			enemyList.values.Add(this);
+		else {
+			allyList.values.Add(this);
+		}
 		//Debug.Log("Spawned  " + stats.charData.entryName);
 	}
 
@@ -116,8 +121,8 @@ public class NPCMove : TacticsMove {
 		if (aggroType == AggroType.HUNT && huntTile.interacted)
 			aggroType = AggroType.CHARGE;
 
-		//Hunting AI
-		if (aggroType == AggroType.HUNT) {
+		//Hunting or Escaping AI
+		if (aggroType == AggroType.HUNT || aggroType == AggroType.ESCAPE) {
 			tileBest = huntTile;
 			tileGood = null;
 			while (tileBest != null && (tileBest.distance > moveSpeed || !tileBest.selectable)) {
@@ -156,7 +161,7 @@ public class NPCMove : TacticsMove {
 			if (aggroType == AggroType.WAIT)
 				aggroType = AggroType.CHARGE;
 		}
-		else if (goodTile && aggroType == AggroType.CHARGE) {
+		else if (goodTile && aggroType != AggroType.CHARGE && aggroType != AggroType.PATROL) {
 			//Have no weapons that can be used
 			currentMode.value = ActionMode.NONE;
 			tileBest = null;
@@ -165,13 +170,14 @@ public class NPCMove : TacticsMove {
 		else if (aggroType == AggroType.PATROL) {
 			tileBest = null;
 			tileGood = patrolTiles[patrolIndex];
-			while(tileGood != null && (tileGood.distance > moveSpeed || !tileGood.selectable)) {
+			while (tileGood != null && (tileGood.distance > moveSpeed || !tileGood.selectable)) {
 				tileGood = tileGood.parent;
 			}
-			if(tileGood != null) {
+			if (tileGood != null) {
 				tileGood.PrintPos();
 				currentMode.value = ActionMode.MOVE;
-				patrolIndex = OPMath.FullLoop(0, patrolTiles.Length, patrolIndex + 1);
+				if (tileGood == patrolTiles[patrolIndex])
+					patrolIndex = OPMath.FullLoop(0, patrolTiles.Count, patrolIndex + 1);
 				return;
 			}
 			else {
@@ -287,6 +293,10 @@ public class NPCMove : TacticsMove {
 			aggroType = AggroType.CHARGE;
 			huntTile.SetTerrain(huntTile.alternativeTerrain);
 			destroyedTileEvent.Invoke();
+		}
+		else if(aggroType == AggroType.ESCAPE && currentTile == huntTile) {
+			escapeEvent.Invoke();
+			Escape();
 		}
 		else {
 			finishedMovingEvent.Invoke();

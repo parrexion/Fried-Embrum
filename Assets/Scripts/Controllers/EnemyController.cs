@@ -9,6 +9,7 @@ public class EnemyController : MonoBehaviour {
 	[Header("References")]
 	public CharacterListVariable playerList;
 	public CharacterListVariable enemyList;
+	public CharacterListVariable allyList;
 	public TacticsMoveVariable selectCharacter;
 	public MapTileVariable selectTile;
 	public IntVariable battleWeaponIndex;
@@ -17,7 +18,6 @@ public class EnemyController : MonoBehaviour {
 	public IntVariable cursorY;
 
 	[Header("Settings")]
-	public BoolVariable selectMainCharacter;
 	public IntVariable slowGameSpeed;
 	public IntVariable currentGameSpeed;
 
@@ -30,7 +30,7 @@ public class EnemyController : MonoBehaviour {
 	public UnityEvent cursorMovedEvent;
 	public UnityEvent nextStateEvent;
 
-	private NPCMove enemy;
+	private NPCMove tactics;
 	private bool isRunning;
 	private bool waitForNextAction;
 
@@ -40,14 +40,23 @@ public class EnemyController : MonoBehaviour {
 	/// </summary>
 	public void RunEnemies(float startDelay) {
 		if (!isRunning)
-			StartCoroutine(RunEnemyTurn(startDelay));
+			StartCoroutine(RunNPCTurn(enemyList, startDelay));
+	}
+
+	/// <summary>
+	/// Starts the loop which runs the allies' turns.
+	/// </summary>
+	/// <param name="startDelay"></param>
+	public void RunAllies(float startDelay) {
+		if (!isRunning)
+			StartCoroutine(RunNPCTurn(allyList, startDelay));
 	}
 
 	/// <summary>
 	/// Takes each enemy that is alive and runs their turn.
 	/// </summary>
 	/// <returns></returns>
-	private IEnumerator RunEnemyTurn(float startDelay) {
+	private IEnumerator RunNPCTurn(CharacterListVariable list, float startDelay) {
 		isRunning = true;
 		yield return new WaitForSeconds(startDelay * slowGameSpeed.value / currentGameSpeed.value);
 
@@ -56,41 +65,41 @@ public class EnemyController : MonoBehaviour {
 
 		yield return new WaitForSeconds(2f * slowGameSpeed.value / currentGameSpeed.value);
 
-		for (int i = 0; i < enemyList.Count; i++) {
-			if (!enemyList.values[i].IsAlive())
+		for (int i = 0; i < list.Count; i++) {
+			if (!list.values[i].IsAlive() || list.values[i].hasEscaped)
 				continue;
 
 			// Select the next enemy and show its movement
-			//Debug.Log(enemyList.values[i].gameObject.name + " turn");
-			selectCharacter.value = enemyList.values[i];
+			//Debug.Log(list.values[i].gameObject.name + " turn");
+			selectCharacter.value = list.values[i];
 			selectTile.value = selectCharacter.value.currentTile;
-			enemy = (NPCMove)enemyList.values[i];
+			tactics = (NPCMove)list.values[i];
 			// enemy.FindAllMoveTiles(false);
-			cursorX.value = enemy.posx;
-			cursorY.value = enemy.posy;
+			cursorX.value = tactics.posx;
+			cursorY.value = tactics.posy;
 			cursorMovedEvent.Invoke();
 
 			// Calculate the tile to move towards and wait for the character to move there if any
-			MapTile moveTile = enemy.CalculateMovement();
+			MapTile moveTile = tactics.CalculateMovement();
 			if (moveTile == null) {
-				enemy.EndMovement();
+				tactics.EndMovement();
 				waitForNextAction = false;
 			}
 			else {
-				enemy.ShowMove(moveTile);
+				tactics.ShowMove(moveTile);
 				waitForNextAction = true;
 			}
 
 			if (waitForNextAction) {
 				yield return new WaitForSeconds(1.5f * slowGameSpeed.value / currentGameSpeed.value);
-				enemy.StartMove();
+				tactics.StartMove();
 			}
 			while (waitForNextAction)
 				yield return null;
 
 			// Calculate which character to attack/support and waits for the battle scene to finish
 			// Debug.Log("Attack time");
-			bool res = waitForNextAction = enemy.CalculateAttacksHeals();
+			bool res = waitForNextAction = tactics.CalculateAttacksHeals();
 			while (waitForNextAction)
 				yield return null;
 
@@ -99,19 +108,14 @@ public class EnemyController : MonoBehaviour {
 			}
 			// Finish the turn
 			// Debug.Log("End turn");
-			enemy.End();
-			cursorX.value = enemy.posx;
-			cursorY.value = enemy.posy;
+			tactics.End();
+			cursorX.value = tactics.posx;
+			cursorY.value = tactics.posy;
 			cursorMovedEvent.Invoke();
 		}
 
 		yield return new WaitForSeconds(3f * slowGameSpeed.value / currentGameSpeed.value);
 
-		if (selectMainCharacter.value) {
-			cursorX.value = playerList.values[0].posx;
-			cursorY.value = playerList.values[0].posy;
-			cursorMovedEvent.Invoke();
-		}
 		isRunning = false;
 		nextStateEvent.Invoke();
 	}
@@ -127,7 +131,7 @@ public class EnemyController : MonoBehaviour {
 	/// Called when an enemy is going to destroy a tile and pauses for that to happen.
 	/// </summary>
 	public void IncomingDestruction() {
-		if (enemy != null) {
+		if (tactics != null) {
 			StartCoroutine(DestroyTile());
 		}
 	}
@@ -137,7 +141,7 @@ public class EnemyController : MonoBehaviour {
 	/// </summary>
 	/// <returns></returns>
 	private IEnumerator DestroyTile() {
-		string destroyType = (enemy.currentTile.interactType == InteractType.VILLAGE) ? "Village" : "???";
+		string destroyType = (tactics.currentTile.interactType == InteractType.VILLAGE) ? "Village" : "???";
 		MySpinnerData data = new MySpinnerData() {
 			icon = null,
 			sfx = destroyedTileSfx,
@@ -147,6 +151,33 @@ public class EnemyController : MonoBehaviour {
 		waitForNextAction = false;
 	}
 
+	/// <summary>
+	/// Called when an enemy is going to destroy a tile and pauses for that to happen.
+	/// </summary>
+	public void IncomingEscape() {
+		if (tactics != null) {
+			StartCoroutine(EscapeCharacter());
+		}
+	}
+
+	/// <summary>
+	/// Runs the action of escaping with an NPC character.
+	/// </summary>
+	/// <returns></returns>
+	private IEnumerator EscapeCharacter() {
+		MySpinnerData data = new MySpinnerData() {
+			icon = tactics.stats.charData.portrait,
+			sfx = null,
+			text = tactics.stats.charData.entryName + " escaped!"
+		};
+		yield return StartCoroutine(spinner.ShowSpinner(data));
+		waitForNextAction = false;
+	}
+
+	/// <summary>
+	/// Calculates how many enemies has been killed.
+	/// </summary>
+	/// <returns></returns>
 	public int NumberOfKilledEnemies() {
 		int sum = 0;
 

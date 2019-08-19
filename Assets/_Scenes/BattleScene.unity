@@ -26634,6 +26634,7 @@ MonoBehaviour:
   enemyController: {fileID: 1931585850}
   playerList: {fileID: 11400000, guid: 8943adc57d10eb547a5f30311d9c9f90, type: 2}
   enemyList: {fileID: 11400000, guid: 267060ebaf58f1a45bfa555220142569, type: 2}
+  allyList: {fileID: 11400000, guid: a9c6a027daa40934dafcf4cd271c0260, type: 2}
   lockControls: {fileID: 11400000, guid: b8d06aee0ad3bce4daa463a8433439f4, type: 2}
   currentMission: {fileID: 11400000, guid: a149375abc4af2948b0b40ba31472a06, type: 2}
   currentMap: {fileID: 11400000, guid: 188cfd11b445e1244a89510ca126c756, type: 2}
@@ -65409,6 +65410,7 @@ GameObject:
   - component: {fileID: 1931585850}
   - component: {fileID: 1931585852}
   - component: {fileID: 1931585853}
+  - component: {fileID: 1931585855}
   - component: {fileID: 1931585854}
   m_Layer: 0
   m_Name: EnemyController
@@ -65431,14 +65433,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerList: {fileID: 11400000, guid: 8943adc57d10eb547a5f30311d9c9f90, type: 2}
   enemyList: {fileID: 11400000, guid: 267060ebaf58f1a45bfa555220142569, type: 2}
+  allyList: {fileID: 11400000, guid: a9c6a027daa40934dafcf4cd271c0260, type: 2}
   selectCharacter: {fileID: 11400000, guid: 9514266d05ac5174781ef48f42fe570e, type: 2}
   selectTile: {fileID: 11400000, guid: cc6b23f7f6b66384fbcd3092e9bbc82a, type: 2}
   battleWeaponIndex: {fileID: 11400000, guid: b325086f4f856bb42b4a1d6407137bfe, type: 2}
   currentPage: {fileID: 11400000, guid: 0aeb313bff5d1b74ea4fbec5e866deba, type: 2}
   cursorX: {fileID: 11400000, guid: c2b3aa3e1e995d545b1165460053d109, type: 2}
   cursorY: {fileID: 11400000, guid: bc83df26fa1b9664593c316923606033, type: 2}
-  selectMainCharacter: {fileID: 11400000, guid: 2fcbe5e77d621cf44b185b8fc56c1a32,
-    type: 2}
   slowGameSpeed: {fileID: 11400000, guid: 208d37ab76bc94c4c849779521ed5319, type: 2}
   currentGameSpeed: {fileID: 11400000, guid: 956f89e305f8cf743a1cdd2a56705734, type: 2}
   spinner: {fileID: 1672997532}
@@ -65581,6 +65582,35 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1931585850}
         m_MethodName: ActionFinishedQue
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+--- !u!114 &1931585855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1931585849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14602ab6441821f43883d0b13d4f57c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  evnt: {fileID: 11400000, guid: 87c23d6ea0b68ac48a66c4609b23a4f2, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1931585850}
+        m_MethodName: IncomingEscape
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

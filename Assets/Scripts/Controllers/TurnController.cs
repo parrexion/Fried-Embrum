@@ -15,6 +15,7 @@ public class TurnController : MonoBehaviour {
 	public EnemyController enemyController;
 	public CharacterListVariable playerList;
 	public CharacterListVariable enemyList;
+	public CharacterListVariable allyList;
 
 	[Header("References")]
 	public BoolVariable lockControls;
@@ -80,10 +81,11 @@ public class TurnController : MonoBehaviour {
 		currentState = TurnState.INIT;
 		currentTurn.value = 0;
 		totalKills.value = 0;
-		currentFactionTurn.value = Faction.ENEMY;
+		currentFactionTurn.value = Faction.ALLY;
 		triggeredWin.value = false;
 		playerList.values.Clear();
 		enemyList.values.Clear();
+		allyList.values.Clear();
 	}
 
 	public void TriggerNextStep() {
@@ -128,7 +130,7 @@ public class TurnController : MonoBehaviour {
 		case TurnState.DIALOGUE:
 			//Debug.Log("Check reinforcements");
 			currentState = TurnState.REINFORCE;
-			if (currentFactionTurn.value == Faction.ENEMY) {
+			if (currentFactionTurn.value == Faction.ALLY) {
 				checkReinforcementsEvent.Invoke();
 			}
 			else {
@@ -156,7 +158,7 @@ public class TurnController : MonoBehaviour {
 	private void StartGameSetup() {
 		MapEntry map = (MapEntry)currentMap.value;
 		musicFocus.value = true;
-		mainMusic.value = map.playerMusic.clip;
+		mainMusic.value = map.mapMusic.playerTheme.clip;
 		subMusic.value = null;
 		playBkgMusicEvent.Invoke();
 		checkReinforcementsEvent.Invoke();
@@ -179,6 +181,14 @@ public class TurnController : MonoBehaviour {
 					wait = 2f;
 			}
 			enemyController.RunEnemies(wait);
+		}
+		else if (currentFactionTurn.value == Faction.ALLY) {
+			float wait = 0;
+			for (int i = 0; i < allyList.values.Count; i++) {
+				if (allyList.values[i].OnStartTurn())
+					wait = 2f;
+			}
+			enemyController.RunAllies(wait);
 		}
 		else if (currentFactionTurn.value == Faction.PLAYER) {
 			for (int i = 0; i < playerList.values.Count; i++) {
@@ -231,6 +241,37 @@ public class TurnController : MonoBehaviour {
 				enemyList.values[i].OnEndTurn();
 			}
 		}
+		else if (currentFactionTurn.value == Faction.ALLY) {
+			for (int i = 0; i < allyList.values.Count; i++) {
+				allyList.values[i].OnEndTurn();
+			}
+		}
+	}
+
+	/// <summary>
+	/// Updates the current faction and skips the ones without characters.
+	/// </summary>
+	private void ChangeFaction() {
+		currentFactionTurn.value = (currentFactionTurn.value == Faction.PLAYER) ? Faction.ENEMY : 
+			(currentFactionTurn.value == Faction.ENEMY) ? Faction.ALLY : Faction.PLAYER;
+
+		if (currentFactionTurn.value == Faction.PLAYER)
+			currentTurn.value++;
+
+		switch (currentFactionTurn.value) {
+			case Faction.PLAYER:
+				if (!playerList.IsAnyoneAlive())
+					ChangeFaction();
+				break;
+			case Faction.ENEMY:
+				if (!enemyList.IsAnyoneAlive())
+					ChangeFaction();
+				break;
+			case Faction.ALLY:
+				if (!allyList.IsAnyoneAlive())
+					ChangeFaction();
+				break;
+		}
 	}
 
 	/// <summary>
@@ -239,9 +280,7 @@ public class TurnController : MonoBehaviour {
 	/// <param name="duration"></param>
 	/// <returns></returns>
 	private IEnumerator DisplayTurnChange(float duration) {
-		currentFactionTurn.value = (currentFactionTurn.value == Faction.PLAYER) ? Faction.ENEMY : Faction.PLAYER;
-		if (currentFactionTurn.value == Faction.PLAYER)
-			currentTurn.value++;
+		ChangeFaction();
 
 		statusBar.UpdateTurn();
 		currentAction.value = ActionMode.LOCK;
@@ -255,7 +294,7 @@ public class TurnController : MonoBehaviour {
 		sfxQueue.Enqueue(turnChangeFanfare);
 		playSfxEvent.Invoke();
 		MapEntry map = (MapEntry)currentMap.value;
-		mainMusic.value = (currentFactionTurn.value == Faction.ENEMY) ? map.enemyMusic.clip : map.playerMusic.clip;
+		mainMusic.value = (currentFactionTurn.value == Faction.ENEMY) ? map.mapMusic.enemyTheme.clip : map.mapMusic.playerTheme.clip;
 		replaceMusicEvent.Invoke();
 
 		yield return new WaitForSeconds(duration);

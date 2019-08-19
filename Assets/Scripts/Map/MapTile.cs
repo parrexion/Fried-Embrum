@@ -43,11 +43,11 @@ public class MapTile : MonoBehaviour {
 	private SpriteRenderer _rendHighlight;
 
 
-	private void Start () {
+	private void Start() {
 		_rendHighlight = highlight.GetComponent<SpriteRenderer>();
 	}
-	
-	private void Update () {
+
+	private void Update() {
 		SetHighlightColor();
 	}
 
@@ -106,13 +106,13 @@ public class MapTile : MonoBehaviour {
 	public int GetRoughness(MovementType type) {
 		for (int i = 0; i < terrain.canMoveTypes.Length; i++) {
 			if (terrain.canMoveTypes[i].type == type) {
-//				Debug.Log("Movespeed:  " + terrain.canMoveTypes[i].roughness);
+				//				Debug.Log("Movespeed:  " + terrain.canMoveTypes[i].roughness);
 				return terrain.canMoveTypes[i].roughness;
 			}
 		}
 		Debug.LogError("Forgot to add type " + type);
 		return 1;
-	} 
+	}
 
 	public void Reset() {
 		current = false;
@@ -128,16 +128,16 @@ public class MapTile : MonoBehaviour {
 	}
 
 	public void FindNeighbours(Queue<MapTile> progress, int currentDistance, SearchInfo info) {
-		MapTile tile = battlemap.GetTile(posx-1, posy);
+		MapTile tile = battlemap.GetTile(posx - 1, posy);
 		if (CheckTile(tile, currentDistance, info))
 			progress.Enqueue(tile);
-		tile = battlemap.GetTile(posx+1, posy);
+		tile = battlemap.GetTile(posx + 1, posy);
 		if (CheckTile(tile, currentDistance, info))
 			progress.Enqueue(tile);
-		tile = battlemap.GetTile(posx, posy-1);
+		tile = battlemap.GetTile(posx, posy - 1);
 		if (CheckTile(tile, currentDistance, info))
 			progress.Enqueue(tile);
-		tile = battlemap.GetTile(posx, posy+1);
+		tile = battlemap.GetTile(posx, posy + 1);
 		if (CheckTile(tile, currentDistance, info))
 			progress.Enqueue(tile);
 	}
@@ -146,7 +146,8 @@ public class MapTile : MonoBehaviour {
 		if (checkTile == null)
 			return false;
 		if (checkTile.currentCharacter != null && checkTile.currentCharacter.faction != info.tactics.faction) {
-			return false;
+			//return false;
+			currentDistance = 500;
 		}
 
 		MovementType moveType = info.tactics.stats.currentClass.classType;
@@ -159,22 +160,22 @@ public class MapTile : MonoBehaviour {
 		checkTile.distance = currentDistance;
 		if (currentDistance > info.moveSpeed)
 			return false;
-	
+
 		if (info.isDanger) {
 			checkTile.dangerous = true;
 		}
 		else if (checkTile.currentCharacter == null) {
 			checkTile.selectable = (checkTile.currentCharacter == null);
 		}
-			
+
 		if (info.wpnRange != null && info.showAttack) {
 			battlemap.ShowAttackTiles(checkTile, info.wpnRange, info.tactics.faction, info.isDanger);
 		}
-			
+
 		if (info.staff != null && info.showAttack) {
 			battlemap.ShowSupportTiles(checkTile, info.staff, info.tactics.faction, info.isDanger, info.isBuff);
 		}
-		
+
 		checkTile.parent = this;
 		return true;
 	}

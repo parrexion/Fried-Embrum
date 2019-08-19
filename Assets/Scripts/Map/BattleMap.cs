@@ -76,7 +76,16 @@ public class BattleMap : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Returns the tile for the given coordinates.
+	/// Returns the map tile for the given position.
+	/// </summary>
+	/// <param name="pos"></param>
+	/// <returns></returns>
+	public MapTile GetTile(Position pos) {
+		return GetTile(pos.x, pos.y);
+	}
+
+	/// <summary>
+	/// Returns the map tile for the given coordinates.
 	/// </summary>
 	/// <param name="x"></param>
 	/// <param name="y"></param>

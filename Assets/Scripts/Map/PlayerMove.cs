@@ -54,6 +54,35 @@ public class PlayerMove : TacticsMove {
 			}
 		}
 	}
+	
+	/// <summary>
+	/// Finds all the allies around the character which can be supported with the staff.
+	/// </summary>
+	/// <returns></returns>
+	public List<MapTile> FindSupportablesInRange() {
+		InventoryTuple staff = inventory.GetFirstUsableItemTuple(ItemCategory.SUPPORT);
+		if (string.IsNullOrEmpty(staff.uuid))
+			return new List<MapTile>();
+
+		List<MapTile> supportables = new List<MapTile>();
+		for (int i = 0; i < playerList.values.Count; i++) {
+			if (this == playerList.values[i] || !playerList.values[i].IsInjured() || !playerList.values[i].IsAlive())
+				continue;
+
+			int tempDist = BattleMap.DistanceTo(this, playerList.values[i]);
+			if (staff.InRange(tempDist))
+				supportables.Add(playerList.values[i].currentTile);
+		}
+		for (int i = 0; i < allyList.values.Count; i++) {
+			if (this == allyList.values[i] || !allyList.values[i].IsInjured() || !allyList.values[i].IsAlive())
+				continue;
+
+			int tempDist = BattleMap.DistanceTo(this, allyList.values[i]);
+			if (staff.InRange(tempDist))
+				supportables.Add(allyList.values[i].currentTile);
+		}
+		return supportables;
+	}
 
 
 	// Functions for checking if the character can do stuff.

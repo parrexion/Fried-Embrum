@@ -12,6 +12,7 @@ public class LibraryEditorWindow : EditorWindow {
 	Rect headerRect = new Rect();
 	Texture2D headerTex;
 	static GUIStyle horizontalLine;
+	static GUIStyle redText;
 
 	public IntVariable currentWindow;
 
@@ -52,7 +53,7 @@ public class LibraryEditorWindow : EditorWindow {
 	public PortraitEntry portraitContainer;
 	public SpriteListVariable poseList;
 
-	private string[] toolbarStrings = new string[] {"Missions", "Maps", "Characters", "Classes", "Items", "Upgrades", "Skills", "Background", "Portraits"};
+	private string[] toolbarStrings = new string[] { "Missions", "Maps", "Characters", "Classes", "Items", "Upgrades", "Skills", "Background", "Portraits" };
 
 
 	[MenuItem("Window/LibraryEditor")]
@@ -76,8 +77,7 @@ public class LibraryEditorWindow : EditorWindow {
 		DrawHeader();
 		int width = (int)position.width;
 		int height = (int)position.height;
-		switch ((State)currentWindow.value)
-		{
+		switch ((State)currentWindow.value) {
 			case State.MISSIONS:
 				missionEditor.DrawWindow(width, height);
 				break;
@@ -143,11 +143,11 @@ public class LibraryEditorWindow : EditorWindow {
 		headerTex = new Texture2D(1, 1);
 		headerTex.SetPixel(0, 0, new Color(0.5f, 0.2f, 0.8f));
 		headerTex.Apply();
-		
+
 		// divider style
 		horizontalLine = new GUIStyle();
 		horizontalLine.normal.background = EditorGUIUtility.whiteTexture;
-		horizontalLine.margin = new RectOffset( 0, 0, 4, 4 );
+		horizontalLine.margin = new RectOffset(0, 0, 4, 4);
 		horizontalLine.fixedHeight = 1;
 
 		missionEditor.InitializeWindow();
@@ -178,10 +178,22 @@ public class LibraryEditorWindow : EditorWindow {
 	}
 
 	// utility method for drawing lines
-	public static void HorizontalLine ( Color color ) {
+	public static void HorizontalLine(Color color) {
 		var c = GUI.color;
 		GUI.color = color;
-		GUILayout.Box( GUIContent.none, horizontalLine );
+		GUILayout.Box(GUIContent.none, horizontalLine);
 		GUI.color = c;
+	}
+
+	public static GUIStyle RedField() {
+		if (redText != null) {
+			return redText;
+		}
+
+		redText = EditorStyles.objectField;
+		Texture2D texture = new Texture2D(1, 1);
+		texture.SetPixel(0, 0, Color.red);
+		redText.normal.background = texture;
+		return redText;
 	}
 }

@@ -217,7 +217,7 @@ public class BattleContainer : InputReceiverDelegate {
 
 		//Music
 		MapEntry map = (MapEntry)currentMap.value;
-		subMusic.value = (actions[0].type == BattleAction.Type.DAMAGE) ? map.battleMusic.clip : map.healMusic.clip;
+		subMusic.value = (actions[0].type == BattleAction.Type.DAMAGE) ? map.mapMusic.battleTheme.clip : map.mapMusic.healTheme.clip;
 		playTransitionMusicEvent.Invoke();
 	}
 

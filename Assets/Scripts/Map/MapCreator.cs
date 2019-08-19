@@ -85,6 +85,7 @@ public class MapCreator : MonoBehaviour {
 		cursorMoveEvent.Invoke();
 		SpawnPlayers();
 		SpawnEnemies();
+		SpawnAllies();
 		Debug.Log("Finished spawning and creating map");
 	}
 
@@ -194,7 +195,7 @@ public class MapCreator : MonoBehaviour {
 			Position pos = map.spawnPoints1[i];
 
 			if (prepPos >= prepList1.values.Count) {
-				battleMap.GetTile(pos.x, pos.y).selectable = true;
+				battleMap.GetTile(pos).selectable = true;
 				continue;
 			}
 
@@ -212,7 +213,7 @@ public class MapCreator : MonoBehaviour {
 			Position pos = map.spawnPoints2[i];
 
 			if (prepPos >= prepList2.values.Count) {
-				battleMap.GetTile(pos.x, pos.y).selectable = true;
+				battleMap.GetTile(pos).selectable = true;
 				continue;
 			}
 
@@ -247,9 +248,34 @@ public class MapCreator : MonoBehaviour {
 				fight.activated = false;
 				quotes.Add(fight);
 			}
-			MapTile huntTile = (pos.aggroType == AggroType.HUNT) ? battleMap.GetTile(pos.huntX, pos.huntY) : null;
 
-			SpawnEnemyCharacter(pos.x, pos.y, stats, inventory, skills, quotes, pos.aggroType, huntTile);
+			SpawnEnemyCharacter(new ReinforcementPosition(pos), stats, inventory, skills);
+		}
+	}
+
+	/// <summary>
+	/// Takes the map information and spawns all the enemy characters on their given positions.
+	/// </summary>
+	private void SpawnAllies() {
+		MapEntry map = (MapEntry)currentMap.value;
+
+		//Allies
+		for (int i = 0; i < map.allies.Count; i++) {
+			ReinforcementPosition pos = map.allies[i];
+
+			StatsContainer stats = new StatsContainer(pos);
+			InventoryContainer inventory = new InventoryContainer(enemyClassWheel.GetWpnSkillFromLevel(pos.charData.startClassLevels), pos.inventory);
+			SkillsContainer skills = new SkillsContainer(enemyClassWheel.GetSkillsFromLevel(pos.charData.startClassLevels, pos.charData.startClass, pos.level));
+			List<FightQuote> quotes = new List<FightQuote>();
+			for (int q = 0; q < pos.quotes.Count; q++) {
+				FightQuote fight = new FightQuote();
+				fight.triggerer = pos.quotes[q].triggerer;
+				fight.quote = pos.quotes[q].quote;
+				fight.activated = false;
+				quotes.Add(fight);
+			}
+
+			SpawnAllyCharacter(pos, stats, inventory, skills);
 		}
 	}
 
@@ -294,27 +320,58 @@ public class MapCreator : MonoBehaviour {
 	/// <summary>
 	/// Spawns an enemy character on the map.
 	/// </summary>
-	/// <param name="x"></param>
-	/// <param name="y"></param>
+	/// <param name="pos"></param>
 	/// <param name="stats"></param>
 	/// <param name="inventory"></param>
 	/// <param name="skills"></param>
-	/// <param name="quotes"></param>
-	/// <param name="aggro"></param>
-	private void SpawnEnemyCharacter(int x, int y, StatsContainer stats, InventoryContainer inventory, SkillsContainer skills, List<FightQuote> quotes, AggroType aggro, MapTile huntTile) {
+	private void SpawnEnemyCharacter(ReinforcementPosition pos, StatsContainer stats, InventoryContainer inventory, SkillsContainer skills) {
 		Transform enemyTransform = Instantiate(enemyPrefab, battleMap.enemyParent);
-		enemyTransform.position = new Vector3(x, y);
+		enemyTransform.position = new Vector3(pos.x, pos.y);
 
 		NPCMove tactics = enemyTransform.GetComponent<NPCMove>();
 		tactics.battleMap = battleMap;
-		tactics.posx = x;
-		tactics.posy = y;
+		tactics.posx = pos.x;
+		tactics.posy = pos.y;
 		tactics.stats = stats;
+		tactics.faction = Faction.ENEMY;
 		tactics.inventory = inventory;
 		tactics.skills = skills;
-		tactics.fightQuotes = quotes;
-		tactics.aggroType = aggro;
-		tactics.huntTile = huntTile;
+		tactics.fightQuotes = pos.quotes;
+		tactics.aggroType = pos.aggroType;
+		tactics.huntTile = battleMap.GetTile(pos.huntX, pos.huntY);
+		tactics.patrolTiles.Clear();
+		for (int i = 0; i < pos.patrolPositions.Count; i++) {
+			tactics.patrolTiles.Add(battleMap.GetTile(pos.patrolPositions[i]));
+		}
+		tactics.Setup();
+	}
+
+	/// <summary>
+	/// Spawns an enemy character on the map.
+	/// </summary>
+	/// <param name="pos"></param>
+	/// <param name="stats"></param>
+	/// <param name="inventory"></param>
+	/// <param name="skills"></param>
+	private void SpawnAllyCharacter(ReinforcementPosition pos, StatsContainer stats, InventoryContainer inventory, SkillsContainer skills) {
+		Transform enemyTransform = Instantiate(enemyPrefab, battleMap.enemyParent);
+		enemyTransform.position = new Vector3(pos.x, pos.y);
+
+		NPCMove tactics = enemyTransform.GetComponent<NPCMove>();
+		tactics.battleMap = battleMap;
+		tactics.posx = pos.x;
+		tactics.posy = pos.y;
+		tactics.stats = stats;
+		tactics.faction = Faction.ALLY;
+		tactics.inventory = inventory;
+		tactics.skills = skills;
+		tactics.fightQuotes = pos.quotes;
+		tactics.aggroType = pos.aggroType;
+		tactics.huntTile = battleMap.GetTile(pos.huntX, pos.huntY);
+		tactics.patrolTiles.Clear();
+		for (int i = 0; i < pos.patrolPositions.Count; i++) {
+			tactics.patrolTiles.Add(battleMap.GetTile(pos.patrolPositions[i]));
+		}
 		tactics.Setup();
 	}
 
@@ -352,7 +409,7 @@ public class MapCreator : MonoBehaviour {
 						}
 					}
 					else if (pos.charData.faction == Faction.ENEMY) {
-						SpawnEnemyCharacter(pos.x, pos.y, stats, inventory, skills, pos.quotes, pos.aggroType, battleMap.GetTile(pos.huntX, pos.huntY));
+						SpawnEnemyCharacter(pos, stats, inventory, skills);
 					}
 					else {
 						Debug.LogError("Unimplemented faction  " + pos.faction);

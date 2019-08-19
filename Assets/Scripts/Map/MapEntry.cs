@@ -26,10 +26,7 @@ public class MapEntry : ScrObjLibraryEntry {
 	public DialogueEntry endDialogue;
 
 	[Header("Music")]
-	public MusicEntry playerMusic;
-	public MusicEntry enemyMusic;
-	public MusicEntry battleMusic;
-	public MusicEntry healMusic;
+	public MusicSetEntry mapMusic;
 
 	[Header("Players")]
 	public List<Position> spawnPoints1 = new List<Position>();
@@ -37,8 +34,9 @@ public class MapEntry : ScrObjLibraryEntry {
 	public List<CharData> forcedCharacters = new List<CharData>();
 	public List<CharData> lockedCharacters = new List<CharData>();
 	
-	[Header("Enemies")]
+	[Header("Other characters")]
 	public List<EnemyPosition> enemies = new List<EnemyPosition>();
+	public List<ReinforcementPosition> allies = new List<ReinforcementPosition>();
 	public List<ReinforcementPosition> reinforcements = new List<ReinforcementPosition>();
 	
 	[Header("Interactions")]
@@ -64,19 +62,19 @@ public class MapEntry : ScrObjLibraryEntry {
 		introDialogue = null;
 		endDialogue = null;
 
-		playerMusic = null;
-		enemyMusic = null;
-		battleMusic = null;
-		healMusic = null;
+		mapMusic = null;
 
 		spawnPoints1 = new List<Position>();
 		spawnPoints2 = new List<Position>();
 		forcedCharacters = new List<CharData>();
 		lockedCharacters = new List<CharData>();
+
 		enemies = new List<EnemyPosition>();
+		allies = new List<ReinforcementPosition>();
+		reinforcements = new List<ReinforcementPosition>();
+
 		interactions = new List<InteractPosition>();
 		turnEvents = new List<TurnEvent>();
-		reinforcements = new List<ReinforcementPosition>();
 	}
 
 	public override void CopyValues(ScrObjLibraryEntry other) {
@@ -96,10 +94,7 @@ public class MapEntry : ScrObjLibraryEntry {
 		introDialogue = map.introDialogue;
 		endDialogue = map.endDialogue;
 
-		playerMusic = map.playerMusic;
-		enemyMusic = map.enemyMusic;
-		battleMusic = map.battleMusic;
-		healMusic = map.healMusic;
+		mapMusic = map.mapMusic;
 
 		spawnPoints1 = new List<Position>();
 		for (int i = 0; i < map.spawnPoints1.Count; i++) {
@@ -117,10 +112,20 @@ public class MapEntry : ScrObjLibraryEntry {
 		for (int i = 0; i < map.lockedCharacters.Count; i++) {
 			lockedCharacters.Add(map.lockedCharacters[i]);
 		}
+
 		enemies = new List<EnemyPosition>();
 		for (int i = 0; i < map.enemies.Count; i++) {
 			enemies.Add(map.enemies[i]);
 		}
+		allies = new List<ReinforcementPosition>();
+		for (int i = 0; i < map.allies.Count; i++) {
+			allies.Add(map.allies[i]);
+		}
+		reinforcements = new List<ReinforcementPosition>();
+		for (int i = 0; i < map.reinforcements.Count; i++) {
+			reinforcements.Add(map.reinforcements[i]);
+		}
+
 		interactions = new List<InteractPosition>();
 		for (int i = 0; i < map.interactions.Count; i++) {
 			interactions.Add(map.interactions[i]);
@@ -128,10 +133,6 @@ public class MapEntry : ScrObjLibraryEntry {
 		turnEvents = new List<TurnEvent>();
 		for (int i = 0; i < map.turnEvents.Count; i++) {
 			turnEvents.Add(map.turnEvents[i]);
-		}
-		reinforcements = new List<ReinforcementPosition>();
-		for (int i = 0; i < map.reinforcements.Count; i++) {
-			reinforcements.Add(map.reinforcements[i]);
 		}
 	}
 
@@ -241,6 +242,38 @@ public class ReinforcementPosition {
 	public bool hasQuotes;
 	public List<FightQuote> quotes = new List<FightQuote>();
 	public int huntX, huntY;
+	public List<Position> patrolPositions = new List<Position>();
+
+
+	public ReinforcementPosition(){}
+	public ReinforcementPosition(EnemyPosition pos) {
+		spawnTurn = pos.spawnTurn;
+		x = pos.x;
+		y = pos.y;
+		level = pos.level;
+		charData = pos.charData;
+		for (int i = 0; i < pos.inventory.Count; i++) {
+			inventory.Add(new WeaponTuple() {
+				item = pos.inventory[i].item,
+				droppable = pos.inventory[i].droppable
+			});
+		}
+		aggroType = pos.aggroType;
+		hasQuotes = pos.hasQuotes;
+		for (int i = 0; i < pos.quotes.Count; i++) {
+			quotes.Add(new FightQuote() {
+				triggerer = pos.quotes[i].triggerer,
+				quote = pos.quotes[i].quote,
+				activated = pos.quotes[i].activated
+			});
+		}
+		huntX = pos.huntX;
+		huntY = pos.huntY;
+		patrolPositions = new List<Position>();
+		for (int i = 0; i < pos.patrolPositions.Count; i++) {
+			patrolPositions.Add(new Position() { x = pos.patrolPositions[i].x, y = pos.patrolPositions[i].y });
+		}
+	}
 
 	public void Copy(ReinforcementPosition other) {
 		spawnTurn = other.spawnTurn;
@@ -264,6 +297,10 @@ public class ReinforcementPosition {
 		}
 		huntX = other.huntX;
 		huntY = other.huntY;
+		patrolPositions = new List<Position>();
+		for (int i = 0; i < other.patrolPositions.Count; i++) {
+			patrolPositions.Add(new Position() { x = other.patrolPositions[i].x, y = other.patrolPositions[i].y });
+		}
 	}
 }
 

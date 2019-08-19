@@ -58,40 +58,41 @@ public class ActionInputController : MonoBehaviour {
 	}
 
 	public void OkButton() {
+		PlayerMove player = (PlayerMove)selectedCharacter.value;
 		switch ((ActionInputType)actionButtons.GetValue()) {
 			case ActionInputType.CAPTURE:
 				triggeredWin.value = true;
 				currentActionMode.value = ActionMode.NONE;
 				InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
-				selectedCharacter.value.End();
+				player.End();
 				break;
 			case ActionInputType.ESCAPE:
 				currentActionMode.value = ActionMode.NONE;
 				InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
-				selectedCharacter.value.Escape();
-				selectedCharacter.value.End();
+				player.Escape();
+				player.End();
 				break;
 			case ActionInputType.ATTACK:
-				targetList.values = selectedCharacter.value.GetAttackablesInRange();
+				targetList.values = player.GetAttackablesInRange();
 				currentActionMode.value = ActionMode.ATTACK;
 				InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
 				break;
 			case ActionInputType.HEAL: // HEAL
-				targetList.values = selectedCharacter.value.FindSupportablesInRange();
+				targetList.values = player.FindSupportablesInRange();
 				currentActionMode.value = ActionMode.HEAL;
 				InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
 				break;
 			case ActionInputType.VISIT: // VISIT
-				selectedCharacter.value.currentTile.interacted = true;
-				selectedCharacter.value.canUndoMove = false;
+				player.currentTile.interacted = true;
+				player.canUndoMove = false;
 				currentActionMode.value = ActionMode.NONE;
 				dialogueMode.value = (int)DialogueMode.VISIT;
-				dialogueEntry.value = selectedCharacter.value.currentTile.dialogue;
-				villageVisitor1.value = selectedCharacter.value.stats.charData.portraitSet;
+				dialogueEntry.value = player.currentTile.dialogue;
+				villageVisitor1.value = player.stats.charData.portraitSet;
 				startDialogue.Invoke();
 				break;
 			case ActionInputType.HACK:
-				MapTile tile = selectedCharacter.value.currentTile;
+				MapTile tile = player.currentTile;
 				tile.interacted = true;
 				tile.SetTerrain(tile.alternativeTerrain);
 				currentActionMode.value = ActionMode.NONE;
@@ -99,7 +100,7 @@ public class ActionInputController : MonoBehaviour {
 				StartCoroutine(WaitForItemGain());
 				break;
 			case ActionInputType.TRADE: // TRADE
-				targetList.values = selectedCharacter.value.FindAdjacentCharacters(Faction.PLAYER);
+				targetList.values = player.FindAdjacentCharacters(Faction.PLAYER);
 				currentActionMode.value = ActionMode.TRADE;
 				InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
 				break;
@@ -110,7 +111,7 @@ public class ActionInputController : MonoBehaviour {
 			case ActionInputType.WAIT: // WAIT
 				currentActionMode.value = ActionMode.NONE;
 				InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
-				selectedCharacter.value.End();
+				player.End();
 				break;
 		}
 	}

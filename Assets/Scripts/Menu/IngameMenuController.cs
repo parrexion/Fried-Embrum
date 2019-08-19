@@ -168,9 +168,7 @@ public class IngameMenuController : InputReceiverDelegate {
 	private void EndTurn() {
 		objective.UpdateState(false);
 		waitPlayerEvent.Invoke();
-		if (!autoEndTurn.value) {
-			nextStateEvent.Invoke();
-		}
+		nextStateEvent.Invoke();
 	}
 
 	public override void OnLeftArrow() {
