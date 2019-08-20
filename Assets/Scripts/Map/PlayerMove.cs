@@ -161,6 +161,19 @@ public class PlayerMove : TacticsMove {
 	}
 
 	/// <summary>
+	/// Checks if the character can talk to anyone.
+	/// </summary>
+	/// <returns></returns>
+	public bool CanTalk() {
+		List<MapTile> talkers = FindAdjacentCharacters(Faction.PLAYER);
+		for(int i = 0; i < talkers.Count; i++) {
+			if(talkers[i].currentCharacter.talkQuotes.Count > 0)
+				return true;
+		}
+		return false;
+	}
+
+	/// <summary>
 	/// Checks if the character can hack on the current tile.
 	/// </summary>
 	/// <returns></returns>

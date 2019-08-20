@@ -195,6 +195,7 @@ public class EnemyPosition {
 	public AggroType aggroType;
 	public bool hasQuotes;
 	public List<FightQuote> quotes = new List<FightQuote>();
+	public List<FightQuote> talks = new List<FightQuote>();
 	public int huntX, huntY;
 	public List<Position> patrolPositions = new List<Position>();
 
@@ -212,9 +213,16 @@ public class EnemyPosition {
 		}
 		aggroType = other.aggroType;
 		hasQuotes = other.hasQuotes;
+		quotes.Clear();
 		for (int i = 0; i < other.quotes.Count; i++) {
 			quotes.Add(new FightQuote(){
 				triggerer = other.quotes[i].triggerer, quote = other.quotes[i].quote, activated = other.quotes[i].activated
+			});
+		}
+		talks.Clear();
+		for (int i = 0; i < other.talks.Count; i++) {
+			talks.Add(new FightQuote(){
+				triggerer = other.talks[i].triggerer, quote = other.talks[i].quote, activated = other.talks[i].activated
 			});
 		}
 		huntX = other.huntX;
@@ -241,6 +249,7 @@ public class ReinforcementPosition {
 	public AggroType aggroType;
 	public bool hasQuotes;
 	public List<FightQuote> quotes = new List<FightQuote>();
+	public List<FightQuote> talks = new List<FightQuote>();
 	public int huntX, huntY;
 	public List<Position> patrolPositions = new List<Position>();
 
@@ -260,11 +269,20 @@ public class ReinforcementPosition {
 		}
 		aggroType = pos.aggroType;
 		hasQuotes = pos.hasQuotes;
+		quotes.Clear();
 		for (int i = 0; i < pos.quotes.Count; i++) {
 			quotes.Add(new FightQuote() {
 				triggerer = pos.quotes[i].triggerer,
 				quote = pos.quotes[i].quote,
 				activated = pos.quotes[i].activated
+			});
+		}
+		talks.Clear();
+		for(int i = 0; i < pos.talks.Count; i++) {
+			talks.Add(new FightQuote() {
+				triggerer = pos.talks[i].triggerer,
+				quote = pos.talks[i].quote,
+				activated = pos.talks[i].activated
 			});
 		}
 		huntX = pos.huntX;
@@ -290,9 +308,18 @@ public class ReinforcementPosition {
 		joiningSquad = other.joiningSquad;
 		aggroType = other.aggroType;
 		hasQuotes = other.hasQuotes;
+		quotes.Clear();
 		for (int i = 0; i < other.quotes.Count; i++) {
 			quotes.Add(new FightQuote(){
 				triggerer = other.quotes[i].triggerer, quote = other.quotes[i].quote, activated = other.quotes[i].activated
+			});
+		}
+		talks.Clear();
+		for(int i = 0; i < other.talks.Count; i++) {
+			talks.Add(new FightQuote() {
+				triggerer = other.talks[i].triggerer,
+				quote = other.talks[i].quote,
+				activated = other.talks[i].activated
 			});
 		}
 		huntX = other.huntX;

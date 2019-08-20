@@ -44,6 +44,7 @@ public abstract class TacticsMove : MonoBehaviour {
 
 	[Header("Dialogue")]
 	public List<FightQuote> fightQuotes = new List<FightQuote>();
+	public List<FightQuote> talkQuotes = new List<FightQuote>();
 
 	[Header("Health")]
 	public MyBar healthBar;
@@ -342,6 +343,15 @@ public abstract class TacticsMove : MonoBehaviour {
 
 				if (BattleMap.DistanceTo(this, enemyList.values[i]) == 1)
 					supportables.Add(enemyList.values[i].currentTile);
+			}
+		}
+		else if (faction == Faction.NONE || faction == Faction.ALLY) {
+			for (int i = 0; i < allyList.values.Count; i++) {
+				if (!allyList.values[i].IsAlive())
+					continue;
+
+				if (BattleMap.DistanceTo(this, allyList.values[i]) == 1)
+					supportables.Add(allyList.values[i].currentTile);
 			}
 		}
 		return supportables;

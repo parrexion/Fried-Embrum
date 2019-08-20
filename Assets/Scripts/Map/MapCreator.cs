@@ -337,6 +337,7 @@ public class MapCreator : MonoBehaviour {
 		tactics.inventory = inventory;
 		tactics.skills = skills;
 		tactics.fightQuotes = pos.quotes;
+		tactics.talkQuotes = pos.talks;
 		tactics.aggroType = pos.aggroType;
 		tactics.huntTile = battleMap.GetTile(pos.huntX, pos.huntY);
 		tactics.patrolTiles.Clear();
@@ -366,6 +367,7 @@ public class MapCreator : MonoBehaviour {
 		tactics.inventory = inventory;
 		tactics.skills = skills;
 		tactics.fightQuotes = pos.quotes;
+		tactics.talkQuotes = pos.talks;
 		tactics.aggroType = pos.aggroType;
 		tactics.huntTile = battleMap.GetTile(pos.huntX, pos.huntY);
 		tactics.patrolTiles.Clear();

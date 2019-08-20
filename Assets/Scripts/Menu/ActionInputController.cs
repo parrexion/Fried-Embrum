@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public enum ActionInputType { CAPTURE, ESCAPE, ATTACK, HEAL, VISIT, HACK, TRADE, ITEM, WAIT }
+public enum ActionInputType { CAPTURE, ESCAPE, TALK, ATTACK, HEAL, VISIT, HACK, TRADE, ITEM, WAIT }
 
 public class ActionInputController : MonoBehaviour {
 
@@ -71,6 +71,11 @@ public class ActionInputController : MonoBehaviour {
 				InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
 				player.Escape();
 				player.End();
+				break;
+			case ActionInputType.TALK:
+				targetList.values = player.FindAdjacentCharacters(Faction.PLAYER);
+				currentActionMode.value = ActionMode.TALK;
+				InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
 				break;
 			case ActionInputType.ATTACK:
 				targetList.values = player.GetAttackablesInRange();
