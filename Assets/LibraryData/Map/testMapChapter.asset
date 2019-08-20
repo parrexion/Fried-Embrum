@@ -51,6 +51,7 @@ MonoBehaviour:
     aggroType: 0
     hasQuotes: 0
     quotes: []
+    talks: []
     huntX: 0
     huntY: 0
     patrolPositions: []
@@ -65,6 +66,7 @@ MonoBehaviour:
     aggroType: 5
     hasQuotes: 0
     quotes: []
+    talks: []
     huntX: 0
     huntY: 0
     patrolPositions:
@@ -87,15 +89,17 @@ MonoBehaviour:
     quotes:
     - triggerer: {fileID: 0}
       quote: {fileID: 11400000, guid: b5139b7988475d24f8299cab08cf5c2f, type: 2}
+      willJoin: 0
       activated: 0
+    talks: []
     huntX: 0
     huntY: 0
     patrolPositions: []
   allies:
   - spawnTurn: 0
     faction: 0
-    x: 7
-    y: 7
+    x: 2
+    y: 2
     level: 4
     charData: {fileID: 11400000, guid: 43608e2c8ad57eb47bb7a3d5bf9c5263, type: 2}
     inventory:
@@ -103,8 +107,13 @@ MonoBehaviour:
       droppable: 0
     joiningSquad: 0
     aggroType: 0
-    hasQuotes: 0
+    hasQuotes: 1
     quotes: []
+    talks:
+    - triggerer: {fileID: 0}
+      quote: {fileID: 11400000, guid: 8f6e44679bb065e45a6634714e5052d4, type: 2}
+      willJoin: 1
+      activated: 0
     huntX: 0
     huntY: 0
     patrolPositions: []
