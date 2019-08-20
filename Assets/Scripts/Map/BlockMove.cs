@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class BlockMove : TacticsMove {
 
@@ -9,7 +8,12 @@ public class BlockMove : TacticsMove {
 	/// Additional setup for player characters.
 	/// </summary>
 	protected override void ExtraSetup() { }
-	
+
+	/// <summary>
+	/// Removes the character from the NPC list.
+	/// </summary>
+	public override void RemoveFromList() {	}
+
 	/// <summary>
 	/// Additional functions which run when the player ends their turn.
 	/// </summary>

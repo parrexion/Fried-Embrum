@@ -222,7 +222,7 @@ public class EnemyPosition {
 		talks.Clear();
 		for (int i = 0; i < other.talks.Count; i++) {
 			talks.Add(new FightQuote(){
-				triggerer = other.talks[i].triggerer, quote = other.talks[i].quote, activated = other.talks[i].activated
+				triggerer = other.talks[i].triggerer, quote = other.talks[i].quote, willJoin = other.talks[i].willJoin, activated = other.talks[i].activated
 			});
 		}
 		huntX = other.huntX;
@@ -282,6 +282,7 @@ public class ReinforcementPosition {
 			talks.Add(new FightQuote() {
 				triggerer = pos.talks[i].triggerer,
 				quote = pos.talks[i].quote,
+				willJoin = pos.talks[i].willJoin,
 				activated = pos.talks[i].activated
 			});
 		}
@@ -319,6 +320,7 @@ public class ReinforcementPosition {
 			talks.Add(new FightQuote() {
 				triggerer = other.talks[i].triggerer,
 				quote = other.talks[i].quote,
+				willJoin = other.talks[i].willJoin,
 				activated = other.talks[i].activated
 			});
 		}
@@ -364,6 +366,7 @@ public class TurnEvent {
 public class FightQuote {
 	public CharData triggerer;
 	public DialogueEntry quote;
+	public bool willJoin;
 	public bool activated;
 }
 

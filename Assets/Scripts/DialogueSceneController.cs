@@ -45,31 +45,32 @@ public class DialogueSceneController : MonoBehaviour {
 	/// </summary>
 	public void DialogueEnd() {
 
-		switch (currentDialogueMode.value)
+		switch ((DialogueMode)currentDialogueMode.value)
 		{
-			case (int)DialogueMode.PRELUDE:
+			case DialogueMode.PRELUDE:
 				InputDelegateController.instance.TriggerMenuChange(MenuMode.NONE);
 				nextTurnEvent.Invoke();
 				break;
-			case (int)DialogueMode.INTRO:
+			case DialogueMode.INTRO:
 				InputDelegateController.instance.TriggerMenuChange(MenuMode.NONE);
 				nextTurnEvent.Invoke();
 				break;
-			case (int)DialogueMode.ENDING:
+			case DialogueMode.ENDING:
 				InputDelegateController.instance.TriggerSceneChange(MenuMode.SAVE, "SaveScene");
 				break;
-			case (int)DialogueMode.EVENT:
+			case DialogueMode.EVENT:
 				InputDelegateController.instance.TriggerMenuChange(MenuMode.NONE);
 				resumeTurnEvent.Invoke();
 				musicFocusSource.value = true;
 				playSubMusicEvent.Invoke();
 				break;
-			case (int)DialogueMode.VISIT:
+			case DialogueMode.VISIT:
+			case DialogueMode.TALK:
 				InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
 				musicFocusSource.value = true;
 				playSubMusicEvent.Invoke();
 				break;
-			case (int)DialogueMode.QUOTE:
+			case DialogueMode.QUOTE:
 				InputDelegateController.instance.TriggerMenuChange(MenuMode.BATTLE);
 				resumeBattleEvent.Invoke();
 				break;

@@ -49,6 +49,16 @@ public class NPCMove : TacticsMove {
 		//Debug.Log("Spawned  " + stats.charData.entryName);
 	}
 
+	/// <summary>
+	/// Removes the character from the NPC list.
+	/// </summary>
+	public override void RemoveFromList() {
+		if (faction == Faction.ENEMY)
+			enemyList.values.Remove(this);
+		else {
+			allyList.values.Remove(this);
+		}
+	}
 
 
 	///////////   MOVEMENT	

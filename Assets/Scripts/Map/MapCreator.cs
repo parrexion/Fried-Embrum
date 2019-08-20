@@ -296,9 +296,8 @@ public class MapCreator : MonoBehaviour {
 	/// <param name="stats"></param>
 	/// <param name="inventory"></param>
 	/// <param name="skills"></param>
-	private TacticsMove SpawnPlayerCharacter(int x, int y, StatsContainer stats, InventoryContainer inventory, SkillsContainer skills, int squad, bool active) {
+	public TacticsMove SpawnPlayerCharacter(int x, int y, StatsContainer stats, InventoryContainer inventory, SkillsContainer skills, int squad, bool active) {
 		Transform playerTransform = Instantiate(playerPrefab, battleMap.playerParent);
-		playerTransform.position = new Vector3(x, y);
 		playerTransform.name = stats.charData.entryName;
 
 		PlayerMove tactics = playerTransform.GetComponent<PlayerMove>();

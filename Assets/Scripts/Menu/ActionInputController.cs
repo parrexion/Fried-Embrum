@@ -23,6 +23,11 @@ public class ActionInputController : MonoBehaviour {
 	public PrepListVariable squad1;
 	public PrepListVariable squad2;
 
+	[Header("Joining characters")]
+	public MapCreator mapCreator;
+	private PlayerMove joiningCharacter;
+	private bool willJoin;
+
 	[Header("Unit Action Menu")]
 	public GameObject actionMenu;
 	public MyButtonList actionButtons;
@@ -73,7 +78,7 @@ public class ActionInputController : MonoBehaviour {
 				player.End();
 				break;
 			case ActionInputType.TALK:
-				targetList.values = player.FindAdjacentCharacters(Faction.PLAYER);
+				targetList.values = player.FindAdjacentCharacters(false, true, true);
 				currentActionMode.value = ActionMode.TALK;
 				InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
 				break;
@@ -105,7 +110,7 @@ public class ActionInputController : MonoBehaviour {
 				StartCoroutine(WaitForItemGain());
 				break;
 			case ActionInputType.TRADE: // TRADE
-				targetList.values = player.FindAdjacentCharacters(Faction.PLAYER);
+				targetList.values = player.FindAdjacentCharacters(true, false, false);
 				currentActionMode.value = ActionMode.TRADE;
 				InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
 				break;
@@ -121,29 +126,47 @@ public class ActionInputController : MonoBehaviour {
 		}
 	}
 
+	public void TalkToCharacter(MapTile targetTile) {
+		PlayerMove player = (PlayerMove)selectedCharacter.value;
+		TacticsMove other = targetTile.currentCharacter;
+		currentActionMode.value = ActionMode.NONE;
+		dialogueMode.value = (int)DialogueMode.TALK;
+		dialogueEntry.value = other.talkQuotes[0].quote;
+		willJoin = other.talkQuotes[0].willJoin;
+		villageVisitor1.value = player.stats.charData.portraitSet;
+		startDialogue.Invoke();
+
+		if (willJoin) {
+			joiningCharacter = (PlayerMove)mapCreator.SpawnPlayerCharacter(other.posx, other.posy, other.stats, other.inventory, other.skills, player.squad, false);
+			joiningCharacter.currentTile = targetTile;
+			other.RemoveFromList();
+			Destroy(other.gameObject);
+		}
+	}
+
 	public void ReturnFromVisit() {
 		currentActionMode.value = ActionMode.NONE;
 		InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
-		if (!selectedCharacter.value.currentTile.gift.IsEmpty()) {
-			StartCoroutine(WaitForItemGain());
+		if (dialogueMode.value == (int)DialogueMode.VISIT) {
+			if (!selectedCharacter.value.currentTile.gift.IsEmpty()) {
+				StartCoroutine(WaitForItemGain());
+			}
+			else if (selectedCharacter.value.currentTile.ally != null) {
+				PlayerMove tactics = (PlayerMove)selectedCharacter.value.currentTile.ally;
+				MapTile closest = selectedCharacter.value.battleMap.GetClosestEmptyTile(selectedCharacter.value.currentTile);
+				int recruitSquad = ((PlayerMove)selectedCharacter.value).squad;
+				StartCoroutine(WaitForAllyToJoin(tactics, closest, recruitSquad));
+			}
+			else {
+				selectedCharacter.value.End();
+			}
 		}
-		else if (selectedCharacter.value.currentTile.ally != null) {
-			MapTile closest = selectedCharacter.value.battleMap.GetClosestEmptyTile(selectedCharacter.value.currentTile);
-			PlayerMove tactics = (PlayerMove)selectedCharacter.value.currentTile.ally;
-			tactics.posx = closest.posx;
-			tactics.posy = closest.posy;
-			tactics.Setup();
-			playerData.AddNewPlayer(tactics);
-			int recruitSquad = ((PlayerMove)selectedCharacter.value).squad;
-			if (recruitSquad == 1) {
-				tactics.squad = 1;
-				squad1.values.Add(new PrepCharacter(playerData.stats.Count - 1));
+		else if (dialogueMode.value == (int)DialogueMode.TALK) {
+			if (willJoin) {
+				willJoin = false;
+				int recruitSquad = ((PlayerMove)selectedCharacter.value).squad;
+				StartCoroutine(WaitForAllyToJoin(joiningCharacter, joiningCharacter.currentTile, recruitSquad));
 			}
-			else if (recruitSquad == 2) {
-				tactics.squad = 2;
-				squad2.values.Add(new PrepCharacter(playerData.stats.Count - 1));
-			}
-			else { Debug.LogError("Squad is invalid!"); }
 			selectedCharacter.value.End();
 		}
 		else {
@@ -154,7 +177,6 @@ public class ActionInputController : MonoBehaviour {
 	}
 
 	private IEnumerator WaitForItemGain() {
-
 		if (selectedCharacter.value.currentTile.gift.money > 0) {
 			string message = "Received " + selectedCharacter.value.currentTile.gift.money + " money";
 			yield return StartCoroutine(spinner.ShowSpinner(null, message, gainItemSfx));
@@ -182,6 +204,25 @@ public class ActionInputController : MonoBehaviour {
 		selectedCharacter.value.End();
 	}
 
+	private IEnumerator WaitForAllyToJoin(PlayerMove tactics, MapTile closest, int recruitSquad) {
+		string message = tactics.stats.charData.name + " has joined you!";
+		tactics.posx = closest.posx;
+		tactics.posy = closest.posy;
+		tactics.Setup();
+		playerData.AddNewPlayer(tactics);
+		if (recruitSquad == 1) {
+			tactics.squad = 1;
+			squad1.values.Add(new PrepCharacter(playerData.stats.Count - 1));
+		}
+		else if (recruitSquad == 2) {
+			tactics.squad = 2;
+			squad2.values.Add(new PrepCharacter(playerData.stats.Count - 1));
+		}
+		else { Debug.LogError("Squad is invalid!"); }
+		yield return StartCoroutine(spinner.ShowSpinner(tactics.stats.charData.portrait, message, gainItemSfx));
+		joiningCharacter = null;
+	}
+
 	private void ButtonSetup() {
 		PlayerMove player = (PlayerMove)selectedCharacter.value;
 		actionButtons.ResetButtons();
@@ -191,6 +232,8 @@ public class ActionInputController : MonoBehaviour {
 			actionButtons.AddButton("CAPTURE", (int)ActionInputType.CAPTURE);
 		if (escapeWin && player.CanEscape())
 			actionButtons.AddButton("ESCAPE", (int)ActionInputType.ESCAPE);
+		if (player.CanTalk())
+			actionButtons.AddButton("TALK", (int)ActionInputType.TALK);
 		if (player.CanAttack())
 			actionButtons.AddButton("ATTACK", (int)ActionInputType.ATTACK);
 		if (player.CanSupport())

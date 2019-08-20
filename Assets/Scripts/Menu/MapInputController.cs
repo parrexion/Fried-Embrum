@@ -20,7 +20,7 @@ public class MapInputController : InputReceiverDelegate {
 
 
 	private bool IsTargetMode() {
-		return (currentAction.value == ActionMode.ATTACK || currentAction.value == ActionMode.HEAL || currentAction.value == ActionMode.TRADE);
+		return (currentAction.value == ActionMode.ATTACK || currentAction.value == ActionMode.HEAL || currentAction.value == ActionMode.TRADE || currentAction.value == ActionMode.TALK);
 	}
 
     public override void OnMenuModeChanged() {
@@ -32,7 +32,7 @@ public class MapInputController : InputReceiverDelegate {
 		if (IsTargetMode())
 			targetController.UpdateSelection();
 
-		if (dialogueMode.value == (int)DialogueMode.VISIT)
+		if (dialogueMode.value == (int)DialogueMode.VISIT || dialogueMode.value == (int)DialogueMode.TALK)
 			actionController.ReturnFromVisit();
 
 		cursor.Move(0,0);
@@ -103,6 +103,10 @@ public class MapInputController : InputReceiverDelegate {
 		}
 		else if (currentAction.value == ActionMode.TRADE) {
 			InputDelegateController.instance.TriggerMenuChange(MenuMode.TRADE);
+			menuAcceptEvent.Invoke();
+		}
+		else if (currentAction.value == ActionMode.TALK) {
+			actionController.TalkToCharacter(targetController.target.value);
 			menuAcceptEvent.Invoke();
 		}
 		else if (currentAction.value == ActionMode.ACTION) {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-enum DialogueMode { NONE, PRELUDE, INTRO, ENDING, EVENT, VISIT, QUOTE }
+enum DialogueMode { NONE, PRELUDE, INTRO, ENDING, EVENT, VISIT, TALK, QUOTE }
 
 [System.Serializable]
 public class DialogueScene : MonoBehaviour {

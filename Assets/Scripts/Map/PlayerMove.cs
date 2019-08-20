@@ -34,7 +34,17 @@ public class PlayerMove : TacticsMove {
 			playerFinishedMoveEvent.Invoke();
 		}
 	}
-	
+
+	/// <summary>
+	/// Removes the character from the NPC list.
+	/// </summary>
+	public override void RemoveFromList() {
+		playerList.values.Remove(this);
+	}
+
+
+
+
 	/// <summary>
 	/// Finds all the allies around the character which can be supported with the staff.
 	/// </summary>
@@ -156,7 +166,7 @@ public class PlayerMove : TacticsMove {
 	public bool CanTrade() {
 		if (!canUndoMove)
 			return false;
-		List<MapTile> traders = FindAdjacentCharacters(Faction.PLAYER);
+		List<MapTile> traders = FindAdjacentCharacters(true, false, false);
 		return (traders.Count > 0);
 	}
 
@@ -165,7 +175,7 @@ public class PlayerMove : TacticsMove {
 	/// </summary>
 	/// <returns></returns>
 	public bool CanTalk() {
-		List<MapTile> talkers = FindAdjacentCharacters(Faction.PLAYER);
+		List<MapTile> talkers = FindAdjacentCharacters(false, true, true);
 		for(int i = 0; i < talkers.Count; i++) {
 			if(talkers[i].currentCharacter.talkQuotes.Count > 0)
 				return true;

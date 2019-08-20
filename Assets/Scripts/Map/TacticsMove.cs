@@ -92,6 +92,15 @@ public abstract class TacticsMove : MonoBehaviour {
 		ExtraSetup();
 	}
 
+	public void CopyData(TacticsMove other) {
+		battleMap = other.battleMap;
+		posx = other.posx;
+		posy = other.posy;
+		stats = other.stats;
+		inventory = other.inventory;
+		skills = other.skills;
+	}
+
 	/// <summary>
 	/// Additional functions which should be run by children.
 	/// </summary>
@@ -102,6 +111,10 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// </summary>
 	public abstract void EndMovement();
 
+	/// <summary>
+	/// Removes the character from their corresponding list.
+	/// </summary>
+	public abstract void RemoveFromList();
 
 	/// <summary>
 	/// Runs the physics loop if the character isMoving and follows the path until the end.
@@ -325,29 +338,29 @@ public abstract class TacticsMove : MonoBehaviour {
 	/// Finds all the allies around the character which can be supported with the staff.
 	/// </summary>
 	/// <returns></returns>
-	public List<MapTile> FindAdjacentCharacters(Faction faction) {
+	public List<MapTile> FindAdjacentCharacters(bool players, bool enemies, bool allies) {
 		List<MapTile> supportables = new List<MapTile>();
-		if (faction == Faction.NONE || faction == Faction.PLAYER) {
+		if (players) {
 			for (int i = 0; i < playerList.values.Count; i++) {
-				if (this == playerList.values[i] || !playerList.values[i].IsAlive())
+				if (this == playerList.values[i] || !playerList.values[i].IsAvailable())
 					continue;
 
 				if (BattleMap.DistanceTo(this, playerList.values[i]) == 1)
 					supportables.Add(playerList.values[i].currentTile);
 			}
 		}
-		else if (faction == Faction.NONE || faction == Faction.ENEMY) {
+		if (enemies) {
 			for (int i = 0; i < enemyList.values.Count; i++) {
-				if (!enemyList.values[i].IsAlive())
+				if (this == enemyList.values[i] || !enemyList.values[i].IsAvailable())
 					continue;
 
 				if (BattleMap.DistanceTo(this, enemyList.values[i]) == 1)
 					supportables.Add(enemyList.values[i].currentTile);
 			}
 		}
-		else if (faction == Faction.NONE || faction == Faction.ALLY) {
+		if (allies) {
 			for (int i = 0; i < allyList.values.Count; i++) {
-				if (!allyList.values[i].IsAlive())
+				if (this == allyList.values[i] || !allyList.values[i].IsAvailable())
 					continue;
 
 				if (BattleMap.DistanceTo(this, allyList.values[i]) == 1)
@@ -513,6 +526,14 @@ public abstract class TacticsMove : MonoBehaviour {
 	}
 
 	/// <summary>
+	/// Checks if the character is still on the map.
+	/// </summary>
+	/// <returns></returns>
+	public bool IsAvailable() {
+		return IsAlive() && !hasEscaped;
+	}
+
+	/// <summary>
 	/// Shows the death animation of the character when they die.
 	/// </summary>
 	/// <returns></returns>
@@ -526,7 +547,7 @@ public abstract class TacticsMove : MonoBehaviour {
 		gameObject.SetActive(false);
 	}
 
-#endregion
+	#endregion
 
 	/// <summary>
 	/// Returns the current movement speed. Virtual so that other classes
