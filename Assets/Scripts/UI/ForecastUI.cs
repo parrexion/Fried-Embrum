@@ -167,7 +167,7 @@ public class ForecastUI : MonoBehaviour {
 				}
 			}
 			else {
-				ShowHealForecast(attacker, defender, act1.weaponAtk);
+				ShowHealForecast(attacker, defender, act1.staffAtk);
 				if (!inBattle) {
 					backgroundFight.SetActive(false);
 					backgroundHeal.SetActive(true);

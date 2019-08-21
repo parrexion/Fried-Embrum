@@ -264,8 +264,8 @@ public class MapCreator : MonoBehaviour {
 			ReinforcementPosition pos = map.allies[i];
 
 			StatsContainer stats = new StatsContainer(pos);
-			InventoryContainer inventory = new InventoryContainer(enemyClassWheel.GetWpnSkillFromLevel(pos.charData.startClassLevels), pos.inventory);
-			SkillsContainer skills = new SkillsContainer(enemyClassWheel.GetSkillsFromLevel(pos.charData.startClassLevels, pos.charData.startClass, pos.level));
+			InventoryContainer inventory = new InventoryContainer(playerClassWheel.GetWpnSkillFromLevel(pos.charData.startClassLevels), pos.inventory);
+			SkillsContainer skills = new SkillsContainer(playerClassWheel.GetSkillsFromLevel(pos.charData.startClassLevels, pos.charData.startClass, pos.level));
 			List<FightQuote> quotes = new List<FightQuote>();
 			for (int q = 0; q < pos.quotes.Count; q++) {
 				FightQuote fight = new FightQuote();

@@ -21,6 +21,9 @@ public class ExplanationGroup : MonoBehaviour {
 			selectedObject.highlight.enabled = false;
 			selectedObject = selectedObject.leftObject;
 			selectedObject.highlight.enabled = true;
+
+			if(!selectedObject.highlight.gameObject.activeInHierarchy)
+				MoveLeft();
 		}
 		UpdateSelection(true);
 	}
@@ -30,6 +33,9 @@ public class ExplanationGroup : MonoBehaviour {
 			selectedObject.highlight.enabled = false;
 			selectedObject = selectedObject.rightObject;
 			selectedObject.highlight.enabled = true;
+
+			if(!selectedObject.highlight.gameObject.activeInHierarchy)
+				MoveRight();
 		}
 		UpdateSelection(true);
 	}
@@ -39,6 +45,9 @@ public class ExplanationGroup : MonoBehaviour {
 			selectedObject.highlight.enabled = false;
 			selectedObject = selectedObject.upObject;
 			selectedObject.highlight.enabled = true;
+
+			if(!selectedObject.highlight.gameObject.activeInHierarchy)
+				MoveUp();
 		}
 		UpdateSelection(true);
 	}
@@ -48,6 +57,9 @@ public class ExplanationGroup : MonoBehaviour {
 			selectedObject.highlight.enabled = false;
 			selectedObject = selectedObject.downObject;
 			selectedObject.highlight.enabled = true;
+
+			if(!selectedObject.highlight.gameObject.activeInHierarchy)
+				MoveDown();
 		}
 		UpdateSelection(true);
 	}

@@ -5,6 +5,8 @@ using UnityEngine.Events;
 
 public class ExplanationController : InputReceiverDelegate {
 
+	public IntVariable turnCount;
+
     [Header("Character stats")]
     public TacticsMoveVariable selectedCharacter;
     public InventoryTuple[] inventory;
@@ -128,7 +130,10 @@ public class ExplanationController : InputReceiverDelegate {
 		baseStats.UpdateSelection(false);
 		statsStats.UpdateSelection(false);
 		inventoryStats.UpdateSelection(false);
-		MenuChangeDelay(MenuMode.MAP);
+		if (turnCount.value == 0)
+			MenuChangeDelay(MenuMode.FORMATION);
+		else
+			MenuChangeDelay(MenuMode.MAP);
 		menuBackEvent.Invoke();
     }
 
