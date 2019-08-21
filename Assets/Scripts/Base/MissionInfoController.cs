@@ -38,8 +38,30 @@ public class MissionInfoController : MonoBehaviour {
 		for (int i = 0; i < missionLibrary.Size(); i++) {
 			MissionEntry mission = (MissionEntry)missionLibrary.GetEntryByIndex(i);
 			MissionProgress progress = playerData.GetMissionProgress(mission.uuid);
-			if (!progress.cleared && mission.unlockDay <= currentDay.value) {
-				availableMaps.Add(mission);
+			if (progress.cleared)
+				continue;
+
+			switch (mission.unlockReq) {
+				case MissionEntry.Unlocking.TIME:
+					if (mission.unlockDay <= currentDay.value) {
+						availableMaps.Add(mission);
+					}
+					break;
+				case MissionEntry.Unlocking.DEATH:
+					if (playerData.IsDead(mission.characterReq.uuid)) {
+						availableMaps.Add(mission);
+					}
+					break;
+				case MissionEntry.Unlocking.RECRUITED:
+					if (playerData.HasCharacter(mission.characterReq.uuid)) {
+						availableMaps.Add(mission);
+					}
+					break;
+				case MissionEntry.Unlocking.MISSION:
+					if (playerData.GetMissionProgress(mission.clearedMission.uuid).cleared) {
+						availableMaps.Add(mission);
+					}
+					break;
 			}
 		}
 		for (int i = 0; i < availableMaps.Count; i++) {

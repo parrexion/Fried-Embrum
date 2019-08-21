@@ -23,7 +23,10 @@ public class MissionEditorWindow : GenericEntryEditorWindow {
 		MissionEntry missionValues = (MissionEntry)entryValues;
 
 		GUILayout.Label("Mission Info", EditorStyles.boldLabel);
+		GUILayout.BeginHorizontal();
 		missionValues.mapLocation = (MapLocation)EditorGUILayout.EnumPopup("Location", missionValues.mapLocation);
+		missionValues.duration = EditorGUILayout.IntField("Map Duration", missionValues.duration);
+		GUILayout.EndHorizontal();
 		GUILayout.Label("Mission description");
 		EditorStyles.textField.wordWrap = true;
 		missionValues.mapDescription = EditorGUILayout.TextArea(missionValues.mapDescription, GUILayout.Width(500), GUILayout.Height(30));
@@ -31,10 +34,23 @@ public class MissionEditorWindow : GenericEntryEditorWindow {
 
 		GUILayout.Space(10);
 
-		GUILayout.Label("Chapter Linking", EditorStyles.boldLabel);
+		GUILayout.Label("Mission Unlocking", EditorStyles.boldLabel);
 		GUILayout.BeginHorizontal();
-		missionValues.duration = EditorGUILayout.IntField("Map Duration", missionValues.duration);
-		missionValues.unlockDay = EditorGUILayout.IntField("Unlocked on day", missionValues.unlockDay);
+		missionValues.unlockReq = (MissionEntry.Unlocking)EditorGUILayout.EnumPopup("Unlock requirement", missionValues.unlockReq);
+		switch (missionValues.unlockReq) {
+			case MissionEntry.Unlocking.TIME:
+				missionValues.unlockDay = EditorGUILayout.IntField("Unlocked on day", missionValues.unlockDay);
+				break;
+			case MissionEntry.Unlocking.DEATH:
+				missionValues.characterReq = (CharData)EditorGUILayout.ObjectField("Dead Character", missionValues.characterReq, typeof(CharData), false);
+				break;
+			case MissionEntry.Unlocking.RECRUITED:
+				missionValues.characterReq = (CharData)EditorGUILayout.ObjectField("Recruited Character", missionValues.characterReq, typeof(CharData), false);
+				break;
+			case MissionEntry.Unlocking.MISSION:
+				missionValues.clearedMission = (MissionEntry)EditorGUILayout.ObjectField("Cleared Mission", missionValues.clearedMission, typeof(MissionEntry), false);
+				break;
+		}
 		GUILayout.EndHorizontal();
 
 		GUILayout.Space(10);

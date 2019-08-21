@@ -5,6 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "LibraryEntries/Mission")]
 public class MissionEntry : ScrObjLibraryEntry {
 
+	public enum Unlocking { TIME, DEATH, RECRUITED, MISSION }
+
 	[System.Serializable]
 	public class SquadGroup {
 		public int squad1Size;
@@ -21,7 +23,10 @@ public class MissionEntry : ScrObjLibraryEntry {
 	
 	[Header("Mission Unlock")]
 	public int duration = 1;
+	public Unlocking unlockReq;
 	public int unlockDay = 1;
+	public CharData characterReq;
+	public MissionEntry clearedMission;
 
 	[Header("Reward")]
 	public Reward reward = new Reward();
@@ -36,7 +41,10 @@ public class MissionEntry : ScrObjLibraryEntry {
 		maps = new List<MapEntry>();
 		
 		duration = 1;
+		unlockReq = Unlocking.TIME;
 		unlockDay = 1;
+		characterReq = null;
+		clearedMission = null;
 
 		reward = new Reward();
 	}
@@ -58,7 +66,10 @@ public class MissionEntry : ScrObjLibraryEntry {
 		}
 		
 		duration = mission.duration;
+		unlockReq = mission.unlockReq;
 		unlockDay = mission.unlockDay;
+		characterReq = mission.characterReq;
+		clearedMission = mission.clearedMission;
 
 		reward = mission.reward;
 	}
