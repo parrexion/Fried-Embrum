@@ -46,7 +46,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 	public Text hitText;
 	public Text avoidText;
 	public Image boostAvoid;
-	public GameObject[] retailiateStars;
+	public GameObject[] fatigueLevels;
 
 	[Header("Stats Stats")]
 	public GameObject statsObject;
@@ -182,8 +182,8 @@ public class SimpleCharacterUI : MonoBehaviour {
 		int hitrate = BattleCalc.GetHitRate(weapon, stats);
 		hitText.text = (hitrate != -1) ? "Hit:  " + hitrate : "Hit:  --";
 		avoidText.text = "Avo:  " + (BattleCalc.GetAvoid(stats) + tactics.currentTile.terrain.avoid);
-		for (int i = 0; i < retailiateStars.Length; i++) {
-			retailiateStars[i].SetActive(i < tactics.stats.fatigueAmount);
+		for (int i = 0; i < fatigueLevels.Length; i++) {
+			fatigueLevels[i].SetActive(i == tactics.stats.fatigueAmount);
 		}
 
 		//Terrain
