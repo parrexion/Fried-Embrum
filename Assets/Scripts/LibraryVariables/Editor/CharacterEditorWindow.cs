@@ -30,12 +30,16 @@ public class CharacterEditorWindow : GenericEntryEditorWindow {
 		GUILayout.BeginHorizontal();
 		GUILayout.Label("Trade portrait", GUILayout.Width(130));
 		GUILayout.Label("Info portrait", GUILayout.Width(130));
-		GUILayout.Label("Battle sprite", GUILayout.Width(130));
+		GUILayout.Label("Player sprite", GUILayout.Width(130));
+		GUILayout.Label("Enemy sprite", GUILayout.Width(130));
+		GUILayout.Label("Ally sprite", GUILayout.Width(130));
 		GUILayout.EndHorizontal();
 		GUILayout.BeginHorizontal();
 		charValues.bigPortrait = (Sprite)EditorGUILayout.ObjectField("", charValues.bigPortrait, typeof(Sprite), false, GUILayout.Width(130));
 		charValues.portrait = (Sprite)EditorGUILayout.ObjectField("", charValues.portrait, typeof(Sprite), false, GUILayout.Width(130));
-		charValues.battleSprite = (Sprite)EditorGUILayout.ObjectField("", charValues.battleSprite, typeof(Sprite), false, GUILayout.Width(130));
+		charValues.playerSprite = (Sprite)EditorGUILayout.ObjectField("", charValues.playerSprite, typeof(Sprite), false, GUILayout.Width(130));
+		charValues.enemySprite = (Sprite)EditorGUILayout.ObjectField("", charValues.enemySprite, typeof(Sprite), false, GUILayout.Width(130));
+		charValues.allySprite = (Sprite)EditorGUILayout.ObjectField("", charValues.allySprite, typeof(Sprite), false, GUILayout.Width(130));
 		GUILayout.EndHorizontal();
 		charValues.portraitSet = (PortraitEntry)EditorGUILayout.ObjectField("Portrait set", charValues.portraitSet, typeof(PortraitEntry), false);
 

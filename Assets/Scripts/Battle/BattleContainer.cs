@@ -194,8 +194,8 @@ public class BattleContainer : InputReceiverDelegate {
 	private void SetupBattle() {
 		leftDamageObject.SetActive(false);
 		rightDamageObject.SetActive(false);
-		leftTransform.GetComponent<SpriteRenderer>().sprite = actions[0].attacker.stats.charData.battleSprite;
-		rightTransform.GetComponent<SpriteRenderer>().sprite = actions[0].defender.stats.charData.battleSprite;
+		leftTransform.GetComponent<SpriteRenderer>().sprite = actions[0].attacker.GetComponent<SpriteRenderer>().sprite;
+		rightTransform.GetComponent<SpriteRenderer>().sprite = actions[0].defender.GetComponent<SpriteRenderer>().sprite;
 		leftTransform.GetComponent<SpriteRenderer>().color = Color.white;
 		rightTransform.GetComponent<SpriteRenderer>().color = Color.white;
 		_attackerDealtDamage = false;

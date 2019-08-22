@@ -298,8 +298,6 @@ public class MapCreator : MonoBehaviour {
 	/// <param name="skills"></param>
 	public TacticsMove SpawnPlayerCharacter(int x, int y, StatsContainer stats, InventoryContainer inventory, SkillsContainer skills, int squad, bool active) {
 		Transform playerTransform = Instantiate(playerPrefab, battleMap.playerParent);
-		playerTransform.name = stats.charData.entryName;
-
 		PlayerMove tactics = playerTransform.GetComponent<PlayerMove>();
 		tactics.battleMap = battleMap;
 		tactics.posx = x;
@@ -325,8 +323,6 @@ public class MapCreator : MonoBehaviour {
 	/// <param name="skills"></param>
 	private void SpawnEnemyCharacter(ReinforcementPosition pos, StatsContainer stats, InventoryContainer inventory, SkillsContainer skills) {
 		Transform enemyTransform = Instantiate(enemyPrefab, battleMap.enemyParent);
-		enemyTransform.position = new Vector3(pos.x, pos.y);
-
 		NPCMove tactics = enemyTransform.GetComponent<NPCMove>();
 		tactics.battleMap = battleMap;
 		tactics.posx = pos.x;
@@ -354,10 +350,8 @@ public class MapCreator : MonoBehaviour {
 	/// <param name="inventory"></param>
 	/// <param name="skills"></param>
 	private void SpawnAllyCharacter(ReinforcementPosition pos, StatsContainer stats, InventoryContainer inventory, SkillsContainer skills) {
-		Transform enemyTransform = Instantiate(enemyPrefab, battleMap.enemyParent);
-		enemyTransform.position = new Vector3(pos.x, pos.y);
-
-		NPCMove tactics = enemyTransform.GetComponent<NPCMove>();
+		Transform allyTransform = Instantiate(enemyPrefab, battleMap.enemyParent);
+		NPCMove tactics = allyTransform.GetComponent<NPCMove>();
 		tactics.battleMap = battleMap;
 		tactics.posx = pos.x;
 		tactics.posy = pos.y;

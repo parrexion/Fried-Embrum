@@ -131,8 +131,19 @@ public class ActionInputController : MonoBehaviour {
 		TacticsMove other = targetTile.currentCharacter;
 		currentActionMode.value = ActionMode.NONE;
 		dialogueMode.value = (int)DialogueMode.TALK;
-		dialogueEntry.value = other.talkQuotes[0].quote;
-		willJoin = other.talkQuotes[0].willJoin;
+
+		FightQuote quote = null;
+		for (int i = 0; i < other.talkQuotes.Count; i++) {
+			FightQuote fq = other.talkQuotes[i];
+			if (!fq.activated && (fq.triggerer == null || fq.triggerer.uuid == player.stats.charData.uuid)) {
+				quote = fq;
+				break;
+
+			}
+		}
+
+		dialogueEntry.value = quote.quote;
+		willJoin = quote.willJoin;
 		villageVisitor1.value = player.stats.charData.portraitSet;
 		startDialogue.Invoke();
 

@@ -18,7 +18,7 @@ public class SearchInfo {
 }
 
 public class NPCMove : TacticsMove {
-	
+
 	private static List<TacticsMove> enemies = new List<TacticsMove>();
 	private static List<TacticsMove> friends = new List<TacticsMove>();
 
@@ -41,10 +41,17 @@ public class NPCMove : TacticsMove {
 	protected override void ExtraSetup() {
 		bossCrest.enabled = (aggroType == AggroType.BOSS);
 
-		if (faction == Faction.ENEMY)
+		if (faction == Faction.ENEMY) {
 			enemyList.values.Add(this);
+			GetComponent<SpriteRenderer>().sprite = stats.charData.enemySprite;
+		}
 		else {
 			allyList.values.Add(this);
+			GetComponent<SpriteRenderer>().sprite = stats.charData.allySprite;
+		}
+
+		if (GetComponent<SpriteRenderer>().sprite == null) {
+			Debug.LogError("Battle sprite is null!", this);
 		}
 		//Debug.Log("Spawned  " + stats.charData.entryName);
 	}

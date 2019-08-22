@@ -10,6 +10,7 @@ public class MapTile : MonoBehaviour {
 	public GameObject highlight;
 	public GameObject dangerZone;
 	public GameObject spawnPoint;
+	public ActionModeVariable actionMode;
 
 	[Header("Selectable")]
 	public bool current;
@@ -41,6 +42,7 @@ public class MapTile : MonoBehaviour {
 	public TacticsMove ally;
 
 	private SpriteRenderer _rendHighlight;
+	private float colorWarping;
 
 
 	private void Start() {
@@ -48,6 +50,10 @@ public class MapTile : MonoBehaviour {
 	}
 
 	private void Update() {
+		colorWarping += Time.deltaTime;
+		if (colorWarping >= 1f) {
+			colorWarping -= 1f;
+		}
 		SetHighlightColor();
 	}
 
@@ -64,11 +70,11 @@ public class MapTile : MonoBehaviour {
 		tileColor.a = 0.35f;
 
 		if (current) {
-			tileColor = Color.magenta;
+			tileColor = (colorWarping >= 0.5f && actionMode.value == ActionMode.MOVE) ? Color.yellow : Color.magenta;
 			tileColor.a = 0.35f;
 		}
 		else if (target) {
-			tileColor = Color.cyan;
+			tileColor = (colorWarping >= 0.5f && actionMode.value != ActionMode.NONE && actionMode.value != ActionMode.MOVE) ? Color.magenta : Color.cyan;
 			tileColor.a = 0.35f;
 		}
 		else if (pathable || deployable > 0) {

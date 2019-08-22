@@ -84,10 +84,10 @@ public abstract class TacticsMove : MonoBehaviour {
 		currentHealth = stats.hp;
 		UpdateHealth();
 		inventory.CleanupInventory();
-		GetComponent<SpriteRenderer>().sprite = stats.charData.battleSprite;
 		currentTile = battleMap.GetTile(posx, posy);
 		currentTile.currentCharacter = this;
 		transform.position = new Vector3(currentTile.transform.position.x, currentTile.transform.position.y, 0);
+
 		gameObject.SetActive(true);
 		ExtraSetup();
 	}

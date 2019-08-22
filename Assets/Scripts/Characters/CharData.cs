@@ -8,7 +8,9 @@ public class CharData : ScrObjLibraryEntry {
 	[Header("Character Info")]
 	public Sprite bigPortrait;
 	public Sprite portrait;
-	public Sprite battleSprite;
+	public Sprite playerSprite;
+	public Sprite enemySprite;
+	public Sprite allySprite;
 	public PortraitEntry portraitSet;
 	public CharClass startClass;
 	public int[] startClassLevels = new int[ClassWheel.CLASS_COUNT];
@@ -43,7 +45,9 @@ public class CharData : ScrObjLibraryEntry {
 
 		bigPortrait = null;
 		portrait = null;
-		battleSprite = null;
+		playerSprite = null;
+		enemySprite = null;
+		allySprite = null;
 		portraitSet = null;
 		startClass = null;
 		startClassLevels = new int[ClassWheel.CLASS_COUNT];
@@ -75,7 +79,9 @@ public class CharData : ScrObjLibraryEntry {
 
 		bigPortrait = cd.bigPortrait;
 		portrait = cd.portrait;
-		battleSprite = cd.battleSprite;
+		playerSprite = cd.playerSprite;
+		enemySprite = cd.enemySprite;
+		allySprite = cd.allySprite;
 		portraitSet = cd.portraitSet;
 		startClass = cd.startClass;
 		startClassLevels = cd.startClassLevels;

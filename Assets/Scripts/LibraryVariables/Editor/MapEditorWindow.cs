@@ -361,6 +361,30 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 					mapValues.enemies[i].quotes.Add(new FightQuote());
 				}
 				GUILayout.EndHorizontal();
+
+				// Talks
+				for (int j = 0; j < mapValues.enemies[i].talks.Count; j++) {
+					EditorGUIUtility.labelWidth = 70;
+					GUILayout.BeginHorizontal();
+					mapValues.enemies[i].talks[j].triggerer = (CharData)EditorGUILayout.ObjectField("Caused by", mapValues.enemies[i].talks[j].triggerer, typeof(CharData), false);
+					mapValues.enemies[i].talks[j].quote = (DialogueEntry)EditorGUILayout.ObjectField("Talk", mapValues.enemies[i].talks[j].quote, typeof(DialogueEntry), false);
+					EditorGUIUtility.labelWidth = 50;
+					mapValues.enemies[i].talks[j].willJoin = EditorGUILayout.Toggle("Join", mapValues.enemies[i].talks[j].willJoin, GUILayout.Width(90));
+					if (GUILayout.Button("X", GUILayout.Width(50))) {
+						GUI.FocusControl(null);
+						mapValues.enemies[i].talks.RemoveAt(j);
+						j--;
+						continue;
+					}
+					GUILayout.EndHorizontal();
+					EditorGUIUtility.labelWidth = 120;
+				}
+				GUILayout.BeginHorizontal();
+				GUILayout.Space(120);
+				if (GUILayout.Button("Add Talks")) {
+					mapValues.enemies[i].talks.Add(new FightQuote());
+				}
+				GUILayout.EndHorizontal();
 			}
 
 			LibraryEditorWindow.HorizontalLine(Color.black);

@@ -180,6 +180,7 @@ MonoBehaviour:
   highlight: {fileID: 1036790313625656}
   dangerZone: {fileID: 1501955218855512}
   spawnPoint: {fileID: 4997497560379017391}
+  actionMode: {fileID: 11400000, guid: b0e392ad086e2ab4e9c4feb871cf0d41, type: 2}
   current: 0
   target: 0
   pathable: 0
@@ -192,6 +193,7 @@ MonoBehaviour:
   posy: 0
   terrain: {fileID: 11400000, guid: 4b27fdea53660cf4784c5f4ac749c0b4, type: 2}
   distance: 1000
+  value: 0
   parent: {fileID: 0}
   interactType: 0
   alternativeTerrain: {fileID: 0}
@@ -199,8 +201,9 @@ MonoBehaviour:
   interacted: 0
   dialogue: {fileID: 0}
   gift:
-    item: {fileID: 0}
-    charges: 0
+    money: 0
+    scrap: 0
+    items: []
   ally: {fileID: 0}
 --- !u!114 &114791382339344342
 MonoBehaviour:
@@ -219,6 +222,7 @@ MonoBehaviour:
   targetTile: {fileID: 0}
   playerList: {fileID: 0}
   enemyList: {fileID: 0}
+  allyList: {fileID: 0}
   interactList: {fileID: 0}
   battleWeaponIndex: {fileID: 0}
   movementVelocity: {fileID: 0}
@@ -228,6 +232,7 @@ MonoBehaviour:
   posx: 0
   posy: 0
   currentTile: {fileID: 0}
+  hasEscaped: 0
   faction: 0
   currentHealth: 0
   stats:
@@ -468,6 +473,7 @@ MonoBehaviour:
   skills:
     skills: []
   fightQuotes: []
+  talkQuotes: []
   healthBar: {fileID: 0}
   damageObject: {fileID: 0}
   damageNumberBkg: {fileID: 0}

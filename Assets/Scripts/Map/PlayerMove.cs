@@ -17,6 +17,10 @@ public class PlayerMove : TacticsMove {
 	/// </summary>
 	protected override void ExtraSetup() {
 		playerList.values.Add(this);
+		GetComponent<SpriteRenderer>().sprite = stats.charData.playerSprite;
+		if (stats.charData.playerSprite == null) {
+			Debug.LogError("Battle sprite is null!", this);
+		}
 		//Debug.Log("Spawned " + stats.charData.entryName);
 	}
 	
@@ -177,8 +181,12 @@ public class PlayerMove : TacticsMove {
 	public bool CanTalk() {
 		List<MapTile> talkers = FindAdjacentCharacters(false, true, true);
 		for(int i = 0; i < talkers.Count; i++) {
-			if(talkers[i].currentCharacter.talkQuotes.Count > 0)
-				return true;
+			for (int talk = 0; talk < talkers[i].currentCharacter.talkQuotes.Count; talk++) {
+				FightQuote fq = talkers[i].currentCharacter.talkQuotes[talk];
+				if (!fq.activated && (fq.triggerer == null || fq.triggerer.uuid == stats.charData.uuid)) {
+					return true;
+				}
+			}
 		}
 		return false;
 	}
