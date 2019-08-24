@@ -26,9 +26,6 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 	protected override void DrawContentWindow() {
 		MapEntry mapValues = (MapEntry)entryValues;
 		EditorGUIUtility.labelWidth = 120;
-		mapValues.entryName = EditorGUILayout.TextField("Map Name", mapValues.entryName);
-
-		GUILayout.Space(10);
 		GUILayout.Label("Mission description");
 		EditorStyles.textField.wordWrap = true;
 		mapValues.mapDescription = EditorGUILayout.TextArea(mapValues.mapDescription, GUILayout.Width(500), GUILayout.Height(30));

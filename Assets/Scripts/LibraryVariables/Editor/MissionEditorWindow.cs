@@ -41,6 +41,9 @@ public class MissionEditorWindow : GenericEntryEditorWindow {
 			case MissionEntry.Unlocking.TIME:
 				missionValues.unlockDay = EditorGUILayout.IntField("Unlocked on day", missionValues.unlockDay);
 				break;
+			case MissionEntry.Unlocking.SQUADSIZE:
+				missionValues.squadSize = EditorGUILayout.IntField("Max squad size", missionValues.squadSize);
+				break;
 			case MissionEntry.Unlocking.DEATH:
 				missionValues.characterReq = (CharData)EditorGUILayout.ObjectField("Dead Character", missionValues.characterReq, typeof(CharData), false);
 				break;

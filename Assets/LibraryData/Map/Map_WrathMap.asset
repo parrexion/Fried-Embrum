@@ -1,0 +1,177 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4424ecce59954d349b8dc1a5714d0991, type: 3}
+  m_Name: Map_WrathMap
+  m_EditorClassIdentifier: 
+  uuid: WrathMap
+  entryName: WrathMap
+  repColor: {r: 0.08223568, g: 0.5283019, b: 0.42549363, a: 1}
+  tag: 
+  sizeX: 15
+  sizeY: 10
+  mapSprite: {fileID: 2800000, guid: e41f9182bb3886443b8e1b576293339c, type: 3}
+  winCondition: 0
+  loseCondition: 0
+  mapDescription: With another of the villages under attack, someone needs to help
+    them.
+  skipBattlePrep: 0
+  preDialogue: {fileID: 11400000, guid: d562039d198491d4b91b90917dd3df69, type: 2}
+  introDialogue: {fileID: 11400000, guid: 465b7c90198f50e4db3c96ab3209f1fc, type: 2}
+  endDialogue: {fileID: 11400000, guid: 46a5dfce249b9ec47832775a92396b9c, type: 2}
+  mapMusic: {fileID: 11400000, guid: 97522e631b7f7cc4db34ccdc540de903, type: 2}
+  spawnPoints1:
+  - x: 1
+    y: 1
+  - x: 0
+    y: 2
+  spawnPoints2: []
+  forcedCharacters: []
+  lockedCharacters: []
+  enemies:
+  - spawnTurn: 0
+    x: 5
+    y: 2
+    level: 3
+    charData: {fileID: 11400000, guid: 85f85ef8ed299964f91bddd6970e2a33, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 61b5282282d02b544a200d088100d5e3, type: 2}
+      droppable: 0
+    aggroType: 0
+    hasQuotes: 0
+    quotes: []
+    talks: []
+    huntX: 0
+    huntY: 0
+    patrolPositions: []
+  - spawnTurn: 0
+    x: 6
+    y: 1
+    level: 3
+    charData: {fileID: 11400000, guid: 85f85ef8ed299964f91bddd6970e2a33, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 61b5282282d02b544a200d088100d5e3, type: 2}
+      droppable: 0
+    aggroType: 0
+    hasQuotes: 0
+    quotes: []
+    talks: []
+    huntX: 0
+    huntY: 0
+    patrolPositions: []
+  - spawnTurn: 0
+    x: 8
+    y: 8
+    level: 1
+    charData: {fileID: 11400000, guid: 85f85ef8ed299964f91bddd6970e2a33, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 61b5282282d02b544a200d088100d5e3, type: 2}
+      droppable: 0
+    aggroType: 1
+    hasQuotes: 0
+    quotes: []
+    talks: []
+    huntX: 0
+    huntY: 0
+    patrolPositions: []
+  - spawnTurn: 0
+    x: 8
+    y: 4
+    level: 1
+    charData: {fileID: 11400000, guid: 85f85ef8ed299964f91bddd6970e2a33, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 61b5282282d02b544a200d088100d5e3, type: 2}
+      droppable: 0
+    aggroType: 1
+    hasQuotes: 0
+    quotes: []
+    talks: []
+    huntX: 0
+    huntY: 0
+    patrolPositions: []
+  - spawnTurn: 0
+    x: 14
+    y: 6
+    level: 1
+    charData: {fileID: 11400000, guid: 077a21a361e80834e8379f2a044ceab3, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: a150849ce79069d4396be1c09944a0df, type: 2}
+      droppable: 0
+    aggroType: 1
+    hasQuotes: 0
+    quotes: []
+    talks: []
+    huntX: 0
+    huntY: 0
+    patrolPositions: []
+  - spawnTurn: 0
+    x: 14
+    y: 4
+    level: 1
+    charData: {fileID: 11400000, guid: 077a21a361e80834e8379f2a044ceab3, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: a150849ce79069d4396be1c09944a0df, type: 2}
+      droppable: 0
+    aggroType: 1
+    hasQuotes: 0
+    quotes: []
+    talks: []
+    huntX: 0
+    huntY: 0
+    patrolPositions: []
+  - spawnTurn: 0
+    x: 13
+    y: 5
+    level: 4
+    charData: {fileID: 11400000, guid: e7ddc1c0c7e51884c9652b2b862a6be3, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 8bfe4e7540b44ea4ba7f828c58f0443c, type: 2}
+      droppable: 0
+    - item: {fileID: 11400000, guid: 3929fbf692e73f44f8e7b6847af34c2c, type: 2}
+      droppable: 1
+    aggroType: 3
+    hasQuotes: 1
+    quotes:
+    - triggerer: {fileID: 11400000, guid: 3f27e8851d15ea24093ddc88c30570e2, type: 2}
+      quote: {fileID: 11400000, guid: 064ac680580ec504da59c5a07bda4bc6, type: 2}
+      willJoin: 0
+      activated: 0
+    talks: []
+    huntX: 0
+    huntY: 0
+    patrolPositions: []
+  allies:
+  - spawnTurn: 0
+    faction: 0
+    x: 3
+    y: 8
+    level: 5
+    charData: {fileID: 11400000, guid: 3f27e8851d15ea24093ddc88c30570e2, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 3929fbf692e73f44f8e7b6847af34c2c, type: 2}
+      droppable: 0
+    - item: {fileID: 11400000, guid: 2c6481630a321de4f97f98e24d095e8e, type: 2}
+      droppable: 0
+    joiningSquad: 0
+    aggroType: 0
+    hasQuotes: 1
+    quotes: []
+    talks:
+    - triggerer: {fileID: 0}
+      quote: {fileID: 11400000, guid: 81d62eb014ebf5743a92010b12513d8f, type: 2}
+      willJoin: 1
+      activated: 0
+    huntX: 0
+    huntY: 0
+    patrolPositions: []
+  reinforcements: []
+  interactions: []
+  turnEvents: []

@@ -47,8 +47,8 @@ public class MissionInfoController : MonoBehaviour {
 						availableMaps.Add(mission);
 					}
 					break;
-				case MissionEntry.Unlocking.DEATH:
-					if (playerData.IsDead(mission.characterReq.uuid)) {
+				case MissionEntry.Unlocking.SQUADSIZE:
+					if (playerData.stats.Count <= mission.squadSize) {
 						availableMaps.Add(mission);
 					}
 					break;
@@ -59,6 +59,11 @@ public class MissionInfoController : MonoBehaviour {
 					break;
 				case MissionEntry.Unlocking.MISSION:
 					if (playerData.GetMissionProgress(mission.clearedMission.uuid).cleared) {
+						availableMaps.Add(mission);
+					}
+					break;
+				case MissionEntry.Unlocking.DEATH:
+					if (playerData.IsDead(mission.characterReq.uuid)) {
 						availableMaps.Add(mission);
 					}
 					break;

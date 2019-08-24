@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23faaaeffbc68194c8a5681b1182ac97, type: 3}
+  m_Name: Mission_GetReinforcements
+  m_EditorClassIdentifier: 
+  uuid: GetReinforcements
+  entryName: GetReinforcements
+  repColor: {r: 0.1533019, g: 0.6132076, b: 0.3880528, a: 1}
+  tag: 
+  mapLocation: 1
+  mapDescription: Losing characters is always a big setback. Luckily, there are more
+    people willing to fight for our cause.
+  maps:
+  - {fileID: 11400000, guid: 16e7a4d47e4c6d546be49097226d808e, type: 2}
+  squads:
+  - squad1Size: 2
+    squad2Size: 0
+  duration: 1
+  unlockReq: 1
+  unlockDay: 1
+  squadSize: 2
+  characterReq: {fileID: 0}
+  clearedMission: {fileID: 0}
+  reward:
+    money: 1500
+    scrap: 10
+    items: []

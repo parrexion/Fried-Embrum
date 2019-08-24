@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "LibraryEntries/Mission")]
 public class MissionEntry : ScrObjLibraryEntry {
 
-	public enum Unlocking { TIME, DEATH, RECRUITED, MISSION }
+	public enum Unlocking { TIME, SQUADSIZE, RECRUITED, MISSION, DEATH }
 
 	[System.Serializable]
 	public class SquadGroup {
@@ -25,6 +25,7 @@ public class MissionEntry : ScrObjLibraryEntry {
 	public int duration = 1;
 	public Unlocking unlockReq;
 	public int unlockDay = 1;
+	public int squadSize = 99;
 	public CharData characterReq;
 	public MissionEntry clearedMission;
 
@@ -43,6 +44,7 @@ public class MissionEntry : ScrObjLibraryEntry {
 		duration = 1;
 		unlockReq = Unlocking.TIME;
 		unlockDay = 1;
+		unlockDay = 99;
 		characterReq = null;
 		clearedMission = null;
 
@@ -68,6 +70,7 @@ public class MissionEntry : ScrObjLibraryEntry {
 		duration = mission.duration;
 		unlockReq = mission.unlockReq;
 		unlockDay = mission.unlockDay;
+		squadSize = mission.squadSize;
 		characterReq = mission.characterReq;
 		clearedMission = mission.clearedMission;
 
