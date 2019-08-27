@@ -80,8 +80,14 @@ public class MapCreator : MonoBehaviour {
 		TacticsCamera.boxActive = true;
 
 		GenerateMap(map.mapSprite);
-		cursorX.value = map.spawnPoints1[0].x;
-		cursorY.value = map.spawnPoints1[0].y;
+		if (map.spawnPoints1.Count > 0) {
+			cursorX.value = map.spawnPoints1[0].x;
+			cursorY.value = map.spawnPoints1[0].y;
+		}
+		else {
+			cursorX.value = map.spawnPoints2[0].x;
+			cursorY.value = map.spawnPoints2[0].y;
+		}
 		cursorMoveEvent.Invoke();
 		SpawnPlayers();
 		SpawnEnemies();

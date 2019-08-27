@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4424ecce59954d349b8dc1a5714d0991, type: 3}
+  m_Name: Map_ShipSneak
+  m_EditorClassIdentifier: 
+  uuid: ShipSneak
+  entryName: ShipSneak
+  repColor: {r: 0.1362189, g: 0.3584906, b: 0.07271271, a: 1}
+  tag: 
+  sizeX: 15
+  sizeY: 10
+  mapSprite: {fileID: 2800000, guid: 97608261c136e6047b52f17bc9ea05fd, type: 3}
+  winCondition: 1
+  loseCondition: 0
+  mapDescription: Sneak in and open the gates from the inside.
+  skipBattlePrep: 0
+  preDialogue: {fileID: 11400000, guid: 60b2b588570390f4fa5614660432dbbb, type: 2}
+  introDialogue: {fileID: 11400000, guid: 3a3dfd1a96530fd4aa92c93c01ac7041, type: 2}
+  endDialogue: {fileID: 11400000, guid: 3437291ceec4cd64c8b13b3d61dde437, type: 2}
+  mapMusic: {fileID: 11400000, guid: 97522e631b7f7cc4db34ccdc540de903, type: 2}
+  spawnPoints1:
+  - x: 13
+    y: 9
+  - x: 14
+    y: 9
+  spawnPoints2: []
+  forcedCharacters: []
+  lockedCharacters: []
+  enemies: []
+  allies: []
+  reinforcements: []
+  interactions:
+  - x: 7
+    y: 5
+    interactType: 4
+    health: 0
+    dialogue: {fileID: 0}
+    gift:
+      money: 0
+      scrap: 0
+      items: []
+    ally:
+      x: 0
+      y: 0
+      level: 1
+      charData: {fileID: 0}
+      inventory: []
+  turnEvents: []
