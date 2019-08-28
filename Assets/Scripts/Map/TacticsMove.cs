@@ -38,6 +38,7 @@ public abstract class TacticsMove : MonoBehaviour {
 	[Header("Stats")]
 	public Faction faction;
 	public int currentHealth;
+	public int fatigueCap = 3;
 	public StatsContainer stats;
 	public InventoryContainer inventory;
 	public SkillsContainer skills;

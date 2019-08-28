@@ -357,7 +357,7 @@ public class BattleContainer : InputReceiverDelegate {
 		if (actions[0].type == BattleAction.Type.DAMAGE) {
 			actions[0].attacker.ActivateSkills(SkillActivation.POSTCOMBAT, actions[0].defender);
 			actions[0].defender.ActivateSkills(SkillActivation.POSTCOMBAT, actions[0].attacker);
-			actions[0].defender.stats.fatigueAmount = Mathf.Min(3, actions[0].defender.stats.fatigueAmount + 1);
+			actions[0].defender.stats.fatigueAmount = Mathf.Min(actions[0].defender.fatigueCap, actions[0].defender.stats.fatigueAmount + 1);
 		}
 
 		//Clean up

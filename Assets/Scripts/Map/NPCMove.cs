@@ -40,6 +40,9 @@ public class NPCMove : TacticsMove {
 	/// </summary>
 	protected override void ExtraSetup() {
 		bossCrest.enabled = (aggroType == AggroType.BOSS);
+		if (aggroType == AggroType.BOSS) {
+			fatigueCap = 0;
+		}
 
 		if (faction == Faction.ENEMY) {
 			enemyList.values.Add(this);

@@ -140,7 +140,7 @@ public abstract class GenericEntryEditorWindow {
 		EditorGUIUtility.labelWidth = 120;
 		GUILayout.BeginArea(dispRect2);
 		dispScrollPos = GUILayout.BeginScrollView(dispScrollPos, GUILayout.Width(dispRect2.width),
-							GUILayout.Height(dispRect.height - 45));
+							GUILayout.Height(dispRect.height - 10));
 
 		EditorGUILayout.SelectableLabel("Selected " + NameString + ":   " + entryValues.uuid, EditorStyles.boldLabel);
 		entryValues.entryName = EditorGUILayout.TextField(NameString + " Name", entryValues.entryName);

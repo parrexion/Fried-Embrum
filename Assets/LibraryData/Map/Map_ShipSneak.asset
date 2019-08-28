@@ -22,6 +22,7 @@ MonoBehaviour:
   winCondition: 1
   loseCondition: 0
   mapDescription: Sneak in and open the gates from the inside.
+  turnLimit: 0
   skipBattlePrep: 0
   preDialogue: {fileID: 11400000, guid: 60b2b588570390f4fa5614660432dbbb, type: 2}
   introDialogue: {fileID: 11400000, guid: 3a3dfd1a96530fd4aa92c93c01ac7041, type: 2}
@@ -35,7 +36,109 @@ MonoBehaviour:
   spawnPoints2: []
   forcedCharacters: []
   lockedCharacters: []
-  enemies: []
+  enemies:
+  - spawnTurn: 0
+    x: 7
+    y: 3
+    level: 5
+    charData: {fileID: 11400000, guid: e7ddc1c0c7e51884c9652b2b862a6be3, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 8bfe4e7540b44ea4ba7f828c58f0443c, type: 2}
+      droppable: 0
+    aggroType: 3
+    hasQuotes: 0
+    quotes: []
+    talks: []
+    huntX: 0
+    huntY: 0
+    patrolPositions: []
+  - spawnTurn: 0
+    x: 2
+    y: 7
+    level: 8
+    charData: {fileID: 11400000, guid: 85f85ef8ed299964f91bddd6970e2a33, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 61b5282282d02b544a200d088100d5e3, type: 2}
+      droppable: 0
+    aggroType: 5
+    hasQuotes: 0
+    quotes: []
+    talks: []
+    huntX: 0
+    huntY: 0
+    patrolPositions:
+    - x: 4
+      y: 2
+    - x: 12
+      y: 5
+    - x: 2
+      y: 7
+  - spawnTurn: 0
+    x: 12
+    y: 2
+    level: 8
+    charData: {fileID: 11400000, guid: 85f85ef8ed299964f91bddd6970e2a33, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 61b5282282d02b544a200d088100d5e3, type: 2}
+      droppable: 0
+    aggroType: 5
+    hasQuotes: 0
+    quotes: []
+    talks: []
+    huntX: 0
+    huntY: 0
+    patrolPositions:
+    - x: 9
+      y: 7
+    - x: 2
+      y: 6
+    - x: 12
+      y: 2
+  - spawnTurn: 0
+    x: 1
+    y: 1
+    level: 3
+    charData: {fileID: 11400000, guid: 077a21a361e80834e8379f2a044ceab3, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: a150849ce79069d4396be1c09944a0df, type: 2}
+      droppable: 0
+    aggroType: 0
+    hasQuotes: 0
+    quotes: []
+    talks: []
+    huntX: 0
+    huntY: 0
+    patrolPositions: []
+  - spawnTurn: 0
+    x: 13
+    y: 3
+    level: 3
+    charData: {fileID: 11400000, guid: 5f9fe78bb4b53eb468e1c36351f399b2, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 3c28909acccd4b343aed0cc878523d4d, type: 2}
+      droppable: 0
+    aggroType: 0
+    hasQuotes: 0
+    quotes: []
+    talks: []
+    huntX: 0
+    huntY: 0
+    patrolPositions: []
+  - spawnTurn: 0
+    x: 7
+    y: 8
+    level: 3
+    charData: {fileID: 11400000, guid: 5f9fe78bb4b53eb468e1c36351f399b2, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 3c28909acccd4b343aed0cc878523d4d, type: 2}
+      droppable: 0
+    aggroType: 0
+    hasQuotes: 0
+    quotes: []
+    talks: []
+    huntX: 0
+    huntY: 0
+    patrolPositions: []
   allies: []
   reinforcements: []
   interactions:
@@ -48,6 +151,38 @@ MonoBehaviour:
       money: 0
       scrap: 0
       items: []
+    ally:
+      x: 0
+      y: 0
+      level: 1
+      charData: {fileID: 0}
+      inventory: []
+  - x: 1
+    y: 8
+    interactType: 5
+    health: 0
+    dialogue: {fileID: 0}
+    gift:
+      money: 3000
+      scrap: 0
+      items:
+      - {fileID: 0}
+    ally:
+      x: 0
+      y: 0
+      level: 1
+      charData: {fileID: 0}
+      inventory: []
+  - x: 10
+    y: 5
+    interactType: 5
+    health: 0
+    dialogue: {fileID: 0}
+    gift:
+      money: 0
+      scrap: 0
+      items:
+      - {fileID: 11400000, guid: b3e6f4c923b5f004695709a2dadf3762, type: 2}
     ally:
       x: 0
       y: 0
