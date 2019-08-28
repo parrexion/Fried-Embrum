@@ -57,7 +57,7 @@ public static class BattleCalc {
 	public static int GetCritRate(InventoryTuple weaponAtk, StatsContainer attacker) {
 		if (weaponAtk == null)
 			return -1;
-		return Mathf.Max(0, weaponAtk.critRate + attacker.critBoost - attacker.fatigueAmount * 2);
+		return weaponAtk.critRate + attacker.critBoost - attacker.fatigueAmount * 2;
 	}
 
 	/// <summary>

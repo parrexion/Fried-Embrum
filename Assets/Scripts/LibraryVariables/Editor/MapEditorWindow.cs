@@ -38,6 +38,9 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 		mapValues.winCondition = (WinCondition)EditorGUILayout.EnumPopup("Win", mapValues.winCondition);
 		GUILayout.Space(20);
 		mapValues.loseCondition = (LoseCondition)EditorGUILayout.EnumPopup("Lose", mapValues.loseCondition);
+		if (mapValues.loseCondition == LoseCondition.TIME) {
+			mapValues.turnLimit = EditorGUILayout.IntField("Turns", mapValues.turnLimit);
+		}
 		GUILayout.EndHorizontal();
 
 		GUILayout.Space(10);

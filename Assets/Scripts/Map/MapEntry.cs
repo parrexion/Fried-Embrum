@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum WinCondition { ROUT, CAPTURE, BOSS, ESCAPE, DEFEND }
-public enum LoseCondition { NORMAL, CAPTURE, PROTECT }
+public enum LoseCondition { NONE, TIME }
 public enum MapLocation { UNKNOWN = -1, DEBES, GHART, THARSONIS, VILJIA, WALNIA_REX }
 
 [CreateAssetMenu(menuName = "LibraryEntries/Map")]
@@ -18,6 +18,7 @@ public class MapEntry : ScrObjLibraryEntry {
 	public WinCondition winCondition;
 	public LoseCondition loseCondition;
 	public string mapDescription;
+	public int turnLimit;
 
 	[Header("Dialogues")]
 	public bool skipBattlePrep;
@@ -55,7 +56,8 @@ public class MapEntry : ScrObjLibraryEntry {
 		mapDescription = "";
 
 		winCondition = WinCondition.ROUT;
-		loseCondition = LoseCondition.NORMAL;
+		loseCondition = LoseCondition.NONE;
+		turnLimit = 0;
 		
 		skipBattlePrep = false;
 		preDialogue = null;
@@ -85,9 +87,11 @@ public class MapEntry : ScrObjLibraryEntry {
 		sizeY = map.sizeY;
 		mapSprite = map.mapSprite;
 		
+		mapDescription = map.mapDescription;
+
 		winCondition = map.winCondition;
 		loseCondition = map.loseCondition;
-		mapDescription = map.mapDescription;
+		turnLimit = map.turnLimit;
 		
 		skipBattlePrep = map.skipBattlePrep;
 		preDialogue = map.preDialogue;

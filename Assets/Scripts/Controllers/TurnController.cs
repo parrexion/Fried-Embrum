@@ -10,7 +10,7 @@ public enum TurnState { INIT, STORY, PREP, INTRO, ACTION, REINFORCE, EVENTS, DIA
 /// Class which handles changing turns and triggers functionality when the turn is changed.
 /// </summary>
 public class TurnController : MonoBehaviour {
-	
+
 	[Header("Objects")]
 	public EnemyController enemyController;
 	public CharacterListVariable playerList;
@@ -69,7 +69,7 @@ public class TurnController : MonoBehaviour {
 	public UnityEvent checkMapChangeEvent;
 	public UnityEvent moveCursorEvent;
 	public UnityEvent characterChangedEvent;
-	
+
 	private bool gameover;
 	public BoolVariable autoWin;
 
@@ -90,65 +90,64 @@ public class TurnController : MonoBehaviour {
 
 	public void TriggerNextStep() {
 
-		switch (currentState)
-		{
-		case TurnState.INIT:
-			//Debug.Log("Show story 1");
-			currentState = TurnState.STORY;
-			currentDialogueMode.value = (int)DialogueMode.PRELUDE;
-			currentDialogue.value = ((MapEntry)currentMap.value).preDialogue;
-			startDialogueEvent.Invoke();
-			break;
-		case TurnState.STORY:
-			//Debug.Log("Show prep?");
-			if (((MapEntry)currentMap.value).skipBattlePrep) {
-				currentState = TurnState.INTRO;
-				TriggerNextStep();
+		switch (currentState) {
+			case TurnState.INIT:
+				//Debug.Log("Show story 1");
+				currentState = TurnState.STORY;
+				currentDialogueMode.value = (int)DialogueMode.PRELUDE;
+				currentDialogue.value = ((MapEntry)currentMap.value).preDialogue;
+				startDialogueEvent.Invoke();
 				break;
-			};
-			currentState = TurnState.PREP;
-			InputDelegateController.instance.TriggerMenuChange(MenuMode.PREP);
-			break;
-		case TurnState.PREP:
-			//Debug.Log("Show story 2");
-			currentState = TurnState.INTRO;
-			currentDialogueMode.value = (int)DialogueMode.INTRO;
-			currentDialogue.value = ((MapEntry)currentMap.value).introDialogue;
-			startDialogueEvent.Invoke();
-			break;
-		case TurnState.INTRO:
-			//Debug.Log("Start game");
-			currentState = TurnState.EVENTS;
-			StartGameSetup();
-			break;
-		case TurnState.ACTION:
-			EndChangeTurn();
-			//Debug.Log("Check dialogue");
-			currentState = TurnState.DIALOGUE;
-			checkDialoguesEvent.Invoke();
-			break;
-		case TurnState.DIALOGUE:
-			//Debug.Log("Check reinforcements");
-			currentState = TurnState.REINFORCE;
-			if (currentFactionTurn.value == Faction.ALLY) {
-				checkReinforcementsEvent.Invoke();
-			}
-			else {
-				TriggerNextStep();
-			}
-			break;
-		case TurnState.REINFORCE:
-			//Debug.Log("Check events");
-			currentState = TurnState.EVENTS;
-			checkMapChangeEvent.Invoke();
-			break;
-		case TurnState.EVENTS:
-			//Debug.Log("Next turn");
-			StartCoroutine(DisplayTurnChange(1.5f));
-			break;
-		case TurnState.FINISHED:
-			//Debug.Log("Game finished!");
-			break;
+			case TurnState.STORY:
+				//Debug.Log("Show prep?");
+				if (((MapEntry)currentMap.value).skipBattlePrep) {
+					currentState = TurnState.INTRO;
+					TriggerNextStep();
+					break;
+				};
+				currentState = TurnState.PREP;
+				InputDelegateController.instance.TriggerMenuChange(MenuMode.PREP);
+				break;
+			case TurnState.PREP:
+				//Debug.Log("Show story 2");
+				currentState = TurnState.INTRO;
+				currentDialogueMode.value = (int)DialogueMode.INTRO;
+				currentDialogue.value = ((MapEntry)currentMap.value).introDialogue;
+				startDialogueEvent.Invoke();
+				break;
+			case TurnState.INTRO:
+				//Debug.Log("Start game");
+				currentState = TurnState.EVENTS;
+				StartGameSetup();
+				break;
+			case TurnState.ACTION:
+				EndChangeTurn();
+				//Debug.Log("Check dialogue");
+				currentState = TurnState.DIALOGUE;
+				checkDialoguesEvent.Invoke();
+				break;
+			case TurnState.DIALOGUE:
+				//Debug.Log("Check reinforcements");
+				currentState = TurnState.REINFORCE;
+				if (currentFactionTurn.value == Faction.ALLY) {
+					checkReinforcementsEvent.Invoke();
+				}
+				else {
+					TriggerNextStep();
+				}
+				break;
+			case TurnState.REINFORCE:
+				//Debug.Log("Check events");
+				currentState = TurnState.EVENTS;
+				checkMapChangeEvent.Invoke();
+				break;
+			case TurnState.EVENTS:
+				//Debug.Log("Next turn");
+				StartCoroutine(DisplayTurnChange(1.5f));
+				break;
+			case TurnState.FINISHED:
+				//Debug.Log("Game finished!");
+				break;
 		}
 	}
 
@@ -171,7 +170,7 @@ public class TurnController : MonoBehaviour {
 	private void StartTurn() {
 		if (gameover)
 			return;
-		
+
 		currentState = TurnState.ACTION;
 
 		if (currentFactionTurn.value == Faction.ENEMY) {
@@ -252,7 +251,7 @@ public class TurnController : MonoBehaviour {
 	/// Updates the current faction and skips the ones without characters.
 	/// </summary>
 	private void ChangeFaction() {
-		currentFactionTurn.value = (currentFactionTurn.value == Faction.PLAYER) ? Faction.ENEMY : 
+		currentFactionTurn.value = (currentFactionTurn.value == Faction.PLAYER) ? Faction.ENEMY :
 			(currentFactionTurn.value == Faction.ENEMY) ? Faction.ALLY : Faction.PLAYER;
 
 		if (currentFactionTurn.value == Faction.PLAYER)
@@ -298,7 +297,7 @@ public class TurnController : MonoBehaviour {
 		replaceMusicEvent.Invoke();
 
 		yield return new WaitForSeconds(duration);
-		
+
 		notificationObject.SetActive(false);
 		StartTurn();
 	}
@@ -317,16 +316,25 @@ public class TurnController : MonoBehaviour {
 		// Check if any players are alive
 		bool gameFinished = false;
 		MapEntry map = (MapEntry)currentMap.value;
-		// Normal lose condition
-		if (map.loseCondition == LoseCondition.NORMAL) {
-			for (int i = 0; i < playerList.values.Count; i++) {
-				if (!playerList.values[i].IsAlive() && playerList.values[i].stats.charData.mustSurvive) {
-					gameFinished = true;
-					break;
-				}
+
+		// Basic lose condition
+		bool isAlive = false;
+		for (int i = 0; i < playerList.values.Count; i++) {
+			if (playerList.values[i].IsAlive())
+				isAlive = true;
+			if (playerList.values[i].stats.charData.mustSurvive && !playerList.values[i].IsAlive()) {
+				gameFinished = true;
+				break;
 			}
 		}
-		else {
+		if (!isAlive)
+			gameFinished = true;
+
+		if (map.loseCondition == LoseCondition.TIME) {
+			if (currentTurn.value > map.turnLimit)
+				gameFinished = true;
+		}
+		else if (map.loseCondition != LoseCondition.NONE) {
 			Debug.LogError("Undefined lose condition:   " + map.loseCondition);
 		}
 
@@ -398,7 +406,7 @@ public class TurnController : MonoBehaviour {
 		gameover = true;
 		StartCoroutine(EndGameWin());
 	}
-	
+
 	public void GameOver() {
 		if (gameover)
 			return;

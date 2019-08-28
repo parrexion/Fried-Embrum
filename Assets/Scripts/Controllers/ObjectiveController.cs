@@ -7,12 +7,13 @@ using UnityEngine.UI;
 public class ObjectiveController : MonoBehaviour {
 
 	public GameObject objectiveObject;
-	public ScrObjEntryReference currentMission;
+	public ScrObjEntryReference currentMap;
 	public IntVariable mapIndex;
 	public CharacterListVariable enemyList;
 
 	[Header("Objective")]
-	public Text explanation;
+	public Text winExplanation;
+	public Text loseExplanation;
 	public Text enemyCount;
 
 	[Header("Reward")]
@@ -33,8 +34,7 @@ public class ObjectiveController : MonoBehaviour {
 	}
 
 	private void UpdateObjective() {
-		MissionEntry mission = (MissionEntry)currentMission.value;
-		MapEntry map = mission.maps[mapIndex.value];
+		MapEntry map = (MapEntry)currentMap.value;
 
 		int enemies = 0;
 		for (int i = 0; i < enemyList.values.Count; i++) {
@@ -45,19 +45,19 @@ public class ObjectiveController : MonoBehaviour {
 
 		switch (map.winCondition) {
 			case WinCondition.ROUT:
-				explanation.text = "Rout the enemy.";
+				winExplanation.text = "Rout the enemy.";
 				break;
 
 			case WinCondition.CAPTURE:
-				explanation.text = "Capture command point.";
+				winExplanation.text = "Capture command point.";
 				break;
 
 			case WinCondition.BOSS:
-				explanation.text = "Defeat boss.";
+				winExplanation.text = "Defeat boss.";
 				break;
 
 			case WinCondition.ESCAPE:
-				explanation.text = "Escape with everyone.";
+				winExplanation.text = "Escape with everyone.";
 				break;
 
 			default:
@@ -65,9 +65,14 @@ public class ObjectiveController : MonoBehaviour {
 				break;
 		}
 
-		rewardMoney.text = (mission.reward.money > 0) ? mission.reward.money + " Money" : "";
-		rewardScrap.text = (mission.reward.scrap > 0) ? mission.reward.scrap + " Scrap" : "";
-		rewardItem.text = (mission.reward.items.Count > 0) ? mission.reward.items[0].entryName : "";
+		switch (map.loseCondition) {
+			case LoseCondition.NONE:
+				loseExplanation.text = "";
+				break;
+			case LoseCondition.TIME:
+				loseExplanation.text = "Win by turn " + map.turnLimit;
+				break;
+		}
 	}
 
 }

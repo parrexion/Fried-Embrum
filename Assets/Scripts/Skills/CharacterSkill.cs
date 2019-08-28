@@ -23,8 +23,8 @@ public abstract class CharacterSkill : ScrObjLibraryEntry {
 	public bool includeSelf;
     public int range;
     public int rangeMax;
-	public EnemyCanAttack enemyCanAttack;
-    public WeaponType weaponReq;
+	public EnemyCanAttack enemyCanAttack = EnemyCanAttack.BOTH;
+    public WeaponType weaponReq = WeaponType.NONE;
 	public List<TerrainTile> terrainReq = new List<TerrainTile>();
 
 
