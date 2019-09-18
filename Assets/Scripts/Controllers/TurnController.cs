@@ -31,16 +31,14 @@ public class TurnController : MonoBehaviour {
 	public BoolVariable selectMainCharacter;
 	public BoolVariable autoEndTurn;
 	public IntVariable cursorX, cursorY;
+	public IntVariable gatheredScrap;
 
-	public TurnState currentState;
+	private TurnState currentState;
 
 	[Header("Rewards")]
 	public IntVariable totalKills;
 	public IntVariable totalDeaths;
-	public IntVariable totalMoney;
-	public IntVariable totalScrap;
 	public PlayerData playerData;
-	public IntVariable nextLoadState;
 
 	[Header("UI")]
 	public StatusBarController statusBar;
@@ -81,6 +79,7 @@ public class TurnController : MonoBehaviour {
 		currentState = TurnState.INIT;
 		currentTurn.value = 0;
 		totalKills.value = 0;
+		gatheredScrap.value = 0;
 		currentFactionTurn.value = Faction.ALLY;
 		triggeredWin.value = false;
 		playerList.values.Clear();
@@ -190,6 +189,8 @@ public class TurnController : MonoBehaviour {
 			enemyController.RunAllies(wait);
 		}
 		else if (currentFactionTurn.value == Faction.PLAYER) {
+			gatheredScrap.value = Mathf.Max(0, gatheredScrap.value - 1);
+			statusBar.UpdateCash();
 			for (int i = 0; i < playerList.values.Count; i++) {
 				playerList.values[i].OnStartTurn();
 			}
@@ -271,6 +272,8 @@ public class TurnController : MonoBehaviour {
 					ChangeFaction();
 				break;
 		}
+
+		CheckGameFinished();
 	}
 
 	/// <summary>
@@ -284,6 +287,11 @@ public class TurnController : MonoBehaviour {
 		statusBar.UpdateTurn();
 		currentAction.value = ActionMode.LOCK;
 		InputDelegateController.instance.TriggerMenuChange(MenuMode.NONE);
+
+		if (gameover) {
+			yield break;
+		}
+
 		notificationText.text = currentFactionTurn.value + " TURN";
 
 		yield return null;
@@ -456,18 +464,6 @@ public class TurnController : MonoBehaviour {
 
 		notificationObject.SetActive(false);
 		notificationText.gameObject.SetActive(false);
-
-		// Save all rewards
-		MissionEntry mission = (MissionEntry)currentMission.value;
-		if (mission.reward.money > 0) {
-			totalMoney.value += mission.reward.money;
-		}
-		if (mission.reward.scrap > 0) {
-			totalScrap.value += mission.reward.scrap;
-		}
-		for (int i = 0; i < mission.reward.items.Count; i++) {
-			playerData.items.Add(new InventoryItem(mission.reward.items[i]));
-		}
 
 		showVictoryScreenEvent.Invoke();
 	}

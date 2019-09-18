@@ -16855,9 +16855,15 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   currentMission: {fileID: 11400000, guid: a149375abc4af2948b0b40ba31472a06, type: 2}
   currentMap: {fileID: 11400000, guid: 188cfd11b445e1244a89510ca126c756, type: 2}
+  mapIndex: {fileID: 11400000, guid: 85b195634400b964cac3fff2db4f7d42, type: 2}
+  nextLoadState: {fileID: 11400000, guid: 9b7825b9326414e42a8df295903f802e, type: 2}
+  playerData: {fileID: 11400000, guid: cf29fce9ee9388e4290741fe2d10bab5, type: 2}
+  totalMoney: {fileID: 11400000, guid: ef96254aefdee0b409c4b20d1dd3e375, type: 2}
+  totalScrap: {fileID: 11400000, guid: be3b7679469cfe040923ce4e32a08c75, type: 2}
   totalTurns: {fileID: 11400000, guid: 2ce1ea33e4d27044db0a8b97d2dcf10f, type: 2}
   totalKills: {fileID: 11400000, guid: 5fda396df96fa5c4ba83681015466596, type: 2}
   totalDeaths: {fileID: 11400000, guid: 040b0e0c05697cf4b90758e31bfbc97a, type: 2}
+  gatherScrap: {fileID: 11400000, guid: 76aefc5bc24fbcf43af852ab47bbcb5c, type: 2}
   victoryView: {fileID: 2074129099}
   turnText: {fileID: 1017577297}
   killText: {fileID: 1945523599}
@@ -16868,11 +16874,26 @@ MonoBehaviour:
   currentDialogueMode: {fileID: 11400000, guid: 9ebc847de791cc24bbd938f1f28012e7,
     type: 2}
   currentDialogue: {fileID: 11400000, guid: 4aca8b6ac3dbaa943963a062568cc6b4, type: 2}
-  nextLoadState: {fileID: 11400000, guid: 9b7825b9326414e42a8df295903f802e, type: 2}
   startDialogueEvent:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11400000, guid: 6f15e75a555993c48a97e8b2c7be0718, type: 2}
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  stopSfxEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: d391182fde35f4d438f797cde3011316, type: 2}
         m_MethodName: Raise
         m_Mode: 1
         m_Arguments:
@@ -27097,13 +27118,10 @@ MonoBehaviour:
   autoEndTurn: {fileID: 11400000, guid: 27e8cb1b44794c44da7921a16f5d1041, type: 2}
   cursorX: {fileID: 11400000, guid: c2b3aa3e1e995d545b1165460053d109, type: 2}
   cursorY: {fileID: 11400000, guid: bc83df26fa1b9664593c316923606033, type: 2}
-  currentState: 0
+  gatheredScrap: {fileID: 11400000, guid: 76aefc5bc24fbcf43af852ab47bbcb5c, type: 2}
   totalKills: {fileID: 11400000, guid: 5fda396df96fa5c4ba83681015466596, type: 2}
   totalDeaths: {fileID: 11400000, guid: 040b0e0c05697cf4b90758e31bfbc97a, type: 2}
-  totalMoney: {fileID: 11400000, guid: ef96254aefdee0b409c4b20d1dd3e375, type: 2}
-  totalScrap: {fileID: 11400000, guid: be3b7679469cfe040923ce4e32a08c75, type: 2}
   playerData: {fileID: 11400000, guid: cf29fce9ee9388e4290741fe2d10bab5, type: 2}
-  nextLoadState: {fileID: 11400000, guid: 9b7825b9326414e42a8df295903f802e, type: 2}
   statusBar: {fileID: 1045604594}
   notificationObject: {fileID: 1102929061}
   notificationText: {fileID: 189031125}
@@ -36808,6 +36826,7 @@ GameObject:
   - component: {fileID: 1045604592}
   - component: {fileID: 1045604594}
   - component: {fileID: 1045604595}
+  - component: {fileID: 1045604596}
   m_Layer: 0
   m_Name: StatusBar
   m_TagString: Untagged
@@ -36888,12 +36907,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turnCountText: {fileID: 2071449641}
-  totalMoneyText: {fileID: 1206396907}
-  totalScrapText: {fileID: 808749953}
+  totalMoneyText: {fileID: 808749953}
+  totalScrapText: {fileID: 1206396907}
   currentFactionText: {fileID: 1155224366}
   currentTurn: {fileID: 11400000, guid: 2ce1ea33e4d27044db0a8b97d2dcf10f, type: 2}
   totalMoney: {fileID: 11400000, guid: ef96254aefdee0b409c4b20d1dd3e375, type: 2}
-  totalScrap: {fileID: 11400000, guid: be3b7679469cfe040923ce4e32a08c75, type: 2}
+  totalScrap: {fileID: 11400000, guid: 76aefc5bc24fbcf43af852ab47bbcb5c, type: 2}
   currentFaction: {fileID: 11400000, guid: 03872b965811b8f4eb110ecb93bea4ca, type: 2}
 --- !u!114 &1045604595
 MonoBehaviour:
@@ -36908,6 +36927,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   evnt: {fileID: 11400000, guid: 8df7c2d8262db7847b7c81744142eb47, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1045604594}
+        m_MethodName: UpdateCash
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+--- !u!114 &1045604596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1045604590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14602ab6441821f43883d0b13d4f57c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  evnt: {fileID: 11400000, guid: 34a8c84113f19b941b56dd383342724b, type: 2}
   response:
     m_PersistentCalls:
       m_Calls:

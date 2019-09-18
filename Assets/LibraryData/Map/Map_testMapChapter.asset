@@ -22,6 +22,7 @@ MonoBehaviour:
   winCondition: 3
   loseCondition: 0
   mapDescription: TESTING TESTING
+  turnLimit: 1
   skipBattlePrep: 1
   preDialogue: {fileID: 11400000, guid: 60b2b588570390f4fa5614660432dbbb, type: 2}
   introDialogue: {fileID: 11400000, guid: 3a3dfd1a96530fd4aa92c93c01ac7041, type: 2}
@@ -41,22 +42,7 @@ MonoBehaviour:
   lockedCharacters: []
   enemies:
   - spawnTurn: 0
-    x: 6
-    y: 9
-    level: 1
-    charData: {fileID: 11400000, guid: e073228f081b5ec48b55e2e1ac4062f9, type: 2}
-    inventory:
-    - item: {fileID: 11400000, guid: 61b5282282d02b544a200d088100d5e3, type: 2}
-      droppable: 0
-    aggroType: 0
-    hasQuotes: 0
-    quotes: []
-    talks: []
-    huntX: 0
-    huntY: 0
-    patrolPositions: []
-  - spawnTurn: 0
-    x: 8
+    x: 12
     y: 8
     level: 1
     charData: {fileID: 11400000, guid: e073228f081b5ec48b55e2e1ac4062f9, type: 2}

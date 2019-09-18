@@ -450,6 +450,7 @@ MonoBehaviour:
   hasEscaped: 0
   faction: 1
   currentHealth: 0
+  fatigueCap: 3
   stats:
     charData: {fileID: 0}
     currentClass: {fileID: 0}
@@ -503,6 +504,7 @@ MonoBehaviour:
   skills:
     skills: []
   fightQuotes: []
+  talkQuotes: []
   healthBar: {fileID: 9080235638780240724}
   damageObject: {fileID: 7713397952840530227}
   damageNumberBkg: {fileID: 1721465599479482442}
@@ -576,6 +578,7 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  gatheredScrap: {fileID: 11400000, guid: 76aefc5bc24fbcf43af852ab47bbcb5c, type: 2}
   currentMode: {fileID: 11400000, guid: b0e392ad086e2ab4e9c4feb871cf0d41, type: 2}
   aggroType: 0
   moveTile: {fileID: 11400000, guid: 3a98548c39c09914ba5bd9f128964722, type: 2}
@@ -630,10 +633,26 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  gainedScrapEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 34a8c84113f19b941b56dd383342724b, type: 2}
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!199 &199253680508580476
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 2
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}

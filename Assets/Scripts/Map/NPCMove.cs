@@ -22,6 +22,7 @@ public class NPCMove : TacticsMove {
 	private static List<TacticsMove> enemies = new List<TacticsMove>();
 	private static List<TacticsMove> friends = new List<TacticsMove>();
 
+	public IntVariable gatheredScrap;
 	public ActionModeVariable currentMode;
 	public AggroType aggroType;
 	public MapTileVariable moveTile;
@@ -33,6 +34,7 @@ public class NPCMove : TacticsMove {
 	public UnityEvent finishedMovingEvent;
 	public UnityEvent destroyedTileEvent;
 	public UnityEvent escapeEvent;
+	public UnityEvent gainedScrapEvent;
 
 
 	/// <summary>
@@ -68,6 +70,14 @@ public class NPCMove : TacticsMove {
 		else {
 			allyList.values.Remove(this);
 		}
+	}
+
+	protected override IEnumerator OnDeath() {
+		if (faction == Faction.ENEMY) {
+			gatheredScrap.value += 3;
+			gainedScrapEvent.Invoke();
+		}
+		yield return StartCoroutine(base.OnDeath());
 	}
 
 
@@ -120,10 +130,10 @@ public class NPCMove : TacticsMove {
 		// Skip move if guarding type of enemy
 		if (aggroType == AggroType.GUARD || aggroType == AggroType.BOSS) {
 			if (currentTile.attackable) {
-				//currentMode.value = (weapons[0].item.itemCategory == ItemCategory.WEAPON) ? ActionMode.ATTACK : ActionMode.HEAL;
-				currentMode.value = ActionMode.MOVE;
-				//tileBest = currentTile;
-				tileBest = null;
+				currentMode.value = (weapons[0].itemCategory == ItemCategory.WEAPON) ? ActionMode.ATTACK : ActionMode.HEAL;
+				//currentMode.value = ActionMode.MOVE;
+				tileBest = currentTile;
+				//tileBest = null;
 				tileGood = null;
 			}
 			else {

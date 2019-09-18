@@ -34,7 +34,6 @@ public class SaveScreenController : InputReceiverDelegate {
 		}
 
 		MissionEntry mission = (MissionEntry)currentMission.value;
-		mapIndex.value++;
 		if (mapIndex.value >= mission.maps.Count) {
 			for (int i = 0; i < playerData.missions.Count; i++) {
 				if (playerData.missions[i].uuid == mission.uuid) {
@@ -45,6 +44,7 @@ public class SaveScreenController : InputReceiverDelegate {
 			currentPlayDays.value += mission.duration;
 			currentChapterId.value = "";
 			mapIndex.value = 0;
+			nextState.value = (int)NextState.BASE;
 		}
 		else {
 			currentChapterId.value = mission.maps[mapIndex.value].uuid;
@@ -57,24 +57,22 @@ public class SaveScreenController : InputReceiverDelegate {
 
 	public void NextLevel() {
 		MissionEntry mission = (MissionEntry)currentMission.value;
-
-		if (mapIndex.value >= mission.maps.Count) {
-			NextState next = ((NextState)nextState.value);
-			if (next == NextState.MAIN) {
-				InputDelegateController.instance.TriggerSceneChange(MenuMode.MAIN_MENU, "MainMenu");
-				return;
-			}
-			else if (next == NextState.BASE) {
-				InputDelegateController.instance.TriggerSceneChange(MenuMode.NONE, "BaseScene");
-				return;
-			}
-		}
-
-		if (currentChapterId.value == SaveFileController.CLEAR_GAME_ID) {
+		
+		NextState next = ((NextState)nextState.value);
+		if (next == NextState.MAIN) {
 			InputDelegateController.instance.TriggerSceneChange(MenuMode.MAIN_MENU, "MainMenu");
+			return;
 		}
-		else {
-			InputDelegateController.instance.TriggerSceneChange(MenuMode.NONE, "LoadingScreen");
+		else if (next == NextState.BASE) {
+			InputDelegateController.instance.TriggerSceneChange(MenuMode.NONE, "BaseScene");
+			return;
+		} else if (next == NextState.LOADSCREEN) {
+			if (currentChapterId.value == SaveFileController.CLEAR_GAME_ID) {
+				InputDelegateController.instance.TriggerSceneChange(MenuMode.MAIN_MENU, "MainMenu");
+			}
+			else {
+				InputDelegateController.instance.TriggerSceneChange(MenuMode.NONE, "LoadingScreen");
+			}
 		}
 	}
 

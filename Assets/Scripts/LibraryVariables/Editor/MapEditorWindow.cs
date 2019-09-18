@@ -85,18 +85,6 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 
 		GUILayout.Space(10);
 
-		// Player selection stuff
-		GUILayout.BeginHorizontal();
-		GUILayout.Label("Character limitations", EditorStyles.boldLabel);
-		if (GUILayout.Button((showPlayerSpecialStuff) ? "Hide" : "Show", GUILayout.Width(150))) {
-			showPlayerSpecialStuff = !showPlayerSpecialStuff;
-		}
-		GUILayout.EndHorizontal();
-		if (showPlayerSpecialStuff)
-			DrawCharacterLimitStuff();
-
-		GUILayout.Space(10);
-
 		// Enemies 
 		GUILayout.BeginHorizontal();
 		GUILayout.Label("Enemy spawn points", EditorStyles.boldLabel);
@@ -132,6 +120,18 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 		GUILayout.EndHorizontal();
 		if (showInteractStuff)
 			DrawInteractStuff();
+
+		GUILayout.Space(10);
+
+		// Player selection stuff
+		GUILayout.BeginHorizontal();
+		GUILayout.Label("Character limitations", EditorStyles.boldLabel);
+		if (GUILayout.Button((showPlayerSpecialStuff) ? "Hide" : "Show", GUILayout.Width(150))) {
+			showPlayerSpecialStuff = !showPlayerSpecialStuff;
+		}
+		GUILayout.EndHorizontal();
+		if (showPlayerSpecialStuff)
+			DrawCharacterLimitStuff();
 
 		GUILayout.Space(10);
 
