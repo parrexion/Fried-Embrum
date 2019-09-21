@@ -180,10 +180,12 @@ public abstract class GenericEntryEditorWindow {
 		GUI.FocusControl(null);
 		if (string.IsNullOrEmpty(uuid)) {
 			Debug.LogError("uuid is empty!");
+			EditorUtility.DisplayDialog("Error", "uuid can not be empty!", "OK");
 			return;
 		}
 		if (entryLibrary.ContainsID(uuid)) {
 			Debug.LogError("uuid already exists!");
+			EditorUtility.DisplayDialog("Error", "That uuid already exists!", "OK");
 			return;
 		}
 		ScrObjLibraryEntry entry = CreateInstance;

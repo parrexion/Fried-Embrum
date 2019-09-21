@@ -12,17 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c66341c8af3a7549bd8e191fbd754ff, type: 3}
   m_Name: shipClearEnding
   m_EditorClassIdentifier: 
-  uuid: shipClearPrelude
-  entryName: shipClearPrelude
-  repColor: {r: 0, g: 0, b: 1, a: 1}
-  tag: PRELUDE
+  uuid: shipClearEnding
+  entryName: shipClearEnding
+  repColor: {r: 0, g: 1, b: 1, a: 1}
+  tag: ENDING
   participantColors: []
   actions:
   - autoContinue: 1
     useDelay: 0
     type: 4
     entries:
-    - {fileID: 11400000, guid: cc3525d455a8f174fad62308aaed7640, type: 2}
+    - {fileID: 11400000, guid: d9f03c5c6e1942b4bbc8eb19909e1b43, type: 2}
     values: 
     text: []
     boolValue: 0
@@ -56,7 +56,7 @@ MonoBehaviour:
     values: 02000000
     text:
     - '###'
-    - Everyone ready?
+    - Their leader is down!
     boolValue: 1
   - autoContinue: 0
     useDelay: 0
@@ -65,8 +65,7 @@ MonoBehaviour:
     values: 02000000
     text:
     - '###'
-    - Once inside we need to kill the one in charge and clear a way forward towards
-      the hangar.
+    - Hopefully that will buy us some time before more reinforcements show up.
     boolValue: 1
   - autoContinue: 0
     useDelay: 0
@@ -75,7 +74,7 @@ MonoBehaviour:
     values: 02000000
     text:
     - '###'
-    - There will be a lot of enemies so we won't be able to kill everyone.
+    - Let's just hope that the others get to the hangar in time.
     boolValue: 1
   - autoContinue: 0
     useDelay: 0
@@ -84,7 +83,7 @@ MonoBehaviour:
     values: 02000000
     text:
     - '###'
-    - "Okay. \nHere we go."
+    - We got no time to waste! Let's get to the ship!
     boolValue: 1
   - autoContinue: 0
     useDelay: 0

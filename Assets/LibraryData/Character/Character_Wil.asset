@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffbd57f50cc07054281a2e1bd782da5f, type: 3}
+  m_Name: Character_Wil
+  m_EditorClassIdentifier: 
+  uuid: Wil
+  entryName: Wil
+  repColor: {r: 0.7794118, g: 0.5441654, b: 0.24643168, a: 1}
+  tag: 
+  bigPortrait: {fileID: 21300000, guid: 2f040b443ef3e4d449674c9c332307dd, type: 3}
+  portrait: {fileID: 21300000, guid: b7fd0a8b40ce10b4cab770e0a927a5fb, type: 3}
+  playerSprite: {fileID: 21300000, guid: 1982659d54858354586758aa4bbb1246, type: 3}
+  enemySprite: {fileID: 21300000, guid: 171161b132f70f14f974a2b8655631e6, type: 3}
+  allySprite: {fileID: 21300000, guid: 1982659d54858354586758aa4bbb1246, type: 3}
+  portraitSet: {fileID: 11400000, guid: e7b4ca99c8fd0844fa0d2a96c70c46a7, type: 2}
+  startClass: {fileID: 11400000, guid: ffed2480b9ab04c42af86d07aaa92dcf, type: 2}
+  startClassLevels: 0000000000000000000000000100000000000000
+  hp: 1
+  dmg: 0
+  mnd: -1
+  skl: 2
+  spd: 1
+  def: 0
+  gHp: 5
+  gDmg: 0
+  gMnd: -5
+  gSkl: 10
+  gSpd: 5
+  gDef: 0
+  supports:
+  - partner: {fileID: 11400000, guid: ebe64c7e451dc494fbc8211be6f10d6a, type: 2}
+    maxlevel: 2
+    speed: 1
+  - partner: {fileID: 11400000, guid: cf951a3da37e1794b9cd29749c715911, type: 2}
+    maxlevel: 2
+    speed: 3
+  faction: 0
+  mustSurvive: 0
+  deathQuote: {fileID: 11400000, guid: 9a4fdd536ffdfee4bb2c9d4d908d10c3, type: 2}
