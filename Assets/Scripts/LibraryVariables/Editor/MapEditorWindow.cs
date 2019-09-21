@@ -263,7 +263,7 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 			//  = (ClassType)EditorGUILayout.EnumPopup("",entryValues.advantageType[i]);
 			if (GUILayout.Button("Dup", GUILayout.Width(50))) {
 				GUI.FocusControl(null);
-				EnemyPosition epos = new EnemyPosition();
+				ReinforcementPosition epos = new ReinforcementPosition();
 				epos.Copy(mapValues.enemies[i]);
 				mapValues.enemies.Insert(i + 1, epos);
 			}
@@ -390,7 +390,7 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 			LibraryEditorWindow.HorizontalLine(Color.black);
 		}
 		if (GUILayout.Button("+")) {
-			mapValues.enemies.Add(new EnemyPosition());
+			mapValues.enemies.Add(new ReinforcementPosition());
 		}
 	}
 

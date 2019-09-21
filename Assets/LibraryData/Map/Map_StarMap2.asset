@@ -22,6 +22,7 @@ MonoBehaviour:
   winCondition: 1
   loseCondition: 0
   mapDescription: We need to help our friends!
+  turnLimit: 0
   skipBattlePrep: 0
   preDialogue: {fileID: 11400000, guid: dfabaf67b57a0284dac50cb991978de5, type: 2}
   introDialogue: {fileID: 11400000, guid: 3487bc3256d035a4cb46c369c0415d7a, type: 2}
@@ -40,6 +41,7 @@ MonoBehaviour:
   lockedCharacters: []
   enemies:
   - spawnTurn: 0
+    faction: 0
     x: 22
     y: 12
     level: 7
@@ -49,6 +51,7 @@ MonoBehaviour:
       droppable: 0
     - item: {fileID: 11400000, guid: 7bdb62b1a2ae1df4d9a71c84d3e18ab7, type: 2}
       droppable: 1
+    joiningSquad: 0
     aggroType: 3
     hasQuotes: 1
     quotes:
@@ -69,6 +72,7 @@ MonoBehaviour:
     huntY: 0
     patrolPositions: []
   - spawnTurn: 0
+    faction: 0
     x: 8
     y: 4
     level: 2
@@ -76,6 +80,7 @@ MonoBehaviour:
     inventory:
     - item: {fileID: 11400000, guid: a150849ce79069d4396be1c09944a0df, type: 2}
       droppable: 0
+    joiningSquad: 0
     aggroType: 0
     hasQuotes: 0
     quotes: []
@@ -84,6 +89,7 @@ MonoBehaviour:
     huntY: 0
     patrolPositions: []
   - spawnTurn: 0
+    faction: 0
     x: 6
     y: 11
     level: 3
@@ -91,6 +97,7 @@ MonoBehaviour:
     inventory:
     - item: {fileID: 11400000, guid: a150849ce79069d4396be1c09944a0df, type: 2}
       droppable: 0
+    joiningSquad: 0
     aggroType: 1
     hasQuotes: 0
     quotes: []
@@ -99,6 +106,7 @@ MonoBehaviour:
     huntY: 0
     patrolPositions: []
   - spawnTurn: 0
+    faction: 0
     x: 17
     y: 2
     level: 4
@@ -106,6 +114,7 @@ MonoBehaviour:
     inventory:
     - item: {fileID: 11400000, guid: a150849ce79069d4396be1c09944a0df, type: 2}
       droppable: 0
+    joiningSquad: 0
     aggroType: 0
     hasQuotes: 0
     quotes: []
@@ -114,6 +123,7 @@ MonoBehaviour:
     huntY: 0
     patrolPositions: []
   - spawnTurn: 0
+    faction: 0
     x: 17
     y: 12
     level: 3
@@ -121,6 +131,7 @@ MonoBehaviour:
     inventory:
     - item: {fileID: 11400000, guid: a150849ce79069d4396be1c09944a0df, type: 2}
       droppable: 0
+    joiningSquad: 0
     aggroType: 0
     hasQuotes: 0
     quotes: []
@@ -129,6 +140,7 @@ MonoBehaviour:
     huntY: 0
     patrolPositions: []
   - spawnTurn: 0
+    faction: 0
     x: 20
     y: 12
     level: 3
@@ -136,6 +148,7 @@ MonoBehaviour:
     inventory:
     - item: {fileID: 11400000, guid: a150849ce79069d4396be1c09944a0df, type: 2}
       droppable: 0
+    joiningSquad: 0
     aggroType: 0
     hasQuotes: 0
     quotes: []
@@ -144,6 +157,7 @@ MonoBehaviour:
     huntY: 0
     patrolPositions: []
   - spawnTurn: 0
+    faction: 0
     x: 1
     y: 7
     level: 3
@@ -151,6 +165,7 @@ MonoBehaviour:
     inventory:
     - item: {fileID: 11400000, guid: 61b5282282d02b544a200d088100d5e3, type: 2}
       droppable: 0
+    joiningSquad: 0
     aggroType: 0
     hasQuotes: 1
     quotes:
@@ -163,6 +178,7 @@ MonoBehaviour:
     huntY: 0
     patrolPositions: []
   - spawnTurn: 0
+    faction: 0
     x: 2
     y: 7
     level: 2
@@ -170,6 +186,7 @@ MonoBehaviour:
     inventory:
     - item: {fileID: 11400000, guid: 61b5282282d02b544a200d088100d5e3, type: 2}
       droppable: 0
+    joiningSquad: 0
     aggroType: 0
     hasQuotes: 0
     quotes: []
@@ -178,6 +195,7 @@ MonoBehaviour:
     huntY: 0
     patrolPositions: []
   - spawnTurn: 0
+    faction: 0
     x: 10
     y: 8
     level: 2
@@ -185,6 +203,7 @@ MonoBehaviour:
     inventory:
     - item: {fileID: 11400000, guid: 61b5282282d02b544a200d088100d5e3, type: 2}
       droppable: 0
+    joiningSquad: 0
     aggroType: 0
     hasQuotes: 0
     quotes: []
@@ -193,6 +212,7 @@ MonoBehaviour:
     huntY: 0
     patrolPositions: []
   - spawnTurn: 0
+    faction: 0
     x: 18
     y: 8
     level: 4
@@ -200,6 +220,7 @@ MonoBehaviour:
     inventory:
     - item: {fileID: 11400000, guid: 61b5282282d02b544a200d088100d5e3, type: 2}
       droppable: 0
+    joiningSquad: 0
     aggroType: 2
     hasQuotes: 0
     quotes: []
@@ -208,6 +229,7 @@ MonoBehaviour:
     huntY: 0
     patrolPositions: []
   - spawnTurn: 0
+    faction: 0
     x: 19
     y: 8
     level: 4
@@ -215,6 +237,7 @@ MonoBehaviour:
     inventory:
     - item: {fileID: 11400000, guid: 61b5282282d02b544a200d088100d5e3, type: 2}
       droppable: 0
+    joiningSquad: 0
     aggroType: 2
     hasQuotes: 0
     quotes: []
@@ -223,6 +246,7 @@ MonoBehaviour:
     huntY: 0
     patrolPositions: []
   - spawnTurn: 0
+    faction: 0
     x: 12
     y: 1
     level: 2
@@ -230,6 +254,7 @@ MonoBehaviour:
     inventory:
     - item: {fileID: 11400000, guid: 3c28909acccd4b343aed0cc878523d4d, type: 2}
       droppable: 0
+    joiningSquad: 0
     aggroType: 0
     hasQuotes: 0
     quotes: []
@@ -238,6 +263,7 @@ MonoBehaviour:
     huntY: 0
     patrolPositions: []
   - spawnTurn: 0
+    faction: 0
     x: 19
     y: 3
     level: 2
@@ -245,6 +271,7 @@ MonoBehaviour:
     inventory:
     - item: {fileID: 11400000, guid: 3c28909acccd4b343aed0cc878523d4d, type: 2}
       droppable: 0
+    joiningSquad: 0
     aggroType: 0
     hasQuotes: 0
     quotes: []
@@ -253,6 +280,7 @@ MonoBehaviour:
     huntY: 0
     patrolPositions: []
   - spawnTurn: 0
+    faction: 0
     x: 15
     y: 4
     level: 2
@@ -262,6 +290,7 @@ MonoBehaviour:
       droppable: 0
     - item: {fileID: 11400000, guid: d177c188e942aba4a8ae3556d15f6663, type: 2}
       droppable: 1
+    joiningSquad: 0
     aggroType: 4
     hasQuotes: 0
     quotes: []

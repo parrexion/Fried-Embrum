@@ -241,7 +241,7 @@ public class MapCreator : MonoBehaviour {
 
 		//Enemies
 		for (int i = 0; i < map.enemies.Count; i++) {
-			EnemyPosition pos = map.enemies[i];
+			ReinforcementPosition pos = map.enemies[i];
 
 			StatsContainer stats = new StatsContainer(pos);
 			InventoryContainer inventory = new InventoryContainer(enemyClassWheel.GetWpnSkillFromLevel(pos.charData.startClassLevels), pos.inventory);
@@ -255,7 +255,7 @@ public class MapCreator : MonoBehaviour {
 				quotes.Add(fight);
 			}
 
-			SpawnEnemyCharacter(new ReinforcementPosition(pos), stats, inventory, skills);
+			SpawnEnemyCharacter(pos, stats, inventory, skills);
 		}
 	}
 

@@ -36,7 +36,7 @@ public class MapEntry : ScrObjLibraryEntry {
 	public List<CharData> lockedCharacters = new List<CharData>();
 	
 	[Header("Other characters")]
-	public List<EnemyPosition> enemies = new List<EnemyPosition>();
+	public List<ReinforcementPosition> enemies = new List<ReinforcementPosition>();
 	public List<ReinforcementPosition> allies = new List<ReinforcementPosition>();
 	public List<ReinforcementPosition> reinforcements = new List<ReinforcementPosition>();
 	
@@ -71,7 +71,7 @@ public class MapEntry : ScrObjLibraryEntry {
 		forcedCharacters = new List<CharData>();
 		lockedCharacters = new List<CharData>();
 
-		enemies = new List<EnemyPosition>();
+		enemies = new List<ReinforcementPosition>();
 		allies = new List<ReinforcementPosition>();
 		reinforcements = new List<ReinforcementPosition>();
 
@@ -117,7 +117,7 @@ public class MapEntry : ScrObjLibraryEntry {
 			lockedCharacters.Add(map.lockedCharacters[i]);
 		}
 
-		enemies = new List<EnemyPosition>();
+		enemies = new List<ReinforcementPosition>();
 		for (int i = 0; i < map.enemies.Count; i++) {
 			enemies.Add(map.enemies[i]);
 		}
