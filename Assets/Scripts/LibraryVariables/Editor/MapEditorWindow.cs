@@ -698,12 +698,14 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 					break;
 				case InteractType.DATABASE:
 					GUILayout.BeginHorizontal();
-					pos.gift.money = EditorGUILayout.IntField("Money", pos.gift.money);
-					pos.gift.scrap = EditorGUILayout.IntField("Scrap", pos.gift.scrap);
-					GUILayout.EndHorizontal();
+					EditorGUIUtility.labelWidth = 55;
+					pos.gift.money = EditorGUILayout.IntField("Money", pos.gift.money, GUILayout.Width(120));
+					pos.gift.scrap = EditorGUILayout.IntField("Scrap", pos.gift.scrap, GUILayout.Width(120));
 					if (pos.gift.items.Count < 1)
 						pos.gift.items.Add(null);
 					pos.gift.items[0] = (ItemEntry)EditorGUILayout.ObjectField("Item", pos.gift.items[0], typeof(ItemEntry), false);
+					GUILayout.EndHorizontal();
+					EditorGUIUtility.labelWidth = 120;
 					break;
 			}
 

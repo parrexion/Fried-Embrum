@@ -220,6 +220,7 @@ public class DialogueListWindow : EditorWindow {
 		//SAVE
 		if (hub.selAction != -1) {
 			if (GUILayout.Button("SAVE")) {
+				hub.dialogueValues.repColor = hub.dialogueValues.GetTagColor();
 				hub.SaveSelectedDialogue();
 			}
 			GUILayout.Space(5);

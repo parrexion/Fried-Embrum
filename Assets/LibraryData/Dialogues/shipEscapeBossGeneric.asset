@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0c66341c8af3a7549bd8e191fbd754ff, type: 3}
-  m_Name: Star3BreakIn
+  m_Name: shipEscapeBossGeneric
   m_EditorClassIdentifier: 
-  uuid: Star3BreakIn
-  entryName: Star3BreakIn
-  repColor: {r: 1, g: 0, b: 1, a: 1}
-  tag: EVENT
+  uuid: shipEscapeBossGeneric
+  entryName: shipEscapeBossGeneric
+  repColor: {r: 0, g: 0, b: 0, a: 0}
+  tag: DEFAULT
   participantColors: []
   actions:
   - autoContinue: 1
     useDelay: 0
     type: 4
     entries:
-    - {fileID: 11400000, guid: 4d6a6d8ca1d5d8446ad36a687ef19011, type: 2}
+    - {fileID: 0}
     values: 
     text: []
     boolValue: 0
@@ -41,40 +41,22 @@ MonoBehaviour:
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
-    - {fileID: 11400000, guid: 193b3a8379d8c464db011f1fa6fd2bde, type: 2}
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
-    values: ffffffffffffffffffffffff00000000ffffffffffffffffffffffffffffffff
+    - {fileID: 0}
+    values: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
     text: []
     boolValue: 0
   - autoContinue: 0
     useDelay: 0
     type: 2
     entries: []
-    values: 03000000
+    values: ffffffff
     text:
-    - '###'
-    - Wait! Did you hear that?
-    boolValue: 1
-  - autoContinue: 0
-    useDelay: 0
-    type: 2
-    entries: []
-    values: 03000000
-    text:
-    - '###'
-    - It sounds like they are breaking through our barrier!
-    boolValue: 1
-  - autoContinue: 0
-    useDelay: 0
-    type: 2
-    entries: []
-    values: 03000000
-    text:
-    - '###'
-    - We must hurry!
+    - 
+    - 
     boolValue: 1
   - autoContinue: 0
     useDelay: 0

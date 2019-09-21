@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0c66341c8af3a7549bd8e191fbd754ff, type: 3}
-  m_Name: Star3BreakIn
+  m_Name: ShipEscapeWarning
   m_EditorClassIdentifier: 
-  uuid: Star3BreakIn
-  entryName: Star3BreakIn
+  uuid: ShipEscapeWarning
+  entryName: ShipEscapeWarning
   repColor: {r: 1, g: 0, b: 1, a: 1}
   tag: EVENT
   participantColors: []
@@ -22,7 +22,7 @@ MonoBehaviour:
     useDelay: 0
     type: 4
     entries:
-    - {fileID: 11400000, guid: 4d6a6d8ca1d5d8446ad36a687ef19011, type: 2}
+    - {fileID: 11400000, guid: d9f03c5c6e1942b4bbc8eb19909e1b43, type: 2}
     values: 
     text: []
     boolValue: 0
@@ -30,7 +30,7 @@ MonoBehaviour:
     useDelay: 0
     type: 5
     entries:
-    - {fileID: 0}
+    - {fileID: 11400000, guid: 7b17f9dbff54970438f62ab06aa0fef9, type: 2}
     values: 
     text: []
     boolValue: 0
@@ -40,41 +40,32 @@ MonoBehaviour:
     entries:
     - {fileID: 0}
     - {fileID: 0}
-    - {fileID: 0}
     - {fileID: 11400000, guid: 193b3a8379d8c464db011f1fa6fd2bde, type: 2}
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
-    values: ffffffffffffffffffffffff00000000ffffffffffffffffffffffffffffffff
+    - {fileID: 0}
+    values: ffffffffffffffff00000000ffffffffffffffffffffffffffffffffffffffff
     text: []
     boolValue: 0
   - autoContinue: 0
     useDelay: 0
     type: 2
     entries: []
-    values: 03000000
+    values: 02000000
     text:
     - '###'
-    - Wait! Did you hear that?
+    - I can here a lot of enemies moving towards us.
     boolValue: 1
   - autoContinue: 0
     useDelay: 0
     type: 2
     entries: []
-    values: 03000000
+    values: 02000000
     text:
     - '###'
-    - It sounds like they are breaking through our barrier!
-    boolValue: 1
-  - autoContinue: 0
-    useDelay: 0
-    type: 2
-    entries: []
-    values: 03000000
-    text:
-    - '###'
-    - We must hurry!
+    - We need to hurry or we'll all be overwhelmed!
     boolValue: 1
   - autoContinue: 0
     useDelay: 0

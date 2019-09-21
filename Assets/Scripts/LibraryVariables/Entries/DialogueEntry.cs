@@ -73,4 +73,26 @@ public class DialogueEntry : ScrObjLibraryEntry {
 		}
 		return list;
 	}
+
+	public Color GetTagColor() {
+		//DEFAULT, PRELUDE, INTRO, ENDING, QUOTE, VILLAGE, DEATH, EVENT
+		switch (tag) {
+			case "PRELUDE":
+				return Color.blue;
+			case "INTRO":
+				return Color.green;
+			case "ENDING":
+				return Color.cyan;
+			case "QUOTE":
+				return Color.red;
+			case "VILLAGE":
+				return Color.yellow;
+			case "DEATH":
+				return Color.black;
+			case "EVENT":
+				return Color.magenta;
+			default:
+				return new Color();
+		}
+	}
 }
