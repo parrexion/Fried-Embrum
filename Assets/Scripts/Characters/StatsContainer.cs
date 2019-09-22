@@ -78,7 +78,8 @@ public class StatsContainer {
 
 		classLevels = new int[ClassWheel.CLASS_COUNT];
 		for (int i = 0; i < ClassWheel.CLASS_COUNT; i++) {
-			classLevels[i] = saveData.classLevels[i];
+			if (i < saveData.classLevels.Length)
+				classLevels[i] = saveData.classLevels[i];
 		}
 		level = saveData.level;
 		if (level == -1)

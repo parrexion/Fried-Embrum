@@ -31,10 +31,9 @@ MonoBehaviour:
   spawnPoints1:
   - x: 13
     y: 9
-  - x: 14
-    y: 9
   spawnPoints2: []
-  forcedCharacters: []
+  forcedCharacters:
+  - {fileID: 11400000, guid: ebe64c7e451dc494fbc8211be6f10d6a, type: 2}
   lockedCharacters: []
   enemies:
   - spawnTurn: 0
@@ -121,7 +120,7 @@ MonoBehaviour:
     faction: 0
     x: 13
     y: 3
-    level: 3
+    level: 2
     charData: {fileID: 11400000, guid: 5f9fe78bb4b53eb468e1c36351f399b2, type: 2}
     inventory:
     - item: {fileID: 11400000, guid: 3c28909acccd4b343aed0cc878523d4d, type: 2}
@@ -138,7 +137,7 @@ MonoBehaviour:
     faction: 0
     x: 7
     y: 8
-    level: 3
+    level: 2
     charData: {fileID: 11400000, guid: 5f9fe78bb4b53eb468e1c36351f399b2, type: 2}
     inventory:
     - item: {fileID: 11400000, guid: 3c28909acccd4b343aed0cc878523d4d, type: 2}
@@ -152,7 +151,26 @@ MonoBehaviour:
     huntY: 0
     patrolPositions: []
   allies: []
-  reinforcements: []
+  reinforcements:
+  - spawnTurn: 0
+    faction: 0
+    x: 14
+    y: 9
+    level: 5
+    charData: {fileID: 11400000, guid: 31749796e39728f43b887537c3bc69bd, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 7bdb62b1a2ae1df4d9a71c84d3e18ab7, type: 2}
+      droppable: 0
+    - item: {fileID: 11400000, guid: 2c6481630a321de4f97f98e24d095e8e, type: 2}
+      droppable: 0
+    joiningSquad: 1
+    aggroType: 0
+    hasQuotes: 0
+    quotes: []
+    talks: []
+    huntX: 0
+    huntY: 0
+    patrolPositions: []
   interactions:
   - x: 7
     y: 5

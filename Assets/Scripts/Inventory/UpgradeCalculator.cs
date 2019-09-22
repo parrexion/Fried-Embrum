@@ -24,7 +24,7 @@ public class UpgradeCalculator {
 		developed = new List<string>();
 		listSize = upgrades.Count;
 		for (int i = 0; i < listSize; i++) {
-			if (upgrades[i].upgrade.type == UpgradeType.INVENTION && upgrades[i].researched) {
+			if (upgrades[i].upgrade?.type == UpgradeType.INVENTION && upgrades[i].researched) {
 				developed.Add(upgrades[i].upgrade.item.uuid);
 				Debug.Log("Found an upgrade!  " + upgrades[i].upgrade.item.uuid);
 			}
@@ -39,7 +39,7 @@ public class UpgradeCalculator {
 	public List<UpgradeItem> GetItemUpgradeList(string itemID) {
 		List<UpgradeItem> relatedUpgrades = new List<UpgradeItem>();
 		for (int i = 0; i < upgrades.Count; i++) {
-			if (upgrades[i].upgrade.item.uuid == itemID)
+			if (upgrades[i].upgrade?.item.uuid == itemID)
 				relatedUpgrades.Add(upgrades[i]);
 		}
 		return relatedUpgrades;

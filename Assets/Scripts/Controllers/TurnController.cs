@@ -128,7 +128,8 @@ public class TurnController : MonoBehaviour {
 			case TurnState.DIALOGUE:
 				//Debug.Log("Check reinforcements");
 				currentState = TurnState.REINFORCE;
-				if (currentFactionTurn.value == Faction.ALLY) {
+				if (currentFactionTurn.value == Faction.ALLY || 
+					(currentFactionTurn.value == Faction.ENEMY && allyList.Count == 0)) {
 					checkReinforcementsEvent.Invoke();
 				}
 				else {
