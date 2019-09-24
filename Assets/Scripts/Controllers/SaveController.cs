@@ -252,7 +252,8 @@ public class SaveController : MonoBehaviour {
 		// Read map data
 		currentMission.value = missionLibrary.GetEntry(loadedData.mapData.missionString);
 		mapIndex.value = loadedData.mapData.mapIndex;
-		loadMapID.value = ((MissionEntry)currentMission.value).maps[mapIndex.value].uuid;
+		if(currentMission.value != null)
+			loadMapID.value = ((MissionEntry)currentMission.value).maps[mapIndex.value].uuid;
 		squad1.values.Clear();
 		for (int i = 0; i < loadedData.mapData.squad1.Count; i++) {
 			squad1.values.Add(new PrepCharacter(loadedData.mapData.squad1[i]));
@@ -322,7 +323,7 @@ public class SaveData {
 
 	public int money;
 	public int scrap;
-	public MapSavePackage mapData;
+	public MapSavePackage mapData = new MapSavePackage();
 	public List<CharacterSaveData> characters = new List<CharacterSaveData>();
 	public List<ItemSaveData> items = new List<ItemSaveData>();
 	public List<UpgradeSaveData> upgrade = new List<UpgradeSaveData>();
