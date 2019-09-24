@@ -43,52 +43,25 @@ MonoBehaviour:
   enemies:
   - spawnTurn: 0
     faction: 0
-    x: 12
-    y: 8
+    x: 14
+    y: 9
     level: 1
     charData: {fileID: 11400000, guid: e073228f081b5ec48b55e2e1ac4062f9, type: 2}
     inventory:
     - item: {fileID: 11400000, guid: 61b5282282d02b544a200d088100d5e3, type: 2}
       droppable: 0
     joiningSquad: 0
-    aggroType: 5
+    aggroType: 4
     hasQuotes: 0
     quotes: []
     talks: []
-    huntX: 0
-    huntY: 0
+    huntX: 4
+    huntY: 6
     patrolPositions:
     - x: 11
       y: 8
     - x: 7
       y: 8
-  - spawnTurn: 0
-    faction: 0
-    x: 5
-    y: 8
-    level: 2
-    charData: {fileID: 11400000, guid: e073228f081b5ec48b55e2e1ac4062f9, type: 2}
-    inventory:
-    - item: {fileID: 11400000, guid: bb93947bced453f4cbba944f33781d64, type: 2}
-      droppable: 0
-    - item: {fileID: 11400000, guid: 2c6481630a321de4f97f98e24d095e8e, type: 2}
-      droppable: 1
-    joiningSquad: 0
-    aggroType: 3
-    hasQuotes: 1
-    quotes:
-    - triggerer: {fileID: 0}
-      quote: {fileID: 11400000, guid: b5139b7988475d24f8299cab08cf5c2f, type: 2}
-      willJoin: 0
-      activated: 0
-    talks:
-    - triggerer: {fileID: 0}
-      quote: {fileID: 11400000, guid: b731e22527e30b4448a3f2d16b03432b, type: 2}
-      willJoin: 1
-      activated: 0
-    huntX: 0
-    huntY: 0
-    patrolPositions: []
   allies:
   - spawnTurn: 0
     faction: 0
@@ -121,7 +94,7 @@ MonoBehaviour:
     y: 6
     interactType: 3
     health: 0
-    dialogue: {fileID: 0}
+    dialogue: {fileID: 11400000, guid: 4ca399a4972b5c14fbb5c99c0306417e, type: 2}
     gift:
       money: 0
       scrap: 0
@@ -154,7 +127,7 @@ MonoBehaviour:
     y: 7
     interactType: 3
     health: 0
-    dialogue: {fileID: 0}
+    dialogue: {fileID: 11400000, guid: 4ca399a4972b5c14fbb5c99c0306417e, type: 2}
     gift:
       money: 0
       scrap: 0
@@ -170,7 +143,7 @@ MonoBehaviour:
     y: 9
     interactType: 3
     health: 0
-    dialogue: {fileID: 0}
+    dialogue: {fileID: 11400000, guid: 4ca399a4972b5c14fbb5c99c0306417e, type: 2}
     gift:
       money: 0
       scrap: 0
@@ -182,8 +155,8 @@ MonoBehaviour:
       level: 0
       charData: {fileID: 0}
       inventory: []
-  - x: 9
-    y: 4
+  - x: 14
+    y: 5
     interactType: 1
     health: 20
     dialogue: {fileID: 0}

@@ -78,7 +78,7 @@ public class ActionInputController : MonoBehaviour {
 				player.End();
 				break;
 			case ActionInputType.TALK:
-				targetList.values = player.FindAdjacentCharacters(false, true, true);
+				FindTalkers();
 				currentActionMode.value = ActionMode.TALK;
 				InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
 				break;
@@ -123,6 +123,21 @@ public class ActionInputController : MonoBehaviour {
 				InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
 				player.End();
 				break;
+		}
+	}
+
+	private void FindTalkers() {
+		targetList.values.Clear();
+		PlayerMove player = (PlayerMove)selectedCharacter.value;
+		List<MapTile> talkers = player.FindAdjacentCharacters(false, true, true);
+		for(int i = 0; i < talkers.Count; i++) {
+			for(int talk = 0; talk < talkers[i].currentCharacter.talkQuotes.Count; talk++) {
+				FightQuote fq = talkers[i].currentCharacter.talkQuotes[talk];
+				if(!fq.activated && (fq.triggerer == null || fq.triggerer.uuid == player.stats.charData.uuid)) {
+					targetList.values.Add(talkers[i]);
+					break;
+				}
+			}
 		}
 	}
 
@@ -216,7 +231,7 @@ public class ActionInputController : MonoBehaviour {
 	}
 
 	private IEnumerator WaitForAllyToJoin(PlayerMove tactics, MapTile closest, int recruitSquad) {
-		string message = tactics.stats.charData.name + " has joined you!";
+		string message = tactics.stats.charData.entryName + " has joined you!";
 		tactics.posx = closest.posx;
 		tactics.posy = closest.posy;
 		tactics.Setup();
