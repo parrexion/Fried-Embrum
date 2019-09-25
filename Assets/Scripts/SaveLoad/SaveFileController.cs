@@ -105,7 +105,7 @@ public class SaveFileController : MonoBehaviour {
 		return true;
 	}
 
-	public void UpdateFiles() {
+	public void UpdateFile() {
 		int i = saveFiles.GetPosition();
 		SaveFileEntry entry = saveFiles.GetEntry();
 		if (chapterIDs[i].value == CLEAR_GAME_ID) {

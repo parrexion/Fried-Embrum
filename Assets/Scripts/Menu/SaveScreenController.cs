@@ -141,7 +141,7 @@ public class SaveScreenController : InputReceiverDelegate {
 		savePrompt.ShowSpinner("Saving...");
 		yield return new WaitForSeconds(1f);
 		savePrompt.ShowSpinner("Saved  :)");
-		saveFileController.UpdateFiles();
+		saveFileController.UpdateFile();
 		yield return new WaitForSeconds(1f);
 		savePrompt.Click(true);
 		

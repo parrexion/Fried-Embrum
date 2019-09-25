@@ -128,7 +128,8 @@ public class SaveController : MonoBehaviour {
 
 			//Map data
 			data.mapData = new MapSavePackage() {
-				missionString = currentMission.value.uuid,
+				//missionString = currentMission.value.uuid,
+				missionString = loadMapID.value,
 				mapIndex = mapIndex.value
 			};
 			for (int i = 0; i < squad1.Count; i++) {
@@ -252,8 +253,7 @@ public class SaveController : MonoBehaviour {
 		// Read map data
 		currentMission.value = missionLibrary.GetEntry(loadedData.mapData.missionString);
 		mapIndex.value = loadedData.mapData.mapIndex;
-		if(currentMission.value != null)
-			loadMapID.value = ((MissionEntry)currentMission.value).maps[mapIndex.value].uuid;
+		loadMapID.value = loadedData.mapData.missionString;
 		squad1.values.Clear();
 		for (int i = 0; i < loadedData.mapData.squad1.Count; i++) {
 			squad1.values.Add(new PrepCharacter(loadedData.mapData.squad1[i]));

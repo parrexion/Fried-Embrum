@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public enum MenuMode { NONE, MAP, MAIN_MENU, INV, BATTLE, WEAPON, GAMEOVER, INGAME, NNN, TRADE, DIALOGUE, TOOLTIP, 
 						BASE_LAB, BASE_MISSION, BASE_HOUSE, BASE_TRAIN, BASE_SHOP, PREP, FORMATION, SAVE,
@@ -34,22 +35,27 @@ public class InputDelegateController : MonoBehaviour {
 
 	[Header("Control locks")]
 	public BoolVariable lockAllControls;
-	public int holdDelay = 12;
-	public int scrollSpeed = 5;
+	public float holdDelay = 0.4f;
+	public float scrollSpeed = 0.1f;
 
 	[Header("Play Time Clock")]
 	public IntVariable currentPlayTime;
 
 	[Header("Move values")]
-	private int holdUp;
-	private int holdDown;
-	private int holdLeft;
-	private int holdRight;
+	private float holdUp;
+	private float holdDown;
+	private float holdLeft;
+	private float holdRight;
 
 	private bool axisUp;
 	private bool axisDown;
 	private bool axisLeft;
 	private bool axisRight;
+
+	public Text debugUpText;
+	public Text debugDownText;
+	public Text debugLeftText;
+	public Text debugRightText;
 
 	//Delegates
 	public delegate void ButtonDelegate();
@@ -101,19 +107,20 @@ public class InputDelegateController : MonoBehaviour {
 			return;
 
 		ControlScheme cs = controlSchemes[controlSchemeIndex.value];
+		float timeStep = Time.deltaTime;
 
 		//Button holds
 		if (Input.GetKey(cs.moveUp) || Input.GetAxis("DpadVertical") > 0.8f || Input.GetAxis("LstickVertical") > 0.8f) {
-			holdUp++;
+			holdUp += timeStep;
 		}
 		if (Input.GetKey(cs.moveDown) || Input.GetAxis("DpadVertical") < -0.8f || Input.GetAxis("LstickVertical") < -0.8f) {
-			holdDown++;
+			holdDown += timeStep;
 		}
 		if (Input.GetKey(cs.moveLeft) || Input.GetAxis("DpadHorizontal") < -0.8f || Input.GetAxis("LstickHorizontal") < -0.8f) {
-			holdLeft++;
+			holdLeft += timeStep;
 		}
 		if (Input.GetKey(cs.moveRight) || Input.GetAxis("DpadHorizontal") > 0.8f || Input.GetAxis("LstickHorizontal") > 0.8f) {
-			holdRight++;
+			holdRight += timeStep;
 		}
 
 		//Button releases
@@ -182,6 +189,13 @@ public class InputDelegateController : MonoBehaviour {
 			Input.GetKeyDown(cs.select) || Input.GetKeyDown(KeyCode.JoystickButton7)) {
 			startButtonDelegate?.Invoke();
 		}
+
+
+		//Debug
+		/*debugUpText.text = "holdUp: " + holdUp;
+		debugDownText.text = "holdDown: " + holdDown;
+		debugLeftText.text = "holdLeft: " + holdLeft;
+		debugRightText.text = "holdRight: " + holdRight;*/
 	}
 
 	/// <summary>

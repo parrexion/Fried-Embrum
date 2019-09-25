@@ -130,10 +130,10 @@ public class ActionInputController : MonoBehaviour {
 		targetList.values.Clear();
 		PlayerMove player = (PlayerMove)selectedCharacter.value;
 		List<MapTile> talkers = player.FindAdjacentCharacters(false, true, true);
-		for(int i = 0; i < talkers.Count; i++) {
-			for(int talk = 0; talk < talkers[i].currentCharacter.talkQuotes.Count; talk++) {
+		for (int i = 0; i < talkers.Count; i++) {
+			for (int talk = 0; talk < talkers[i].currentCharacter.talkQuotes.Count; talk++) {
 				FightQuote fq = talkers[i].currentCharacter.talkQuotes[talk];
-				if(!fq.activated && (fq.triggerer == null || fq.triggerer.uuid == player.stats.charData.uuid)) {
+				if (!fq.activated && (fq.triggerer == null || fq.triggerer.uuid == player.stats.charData.uuid)) {
 					targetList.values.Add(talkers[i]);
 					break;
 				}
@@ -183,9 +183,6 @@ public class ActionInputController : MonoBehaviour {
 				int recruitSquad = ((PlayerMove)selectedCharacter.value).squad;
 				StartCoroutine(WaitForAllyToJoin(tactics, closest, recruitSquad));
 			}
-			else {
-				selectedCharacter.value.End();
-			}
 		}
 		else if (dialogueMode.value == (int)DialogueMode.TALK) {
 			if (willJoin) {
@@ -193,12 +190,9 @@ public class ActionInputController : MonoBehaviour {
 				int recruitSquad = ((PlayerMove)selectedCharacter.value).squad;
 				StartCoroutine(WaitForAllyToJoin(joiningCharacter, joiningCharacter.currentTile, recruitSquad));
 			}
-			selectedCharacter.value.End();
-		}
-		else {
-			selectedCharacter.value.End();
 		}
 
+		selectedCharacter.value.End();
 		dialogueMode.value = (int)DialogueMode.NONE;
 	}
 
