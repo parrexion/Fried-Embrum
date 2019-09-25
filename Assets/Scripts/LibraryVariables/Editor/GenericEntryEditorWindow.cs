@@ -30,6 +30,9 @@ public abstract class GenericEntryEditorWindow {
 	//Creation
 	protected string uuid;
 	protected Color repColor = new Color(0, 0, 0, 1f);
+	private bool renameMode;
+	private string renameString;
+	private Color oldRepColor;
 
 
 	protected void LoadLibrary() {
@@ -142,7 +145,30 @@ public abstract class GenericEntryEditorWindow {
 		dispScrollPos = GUILayout.BeginScrollView(dispScrollPos, GUILayout.Width(dispRect2.width),
 							GUILayout.Height(dispRect.height - 10));
 
-		EditorGUILayout.SelectableLabel("Selected " + NameString + ":   " + entryValues.uuid, EditorStyles.boldLabel);
+		GUILayout.BeginHorizontal();
+		if (renameMode) {
+			renameString = EditorGUILayout.TextField("New uuid", renameString);
+			if (GUILayout.Button("Save", GUILayout.Width(60))) {
+				if (renameString == entryValues.uuid) {
+					renameMode = false;
+				}
+				else if (IsValidUuid(renameString)) {
+					RenameEntry(renameString);
+					renameMode = false;
+				}
+			}
+			if (GUILayout.Button("Cancel", GUILayout.Width(60))) {
+				renameMode = false;
+			}
+		}
+		else {
+			EditorGUILayout.SelectableLabel("Selected " + NameString + ":   " + entryValues.uuid, EditorStyles.boldLabel);
+			if (GUILayout.Button("Change uuid", GUILayout.Width(100))) {
+				renameString = entryValues.uuid;
+				renameMode = true;
+			}
+		}
+		GUILayout.EndHorizontal();
 		entryValues.entryName = EditorGUILayout.TextField(NameString + " Name", entryValues.entryName);
 		entryValues.repColor = EditorGUILayout.ColorField("List color", entryValues.repColor);
 		GUILayout.Space(10);
@@ -157,6 +183,11 @@ public abstract class GenericEntryEditorWindow {
 
 	abstract protected void DrawContentWindow();
 
+	protected void RefreshEntryList() {
+		entryLibrary.initialized = false;
+		currentEntryList = entryLibrary.GetRepresentations("", filterStr);
+	}
+
 	protected void SelectEntry() {
 		// Nothing selected
 		if (selIndex == -1) {
@@ -166,6 +197,7 @@ public abstract class GenericEntryEditorWindow {
 			// Something selected
 			ScrObjLibraryEntry entry = entryLibrary.GetEntryByIndex(selIndex);
 			entryValues.CopyValues(entry);
+			oldRepColor = entryValues.repColor;
 		}
 	}
 
@@ -174,18 +206,29 @@ public abstract class GenericEntryEditorWindow {
 		entry.CopyValues(entryValues);
 		Undo.RecordObject(entry, "Updated entry");
 		EditorUtility.SetDirty(entry);
+		if (oldRepColor != entryValues.repColor) {
+			oldRepColor = entryValues.repColor;
+			RefreshEntryList();
+		}
 	}
 
-	protected void InstansiateEntry() {
-		GUI.FocusControl(null);
+	protected bool IsValidUuid(string uuid) {
 		if (string.IsNullOrEmpty(uuid)) {
 			Debug.LogError("uuid is empty!");
 			EditorUtility.DisplayDialog("Error", "uuid can not be empty!", "OK");
-			return;
+			return false;
 		}
 		if (entryLibrary.ContainsID(uuid)) {
 			Debug.LogError("uuid already exists!");
 			EditorUtility.DisplayDialog("Error", "That uuid already exists!", "OK");
+			return false;
+		}
+		return true;
+	}
+
+	protected void InstansiateEntry() {
+		GUI.FocusControl(null);
+		if (!IsValidUuid(uuid)) {
 			return;
 		}
 		ScrObjLibraryEntry entry = CreateInstance;
@@ -201,11 +244,27 @@ public abstract class GenericEntryEditorWindow {
 		AssetDatabase.CreateAsset(entry, path);
 		AssetDatabase.SaveAssets();
 		AssetDatabase.Refresh();
-
-		currentEntryList = entryLibrary.GetRepresentations("", filterStr);
+		
 		uuid = "";
 		selIndex = 0;
 		SelectEntry();
+		RefreshEntryList();
+	}
+
+	protected void RenameEntry(string newName) {
+		ScrObjLibraryEntry entry = entryLibrary.GetEntryByIndex(selIndex);
+		string path = "Assets/LibraryData/" + NameString + "/" + NameString + "_" + entry.uuid + ".asset";
+		string newPath = NameString + "_" + newName + ".asset";
+
+		entryValues.uuid = newName;
+		SaveSelectedEntry();
+		AssetDatabase.Refresh();
+
+		string res = AssetDatabase.RenameAsset(path, newPath);
+		if (!string.IsNullOrEmpty(res))
+			Debug.LogError("Res:  " + res);
+		SelectEntry();
+		RefreshEntryList();
 	}
 
 	protected void DeleteEntry() {
@@ -220,11 +279,13 @@ public abstract class GenericEntryEditorWindow {
 		AssetDatabase.SaveAssets();
 		AssetDatabase.Refresh();
 
-		currentEntryList = entryLibrary.GetRepresentations("", filterStr);
-
 		if (res) {
 			Debug.Log("Removed entry: " + entry.uuid);
 			selIndex = -1;
 		}
+		else {
+			Debug.LogError("Failed to remove entry: " + path);
+		}
+		RefreshEntryList();
 	}
 }

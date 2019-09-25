@@ -22,9 +22,8 @@ public class BackgroundEditorWindow : GenericEntryEditorWindow {
 
 	protected override void DrawContentWindow() {
 		BackgroundEntry backgroundValues = (BackgroundEntry)entryValues;
-
-		backgroundValues.entryName = EditorGUILayout.TextField("Name", backgroundValues.entryName);
-		backgroundValues.sprite = (Sprite)EditorGUILayout.ObjectField("Default color", backgroundValues.sprite, typeof(Sprite), false);
+		
+		backgroundValues.sprite = (Sprite)EditorGUILayout.ObjectField("Image", backgroundValues.sprite, typeof(Sprite), false);
 
 	}
 
