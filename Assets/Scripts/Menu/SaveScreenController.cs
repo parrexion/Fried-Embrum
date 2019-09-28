@@ -41,6 +41,7 @@ public class SaveScreenController : InputReceiverDelegate {
 					break;
 				}
 			}
+			currentMission.value = null;
 			currentPlayDays.value += mission.duration;
 			currentChapterId.value = "";
 			mapIndex.value = 0;
