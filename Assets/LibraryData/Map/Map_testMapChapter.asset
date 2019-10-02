@@ -41,7 +41,9 @@ MonoBehaviour:
   forcedCharacters: []
   lockedCharacters: []
   enemies:
-  - spawnTurn: 0
+  - triggerType: 0
+    spawnTurn: 0
+    triggerIndex: 
     faction: 0
     x: 14
     y: 9
@@ -63,7 +65,9 @@ MonoBehaviour:
     - x: 7
       y: 8
   allies:
-  - spawnTurn: 0
+  - triggerType: 0
+    spawnTurn: 0
+    triggerIndex: 
     faction: 0
     x: 2
     y: 2
@@ -217,4 +221,32 @@ MonoBehaviour:
       level: 1
       charData: {fileID: 0}
       inventory: []
-  turnEvents: []
+  triggerIds:
+  - id: a
+    triggered: 0
+  - id: c
+    triggered: 0
+  triggerAreas:
+  - idIndex: 0
+    faction: 0
+    xMin: 2
+    xMax: 3
+    yMin: 2
+    yMax: 3
+  - idIndex: 1
+    faction: 0
+    xMin: 0
+    xMax: 0
+    yMin: 0
+    yMax: 8
+  turnEvents:
+  - triggerType: 1
+    turn: 0
+    triggerIndex: 1
+    factionTurn: 0
+    type: 1
+    dialogue: {fileID: 11400000, guid: 064ac680580ec504da59c5a07bda4bc6, type: 2}
+    x: 0
+    y: 0
+    changeTerrain: {fileID: 0}
+    value: 0

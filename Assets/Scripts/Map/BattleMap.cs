@@ -4,7 +4,10 @@ using UnityEngine;
 using UnityEngine.Events;
 
 public class BattleMap : MonoBehaviour {
-	
+
+	[Header("Map state")]
+	public TriggerListVariable triggerList;
+
 	[Header("Characters")]
 	public Transform playerParent;
 	public Transform enemyParent;
@@ -21,6 +24,10 @@ public class BattleMap : MonoBehaviour {
 	public void SetupMap(MapEntry map) {
 		_sizeX = map.sizeX;
 		_sizeY = map.sizeY;
+		triggerList.values.Clear();
+		for (int i = 0; i < map.triggerIds.Count; i++) {
+			triggerList.values.Add(new TriggerTuple(map.triggerIds[i].id));
+		}
 	}
 
 	public void ResetMap() {

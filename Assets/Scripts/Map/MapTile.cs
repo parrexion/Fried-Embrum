@@ -1,9 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Video;
 
 public class MapTile : MonoBehaviour {
+
+	[System.Serializable]
+	private class TriggerID {
+		public string id;
+		public Faction faction;
+	}
 
 	public BattleMap battlemap;
 	public TacticsMove currentCharacter;
@@ -40,6 +45,7 @@ public class MapTile : MonoBehaviour {
 	public DialogueEntry dialogue;
 	public Reward gift;
 	public TacticsMove ally;
+	private List<TriggerID> triggers = new List<TriggerID>();
 
 	private SpriteRenderer _rendHighlight;
 	private float colorWarping;
@@ -186,4 +192,27 @@ public class MapTile : MonoBehaviour {
 		return true;
 	}
 
+	/// <summary>
+	/// Adds a trigger for the event to this tile.
+	/// </summary>
+	/// <param name="trigger"></param>
+	public void AddTrigger(TriggerArea trigger) {
+		triggers.Add(new TriggerID() {
+			id = battlemap.triggerList.values[trigger.idIndex].id,
+			faction = trigger.faction
+		});
+	}
+
+	/// <summary>
+	/// Can be triggered whenever someone ends their turn on the tile.
+	/// </summary>
+	public void EndOn(Faction faction) {
+		for (int i = 0; i < triggers.Count; i++) {
+			if (faction == triggers[i].faction) {
+				battlemap.triggerList.Trigger(triggers[i].id);
+			}
+		}
+	}
 }
+
+

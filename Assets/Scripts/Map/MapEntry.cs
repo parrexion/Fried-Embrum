@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum TriggerType { TURN, TRIGGER }
 public enum WinCondition { ROUT, CAPTURE, BOSS, ESCAPE, DEFEND }
 public enum LoseCondition { NONE, TIME }
 public enum MapLocation { UNKNOWN = -1, DEBES, GHART, THARSONIS, VILJIA, WALNIA_REX }
@@ -43,7 +44,9 @@ public class MapEntry : ScrObjLibraryEntry {
 	[Header("Interactions")]
 	public List<InteractPosition> interactions = new List<InteractPosition>();
 	
-	[Header("Turn Events")]
+	[Header("Events")]
+	public List<TriggerTuple> triggerIds = new List<TriggerTuple>();
+	public List<TriggerArea> triggerAreas = new List<TriggerArea>();
 	public List<TurnEvent> turnEvents = new List<TurnEvent>();
 
 
@@ -76,6 +79,9 @@ public class MapEntry : ScrObjLibraryEntry {
 		reinforcements = new List<ReinforcementPosition>();
 
 		interactions = new List<InteractPosition>();
+
+		triggerIds = new List<TriggerTuple>();
+		triggerAreas = new List<TriggerArea>();
 		turnEvents = new List<TurnEvent>();
 	}
 
@@ -133,6 +139,15 @@ public class MapEntry : ScrObjLibraryEntry {
 		interactions = new List<InteractPosition>();
 		for (int i = 0; i < map.interactions.Count; i++) {
 			interactions.Add(map.interactions[i]);
+		}
+
+		triggerIds = new List<TriggerTuple>();
+		for (int i = 0; i < map.triggerIds.Count; i++) {
+			triggerIds.Add(map.triggerIds[i]);
+		}
+		triggerAreas = new List<TriggerArea>();
+		for (int i = 0; i < map.triggerAreas.Count; i++) {
+			triggerAreas.Add(map.triggerAreas[i]);
 		}
 		turnEvents = new List<TurnEvent>();
 		for (int i = 0; i < map.turnEvents.Count; i++) {
@@ -240,7 +255,9 @@ public class EnemyPosition {
 
 [System.Serializable]
 public class ReinforcementPosition {
+	public TriggerType triggerType;
 	public int spawnTurn;
+	public string triggerIndex;
 	public Faction faction;
 	public int x;
 	public int y;
@@ -259,47 +276,11 @@ public class ReinforcementPosition {
 
 
 	public ReinforcementPosition(){}
-	public ReinforcementPosition(EnemyPosition pos) {
-		spawnTurn = pos.spawnTurn;
-		x = pos.x;
-		y = pos.y;
-		level = pos.level;
-		charData = pos.charData;
-		for (int i = 0; i < pos.inventory.Count; i++) {
-			inventory.Add(new WeaponTuple() {
-				item = pos.inventory[i].item,
-				droppable = pos.inventory[i].droppable
-			});
-		}
-		aggroType = pos.aggroType;
-		hasQuotes = pos.hasQuotes;
-		quotes.Clear();
-		for (int i = 0; i < pos.quotes.Count; i++) {
-			quotes.Add(new FightQuote() {
-				triggerer = pos.quotes[i].triggerer,
-				quote = pos.quotes[i].quote,
-				activated = pos.quotes[i].activated
-			});
-		}
-		talks.Clear();
-		for(int i = 0; i < pos.talks.Count; i++) {
-			talks.Add(new FightQuote() {
-				triggerer = pos.talks[i].triggerer,
-				quote = pos.talks[i].quote,
-				willJoin = pos.talks[i].willJoin,
-				activated = pos.talks[i].activated
-			});
-		}
-		huntX = pos.huntX;
-		huntY = pos.huntY;
-		patrolPositions = new List<Position>();
-		for (int i = 0; i < pos.patrolPositions.Count; i++) {
-			patrolPositions.Add(new Position() { x = pos.patrolPositions[i].x, y = pos.patrolPositions[i].y });
-		}
-	}
 
 	public void Copy(ReinforcementPosition other) {
+		triggerType = other.triggerType;
 		spawnTurn = other.spawnTurn;
+		triggerIndex = other.triggerIndex;
 		faction = other.faction;
 		x = other.x;
 		y = other.y;
@@ -350,16 +331,19 @@ public class InteractPosition {
 	public PlayerPosition ally = new PlayerPosition();
 }
 
-public enum TurnEventType { NONE, DIALOGUE, MAPCHANGE }
+public enum TurnEventType { NONE, DIALOGUE, MAPCHANGE, MONEY, SCRAP }
 [System.Serializable]
 public class TurnEvent {
+	public TriggerType triggerType;
 	public int turn;
+	public int triggerIndex;
 	public Faction factionTurn;
 	public TurnEventType type;
 	public DialogueEntry dialogue;
 	public int x;
 	public int y;
 	public TerrainTile changeTerrain;
+	public int value;
 
 	public override string ToString() {
 		return "Type: " + type + ", Turn: " + turn + ", faction: " + factionTurn;
@@ -392,4 +376,14 @@ public class Reward {
 
 		return true;
 	}
+}
+
+[System.Serializable]
+public class TriggerArea {
+	public int idIndex;
+	public Faction faction;
+	public int xMin;
+	public int xMax;
+	public int yMin;
+	public int yMax;
 }

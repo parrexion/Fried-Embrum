@@ -13,8 +13,11 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 	private bool showEnemyStuff = false;
 	private bool showAllyStuff = false;
 	private bool showInteractStuff = false;
+	private bool showTriggerStuff = false;
 	private bool showTurnEventStuff = false;
 	private bool showReinforcementStuff = false;
+
+	private string[] triggerOptions = new string[0];
 
 
 	public MapEditorWindow(ScrObjLibraryVariable entries, MapEntry container) {
@@ -25,6 +28,8 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 
 	protected override void DrawContentWindow() {
 		MapEntry mapValues = (MapEntry)entryValues;
+		UpdateTriggerOptions();
+
 		EditorGUIUtility.labelWidth = 120;
 		GUILayout.Label("Mission description");
 		EditorStyles.textField.wordWrap = true;
@@ -132,6 +137,18 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 		GUILayout.EndHorizontal();
 		if (showPlayerSpecialStuff)
 			DrawCharacterLimitStuff();
+
+		GUILayout.Space(10);
+
+		// Triggers
+		GUILayout.BeginHorizontal();
+		GUILayout.Label("Triggers", EditorStyles.boldLabel);
+		if (GUILayout.Button((showTriggerStuff) ? "Hide" : "Show", GUILayout.Width(150))) {
+			showTriggerStuff = !showTriggerStuff;
+		}
+		GUILayout.EndHorizontal();
+		if (showTriggerStuff)
+			DrawTriggerStuff();
 
 		GUILayout.Space(10);
 
@@ -716,6 +733,59 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 		}
 	}
 
+	private void DrawTriggerStuff() {
+		MapEntry mapValues = (MapEntry)entryValues;
+		GUILayout.Space(5);
+		GUILayout.Label("Trigger IDs", EditorStyles.boldLabel);
+		for (int i = 0; i < mapValues.triggerIds.Count; i++) {
+			GUILayout.BeginHorizontal();
+			EditorGUIUtility.labelWidth = 70;
+			mapValues.triggerIds[i].id = EditorGUILayout.TextField("ID", mapValues.triggerIds[i].id);
+			if (GUILayout.Button("X", GUILayout.Width(50))) {
+				GUI.FocusControl(null);
+				mapValues.triggerIds.RemoveAt(i);
+				i--;
+				continue;
+			}
+			EditorGUIUtility.labelWidth = 120;
+			GUILayout.EndHorizontal();
+		}
+		if (GUILayout.Button("+")) {
+			mapValues.triggerIds.Add(new TriggerTuple());
+		}
+
+		GUILayout.Space(10);
+
+
+		GUILayout.Label("Trigger Areas", EditorStyles.boldLabel);
+		EditorGUIUtility.labelWidth = 70;
+		for (int i = 0; i < mapValues.triggerAreas.Count; i++) {
+			GUILayout.BeginHorizontal();
+			mapValues.triggerAreas[i].idIndex = EditorGUILayout.Popup("Trigger ID", mapValues.triggerAreas[i].idIndex, triggerOptions);
+			if (GUILayout.Button("X", GUILayout.Width(50))) {
+				GUI.FocusControl(null);
+				mapValues.triggerAreas.RemoveAt(i);
+				i--;
+				continue;
+			}
+			GUILayout.EndHorizontal();
+			GUILayout.BeginHorizontal();
+			GUILayout.Label("Area width");
+			mapValues.triggerAreas[i].xMin = EditorGUILayout.IntField(mapValues.triggerAreas[i].xMin);
+			mapValues.triggerAreas[i].xMax = EditorGUILayout.IntField(mapValues.triggerAreas[i].xMax);
+			GUILayout.Label("Area height");
+			mapValues.triggerAreas[i].yMin = EditorGUILayout.IntField(mapValues.triggerAreas[i].yMin);
+			mapValues.triggerAreas[i].yMax = EditorGUILayout.IntField(mapValues.triggerAreas[i].yMax);
+			GUILayout.EndHorizontal();
+			LibraryEditorWindow.HorizontalLine(Color.black);
+		}
+		EditorGUIUtility.labelWidth = 120;
+
+		if (GUILayout.Button("+")) {
+			mapValues.triggerAreas.Add(new TriggerArea());
+		}
+	}
+
 	private void DrawTurnEventStuff() {
 		MapEntry mapValues = (MapEntry)entryValues;
 		GUILayout.Space(5);
@@ -723,7 +793,13 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 			TurnEvent pos = mapValues.turnEvents[i];
 			GUILayout.BeginHorizontal();
 			EditorGUIUtility.labelWidth = 70;
+			pos.triggerType = (TriggerType)EditorGUILayout.EnumPopup("Event Type", pos.triggerType);
+			if (pos.triggerType == TriggerType.TURN) {
 			pos.turn = EditorGUILayout.IntField("Turn", pos.turn);
+			}
+			else if (pos.triggerType == TriggerType.TRIGGER) {
+				pos.triggerIndex = EditorGUILayout.Popup("Trigger ID", pos.triggerIndex, triggerOptions);
+			}
 			pos.factionTurn = (Faction)EditorGUILayout.EnumPopup("Faction", pos.factionTurn);
 			if (GUILayout.Button("X", GUILayout.Width(50))) {
 				GUI.FocusControl(null);
@@ -748,6 +824,12 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 				case TurnEventType.DIALOGUE:
 					pos.dialogue = (DialogueEntry)EditorGUILayout.ObjectField("Dialogue", pos.dialogue, typeof(DialogueEntry), false);
 					break;
+				case TurnEventType.MONEY:
+					pos.value = EditorGUILayout.IntField("Money", pos.value);
+					break;
+				case TurnEventType.SCRAP:
+					pos.value = EditorGUILayout.IntField("Scrap", pos.value);
+					break;
 			}
 
 			LibraryEditorWindow.HorizontalLine(Color.black);
@@ -757,4 +839,12 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 		}
 	}
 
+
+	private void UpdateTriggerOptions() {
+		MapEntry mapValues = (MapEntry)entryValues;
+		triggerOptions = new string[mapValues.triggerIds.Count];
+		for (int i = 0; i < mapValues.triggerIds.Count; i++) {
+			triggerOptions[i] = mapValues.triggerIds[i].id;
+		}
+	}
 }

@@ -89,6 +89,7 @@ public class MapCreator : MonoBehaviour {
 			cursorY.value = map.spawnPoints2[0].y;
 		}
 		cursorMoveEvent.Invoke();
+		CreateTriggers(map);
 		SpawnPlayers();
 		SpawnEnemies();
 		SpawnAllies();
@@ -187,6 +188,20 @@ public class MapCreator : MonoBehaviour {
 				return map.interactions[i];
 		}
 		return null;
+	}
+
+	private void CreateTriggers(MapEntry map) {
+		int triggerCount = 0;
+		for (int i = 0; i < map.triggerAreas.Count; i++) {
+			TriggerArea area = map.triggerAreas[i];
+			for (int x = area.xMin; x < area.xMax +1; x++) {
+				for (int y = area.yMin; y < area.yMax + 1; y++) {
+					battleMap.GetTile(x,y).AddTrigger(area);
+					triggerCount++;
+				}
+			}
+		}
+		Debug.Log("Added triggers to tiles:  " + triggerCount);
 	}
 
 	/// <summary>
@@ -391,36 +406,45 @@ public class MapCreator : MonoBehaviour {
 		MapEntry map = (MapEntry)currentMap.value;
 		for (int i = 0; i < map.reinforcements.Count; i++) {
 			ReinforcementPosition pos = map.reinforcements[i];
-			if (currentTurn.value == pos.spawnTurn) {
-				MapTile tile = battleMap.GetTile(pos.x, pos.y);
-				if (tile.currentCharacter == null) {
-					StatsContainer stats = new StatsContainer(pos);
-					ClassWheel wheel = (stats.charData.faction == Faction.PLAYER) ? playerClassWheel : enemyClassWheel;
-					InventoryContainer inventory = new InventoryContainer(wheel.GetWpnSkillFromLevel(pos.charData.startClassLevels), pos.inventory);
-					SkillsContainer skills = new SkillsContainer(wheel.GetSkillsFromLevel(pos.charData.startClassLevels, pos.charData.startClass, pos.level));
-					if (pos.charData.faction == Faction.PLAYER) {
-						TacticsMove tm = SpawnPlayerCharacter(pos.x, pos.y, stats, inventory, skills, pos.joiningSquad, true);
-						playerData.AddNewPlayer(tm);
-						PrepCharacter prep = new PrepCharacter(playerData.stats.Count - 1);
-						if (pos.joiningSquad == 2) {
-							prepList2.values.Add(prep);
-						}
-						else {
-							prepList1.values.Add(prep);
-						}
-					}
-					else if (pos.charData.faction == Faction.ENEMY) {
-						SpawnEnemyCharacter(pos, stats, inventory, skills);
+			bool activate = false;
+			if (pos.triggerType == TriggerType.TURN)
+				activate = (currentTurn.value == pos.spawnTurn);
+			else if (pos.triggerType == TriggerType.TRIGGER) {
+				activate = battleMap.triggerList.IsTriggered(pos.triggerIndex);
+			}
+
+			if (!activate) {
+				continue;
+			}
+
+			MapTile tile = battleMap.GetTile(pos.x, pos.y);
+			if (tile.currentCharacter == null) {
+				StatsContainer stats = new StatsContainer(pos);
+				ClassWheel wheel = (stats.charData.faction == Faction.PLAYER) ? playerClassWheel : enemyClassWheel;
+				InventoryContainer inventory = new InventoryContainer(wheel.GetWpnSkillFromLevel(pos.charData.startClassLevels), pos.inventory);
+				SkillsContainer skills = new SkillsContainer(wheel.GetSkillsFromLevel(pos.charData.startClassLevels, pos.charData.startClass, pos.level));
+				if (pos.charData.faction == Faction.PLAYER) {
+					TacticsMove tm = SpawnPlayerCharacter(pos.x, pos.y, stats, inventory, skills, pos.joiningSquad, true);
+					playerData.AddNewPlayer(tm);
+					PrepCharacter prep = new PrepCharacter(playerData.stats.Count - 1);
+					if (pos.joiningSquad == 2) {
+						prepList2.values.Add(prep);
 					}
 					else {
-						Debug.LogError("Unimplemented faction  " + pos.faction);
+						prepList1.values.Add(prep);
 					}
-					cursorX.value = pos.x;
-					cursorY.value = pos.y;
-					cursorMoveEvent.Invoke();
-					// Debug.Log("Hello there!     " + (reinforcementDelay * slowGameSpeed.value / currentGameSpeed.value));
-					yield return new WaitForSeconds(reinforcementDelay * slowGameSpeed.value / currentGameSpeed.value);
 				}
+				else if (pos.charData.faction == Faction.ENEMY) {
+					SpawnEnemyCharacter(pos, stats, inventory, skills);
+				}
+				else {
+					Debug.LogError("Unimplemented faction  " + pos.faction);
+				}
+				cursorX.value = pos.x;
+				cursorY.value = pos.y;
+				cursorMoveEvent.Invoke();
+				// Debug.Log("Hello there!     " + (reinforcementDelay * slowGameSpeed.value / currentGameSpeed.value));
+				yield return new WaitForSeconds(reinforcementDelay * slowGameSpeed.value / currentGameSpeed.value);
 			}
 		}
 		nextTurnStateEvent.Invoke();
@@ -434,8 +458,17 @@ public class MapCreator : MonoBehaviour {
 		MapEntry map = (MapEntry)currentMap.value;
 		for (int i = 0; i < map.turnEvents.Count; i++) {
 			TurnEvent pos = map.turnEvents[i];
-			//Debug.Log(pos.ToString());
-			if (currentTurn.value == pos.turn && currentFaction.value == pos.factionTurn && pos.type == TurnEventType.DIALOGUE) {
+			if (currentFaction.value != pos.factionTurn || pos.type != TurnEventType.DIALOGUE)
+				continue;
+
+			bool activate = false;
+			if (pos.triggerType == TriggerType.TURN)
+				activate = (currentTurn.value == pos.turn);
+			else if (pos.triggerType == TriggerType.TRIGGER) {
+				activate = battleMap.triggerList.IsTriggered(pos.triggerIndex);
+			}
+
+			if (activate) {
 				currentDialogue.value = pos.dialogue;
 				currentDialogueMode.value = (int)DialogueMode.EVENT;
 				startDialogueEvent.Invoke();
