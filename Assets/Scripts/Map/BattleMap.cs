@@ -7,6 +7,9 @@ public class BattleMap : MonoBehaviour {
 
 	[Header("Map state")]
 	public TriggerListVariable triggerList;
+	public EventFlags<TurnEvent> dialogueEvents = new EventFlags<TurnEvent>();
+	public EventFlags<ReinforcementPosition> reinforcementEvents = new EventFlags<ReinforcementPosition>();
+	public EventFlags<TurnEvent> otherEvents = new EventFlags<TurnEvent>();
 
 	[Header("Characters")]
 	public Transform playerParent;
@@ -20,13 +23,24 @@ public class BattleMap : MonoBehaviour {
 	private int _sizeX;
 	private int _sizeY;
 
-	
+
 	public void SetupMap(MapEntry map) {
 		_sizeX = map.sizeX;
 		_sizeY = map.sizeY;
 		triggerList.values.Clear();
 		for (int i = 0; i < map.triggerIds.Count; i++) {
 			triggerList.values.Add(new TriggerTuple(map.triggerIds[i].id));
+		}
+		for (int i = 0; i < map.turnEvents.Count; i++) {
+			if (map.turnEvents[i].type == TurnEventType.DIALOGUE) {
+				dialogueEvents.AddFlag(map.turnEvents[i]);
+			}
+			else {
+				otherEvents.AddFlag(map.turnEvents[i]);
+			}
+		}
+		for (int i = 0; i < map.reinforcements.Count; i++) {
+			reinforcementEvents.AddFlag(map.reinforcements[i]);
 		}
 	}
 
@@ -63,7 +77,7 @@ public class BattleMap : MonoBehaviour {
 			tiles[i].pathable = false;
 		}
 	}
-	
+
 	public void ClearDangerous() {
 		for (int i = 0; i < tiles.Length; i++) {
 			tiles[i].dangerous = false;
@@ -156,11 +170,11 @@ public class BattleMap : MonoBehaviour {
 			}
 		}
 	}
-	
+
 	public void ShowSupportTiles(MapTile startTile, WeaponRange range, Faction faction, bool isDanger, bool isBuff) {
 		if (isDanger)
 			return;
-		
+
 		for (int i = 0; i < tiles.Length; i++) {
 			int tempDist = DistanceTo(startTile, tiles[i]);
 			if (!range.InRange(tempDist))
@@ -169,7 +183,7 @@ public class BattleMap : MonoBehaviour {
 			if (tiles[i].IsEmpty()) {
 				tiles[i].supportable = true;
 			}
-			else if(tiles[i].currentCharacter.faction == faction) {
+			else if (tiles[i].currentCharacter.faction == faction) {
 				if (isBuff || tiles[i].currentCharacter.IsInjured())
 					tiles[i].supportable = true;
 			}

@@ -194,9 +194,9 @@ public class MapCreator : MonoBehaviour {
 		int triggerCount = 0;
 		for (int i = 0; i < map.triggerAreas.Count; i++) {
 			TriggerArea area = map.triggerAreas[i];
-			for (int x = area.xMin; x < area.xMax +1; x++) {
+			for (int x = area.xMin; x < area.xMax + 1; x++) {
 				for (int y = area.yMin; y < area.yMax + 1; y++) {
-					battleMap.GetTile(x,y).AddTrigger(area);
+					battleMap.GetTile(x, y).AddTrigger(area);
 					triggerCount++;
 				}
 			}
@@ -275,7 +275,7 @@ public class MapCreator : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Takes the map information and spawns all the enemy characters on their given positions.
+	/// Takes the map information and spawns all the ally characters on their given positions.
 	/// </summary>
 	private void SpawnAllies() {
 		MapEntry map = (MapEntry)currentMap.value;
@@ -403,12 +403,14 @@ public class MapCreator : MonoBehaviour {
 	/// </summary>
 	/// <returns></returns>
 	private IEnumerator SpawnReinforcementsLoop() {
-		MapEntry map = (MapEntry)currentMap.value;
-		for (int i = 0; i < map.reinforcements.Count; i++) {
-			ReinforcementPosition pos = map.reinforcements[i];
+		for (int i = 0; i < battleMap.reinforcementEvents.Count; i++) {
+			ReinforcementPosition pos = battleMap.reinforcementEvents.GetEvent(i);
+			if (battleMap.dialogueEvents.IsActivated(i) || currentFaction.value != pos.faction)
+				continue;
+
 			bool activate = false;
 			if (pos.triggerType == TriggerType.TURN)
-				activate = (currentTurn.value == pos.spawnTurn);
+				activate = (currentTurn.value >= pos.spawnTurn);
 			else if (pos.triggerType == TriggerType.TRIGGER) {
 				activate = battleMap.triggerList.IsTriggered(pos.triggerIndex);
 			}
@@ -419,6 +421,7 @@ public class MapCreator : MonoBehaviour {
 
 			MapTile tile = battleMap.GetTile(pos.x, pos.y);
 			if (tile.currentCharacter == null) {
+				battleMap.reinforcementEvents.Activate(i);
 				StatsContainer stats = new StatsContainer(pos);
 				ClassWheel wheel = (stats.charData.faction == Faction.PLAYER) ? playerClassWheel : enemyClassWheel;
 				InventoryContainer inventory = new InventoryContainer(wheel.GetWpnSkillFromLevel(pos.charData.startClassLevels), pos.inventory);
@@ -454,11 +457,10 @@ public class MapCreator : MonoBehaviour {
 	/// <summary>
 	/// Checks if there are any dialogues that should be shown.
 	/// </summary>
-	public void CheckDialogues() {
-		MapEntry map = (MapEntry)currentMap.value;
-		for (int i = 0; i < map.turnEvents.Count; i++) {
-			TurnEvent pos = map.turnEvents[i];
-			if (currentFaction.value != pos.factionTurn || pos.type != TurnEventType.DIALOGUE)
+	public void CheckDialogueEvents() {
+		for (int i = 0; i < battleMap.dialogueEvents.Count; i++) {
+			TurnEvent pos = battleMap.dialogueEvents.GetEvent(i);
+			if (battleMap.dialogueEvents.IsActivated(i) || currentFaction.value != pos.factionTurn)
 				continue;
 
 			bool activate = false;
@@ -469,25 +471,47 @@ public class MapCreator : MonoBehaviour {
 			}
 
 			if (activate) {
+				battleMap.dialogueEvents.Activate(i);
 				currentDialogue.value = pos.dialogue;
 				currentDialogueMode.value = (int)DialogueMode.EVENT;
 				startDialogueEvent.Invoke();
 				return;
 			}
 		}
+		//If no dialogues were triggered
 		nextTurnStateEvent.Invoke();
 	}
 
 	/// <summary>
 	/// Checks if there are any events that should be triggered.
 	/// </summary>
-	public void CheckMapChange() {
-		MapEntry map = (MapEntry)currentMap.value;
-		for (int i = 0; i < map.turnEvents.Count; i++) {
-			TurnEvent pos = map.turnEvents[i];
-			if (currentTurn.value == pos.turn && currentFaction.value == pos.factionTurn && pos.type == TurnEventType.MAPCHANGE) {
-				MapTile tile = battleMap.GetTile(pos.x, pos.y);
-				tile.SetTerrain(pos.changeTerrain);
+	public void CheckOtherEvents() {
+		for (int i = 0; i < battleMap.otherEvents.Count; i++) {
+			TurnEvent pos = battleMap.otherEvents.GetEvent(i);
+			if (battleMap.dialogueEvents.IsActivated(i) || currentFaction.value != pos.factionTurn)
+				continue;
+
+			bool activate = false;
+			if (pos.triggerType == TriggerType.TURN)
+				activate = (currentTurn.value == pos.turn);
+			else if (pos.triggerType == TriggerType.TRIGGER) {
+				activate = battleMap.triggerList.IsTriggered(pos.triggerIndex);
+			}
+
+			if (activate) {
+				battleMap.dialogueEvents.Activate(i);
+				switch (pos.type) {
+					case TurnEventType.MAPCHANGE:
+						MapTile tile = battleMap.GetTile(pos.x, pos.y);
+						tile.SetTerrain(pos.changeTerrain);
+						break;
+					case TurnEventType.MONEY:
+						Debug.Log("Gained money:  " + pos.value);
+						break;
+					case TurnEventType.SCRAP:
+						Debug.Log("Gained scrap:  " + pos.value);
+						break;
+				}
 			}
 		}
 		nextTurnStateEvent.Invoke();
