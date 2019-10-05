@@ -1218,7 +1218,7 @@ Transform:
   m_GameObject: {fileID: 55131486}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 2.25, y: -0.1, z: 0}
-  m_LocalScale: {x: 10, y: 10, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 1}
   m_Children: []
   m_Father: {fileID: 2025273338}
   m_RootOrder: 4
@@ -1260,15 +1260,15 @@ SpriteRenderer:
   m_SortingLayerID: -1746185377
   m_SortingLayer: 4
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: f291acc4f0a9d9a4f9f66b4fd3bea583, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 63a362145fecf0046b339ecdca328d98, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.64, y: 0.64}
+  m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!198 &55131489
@@ -20790,6 +20790,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   triggerList: {fileID: 11400000, guid: ec868fbd787c3bb4989e90b0111ab59c, type: 2}
+  playerList: {fileID: 11400000, guid: 8943adc57d10eb547a5f30311d9c9f90, type: 2}
+  enemyList: {fileID: 11400000, guid: 267060ebaf58f1a45bfa555220142569, type: 2}
+  allyList: {fileID: 11400000, guid: a9c6a027daa40934dafcf4cd271c0260, type: 2}
   playerParent: {fileID: 1411918532}
   enemyParent: {fileID: 2104238748}
   tileParent: {fileID: 2028001343}
@@ -23887,15 +23890,16 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1541326513}
+  m_Children:
+  - {fileID: 1541326513}
+  m_Father: {fileID: 927390043}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -62.5}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &639388041
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23916,7 +23920,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 4a2ce860b6ebdb34fad68574c05ec0a3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a2b64b09e1bafe74b83e235bedd9041c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -31180,7 +31184,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -210, y: 160}
+  m_AnchoredPosition: {x: -225, y: 215}
   m_SizeDelta: {x: 150, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &873138781
@@ -33022,7 +33026,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1541326513}
+  - {fileID: 639388040}
   - {fileID: 2012185950}
   - {fileID: 67752378}
   - {fileID: 293164095}
@@ -47931,7 +47935,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 220, y: 160}
+  m_AnchoredPosition: {x: 225, y: 215}
   m_SizeDelta: {x: 150, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1451574314
@@ -50217,16 +50221,15 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 639388040}
-  m_Father: {fileID: 927390043}
+  m_Children: []
+  m_Father: {fileID: 639388040}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -62.5}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1541326514
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -53156,7 +53159,7 @@ Transform:
   m_GameObject: {fileID: 1644028713}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -2.25, y: -0.1, z: 0}
-  m_LocalScale: {x: 10, y: 10, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 1}
   m_Children: []
   m_Father: {fileID: 2025273338}
   m_RootOrder: 3
@@ -53198,15 +53201,15 @@ SpriteRenderer:
   m_SortingLayerID: -1746185377
   m_SortingLayer: 4
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: 32b45a3df3ece6c45a4e2a171b5b36e6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6ed86f70d20edb04db55811c7d275b55, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.64, y: 0.64}
+  m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!199 &1644028716
@@ -69644,7 +69647,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2025273337}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7, y: 4.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 496103368}
@@ -71153,7 +71156,6 @@ MonoBehaviour:
   playerData: {fileID: 11400000, guid: cf29fce9ee9388e4290741fe2d10bab5, type: 2}
   playerClassWheel: {fileID: 11400000, guid: d29c1242cf6052c43bfa5c9fb5fdb98b, type: 2}
   enemyClassWheel: {fileID: 11400000, guid: ce101e55e6b99d44da71f2d3c306a316, type: 2}
-  playerList: {fileID: 11400000, guid: 8943adc57d10eb547a5f30311d9c9f90, type: 2}
   prepList1: {fileID: 11400000, guid: 8918db7c8316b2048968883d5e79479a, type: 2}
   prepList2: {fileID: 11400000, guid: df66b25f4fd355241bdd1e0139be1eaf, type: 2}
   battleMap: {fileID: 526369253}
@@ -71355,7 +71357,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2074500936}
-        m_MethodName: CheckDialogues
+        m_MethodName: CheckDialogueEvents
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -71384,7 +71386,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2074500936}
-        m_MethodName: CheckMapChange
+        m_MethodName: CheckOtherEvents
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

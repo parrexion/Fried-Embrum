@@ -27,8 +27,6 @@ public class PortraitEditorWindow : GenericEntryEditorWindow {
 	protected override void DrawContentWindow() {
 		PortraitEntry portraitValues = (PortraitEntry)entryValues;
 
-		portraitValues.entryName = EditorGUILayout.TextField("Name", portraitValues.entryName);
-
 		if(portraitValues.poses.Length < poseLibrary.values.Length) {
 			System.Array.Resize(ref portraitValues.poses, poseLibrary.values.Length);
 		}

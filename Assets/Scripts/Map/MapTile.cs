@@ -163,14 +163,14 @@ public class MapTile : MonoBehaviour {
 		}
 
 		MovementType moveType = info.tactics.stats.currentClass.classType;
-		if (checkTile.GetRoughness(moveType) == -1)
+		if (checkTile.GetRoughness(moveType) == -1 || checkTile.GetRoughness(moveType) > info.oneTurnSpeed)
 			return false;
 		currentDistance += checkTile.GetRoughness(moveType);
 		if (currentDistance >= checkTile.distance)
 			return false;
 
 		checkTile.distance = currentDistance;
-		if (currentDistance > info.moveSpeed)
+		if (currentDistance > info.maxMoveSpeed)
 			return false;
 
 		if (info.isDanger) {

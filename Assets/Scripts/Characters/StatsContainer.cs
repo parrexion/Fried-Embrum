@@ -107,9 +107,10 @@ public class StatsContainer {
 		eSkl = charData.skl + currentClass.skl;
 		eDef = charData.def + currentClass.def;
 
-		for (int i = 1; i < level; i++) {
+		int gainedLevels = level;
+		level = 1;
+		for (int i = 1; i < gainedLevels; i++) {
 			GainLevel();
-			level--;
 		}
 	}
 
@@ -154,14 +155,21 @@ public class StatsContainer {
 
 	public void GainLevel() {
 		level++;
-		int sum = eHp + eDmg + eMnd + eSpd + eSkl + eDef;
-		while (sum == eHp + eDmg + eMnd + eSpd + eSkl + eDef) {
-			eHp += (int)(0.01f * (currentClass.gHp + charData.gHp + Random.Range(0, 100)));
-			eDmg += (int)(0.01f * (currentClass.gDmg + charData.gDmg + Random.Range(0, 100)));
-			eMnd += (int)(0.01f * (currentClass.gMnd + charData.gMnd + Random.Range(0, 100)));
-			eSpd += (int)(0.01f * (currentClass.gSpd + charData.gSpd + Random.Range(0, 100)));
-			eSkl += (int)(0.01f * (currentClass.gSkl + charData.gSkl + Random.Range(0, 100)));
-			eDef += (int)(0.01f * (currentClass.gDef + charData.gDef + Random.Range(0, 100)));
+		int classGrowths = currentClass.gHp + currentClass.gDmg + currentClass.gMnd + currentClass.gSpd + currentClass.gSkl + currentClass.gDef;
+		int charGrowths = charData.gHp + charData.gDmg + charData.gMnd + charData.gSpd + charData.gSkl + charData.gDef;
+		if (charGrowths + classGrowths == 0) {
+			Debug.LogError("Character growths are 0!");
+		}
+		else {
+			int sum = eHp + eDmg + eMnd + eSpd + eSkl + eDef;
+			while (sum == eHp + eDmg + eMnd + eSpd + eSkl + eDef) {
+				eHp += (int)(0.01f * (currentClass.gHp + charData.gHp + Random.Range(0, 100)));
+				eDmg += (int)(0.01f * (currentClass.gDmg + charData.gDmg + Random.Range(0, 100)));
+				eMnd += (int)(0.01f * (currentClass.gMnd + charData.gMnd + Random.Range(0, 100)));
+				eSpd += (int)(0.01f * (currentClass.gSpd + charData.gSpd + Random.Range(0, 100)));
+				eSkl += (int)(0.01f * (currentClass.gSkl + charData.gSkl + Random.Range(0, 100)));
+				eDef += (int)(0.01f * (currentClass.gDef + charData.gDef + Random.Range(0, 100)));
+			}
 		}
 
 		CalculateStats();

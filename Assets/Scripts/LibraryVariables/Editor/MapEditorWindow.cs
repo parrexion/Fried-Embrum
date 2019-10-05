@@ -560,8 +560,27 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 		for (int i = 0; i < mapValues.reinforcements.Count; i++) {
 			ReinforcementPosition pos = mapValues.reinforcements[i];
 			GUILayout.BeginHorizontal();
-			GUILayout.Label("End of turn");
-			pos.spawnTurn = EditorGUILayout.IntField("", pos.spawnTurn);
+			pos.triggerType = (TriggerType)EditorGUILayout.EnumPopup("Trigger Type", pos.triggerType);
+			if (pos.triggerType == TriggerType.TURN) {
+				GUILayout.Label("End of turn");
+				pos.spawnTurn = EditorGUILayout.IntField(pos.spawnTurn);
+			}
+			else if (pos.triggerType == TriggerType.TRIGGER) {
+				GUILayout.Label("Trigger ID:");
+				pos.triggerIndex = EditorGUILayout.Popup(mapValues.triggerAreas[i].idIndex, triggerOptions);
+			}
+			else if (pos.triggerType == TriggerType.PLAYER_COUNT) {
+				GUILayout.Label("At most players:");
+				pos.spawnTurn = EditorGUILayout.IntField(pos.spawnTurn);
+			}
+			else if (pos.triggerType == TriggerType.ALLY_COUNT) {
+				GUILayout.Label("At most allies:");
+				pos.spawnTurn = EditorGUILayout.IntField(pos.spawnTurn);
+			}
+			else if (pos.triggerType == TriggerType.ENEMY_COUNT) {
+				GUILayout.Label("At most enemies:");
+				pos.spawnTurn = EditorGUILayout.IntField(pos.spawnTurn);
+			}
 			if (GUILayout.Button("Dup", GUILayout.Width(50))) {
 				GUI.FocusControl(null);
 				ReinforcementPosition rpos = new ReinforcementPosition();
@@ -760,8 +779,10 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 		GUILayout.Label("Trigger Areas", EditorStyles.boldLabel);
 		EditorGUIUtility.labelWidth = 70;
 		for (int i = 0; i < mapValues.triggerAreas.Count; i++) {
+			EditorGUIUtility.labelWidth = 120;
 			GUILayout.BeginHorizontal();
 			mapValues.triggerAreas[i].idIndex = EditorGUILayout.Popup("Trigger ID", mapValues.triggerAreas[i].idIndex, triggerOptions);
+			mapValues.triggerAreas[i].faction = (Faction)EditorGUILayout.EnumPopup("Trigger Faction", mapValues.triggerAreas[i].faction);
 			if (GUILayout.Button("X", GUILayout.Width(50))) {
 				GUI.FocusControl(null);
 				mapValues.triggerAreas.RemoveAt(i);
@@ -769,6 +790,8 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 				continue;
 			}
 			GUILayout.EndHorizontal();
+
+			EditorGUIUtility.labelWidth = 70;
 			GUILayout.BeginHorizontal();
 			GUILayout.Label("Area width");
 			mapValues.triggerAreas[i].xMin = EditorGUILayout.IntField(mapValues.triggerAreas[i].xMin);
@@ -792,14 +815,24 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 		for (int i = 0; i < mapValues.turnEvents.Count; i++) {
 			TurnEvent pos = mapValues.turnEvents[i];
 			GUILayout.BeginHorizontal();
-			EditorGUIUtility.labelWidth = 70;
+			EditorGUIUtility.labelWidth = 120;
 			pos.triggerType = (TriggerType)EditorGUILayout.EnumPopup("Event Type", pos.triggerType);
 			if (pos.triggerType == TriggerType.TURN) {
-			pos.turn = EditorGUILayout.IntField("Turn", pos.turn);
+				pos.turn = EditorGUILayout.IntField("Turn", pos.turn);
 			}
 			else if (pos.triggerType == TriggerType.TRIGGER) {
 				pos.triggerIndex = EditorGUILayout.Popup("Trigger ID", pos.triggerIndex, triggerOptions);
 			}
+			else if (pos.triggerType == TriggerType.PLAYER_COUNT) {
+				pos.turn = EditorGUILayout.IntField("Players remaining", pos.turn);
+			}
+			else if (pos.triggerType == TriggerType.ALLY_COUNT) {
+				pos.turn = EditorGUILayout.IntField("Allies remaining", pos.turn);
+			}
+			else if (pos.triggerType == TriggerType.ENEMY_COUNT) {
+				pos.turn = EditorGUILayout.IntField("Enemies remaining", pos.turn);
+			}
+			EditorGUIUtility.labelWidth = 70;
 			pos.factionTurn = (Faction)EditorGUILayout.EnumPopup("Faction", pos.factionTurn);
 			if (GUILayout.Button("X", GUILayout.Width(50))) {
 				GUI.FocusControl(null);

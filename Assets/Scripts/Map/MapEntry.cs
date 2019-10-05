@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum TriggerType { TURN, TRIGGER }
+public enum TriggerType { TURN, TRIGGER, PLAYER_COUNT, ALLY_COUNT, ENEMY_COUNT }
 public enum WinCondition { ROUT, CAPTURE, BOSS, ESCAPE, DEFEND }
 public enum LoseCondition { NONE, TIME }
 public enum MapLocation { UNKNOWN = -1, DEBES, GHART, THARSONIS, VILJIA, WALNIA_REX }
@@ -257,7 +257,7 @@ public class EnemyPosition {
 public class ReinforcementPosition {
 	public TriggerType triggerType;
 	public int spawnTurn;
-	public string triggerIndex;
+	public int triggerIndex;
 	public Faction faction;
 	public int x;
 	public int y;

@@ -261,15 +261,15 @@ public class TurnController : MonoBehaviour {
 
 		switch (currentFactionTurn.value) {
 			case Faction.PLAYER:
-				if (!playerList.IsAnyoneAlive())
+				if (playerList.AliveCount() == 0)
 					ChangeFaction();
 				break;
 			case Faction.ENEMY:
-				if (!enemyList.IsAnyoneAlive())
+				if (enemyList.AliveCount() == 0)
 					ChangeFaction();
 				break;
 			case Faction.ALLY:
-				if (!allyList.IsAnyoneAlive())
+				if (allyList.AliveCount() == 0)
 					ChangeFaction();
 				break;
 		}
@@ -366,10 +366,11 @@ public class TurnController : MonoBehaviour {
 			}
 		}
 		else if (map.winCondition == WinCondition.BOSS) {
+			gameFinished = false;
 			for (int i = 0; i < enemyList.values.Count; i++) {
 				NPCMove enemy = (NPCMove)enemyList.values[i];
-				if (enemy.aggroType == AggroType.BOSS && enemyList.values[i].IsAlive()) {
-					gameFinished = false;
+				if (enemy.aggroType == AggroType.BOSS && !enemyList.values[i].IsAlive()) {
+					gameFinished = true;
 					break;
 				}
 			}

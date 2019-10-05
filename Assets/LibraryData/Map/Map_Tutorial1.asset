@@ -16,28 +16,213 @@ MonoBehaviour:
   entryName: Tutorial1
   repColor: {r: 1, g: 1, b: 1, a: 1}
   tag: 
-  sizeX: 0
-  sizeY: 0
-  mapSprite: {fileID: 0}
-  winCondition: 0
+  sizeX: 15
+  sizeY: 10
+  mapSprite: {fileID: 2800000, guid: 2a78cafc91063294ba2f146792030459, type: 3}
+  winCondition: 2
   loseCondition: 0
-  mapDescription: 
+  mapDescription: It's time to freshen up on those combat skills!
   turnLimit: 0
-  skipBattlePrep: 0
-  preDialogue: {fileID: 0}
+  skipBattlePrep: 1
+  preDialogue: {fileID: 11400000, guid: e1a8b41f2192d184abc1465d40f90808, type: 2}
   introDialogue: {fileID: 0}
-  endDialogue: {fileID: 0}
+  endDialogue: {fileID: 11400000, guid: 17c87274a3708ec468ba4521166e8fb6, type: 2}
   mapMusic: {fileID: 11400000, guid: 97522e631b7f7cc4db34ccdc540de903, type: 2}
   spawnPoints1:
-  - x: 0
-    y: 0
-  spawnPoints2:
   - x: 2
-    y: 0
+    y: 7
+  spawnPoints2: []
   forcedCharacters: []
   lockedCharacters: []
-  enemies: []
-  allies: []
-  reinforcements: []
+  enemies:
+  - triggerType: 0
+    spawnTurn: 0
+    triggerIndex: 0
+    faction: 0
+    x: 9
+    y: 2
+    level: 1
+    charData: {fileID: 11400000, guid: ca3448dad0f8d3b458a1fb1c5b1d25ac, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 61b5282282d02b544a200d088100d5e3, type: 2}
+      droppable: 0
+    joiningSquad: 0
+    aggroType: 2
+    hasQuotes: 0
+    quotes: []
+    talks: []
+    huntX: 0
+    huntY: 0
+    patrolPositions: []
+  - triggerType: 0
+    spawnTurn: 0
+    triggerIndex: 0
+    faction: 0
+    x: 12
+    y: 2
+    level: 1
+    charData: {fileID: 11400000, guid: ca3448dad0f8d3b458a1fb1c5b1d25ac, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 61b5282282d02b544a200d088100d5e3, type: 2}
+      droppable: 0
+    joiningSquad: 0
+    aggroType: 2
+    hasQuotes: 0
+    quotes: []
+    talks: []
+    huntX: 0
+    huntY: 0
+    patrolPositions: []
+  - triggerType: 0
+    spawnTurn: 0
+    triggerIndex: 0
+    faction: 0
+    x: 2
+    y: 3
+    level: 3
+    charData: {fileID: 11400000, guid: 63b815294dddc154abddd577eda0d8c6, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: 61b5282282d02b544a200d088100d5e3, type: 2}
+      droppable: 0
+    joiningSquad: 0
+    aggroType: 3
+    hasQuotes: 1
+    quotes:
+    - triggerer: {fileID: 0}
+      quote: {fileID: 11400000, guid: 6fd9b7bf5179c41489328185c5ffe19f, type: 2}
+      willJoin: 0
+      activated: 0
+    talks: []
+    huntX: 0
+    huntY: 0
+    patrolPositions: []
+  allies:
+  - triggerType: 0
+    spawnTurn: 0
+    triggerIndex: 0
+    faction: 0
+    x: 11
+    y: 7
+    level: 1
+    charData: {fileID: 11400000, guid: ebe64c7e451dc494fbc8211be6f10d6a, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: a2de7015579e1f14ab703abbdd88c510, type: 2}
+      droppable: 0
+    - item: {fileID: 11400000, guid: 2c6481630a321de4f97f98e24d095e8e, type: 2}
+      droppable: 0
+    joiningSquad: 0
+    aggroType: 2
+    hasQuotes: 1
+    quotes: []
+    talks:
+    - triggerer: {fileID: 11400000, guid: cf951a3da37e1794b9cd29749c715911, type: 2}
+      quote: {fileID: 11400000, guid: 5dbae482eab9a58409942de90b60fe11, type: 2}
+      willJoin: 1
+      activated: 0
+    huntX: 0
+    huntY: 0
+    patrolPositions: []
+  reinforcements:
+  - triggerType: 2
+    spawnTurn: 0
+    triggerIndex: 0
+    faction: 0
+    x: 2
+    y: 7
+    level: 1
+    charData: {fileID: 11400000, guid: cf951a3da37e1794b9cd29749c715911, type: 2}
+    inventory:
+    - item: {fileID: 11400000, guid: a2de7015579e1f14ab703abbdd88c510, type: 2}
+      droppable: 0
+    - item: {fileID: 11400000, guid: 2c6481630a321de4f97f98e24d095e8e, type: 2}
+      droppable: 0
+    joiningSquad: 1
+    aggroType: 0
+    hasQuotes: 0
+    quotes: []
+    talks: []
+    huntX: 0
+    huntY: 0
+    patrolPositions: []
   interactions: []
-  turnEvents: []
+  triggerIds:
+  - id: FirstDoor
+    triggered: 0
+  triggerAreas:
+  - idIndex: 0
+    faction: 0
+    xMin: 6
+    xMax: 7
+    yMin: 6
+    yMax: 7
+  turnEvents:
+  - triggerType: 1
+    turn: 0
+    triggerIndex: 0
+    factionTurn: 2
+    type: 2
+    dialogue: {fileID: 0}
+    x: 7
+    y: 7
+    changeTerrain: {fileID: 11400000, guid: 7a99b14a36a199b4eae9c4cbac2286c6, type: 2}
+    value: 0
+  - triggerType: 1
+    turn: 0
+    triggerIndex: 0
+    factionTurn: 2
+    type: 1
+    dialogue: {fileID: 11400000, guid: 323e291386095a54d97d47f453de22fa, type: 2}
+    x: 0
+    y: 0
+    changeTerrain: {fileID: 0}
+    value: 0
+  - triggerType: 3
+    turn: 0
+    triggerIndex: 0
+    factionTurn: 1
+    type: 2
+    dialogue: {fileID: 0}
+    x: 10
+    y: 4
+    changeTerrain: {fileID: 11400000, guid: 7a99b14a36a199b4eae9c4cbac2286c6, type: 2}
+    value: 0
+  - triggerType: 3
+    turn: 0
+    triggerIndex: 0
+    factionTurn: 1
+    type: 2
+    dialogue: {fileID: 11400000, guid: 51f9d4ee8dc6d9c4182876ad85b868a5, type: 2}
+    x: 11
+    y: 4
+    changeTerrain: {fileID: 11400000, guid: 7a99b14a36a199b4eae9c4cbac2286c6, type: 2}
+    value: 0
+  - triggerType: 3
+    turn: 0
+    triggerIndex: 0
+    factionTurn: 1
+    type: 1
+    dialogue: {fileID: 11400000, guid: 51f9d4ee8dc6d9c4182876ad85b868a5, type: 2}
+    x: 0
+    y: 0
+    changeTerrain: {fileID: 0}
+    value: 0
+  - triggerType: 4
+    turn: 1
+    triggerIndex: 0
+    factionTurn: 1
+    type: 2
+    dialogue: {fileID: 0}
+    x: 6
+    y: 2
+    changeTerrain: {fileID: 11400000, guid: 7a99b14a36a199b4eae9c4cbac2286c6, type: 2}
+    value: 0
+  - triggerType: 4
+    turn: 1
+    triggerIndex: 0
+    factionTurn: 1
+    type: 1
+    dialogue: {fileID: 11400000, guid: e8a770b29431ed8428aaa37c3b28ae6d, type: 2}
+    x: 0
+    y: 0
+    changeTerrain: {fileID: 0}
+    value: 0

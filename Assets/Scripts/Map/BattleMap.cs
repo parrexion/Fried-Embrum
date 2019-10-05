@@ -12,6 +12,9 @@ public class BattleMap : MonoBehaviour {
 	public EventFlags<TurnEvent> otherEvents = new EventFlags<TurnEvent>();
 
 	[Header("Characters")]
+	public CharacterListVariable playerList;
+	public CharacterListVariable enemyList;
+	public CharacterListVariable allyList;
 	public Transform playerParent;
 	public Transform enemyParent;
 	public Transform tileParent;

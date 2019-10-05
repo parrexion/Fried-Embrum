@@ -10,11 +10,12 @@ public class CharacterListVariable : ScriptableObject {
 	public List<TacticsMove> values = new List<TacticsMove>();
 
 
-	public bool IsAnyoneAlive() {
+	public int AliveCount() {
+		int alive = 0;
 		for (int i = 0; i < values.Count; i++) {
 			if (values[i].IsAlive())
-				return true;
+				alive++;
 		}
-		return false;
+		return alive;
 	}
 }

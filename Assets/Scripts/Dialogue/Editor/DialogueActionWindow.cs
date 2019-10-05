@@ -379,7 +379,7 @@ public class DialogueActionWindow: EditorWindow {
 				else {
 					GUILayout.BeginHorizontal();
 					GUILayout.FlexibleSpace();
-					GUILayout.Label(((PortraitEntry)hub.dialogueValues.actions[hub.selAction].entries[j]).poses[hub.dialogueValues.actions[hub.selAction].values[j]].texture);
+					GUILayout.Label(((PortraitEntry)hub.dialogueValues.actions[hub.selAction].entries[j]).poses[hub.dialogueValues.actions[hub.selAction].values[j]].texture, GUILayout.Width(80), GUILayout.Height(80));
 					GUILayout.FlexibleSpace();
 					GUILayout.EndHorizontal();
 				}

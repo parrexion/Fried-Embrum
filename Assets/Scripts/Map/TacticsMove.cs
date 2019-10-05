@@ -174,7 +174,8 @@ public abstract class TacticsMove : MonoBehaviour {
 
 		SearchInfo info = new SearchInfo() {
 			tactics = this,
-			moveSpeed = GetMoveSpeed(),
+			maxMoveSpeed = GetMoveSpeed(),
+			oneTurnSpeed = GetMoveSpeed(),
 
 			wpnRange = inventory.GetReach(ItemCategory.WEAPON),
 			staff = inventory.GetReach(ItemCategory.SUPPORT),

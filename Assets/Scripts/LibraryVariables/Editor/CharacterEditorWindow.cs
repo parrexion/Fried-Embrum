@@ -20,8 +20,7 @@ public class CharacterEditorWindow : GenericEntryEditorWindow {
 	protected override void DrawContentWindow() {
 		CharData charValues = (CharData)entryValues;
 		GUILayout.BeginHorizontal();
-		charValues.repColor = EditorGUILayout.ColorField("List color", charValues.repColor);
-		charValues.faction = (Faction)EditorGUILayout.EnumPopup("Class faction", charValues.faction);
+		charValues.faction = (Faction)EditorGUILayout.EnumPopup("Character class faction", charValues.faction);
 		GUILayout.EndHorizontal();
 
 		GUILayout.Space(10);

@@ -67,9 +67,9 @@ public class DialogueHub {
 		currentState.backgroundChanged.Invoke();
 		currentState.bkgMusicChanged.Invoke();
 		currentState.characterChanged.Invoke();
-		Debug.Log("TEXT:  " + currentState.dialogueText.value);
+		//Debug.Log("TEXT:  " + currentState.dialogueText.value);
 
-		Debug.Log("Updated to current state");
+		//Debug.Log("Updated to current state");
 	}
 
 	public void UpdateRealScene() {

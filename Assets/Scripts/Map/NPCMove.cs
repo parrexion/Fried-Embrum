@@ -7,7 +7,8 @@ public enum AggroType { WAIT, CHARGE, GUARD, BOSS, HUNT, PATROL, ESCAPE }
 
 public class SearchInfo {
 	public TacticsMove tactics;
-	public int moveSpeed;
+	public int maxMoveSpeed;
+	public int oneTurnSpeed;
 
 	public WeaponRange wpnRange;
 	public WeaponRange staff;
@@ -127,6 +128,11 @@ public class NPCMove : TacticsMove {
 		// Generate map links
 		GenerateHitTiles(weapons);
 
+		if (aggroType == AggroType.HUNT && huntTile.interacted) {
+			aggroType = AggroType.CHARGE;
+			Debug.Log("CHARGE!");
+		}
+
 		// Skip move if guarding type of enemy
 		if (aggroType == AggroType.GUARD || aggroType == AggroType.BOSS) {
 			if (currentTile.attackable) {
@@ -150,9 +156,6 @@ public class NPCMove : TacticsMove {
 		int moveSpeed = GetMoveSpeed();
 		MapTile bestTile = null; // Reachable this turn
 		MapTile goodTile = null; // Reachable in multiple turns
-
-		if (aggroType == AggroType.HUNT && huntTile.interacted)
-			aggroType = AggroType.CHARGE;
 
 		//Hunting or Escaping AI
 		if (aggroType == AggroType.HUNT || aggroType == AggroType.ESCAPE) {
@@ -308,7 +311,8 @@ public class NPCMove : TacticsMove {
 
 		SearchInfo info = new SearchInfo() {
 			tactics = this,
-			moveSpeed = 1000,
+			maxMoveSpeed = 1000,
+			oneTurnSpeed = GetMoveSpeed(),
 
 			wpnRange = inventory.GetReach(ItemCategory.WEAPON),
 			staff = inventory.GetReach(ItemCategory.SUPPORT),
