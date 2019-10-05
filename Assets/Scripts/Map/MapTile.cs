@@ -67,8 +67,8 @@ public class MapTile : MonoBehaviour {
 		Debug.Log("Pos - x: " + posx + " , posy: " + posy);
 	}
 
-	public bool IsEmpty() {
-		return (currentCharacter == null);
+	public bool IsEmpty(TacticsMove me = null) {
+		return (currentCharacter == null || currentCharacter == me);
 	}
 
 	private void SetHighlightColor() {

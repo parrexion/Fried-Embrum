@@ -225,7 +225,7 @@ public class NPCMove : TacticsMove {
 		else {
 			//The finds the tile which takes the character towards the good tile
 			if (goodTile != null) {
-				while (goodTile.distance > moveSpeed || !goodTile.IsEmpty()) {
+				while (goodTile.distance > moveSpeed || !goodTile.IsEmpty(this)) {
 					goodTile = goodTile.parent;
 				}
 				goodTile.current = true;
