@@ -23,7 +23,6 @@ public class MusicEditorWindow : GenericEntryEditorWindow {
 	protected override void DrawContentWindow() {
 		MusicEntry musicValues = (MusicEntry)entryValues;
 
-		musicValues.entryName = EditorGUILayout.TextField("Name", musicValues.entryName);
 		musicValues.clip = (AudioClip)EditorGUILayout.ObjectField("Audio Clip", musicValues.clip, typeof(AudioClip), false);
 	}
 
