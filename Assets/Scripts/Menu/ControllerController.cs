@@ -5,9 +5,8 @@ using UnityEngine.Events;
 
 public class ControllerController : InputReceiverDelegate {
 
-	public static bool shownControls = false;
-
 	public GameObject view;
+	public BoolVariable controlsSet;
 	public IntVariable selectedScheme;
 	public GameObject[] schemes;
 
@@ -23,11 +22,10 @@ public class ControllerController : InputReceiverDelegate {
 		while (InputDelegateController.instance == null) {
 			yield return null;
 		}
-		if (shownControls) {
+		if (controlsSet.value) {
 			MenuChangeDelay(MenuMode.MAIN_MENU);
 		}
 		else {
-			shownControls = true;
 			MenuChangeDelay(MenuMode.PRE_CONTROLLER);
 		}
 	}
@@ -63,6 +61,7 @@ public class ControllerController : InputReceiverDelegate {
 	}
 
 	public override void OnOkButton() {
+		controlsSet.value = true;
 		selectedScheme.value = currentSchema;
 		saveGameEvent.Invoke();
 		menuAcceptEvent.Invoke();

@@ -24,9 +24,9 @@ MonoBehaviour:
   mapDescription: With the gate open, all that's left is to clear the area of enemies.
   turnLimit: 1
   skipBattlePrep: 0
-  preDialogue: {fileID: 11400000, guid: 2e105bfd1c347be439182f2946ef6b0a, type: 2}
+  preDialogue: {fileID: 11400000, guid: 96027102318cb484fa087ce259ee75cb, type: 2}
   introDialogue: {fileID: 11400000, guid: 18b5c4917dffeb54eb14ab6856f569cd, type: 2}
-  endDialogue: {fileID: 11400000, guid: 96027102318cb484fa087ce259ee75cb, type: 2}
+  endDialogue: {fileID: 11400000, guid: 2e105bfd1c347be439182f2946ef6b0a, type: 2}
   mapMusic: {fileID: 11400000, guid: 97522e631b7f7cc4db34ccdc540de903, type: 2}
   spawnPoints1: []
   spawnPoints2:
@@ -43,7 +43,9 @@ MonoBehaviour:
   forcedCharacters: []
   lockedCharacters: []
   enemies:
-  - spawnTurn: 0
+  - triggerType: 0
+    spawnTurn: 0
+    triggerIndex: 0
     faction: 0
     x: 7
     y: 7
@@ -60,7 +62,9 @@ MonoBehaviour:
     huntX: 0
     huntY: 0
     patrolPositions: []
-  - spawnTurn: 0
+  - triggerType: 0
+    spawnTurn: 0
+    triggerIndex: 0
     faction: 0
     x: 1
     y: 1
@@ -77,7 +81,9 @@ MonoBehaviour:
     huntX: 0
     huntY: 0
     patrolPositions: []
-  - spawnTurn: 0
+  - triggerType: 0
+    spawnTurn: 0
+    triggerIndex: 0
     faction: 0
     x: 13
     y: 1
@@ -94,7 +100,9 @@ MonoBehaviour:
     huntX: 0
     huntY: 0
     patrolPositions: []
-  - spawnTurn: 0
+  - triggerType: 0
+    spawnTurn: 0
+    triggerIndex: 0
     faction: 0
     x: 2
     y: 5
@@ -111,7 +119,9 @@ MonoBehaviour:
     huntX: 0
     huntY: 0
     patrolPositions: []
-  - spawnTurn: 0
+  - triggerType: 0
+    spawnTurn: 0
+    triggerIndex: 0
     faction: 0
     x: 4
     y: 9
@@ -128,7 +138,9 @@ MonoBehaviour:
     huntX: 0
     huntY: 0
     patrolPositions: []
-  - spawnTurn: 0
+  - triggerType: 0
+    spawnTurn: 0
+    triggerIndex: 0
     faction: 0
     x: 9
     y: 2
@@ -145,7 +157,9 @@ MonoBehaviour:
     huntX: 0
     huntY: 0
     patrolPositions: []
-  - spawnTurn: 0
+  - triggerType: 0
+    spawnTurn: 0
+    triggerIndex: 0
     faction: 0
     x: 12
     y: 7
@@ -164,7 +178,9 @@ MonoBehaviour:
     patrolPositions: []
   allies: []
   reinforcements:
-  - spawnTurn: 5
+  - triggerType: 0
+    spawnTurn: 5
+    triggerIndex: 0
     faction: 1
     x: 3
     y: 8
@@ -181,7 +197,9 @@ MonoBehaviour:
     huntX: 0
     huntY: 0
     patrolPositions: []
-  - spawnTurn: 5
+  - triggerType: 0
+    spawnTurn: 5
+    triggerIndex: 0
     faction: 1
     x: 11
     y: 8
@@ -198,7 +216,9 @@ MonoBehaviour:
     huntX: 0
     huntY: 0
     patrolPositions: []
-  - spawnTurn: 6
+  - triggerType: 0
+    spawnTurn: 6
+    triggerIndex: 0
     faction: 1
     x: 1
     y: 1
@@ -215,7 +235,9 @@ MonoBehaviour:
     huntX: 0
     huntY: 0
     patrolPositions: []
-  - spawnTurn: 6
+  - triggerType: 0
+    spawnTurn: 6
+    triggerIndex: 0
     faction: 1
     x: 13
     y: 1
@@ -233,4 +255,6 @@ MonoBehaviour:
     huntY: 0
     patrolPositions: []
   interactions: []
+  triggerIds: []
+  triggerAreas: []
   turnEvents: []

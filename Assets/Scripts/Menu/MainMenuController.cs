@@ -10,6 +10,7 @@ public class MainMenuController : InputReceiverDelegate {
 	public SaveFileController saveFileController;
 	public OptionsController optionsController;
 	public BoolVariable lockControls;
+	public BoolVariable controlsSet;
 
 	[Header("Views")]
 	public GameObject startMenuView;
@@ -98,7 +99,7 @@ public class MainMenuController : InputReceiverDelegate {
 	}
 
 	private void ControlsClicked() {
-		ControllerController.shownControls = false;
+		controlsSet.value = false;
 		MenuChangeDelay(MenuMode.PRE_CONTROLLER);
 	}
 

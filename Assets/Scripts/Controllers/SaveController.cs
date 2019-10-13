@@ -55,6 +55,8 @@ public class SaveController : MonoBehaviour {
 	public ScrObjLibraryVariable upgradeLibrary;
 
 	[Header("Options")]
+	public BoolVariable controlsSet;
+	public IntVariable controlScheme;
 	public IntVariable musicVolume;
 	public IntVariable sfxVolume;
 	public IntVariable gameSpeed;
@@ -62,7 +64,6 @@ public class SaveController : MonoBehaviour {
 	public BoolVariable trueHit;
 	public BoolVariable autoEnd;
 	public BoolVariable autoSelectCharacter;
-	public IntVariable controlScheme;
 
 	public UnityEvent preLoadFinishedEvent;
 	public UnityEvent loadFinishedEvent;
@@ -104,6 +105,7 @@ public class SaveController : MonoBehaviour {
 		saveFileData.options.musicVolume = musicVolume.value;
 		saveFileData.options.sfxVolume = sfxVolume.value;
 		saveFileData.options.gameSpeed = gameSpeed.value;
+		saveFileData.options.controlsSet = controlsSet.value;
 		saveFileData.options.controlScheme = controlScheme.value;
 		saveFileData.options.useAnimations = useAnimations.value;
 		saveFileData.options.trueHit = trueHit.value;
@@ -206,6 +208,7 @@ public class SaveController : MonoBehaviour {
 		musicVolume.value = saveFileData.options.musicVolume;
 		sfxVolume.value = saveFileData.options.sfxVolume;
 		gameSpeed.value = saveFileData.options.gameSpeed;
+		controlsSet.value = saveFileData.options.controlsSet;
 		controlScheme.value = saveFileData.options.controlScheme;
 		useAnimations.value = saveFileData.options.useAnimations;
 		trueHit.value = saveFileData.options.trueHit;
@@ -300,6 +303,7 @@ public class OptionPackage {
 	public int musicVolume = 30;
 	public int sfxVolume = 10;
 	public int gameSpeed = 5;
+	public bool controlsSet = false;
 	public int controlScheme = 0;
 	public bool useAnimations = true;
 	public bool trueHit = true;

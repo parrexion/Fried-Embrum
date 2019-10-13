@@ -2419,7 +2419,18 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   menuBackEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: cab1943f7a7b8a646900e198e8df09c8, type: 2}
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   menuMoveEvent:
@@ -2440,10 +2451,22 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   menuFailEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 5b882ed488044f74d92c3818ac29c97b, type: 2}
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   view: {fileID: 679709480}
+  controlsSet: {fileID: 11400000, guid: f32a77d7362f38342b0a5479e9b237e0, type: 2}
   selectedScheme: {fileID: 11400000, guid: 2c8531c8c55d0f046b648769e6668031, type: 2}
   schemes:
   - {fileID: 654552738}
@@ -3707,15 +3730,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: LoadGame Canvas
       objectReference: {fileID: 0}
-    - target: {fileID: 1708912850470516, guid: 54b7ce48319d74544940f54420359663, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114459560469236114, guid: 54b7ce48319d74544940f54420359663,
-        type: 3}
-      propertyPath: usedForLoad
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 224740703705661992, guid: 54b7ce48319d74544940f54420359663,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3844,6 +3858,15 @@ PrefabInstance:
     - target: {fileID: 224989744490679686, guid: 54b7ce48319d74544940f54420359663,
         type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114459560469236114, guid: 54b7ce48319d74544940f54420359663,
+        type: 3}
+      propertyPath: usedForLoad
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1708912850470516, guid: 54b7ce48319d74544940f54420359663, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -4381,6 +4404,7 @@ MonoBehaviour:
   saveFileController: {fileID: 851388646}
   optionsController: {fileID: 1405510729}
   lockControls: {fileID: 11400000, guid: b8d06aee0ad3bce4daa463a8433439f4, type: 2}
+  controlsSet: {fileID: 11400000, guid: f32a77d7362f38342b0a5479e9b237e0, type: 2}
   startMenuView: {fileID: 264288710}
   saveView: {fileID: 160850941}
   changelogView: {fileID: 891839871}
