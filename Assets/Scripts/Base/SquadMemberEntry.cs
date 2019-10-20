@@ -21,7 +21,7 @@ public class SquadMemberEntry : ListEntry {
 	/// </summary>
 	/// <param name="statsCon"></param>
 	public void FillData(StatsContainer stats, int dataIndex) {
-		icon.sprite = stats.charData.portrait;
+		icon.sprite = stats.charData.portraitSet.small;
 		entryName.text = stats.charData.entryName;
 		level.text = stats.level.ToString();
 		index = dataIndex;

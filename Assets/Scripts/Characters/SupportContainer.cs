@@ -24,7 +24,7 @@ public class SupportContainer {
 		}
 	}
 	
-	public SupportValue GetSupportValue(CharData other) {
+	public SupportValue GetSupportValue(CharEntry other) {
 		for (int i = 0; i < supportValues.Count; i++) {
 			if (supportValues[i].uuid == other.uuid)
 				return supportValues[i];

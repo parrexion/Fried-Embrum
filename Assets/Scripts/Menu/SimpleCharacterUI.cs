@@ -155,7 +155,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 
 		characterName.text = stats.charData.entryName;
 		portrait.enabled = true;
-		portrait.sprite = stats.charData.portrait;
+		portrait.sprite = stats.charData.portraitSet.small;
 		levelClass.text = string.Format("Level {0}  {1}", stats.level, stats.currentClass.entryName);
 		healthBar.SetAmount(tactics.currentHealth, tactics.stats.hp);
 		expBar.SetAmount(tactics.stats.currentExp, 100);
@@ -307,7 +307,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 			StatsContainer stats = tile.blockMove.stats;
 			characterName.text = stats.charData.entryName;
 			portrait.enabled = true;
-			portrait.sprite = stats.charData.portrait;
+			portrait.sprite = stats.charData.portraitSet.small;
 			healthBar.SetAmount(tile.blockMove.currentHealth, stats.hp);
 		}
 		else if (tile.interactType == InteractType.VILLAGE) {

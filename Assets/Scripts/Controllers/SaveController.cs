@@ -272,8 +272,8 @@ public class SaveController : MonoBehaviour {
 			playerData.upgrader.upgrades.Add(new UpgradeItem(upgrade, loadedData.upgrade[i].researched));
 		}
 		for (int i = 0; i < loadedData.characters.Count; i++) {
-			CharData cStats = (CharData)characterLibrary.GetEntry(loadedData.characters[i].id);
-			CharClass cClass = (CharClass)classLibrary.GetEntry(loadedData.characters[i].currentClass);
+			CharEntry cStats = (CharEntry)characterLibrary.GetEntry(loadedData.characters[i].id);
+			ClassEntry cClass = (ClassEntry)classLibrary.GetEntry(loadedData.characters[i].currentClass);
 			playerData.stats.Add(new StatsContainer(loadedData.characters[i], cStats, cClass));
 			playerData.inventory.Add(new InventoryContainer(itemLibrary, loadedData.characters[i], playerData.upgrader));
 			playerData.skills.Add(new SkillsContainer(skillLibrary, loadedData.characters[i]));

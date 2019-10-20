@@ -33,8 +33,8 @@ public class MapEntry : ScrObjLibraryEntry {
 	[Header("Players")]
 	public List<Position> spawnPoints1 = new List<Position>();
 	public List<Position> spawnPoints2 = new List<Position>();
-	public List<CharData> forcedCharacters = new List<CharData>();
-	public List<CharData> lockedCharacters = new List<CharData>();
+	public List<CharEntry> forcedCharacters = new List<CharEntry>();
+	public List<CharEntry> lockedCharacters = new List<CharEntry>();
 	
 	[Header("Other characters")]
 	public List<ReinforcementPosition> enemies = new List<ReinforcementPosition>();
@@ -71,8 +71,8 @@ public class MapEntry : ScrObjLibraryEntry {
 
 		spawnPoints1 = new List<Position>();
 		spawnPoints2 = new List<Position>();
-		forcedCharacters = new List<CharData>();
-		lockedCharacters = new List<CharData>();
+		forcedCharacters = new List<CharEntry>();
+		lockedCharacters = new List<CharEntry>();
 
 		enemies = new List<ReinforcementPosition>();
 		allies = new List<ReinforcementPosition>();
@@ -114,11 +114,11 @@ public class MapEntry : ScrObjLibraryEntry {
 		for (int i = 0; i < map.spawnPoints2.Count; i++) {
 			spawnPoints2.Add(map.spawnPoints2[i]);
 		}
-		forcedCharacters = new List<CharData>();
+		forcedCharacters = new List<CharEntry>();
 		for (int i = 0; i < map.forcedCharacters.Count; i++) {
 			forcedCharacters.Add(map.forcedCharacters[i]);
 		}
-		lockedCharacters = new List<CharData>();
+		lockedCharacters = new List<CharEntry>();
 		for (int i = 0; i < map.lockedCharacters.Count; i++) {
 			lockedCharacters.Add(map.lockedCharacters[i]);
 		}
@@ -160,7 +160,7 @@ public class MapEntry : ScrObjLibraryEntry {
 	/// </summary>
 	/// <param name="data"></param>
 	/// <returns></returns>
-	public bool IsForced(CharData data) {
+	public bool IsForced(CharEntry data) {
 		for (int i = 0; i < forcedCharacters.Count; i++) {
 			if (forcedCharacters[i].entryName == data.entryName)
 				return true;
@@ -173,7 +173,7 @@ public class MapEntry : ScrObjLibraryEntry {
 	/// </summary>
 	/// <param name="data"></param>
 	/// <returns></returns>
-	public bool IsLocked(CharData data) {
+	public bool IsLocked(CharEntry data) {
 		for (int i = 0; i < lockedCharacters.Count; i++) {
 			if (lockedCharacters[i].entryName == data.entryName)
 				return true;
@@ -193,7 +193,7 @@ public class PlayerPosition {
 	public int x;
 	public int y;
 	public int level = 1;
-	public CharData charData;
+	public CharEntry charData;
 	public List<WeaponTuple> inventory = new List<WeaponTuple>();
 }
 
@@ -209,7 +209,7 @@ public class EnemyPosition {
 	public int x;
 	public int y;
 	public int level;
-	public CharData charData;
+	public CharEntry charData;
 	public List<WeaponTuple> inventory = new List<WeaponTuple>();
 	public AggroType aggroType;
 	public bool hasQuotes;
@@ -262,7 +262,7 @@ public class ReinforcementPosition {
 	public int x;
 	public int y;
 	public int level;
-	public CharData charData;
+	public CharEntry charData;
 	public List<WeaponTuple> inventory = new List<WeaponTuple>();
 	//Player only
 	public int joiningSquad;
@@ -352,7 +352,7 @@ public class TurnEvent {
 
 [System.Serializable]
 public class FightQuote {
-	public CharData triggerer;
+	public CharEntry triggerer;
 	public DialogueEntry quote;
 	public bool willJoin;
 	public bool activated;

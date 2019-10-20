@@ -26,7 +26,7 @@ public class MissionEntry : ScrObjLibraryEntry {
 	public Unlocking unlockReq;
 	public int unlockDay = 1;
 	public int squadSize = 99;
-	public CharData characterReq;
+	public CharEntry characterReq;
 	public MissionEntry clearedMission;
 
 	[Header("Reward")]
@@ -105,7 +105,7 @@ public class MissionEntry : ScrObjLibraryEntry {
 		return (smallest == 100) ? 0 : smallest;
 	}
 
-	public bool IsCharacterForced(CharData character) {
+	public bool IsCharacterForced(CharEntry character) {
 		for (int i = 0; i < maps.Count; i++) {
 			if (maps[i].IsForced(character))
 				return true;
@@ -113,7 +113,7 @@ public class MissionEntry : ScrObjLibraryEntry {
 		return false;
 	}
 
-	public bool IsCharacterLocked(CharData character) {
+	public bool IsCharacterLocked(CharEntry character) {
 		for (int i = 0; i < maps.Count; i++) {
 			if (maps[i].IsLocked(character))
 				return true;

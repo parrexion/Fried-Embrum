@@ -235,7 +235,7 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 		for (int i = 0; i < mapValues.forcedCharacters.Count; i++) {
 			GUILayout.BeginHorizontal();
 			EditorGUIUtility.labelWidth = 70;
-			mapValues.forcedCharacters[i] = (CharData)EditorGUILayout.ObjectField("Character", mapValues.forcedCharacters[i], typeof(CharData), false);
+			mapValues.forcedCharacters[i] = (CharEntry)EditorGUILayout.ObjectField("Character", mapValues.forcedCharacters[i], typeof(CharEntry), false);
 			if (GUILayout.Button("X", GUILayout.Width(50))) {
 				GUI.FocusControl(null);
 				mapValues.forcedCharacters.RemoveAt(i);
@@ -254,7 +254,7 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 		for (int i = 0; i < mapValues.lockedCharacters.Count; i++) {
 			GUILayout.BeginHorizontal();
 			EditorGUIUtility.labelWidth = 70;
-			mapValues.lockedCharacters[i] = (CharData)EditorGUILayout.ObjectField("Character", mapValues.lockedCharacters[i], typeof(CharData), false);
+			mapValues.lockedCharacters[i] = (CharEntry)EditorGUILayout.ObjectField("Character", mapValues.lockedCharacters[i], typeof(CharEntry), false);
 			if (GUILayout.Button("X", GUILayout.Width(50))) {
 				GUI.FocusControl(null);
 				mapValues.lockedCharacters.RemoveAt(i);
@@ -293,7 +293,7 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 			GUILayout.EndHorizontal();
 
 			GUILayout.BeginHorizontal();
-			mapValues.enemies[i].charData = (CharData)EditorGUILayout.ObjectField("Character", mapValues.enemies[i].charData, typeof(CharData), false);
+			mapValues.enemies[i].charData = (CharEntry)EditorGUILayout.ObjectField("Character", mapValues.enemies[i].charData, typeof(CharEntry), false);
 			mapValues.enemies[i].hasQuotes = EditorGUILayout.Toggle("Quotes", mapValues.enemies[i].hasQuotes, GUILayout.Width(80));
 			GUILayout.EndHorizontal();
 
@@ -361,7 +361,7 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 				for (int j = 0; j < mapValues.enemies[i].quotes.Count; j++) {
 					EditorGUIUtility.labelWidth = 70;
 					GUILayout.BeginHorizontal();
-					mapValues.enemies[i].quotes[j].triggerer = (CharData)EditorGUILayout.ObjectField("Caused by", mapValues.enemies[i].quotes[j].triggerer, typeof(CharData), false);
+					mapValues.enemies[i].quotes[j].triggerer = (CharEntry)EditorGUILayout.ObjectField("Caused by", mapValues.enemies[i].quotes[j].triggerer, typeof(CharEntry), false);
 					mapValues.enemies[i].quotes[j].quote = (DialogueEntry)EditorGUILayout.ObjectField("Quote", mapValues.enemies[i].quotes[j].quote, typeof(DialogueEntry), false);
 					if (GUILayout.Button("X", GUILayout.Width(50))) {
 						GUI.FocusControl(null);
@@ -383,7 +383,7 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 				for (int j = 0; j < mapValues.enemies[i].talks.Count; j++) {
 					EditorGUIUtility.labelWidth = 70;
 					GUILayout.BeginHorizontal();
-					mapValues.enemies[i].talks[j].triggerer = (CharData)EditorGUILayout.ObjectField("Caused by", mapValues.enemies[i].talks[j].triggerer, typeof(CharData), false);
+					mapValues.enemies[i].talks[j].triggerer = (CharEntry)EditorGUILayout.ObjectField("Caused by", mapValues.enemies[i].talks[j].triggerer, typeof(CharEntry), false);
 					mapValues.enemies[i].talks[j].quote = (DialogueEntry)EditorGUILayout.ObjectField("Talk", mapValues.enemies[i].talks[j].quote, typeof(DialogueEntry), false);
 					EditorGUIUtility.labelWidth = 50;
 					mapValues.enemies[i].talks[j].willJoin = EditorGUILayout.Toggle("Join", mapValues.enemies[i].talks[j].willJoin, GUILayout.Width(90));
@@ -436,7 +436,7 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 			GUILayout.EndHorizontal();
 
 			GUILayout.BeginHorizontal();
-			mapValues.allies[i].charData = (CharData)EditorGUILayout.ObjectField("Character", mapValues.allies[i].charData, typeof(CharData), false);
+			mapValues.allies[i].charData = (CharEntry)EditorGUILayout.ObjectField("Character", mapValues.allies[i].charData, typeof(CharEntry), false);
 			mapValues.allies[i].hasQuotes = EditorGUILayout.Toggle("Quotes", mapValues.allies[i].hasQuotes, GUILayout.Width(80));
 			GUILayout.EndHorizontal();
 
@@ -504,7 +504,7 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 				for (int j = 0; j < mapValues.allies[i].quotes.Count; j++) {
 					EditorGUIUtility.labelWidth = 70;
 					GUILayout.BeginHorizontal();
-					mapValues.allies[i].quotes[j].triggerer = (CharData)EditorGUILayout.ObjectField("Caused by", mapValues.allies[i].quotes[j].triggerer, typeof(CharData), false);
+					mapValues.allies[i].quotes[j].triggerer = (CharEntry)EditorGUILayout.ObjectField("Caused by", mapValues.allies[i].quotes[j].triggerer, typeof(CharEntry), false);
 					mapValues.allies[i].quotes[j].quote = (DialogueEntry)EditorGUILayout.ObjectField("Quote", mapValues.allies[i].quotes[j].quote, typeof(DialogueEntry), false);
 					if (GUILayout.Button("X", GUILayout.Width(50))) {
 						GUI.FocusControl(null);
@@ -526,7 +526,7 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 				for (int j = 0; j < mapValues.allies[i].talks.Count; j++) {
 					EditorGUIUtility.labelWidth = 70;
 					GUILayout.BeginHorizontal();
-					mapValues.allies[i].talks[j].triggerer = (CharData)EditorGUILayout.ObjectField("Caused by", mapValues.allies[i].talks[j].triggerer, typeof(CharData), false);
+					mapValues.allies[i].talks[j].triggerer = (CharEntry)EditorGUILayout.ObjectField("Caused by", mapValues.allies[i].talks[j].triggerer, typeof(CharEntry), false);
 					mapValues.allies[i].talks[j].quote = (DialogueEntry)EditorGUILayout.ObjectField("Talk", mapValues.allies[i].talks[j].quote, typeof(DialogueEntry), false);
 					EditorGUIUtility.labelWidth = 50;
 					mapValues.allies[i].talks[j].willJoin = EditorGUILayout.Toggle("Join", mapValues.allies[i].talks[j].willJoin, GUILayout.Width(90));
@@ -609,7 +609,7 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 			GUILayout.EndHorizontal();
 
 			GUILayout.BeginHorizontal();
-			pos.charData = (CharData)EditorGUILayout.ObjectField("Character", pos.charData, typeof(CharData), false);
+			pos.charData = (CharEntry)EditorGUILayout.ObjectField("Character", pos.charData, typeof(CharEntry), false);
 
 			if (pos.charData != null) {
 				EditorGUIUtility.labelWidth = 50;
@@ -648,7 +648,7 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 				for (int j = 0; j < pos.quotes.Count; j++) {
 					EditorGUIUtility.labelWidth = 70;
 					GUILayout.BeginHorizontal();
-					pos.quotes[j].triggerer = (CharData)EditorGUILayout.ObjectField("Caused by", pos.quotes[j].triggerer, typeof(CharData), false);
+					pos.quotes[j].triggerer = (CharEntry)EditorGUILayout.ObjectField("Caused by", pos.quotes[j].triggerer, typeof(CharEntry), false);
 					pos.quotes[j].quote = (DialogueEntry)EditorGUILayout.ObjectField("Quote", pos.quotes[j].quote, typeof(DialogueEntry), false);
 					if (GUILayout.Button("X", GUILayout.Width(50))) {
 						GUI.FocusControl(null);
@@ -708,7 +708,7 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 					if (pos.gift.items.Count < 1)
 						pos.gift.items.Add(null);
 					pos.gift.items[0] = (ItemEntry)EditorGUILayout.ObjectField("Item", pos.gift.items[0], typeof(ItemEntry), false);
-					pos.ally.charData = (CharData)EditorGUILayout.ObjectField("New ally", pos.ally.charData, typeof(CharData), false);
+					pos.ally.charData = (CharEntry)EditorGUILayout.ObjectField("New ally", pos.ally.charData, typeof(CharEntry), false);
 					if (pos.ally.charData != null) {
 						pos.ally.level = EditorGUILayout.IntField("Level", pos.ally.level);
 

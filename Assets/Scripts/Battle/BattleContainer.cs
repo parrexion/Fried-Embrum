@@ -143,7 +143,7 @@ public class BattleContainer : InputReceiverDelegate {
 			}
 
 			TacticsMove quoter = (attacker.faction == Faction.ENEMY) ? attacker : defender;
-			CharData triggerer = (attacker.faction == Faction.ENEMY) ? defender.stats.charData : attacker.stats.charData;
+			CharEntry triggerer = (attacker.faction == Faction.ENEMY) ? defender.stats.charData : attacker.stats.charData;
 			FightQuote bestFind = null;
 			for (int q = 0; q < quoter.fightQuotes.Count; q++) {
 				if (quoter.fightQuotes[q].triggerer == null) {

@@ -26,11 +26,11 @@ public class LibraryEditorWindow : EditorWindow {
 
 	public CharacterEditorWindow characterEditor;
 	public ScrObjLibraryVariable characterLibrary;
-	public CharData characterContainer;
+	public CharEntry characterContainer;
 
 	public ClassEditorWindow classEditor;
 	public ScrObjLibraryVariable classLibrary;
-	public CharClass classContainer;
+	public ClassEntry classContainer;
 
 	public ItemEditorWindow itemEditor;
 	public ScrObjLibraryVariable itemLibrary;

@@ -28,7 +28,7 @@ public class PrepCharacterEntry : ListEntry {
 	/// <param name="stats"></param>
 	public void FillData(StatsContainer stats, InventoryContainer inventory, PrepCharacter prep) {
 		invCon = inventory;
-		icon.sprite = stats.charData.portrait;
+		icon.sprite = stats.charData.portraitSet.small;
 		entryName.text = stats.charData.entryName;
 		className.text = stats.currentClass.entryName;
 		level.text = stats.level.ToString();

@@ -14,7 +14,7 @@ public class RestockListEntry : ListEntry {
 	/// </summary>
 	/// <param name="statsCon"></param>
 	public void FillData(StatsContainer stats, InventoryContainer inv) {
-		icon.sprite = stats.charData.portrait;
+		icon.sprite = stats.charData.portraitSet.small;
 		entryName.text = stats.charData.entryName;
 		invCon = inv;
 		UpdateRestock();

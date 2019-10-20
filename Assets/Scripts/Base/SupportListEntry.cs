@@ -31,7 +31,7 @@ public class SupportListEntry : ListEntry {
 	/// <param name="stats"></param>
 	public void FillData(int index, StatsContainer stats) {
 		this.index = index;
-		icon.sprite = stats.charData.portrait;
+		icon.sprite = stats.charData.portraitSet.small;
 		entryName.text = stats.charData.entryName;
 		supportC.enabled = false;
 		supportB.enabled = false;

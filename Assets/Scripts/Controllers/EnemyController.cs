@@ -166,7 +166,7 @@ public class EnemyController : MonoBehaviour {
 	/// <returns></returns>
 	private IEnumerator EscapeCharacter() {
 		MySpinnerData data = new MySpinnerData() {
-			icon = tactics.stats.charData.portrait,
+			icon = tactics.stats.charData.portraitSet.small,
 			sfx = null,
 			text = tactics.stats.charData.entryName + " escaped!"
 		};

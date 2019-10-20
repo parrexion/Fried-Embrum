@@ -239,7 +239,7 @@ public class ActionInputController : MonoBehaviour {
 			squad2.values.Add(new PrepCharacter(playerData.stats.Count - 1));
 		}
 		else { Debug.LogError("Squad is invalid!"); }
-		yield return StartCoroutine(spinner.ShowSpinner(tactics.stats.charData.portrait, message, gainItemSfx));
+		yield return StartCoroutine(spinner.ShowSpinner(tactics.stats.charData.portraitSet.small, message, gainItemSfx));
 		joiningCharacter = null;
 	}
 

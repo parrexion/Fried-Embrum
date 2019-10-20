@@ -18,7 +18,7 @@ public enum SupportSpeed { NORMAL, FAST, VERYFAST, SLOW, VERYSLOW }
 [System.Serializable]
 public class SupportTuple {
 
-	public CharData partner;
+	public CharEntry partner;
 	public SupportLetter maxlevel;
 	public SupportSpeed speed;
 

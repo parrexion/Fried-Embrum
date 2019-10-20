@@ -5,10 +5,16 @@ using UnityEngine;
 public enum MovementType { NONE, INFANTRY, ARMORED, CAVALRY, FLYING }
 
 [CreateAssetMenu(menuName = "LibraryEntries/CharClass")]
-public class CharClass : ScrObjLibraryEntry {
+public class ClassEntry : ScrObjLibraryEntry {
 	
 	public PlayerClassName className = PlayerClassName.NONE;
+
+	[Header("Sprites")]
 	public Sprite icon;
+	public Sprite playerSprite;
+	public Sprite allySprite;
+	public Sprite enemySprite;
+	public Sprite bossSprite;
 
 	[Header("Movement")]
 	public MovementType classType;
@@ -45,7 +51,12 @@ public class CharClass : ScrObjLibraryEntry {
 	public override void ResetValues() {
 		base.ResetValues();
 		className = PlayerClassName.NONE;
+
 		icon = null;
+		playerSprite = null;
+		allySprite = null;
+		enemySprite = null;
+		bossSprite = null;
 
 		classType = MovementType.NONE;
 		movespeed = 5;
@@ -78,10 +89,15 @@ public class CharClass : ScrObjLibraryEntry {
 	
 	public override void CopyValues(ScrObjLibraryEntry other) {
 		base.CopyValues(other);
-		CharClass cc = (CharClass)other;
-
+		ClassEntry cc = (ClassEntry)other;
 		className = cc.className;
+
 		icon = cc.icon;
+		playerSprite = cc.playerSprite;
+		allySprite = cc.allySprite;
+		enemySprite = cc.enemySprite;
+		bossSprite = cc.bossSprite;
+
 		classType = cc.classType;
 		movespeed = cc.movespeed;
 

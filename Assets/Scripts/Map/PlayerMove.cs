@@ -17,8 +17,8 @@ public class PlayerMove : TacticsMove {
 	/// </summary>
 	protected override void ExtraSetup() {
 		playerList.values.Add(this);
-		GetComponent<SpriteRenderer>().sprite = stats.charData.playerSprite;
-		if (stats.charData.playerSprite == null) {
+		GetComponent<SpriteRenderer>().sprite = stats.currentClass.playerSprite;
+		if (stats.currentClass.playerSprite == null) {
 			Debug.LogError("Battle sprite is null!", this);
 		}
 		//Debug.Log("Spawned " + stats.charData.entryName);

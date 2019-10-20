@@ -43,17 +43,18 @@ public class NPCMove : TacticsMove {
 	/// </summary>
 	protected override void ExtraSetup() {
 		bossCrest.enabled = (aggroType == AggroType.BOSS);
-		if (aggroType == AggroType.BOSS) {
-			fatigueCap = 0;
-		}
-
 		if (faction == Faction.ENEMY) {
 			enemyList.values.Add(this);
-			GetComponent<SpriteRenderer>().sprite = stats.charData.enemySprite;
+			GetComponent<SpriteRenderer>().sprite = stats.currentClass.enemySprite;
 		}
 		else {
 			allyList.values.Add(this);
-			GetComponent<SpriteRenderer>().sprite = stats.charData.allySprite;
+			GetComponent<SpriteRenderer>().sprite = stats.currentClass.allySprite;
+		}
+		if (aggroType == AggroType.BOSS) {
+			fatigueCap = 0;
+			if (stats.currentClass.bossSprite != null)
+				GetComponent<SpriteRenderer>().sprite = stats.currentClass.bossSprite;
 		}
 
 		if (GetComponent<SpriteRenderer>().sprite == null) {

@@ -5,20 +5,21 @@ using System.Collections.Generic;
 public class CharacterEditorWindow : GenericEntryEditorWindow {
 
 	protected override string NameString => "Character";
-	protected override ScrObjLibraryEntry CreateInstance => Editor.CreateInstance<CharData>();
+	protected override ScrObjLibraryEntry CreateInstance => Editor.CreateInstance<CharEntry>();
 	protected override Color BackgroundColor => new Color(0.1f, 0.4f, 0.6f);
+	public Texture2D undefinedPortrait;
 
 	private bool showStats;
 
 
-	public CharacterEditorWindow(ScrObjLibraryVariable entries, CharData container) {
+	public CharacterEditorWindow(ScrObjLibraryVariable entries, CharEntry container) {
 		entryLibrary = entries;
 		entryValues = container;
 		LoadLibrary();
 	}
 
 	protected override void DrawContentWindow() {
-		CharData charValues = (CharData)entryValues;
+		CharEntry charValues = (CharEntry)entryValues;
 		GUILayout.BeginHorizontal();
 		charValues.faction = (Faction)EditorGUILayout.EnumPopup("Character class faction", charValues.faction);
 		GUILayout.EndHorizontal();
@@ -26,21 +27,15 @@ public class CharacterEditorWindow : GenericEntryEditorWindow {
 		GUILayout.Space(10);
 
 		GUILayout.Label("Visuals", EditorStyles.boldLabel);
-		GUILayout.BeginHorizontal();
-		GUILayout.Label("Trade portrait", GUILayout.Width(130));
-		GUILayout.Label("Info portrait", GUILayout.Width(130));
-		GUILayout.Label("Player sprite", GUILayout.Width(130));
-		GUILayout.Label("Enemy sprite", GUILayout.Width(130));
-		GUILayout.Label("Ally sprite", GUILayout.Width(130));
-		GUILayout.EndHorizontal();
-		GUILayout.BeginHorizontal();
-		charValues.bigPortrait = (Sprite)EditorGUILayout.ObjectField("", charValues.bigPortrait, typeof(Sprite), false, GUILayout.Width(130));
-		charValues.portrait = (Sprite)EditorGUILayout.ObjectField("", charValues.portrait, typeof(Sprite), false, GUILayout.Width(130));
-		charValues.playerSprite = (Sprite)EditorGUILayout.ObjectField("", charValues.playerSprite, typeof(Sprite), false, GUILayout.Width(130));
-		charValues.enemySprite = (Sprite)EditorGUILayout.ObjectField("", charValues.enemySprite, typeof(Sprite), false, GUILayout.Width(130));
-		charValues.allySprite = (Sprite)EditorGUILayout.ObjectField("", charValues.allySprite, typeof(Sprite), false, GUILayout.Width(130));
-		GUILayout.EndHorizontal();
+		GUILayout.BeginHorizontal(GUILayout.Height(64));
 		charValues.portraitSet = (PortraitEntry)EditorGUILayout.ObjectField("Portrait set", charValues.portraitSet, typeof(PortraitEntry), false);
+		if (charValues.portraitSet == null)
+			GUILayout.Label("NO PORTRAIT SET", EditorStyles.boldLabel, GUILayout.Width(160));
+		else if (charValues.portraitSet.small == null)
+			GUILayout.Label("INVALID PORTRAIT", EditorStyles.boldLabel, GUILayout.Width(160));
+		else
+			GUILayout.Label(charValues.portraitSet.small.texture, GUILayout.Width(160), GUILayout.Height(64));
+		GUILayout.EndHorizontal();
 
 		GUILayout.Space(10);
 
@@ -51,7 +46,7 @@ public class CharacterEditorWindow : GenericEntryEditorWindow {
 		GUILayout.Space(10);
 
 		GUILayout.Label("Class", EditorStyles.boldLabel);
-		charValues.startClass = (CharClass)EditorGUILayout.ObjectField("Class", charValues.startClass, typeof(CharClass), false);
+		charValues.startClass = (ClassEntry)EditorGUILayout.ObjectField("Class", charValues.startClass, typeof(ClassEntry), false);
 		GUILayout.Label("Class levels");
 		if(charValues.startClassLevels.Length != ClassWheel.CLASS_COUNT)
 			charValues.startClassLevels = new int[ClassWheel.CLASS_COUNT];
@@ -82,7 +77,7 @@ public class CharacterEditorWindow : GenericEntryEditorWindow {
 	}
 
 	private void ShowBaseStats() {
-		CharData charValues = (CharData)entryValues;
+		CharEntry charValues = (CharEntry)entryValues;
 		GUILayout.Label("Base stats", EditorStyles.boldLabel);
 		GUILayout.BeginHorizontal();
 		GUILayout.Label("HP  " + charValues.startClass.hp);
@@ -118,7 +113,7 @@ public class CharacterEditorWindow : GenericEntryEditorWindow {
 	}
 
 	private void ShowGrowths() {
-		CharData charValues = (CharData)entryValues;
+		CharEntry charValues = (CharEntry)entryValues;
 		GUILayout.Label("Stat growths", EditorStyles.boldLabel);
 		GUILayout.BeginHorizontal();
 		GUILayout.Label("HP  " + charValues.startClass.gHp);
@@ -154,13 +149,13 @@ public class CharacterEditorWindow : GenericEntryEditorWindow {
 	}
 
 	private void ShowSupports() {
-		CharData charValues = (CharData)entryValues;
+		CharEntry charValues = (CharEntry)entryValues;
 		GUILayout.Label("Supports", EditorStyles.boldLabel);
 		GUILayout.Space(5);
 		for(int i = 0; i < charValues.supports.Count; i++) {
 			GUILayout.Label("Support " + (i + 1));
 			GUILayout.BeginHorizontal();
-			charValues.supports[i].partner = (CharData)EditorGUILayout.ObjectField("Partner", charValues.supports[i].partner, typeof(CharData), false);
+			charValues.supports[i].partner = (CharEntry)EditorGUILayout.ObjectField("Partner", charValues.supports[i].partner, typeof(CharEntry), false);
 			if(GUILayout.Button("X", GUILayout.Width(50))) {
 				GUI.FocusControl(null);
 				charValues.supports.RemoveAt(i);

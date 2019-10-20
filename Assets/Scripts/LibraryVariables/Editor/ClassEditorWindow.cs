@@ -5,18 +5,32 @@ using System.Collections.Generic;
 public class ClassEditorWindow : GenericEntryEditorWindow {
 
 	protected override string NameString => "Class";
-	protected override ScrObjLibraryEntry CreateInstance => Editor.CreateInstance<CharClass>();
+	protected override ScrObjLibraryEntry CreateInstance => Editor.CreateInstance<ClassEntry>();
 	protected override Color BackgroundColor => new Color(0.3f, 0.6f, 0.4f);
 
 
-	public ClassEditorWindow(ScrObjLibraryVariable entries, CharClass container) {
+	public ClassEditorWindow(ScrObjLibraryVariable entries, ClassEntry container) {
 		entryLibrary = entries;
 		entryValues = container;
 		LoadLibrary();
 	}
 
 	protected override void DrawContentWindow() {
-		CharClass classValues = (CharClass)entryValues;
+		ClassEntry classValues = (ClassEntry)entryValues;
+
+		GUILayout.Label("Sprites", EditorStyles.boldLabel);
+		GUILayout.BeginHorizontal();
+		GUILayout.Label("Player sprite", GUILayout.Width(130));
+		GUILayout.Label("Ally sprite", GUILayout.Width(130));
+		GUILayout.Label("Enemy sprite", GUILayout.Width(130));
+		GUILayout.Label("Boss sprite", GUILayout.Width(130));
+		GUILayout.EndHorizontal();
+		GUILayout.BeginHorizontal();
+		classValues.playerSprite = (Sprite)EditorGUILayout.ObjectField("", classValues.playerSprite, typeof(Sprite), false, GUILayout.Width(130));
+		classValues.allySprite = (Sprite)EditorGUILayout.ObjectField("", classValues.allySprite, typeof(Sprite), false, GUILayout.Width(130));
+		classValues.enemySprite = (Sprite)EditorGUILayout.ObjectField("", classValues.enemySprite, typeof(Sprite), false, GUILayout.Width(130));
+		classValues.bossSprite = (Sprite)EditorGUILayout.ObjectField("", classValues.bossSprite, typeof(Sprite), false, GUILayout.Width(130));
+		GUILayout.EndHorizontal();
 
 		GUILayout.Label("Movement", EditorStyles.boldLabel);
 		classValues.classType = (MovementType)EditorGUILayout.EnumPopup("Class type", classValues.classType);

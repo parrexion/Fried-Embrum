@@ -154,7 +154,7 @@ public class ClassChangeController : MonoBehaviour {
 		SkillsContainer skills = playerData.skills[entryList.GetPosition()];
 
 		characterName.text = stats.charData.entryName;
-		portrait.sprite = stats.charData.portrait;
+		portrait.sprite = stats.charData.portraitSet.small;
 		className.text = stats.currentClass.entryName;
 		level.text = "Level: " + stats.level;
 		exp.text = "EXP: " + stats.currentExp;

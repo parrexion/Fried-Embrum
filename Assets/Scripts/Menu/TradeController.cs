@@ -124,8 +124,8 @@ public class TradeController : InputReceiverDelegate {
 	/// </summary>
 	private void UpdateInventories() {
 		TacticsMove targetCharacter = targetTile.value.currentCharacter;
-		portraitLeft.sprite = selectedCharacter.value.stats.charData.bigPortrait;
-		portraitRight.sprite = targetCharacter.stats.charData.bigPortrait;
+		portraitLeft.sprite = selectedCharacter.value.stats.charData.portraitSet.poses[0];
+		portraitRight.sprite = targetCharacter.stats.charData.portraitSet.poses[0];
 
 		for (int i = 0, j = InventoryContainer.INVENTORY_SIZE; i < InventoryContainer.INVENTORY_SIZE; i++, j++) {
 			slots[i].FillData(i, selectedCharacter.value.inventory.GetTuple(i));

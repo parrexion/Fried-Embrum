@@ -172,7 +172,7 @@ public class BaseHousing : InputReceiverDelegate {
 		characterName.text = (stats != null) ? stats.charData.entryName : "";
 		characterClass.text = (stats != null) ? stats.currentClass.entryName : "";
 		characterLevel.text = (stats != null) ? "Level  " + stats.level : "";
-		portrait.sprite = (stats != null) ? stats.charData.bigPortrait : null;
+		portrait.sprite = (stats != null) ? stats.charData.portraitSet.poses[0] : null;
 
 		List<Room> neighbours = currentRoom.house.GetNeighbours(currentRoom);
 		string nr1 = "", nr2 = "";

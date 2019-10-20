@@ -28,7 +28,7 @@ public class TrainingListEntry : ListEntry {
 	/// </summary>
 	/// <param name="statsCon"></param>
 	public void FillData(StatsContainer stats) {
-		icon.sprite = stats.charData.portrait;
+		icon.sprite = stats.charData.portraitSet.small;
 		entryName.text = stats.charData.entryName;
 		level.text = stats.level.ToString();
 		exp.text = stats.currentExp.ToString();

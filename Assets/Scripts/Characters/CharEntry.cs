@@ -3,16 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "LibraryEntries/CharData")]
-public class CharData : ScrObjLibraryEntry {
+public class CharEntry : ScrObjLibraryEntry {
 
 	[Header("Character Info")]
-	public Sprite bigPortrait;
-	public Sprite portrait;
-	public Sprite playerSprite;
-	public Sprite enemySprite;
-	public Sprite allySprite;
 	public PortraitEntry portraitSet;
-	public CharClass startClass;
+	public ClassEntry startClass;
 	public int[] startClassLevels = new int[ClassWheel.CLASS_COUNT];
 
 	[Header("Personal Base Stats")]
@@ -42,12 +37,7 @@ public class CharData : ScrObjLibraryEntry {
 	
 	public override void ResetValues() {
 		base.ResetValues();
-
-		bigPortrait = null;
-		portrait = null;
-		playerSprite = null;
-		enemySprite = null;
-		allySprite = null;
+		
 		portraitSet = null;
 		startClass = null;
 		startClassLevels = new int[ClassWheel.CLASS_COUNT];
@@ -75,13 +65,8 @@ public class CharData : ScrObjLibraryEntry {
 	
 	public override void CopyValues(ScrObjLibraryEntry other) {
 		base.CopyValues(other);
-		CharData cd = (CharData)other;
-
-		bigPortrait = cd.bigPortrait;
-		portrait = cd.portrait;
-		playerSprite = cd.playerSprite;
-		enemySprite = cd.enemySprite;
-		allySprite = cd.allySprite;
+		CharEntry cd = (CharEntry)other;
+		
 		portraitSet = cd.portraitSet;
 		startClass = cd.startClass;
 		startClassLevels = cd.startClassLevels;
@@ -110,7 +95,7 @@ public class CharData : ScrObjLibraryEntry {
 		deathQuote = cd.deathQuote;
 	}
 
-	public SupportTuple GetSupport(CharData partner) {
+	public SupportTuple GetSupport(CharEntry partner) {
 		for (int i = 0; i < supports.Count; i++) {
 			if (supports[i].partner.uuid == partner.uuid)
 				return supports[i];

@@ -27,12 +27,17 @@ public class PortraitEditorWindow : GenericEntryEditorWindow {
 	protected override void DrawContentWindow() {
 		PortraitEntry portraitValues = (PortraitEntry)entryValues;
 
-		if(portraitValues.poses.Length < poseLibrary.values.Length) {
-			System.Array.Resize(ref portraitValues.poses, poseLibrary.values.Length);
+		portraitValues.small = (Sprite)EditorGUILayout.ObjectField("Small character portrait", portraitValues.small, typeof(Sprite), false);
+
+		GUILayout.Space(20);
+
+		if(portraitValues.poses.Length < (int)PortraitEntry.Pose.kCount) {
+			System.Array.Resize(ref portraitValues.poses, (int)PortraitEntry.Pose.kCount);
 		}
+
 		// Poses
 		GUILayout.Label("Poses", EditorStyles.boldLabel);
-		for(int i = 0; i < poseLibrary.values.Length; i++) {
+		for(int i = 0; i < portraitValues.poses.Length; i++) {
 			if(portraitValues.poses[i] == null)
 				portraitValues.poses[i] = (Sprite)EditorGUILayout.ObjectField(poseLibrary.values[i].name, poseLibrary.values[i], typeof(Sprite), false);
 			else

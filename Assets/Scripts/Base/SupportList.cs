@@ -97,7 +97,7 @@ public class SupportList : MonoBehaviour {
 		oldIndex = supportList.GetPosition();
 		supportList.FilterShow((x) => x.index != selectedIndex);
 		for (int i = 0; i < supportList.Size; i++) {
-			CharData other = playerData.stats[supportList.GetEntry(i).index].charData;
+			CharEntry other = playerData.stats[supportList.GetEntry(i).index].charData;
 			SupportTuple tuple = playerData.stats[selectedIndex].charData.GetSupport(other);
 			SupportValue value = playerData.baseInfo[selectedIndex].GetSupportValue(other);
 

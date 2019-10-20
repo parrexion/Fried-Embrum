@@ -45,10 +45,10 @@ public class MissionEditorWindow : GenericEntryEditorWindow {
 				missionValues.squadSize = EditorGUILayout.IntField("Max squad size", missionValues.squadSize);
 				break;
 			case MissionEntry.Unlocking.DEATH:
-				missionValues.characterReq = (CharData)EditorGUILayout.ObjectField("Dead Character", missionValues.characterReq, typeof(CharData), false);
+				missionValues.characterReq = (CharEntry)EditorGUILayout.ObjectField("Dead Character", missionValues.characterReq, typeof(CharEntry), false);
 				break;
 			case MissionEntry.Unlocking.RECRUITED:
-				missionValues.characterReq = (CharData)EditorGUILayout.ObjectField("Recruited Character", missionValues.characterReq, typeof(CharData), false);
+				missionValues.characterReq = (CharEntry)EditorGUILayout.ObjectField("Recruited Character", missionValues.characterReq, typeof(CharEntry), false);
 				break;
 			case MissionEntry.Unlocking.MISSION:
 				missionValues.clearedMission = (MissionEntry)EditorGUILayout.ObjectField("Cleared Mission", missionValues.clearedMission, typeof(MissionEntry), false);

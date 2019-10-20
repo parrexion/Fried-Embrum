@@ -180,7 +180,7 @@ public class ForecastUI : MonoBehaviour {
 		colorBackground.color = (tactics.faction == Faction.PLAYER) ? new Color(0.7f, 0.7f, 1f) : new Color(1f, 0.7f, 0.7f);
 
 		characterName.text = tactics.stats.charData.entryName;
-		portrait.sprite = tactics.stats.charData.portrait;
+		portrait.sprite = tactics.stats.charData.portraitSet.small;
 		wpnIcon.sprite = InvTup.icon;
 		wpnName.text = InvTup.entryName;
 		if (wpnCharge)
@@ -197,7 +197,7 @@ public class ForecastUI : MonoBehaviour {
 		eColorBackground.color = (tactics.faction == Faction.PLAYER) ? new Color(0.7f, 0.7f, 1f) : new Color(1f, 0.7f, 0.7f);
 
 		eCharacterName.text = tactics.stats.charData.entryName;
-		ePortrait.sprite = tactics.stats.charData.portrait;
+		ePortrait.sprite = tactics.stats.charData.portraitSet.small;
 		eWpnIcon.sprite = invTup.icon;
 		eWpnName.text = invTup.entryName;
 		if (eWpnCharge)
@@ -216,11 +216,11 @@ public class ForecastUI : MonoBehaviour {
 		colorBackground.color = (healer.faction == Faction.PLAYER) ? new Color(0.7f, 0.7f, 1f) : new Color(1f, 0.7f, 0.7f);
 		eColorBackground.color = (receiver.faction == Faction.PLAYER) ? new Color(0.7f, 0.7f, 1f) : new Color(1f, 0.7f, 0.7f);
 		hCharacterName.text = stats.charData.entryName;
-		hPortrait.sprite = stats.charData.portrait;
+		hPortrait.sprite = stats.charData.portraitSet.small;
 
 		stats = receiver.stats;
 		hCharacterName2.text = stats.charData.entryName;
-		hPortrait2.sprite = stats.charData.portrait;
+		hPortrait2.sprite = stats.charData.portraitSet.small;
 		if (inBattle) {
 			hHpBar.SetAmount(healer.currentHealth, healer.stats.hp);
 			hHpBar2.SetAmount(receiver.currentHealth, receiver.stats.hp);

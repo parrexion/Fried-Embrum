@@ -10,11 +10,11 @@ public class ClassWheel : ScriptableObject {
 
 	public const int CLASS_COUNT = 6;
 	public const int ENEMY_CLASS_COUNT = 4;
-	public CharClass[] classes;
+	public ClassEntry[] classes;
 	public ScrObjLibraryVariable classLibrary;
 
 
-	public CharClass GetClass(PlayerClassName className) {
+	public ClassEntry GetClass(PlayerClassName className) {
 		return classes[(int)className];
 	}
 
@@ -30,7 +30,7 @@ public class ClassWheel : ScriptableObject {
 		return ranks;
 	}
 
-	public List<CharacterSkill> GetSkillsFromLevel(int[] classLevels, CharClass startClass, int startLevel) {
+	public List<CharacterSkill> GetSkillsFromLevel(int[] classLevels, ClassEntry startClass, int startLevel) {
 		List<CharacterSkill> skills = new List<CharacterSkill>();
 
 		bool edit = false;

@@ -6,8 +6,8 @@ using Random = UnityEngine.Random;
 public class StatsContainer {
 
 	[Header("Character Info")]
-	public CharData charData;
-	public CharClass currentClass;
+	public CharEntry charData;
+	public ClassEntry currentClass;
 	public int[] classLevels = new int[0];
 
 	[Header("Player stuff")]
@@ -40,7 +40,7 @@ public class StatsContainer {
 	public Boost currentBoost;
 
 
-	public StatsContainer(CharacterSaveData saveData, CharData cStats, CharClass charClass) {
+	public StatsContainer(CharacterSaveData saveData, CharEntry cStats, ClassEntry charClass) {
 		SetupValues(saveData, cStats, charClass);
 	}
 
@@ -68,7 +68,7 @@ public class StatsContainer {
 		GenerateStartingStats();
 	}
 
-	private void SetupValues(CharacterSaveData saveData, CharData cStacDatas, CharClass cClass) {
+	private void SetupValues(CharacterSaveData saveData, CharEntry cStacDatas, ClassEntry cClass) {
 		charData = cStacDatas;
 		currentClass = cClass;
 
@@ -187,7 +187,7 @@ public class StatsContainer {
 		CalculateStats();
 	}
 
-	public void ChangeClass(CharClass newClass) {
+	public void ChangeClass(ClassEntry newClass) {
 		eHp += newClass.hp - currentClass.hp;
 		eDmg += newClass.dmg - currentClass.dmg;
 		eMnd += newClass.mnd - currentClass.mnd;
