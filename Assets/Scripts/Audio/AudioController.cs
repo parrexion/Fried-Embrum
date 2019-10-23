@@ -143,6 +143,7 @@ public class AudioController : MonoBehaviour {
 		while(sfxQueue.value.Count > 0) {
 			AudioClip sfxClip = sfxQueue.value.Dequeue();
 			if (sfxClip != null) {
+				Debug.Log("Playing: " + sfxClip.name);
 				RandomizePitch();
 				efxSource[currentSfxTrack].clip = sfxClip;
 				efxSource[currentSfxTrack].Play();

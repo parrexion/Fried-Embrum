@@ -40,6 +40,7 @@ public class BattleContainer : InputReceiverDelegate {
 	private bool showBattleAnim;
 
 	[Header("Battle Animations")]
+	public BattleAnimator battleAnimator;
 	public GameObject battleAnimationObject;
 	public GameObject uiCanvas;
 	public ForecastUI forecastUI;
@@ -58,9 +59,9 @@ public class BattleContainer : InputReceiverDelegate {
 	public SfxEntry levelupFanfare;
 	public SfxEntry levelupFill;
 	public SfxEntry missedAttackSfx;
-	public SfxEntry hitAttackSfx;
+	//public SfxEntry hitAttackSfx;
 	public SfxEntry leathalAttackSfx;
-	public SfxEntry critAttackSfx;
+	//public SfxEntry critAttackSfx;
 	public SfxEntry enemyDiedSfx;
 	public SfxEntry healSfx;
 	public SfxEntry badStuffSfx;
@@ -260,17 +261,9 @@ public class BattleContainer : InputReceiverDelegate {
 					isCrit = true;
 				}
 				act.defender.TakeDamage(damage, isCrit);
-				if (damage < 0) {
-					sfxQueue.Enqueue(missedAttackSfx);
-					playSfxEvent.Invoke();
-				}
-				else {
-					SfxEntry hitSfx = (isCrit) ? critAttackSfx :
-									(!act.defender.IsAlive()) ? leathalAttackSfx : hitAttackSfx;
-					sfxQueue.Enqueue(hitSfx);
-					playSfxEvent.Invoke();
-				}
-				StartCoroutine(DamageDisplay(act.leftSide, damage, true, isCrit));
+				BattleAnimator.HitType hitType = (damage < 0) ? BattleAnimator.HitType.MISS : (isCrit) ? BattleAnimator.HitType.CRIT : BattleAnimator.HitType.NORMAL;
+				battleAnimator.PlayAttack(act.leftSide, act.weaponAtk.weaponType, hitType, !act.defender.IsAlive(), damage);
+				//StartCoroutine(DamageDisplay(act.leftSide, damage, true, isCrit));
 
 				if (damage > 0) {
 					if (act.leftSide)
@@ -304,11 +297,6 @@ public class BattleContainer : InputReceiverDelegate {
 			forecastUI.UpdateHealthUI();
 			updateHealthEvent.Invoke();
 
-			//Extra crit animation
-			if (isCrit) {
-				defenseTransform.GetComponent<ParticleSystem>().Play();
-				yield return new WaitForSeconds(0.2f);
-			}
 
 			// Move back
 			// Debug.Log("Moving back");

@@ -1217,7 +1217,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 55131486}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.25, y: -0.1, z: 0}
+  m_LocalPosition: {x: 2.5, y: -0.1, z: 0}
   m_LocalScale: {x: 3, y: 3, z: 1}
   m_Children: []
   m_Father: {fileID: 2025273338}
@@ -1407,7 +1407,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1.75
+      scalar: 3
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -1523,7 +1523,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.05
+      scalar: 0.1
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -1902,7 +1902,7 @@ ParticleSystem:
     angle: 25
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
-    radiusThickness: 1
+    radiusThickness: 0.2
     donutRadius: 0.2
     m_Position: {x: 0, y: 0, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
@@ -1985,7 +1985,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 0.01
+      value: 0.3
       mode: 0
       spread: 0
       speed:
@@ -16967,22 +16967,66 @@ MonoBehaviour:
   currentMenuMode: {fileID: 11400000, guid: 67e3bf56b86dc2f49a9bd4d641b3339a, type: 2}
   menuAcceptEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: e187d9190c1c85647b835141c0b8ac36, type: 2}
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   menuBackEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: cab1943f7a7b8a646900e198e8df09c8, type: 2}
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   menuMoveEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 2493933d020d8834486fadd82a374747, type: 2}
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   menuFailEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 5b882ed488044f74d92c3818ac29c97b, type: 2}
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   currentAction: {fileID: 11400000, guid: b0e392ad086e2ab4e9c4feb871cf0d41, type: 2}
@@ -17006,6 +17050,7 @@ MonoBehaviour:
   speed: 1.5
   useBattleAnimations: {fileID: 11400000, guid: baa24d385cc1cb547a8642b2c53065b6,
     type: 2}
+  battleAnimator: {fileID: 2025273339}
   battleAnimationObject: {fileID: 2025273337}
   uiCanvas: {fileID: 1411092479}
   forecastUI: {fileID: 1000288200}
@@ -17020,9 +17065,7 @@ MonoBehaviour:
   levelupFanfare: {fileID: 11400000, guid: 4fc14e47bebe94649bc49c826ed56e8f, type: 2}
   levelupFill: {fileID: 11400000, guid: 7ce17b4f6a58d814c946e3502586971d, type: 2}
   missedAttackSfx: {fileID: 11400000, guid: e71555a45ad0e884595085760babe61f, type: 2}
-  hitAttackSfx: {fileID: 11400000, guid: 7460251cbc0f8b448b4cea487b3bbf38, type: 2}
   leathalAttackSfx: {fileID: 11400000, guid: d999e697503aebb49b74fb05709844d5, type: 2}
-  critAttackSfx: {fileID: 11400000, guid: 06e685fd1295984448e1fce7d5354f32, type: 2}
   enemyDiedSfx: {fileID: 11400000, guid: 270e2ddbd8e448c4cb09a052a45524d2, type: 2}
   healSfx: {fileID: 11400000, guid: 0a726caaa3430b44aa7abb21f6b4605a, type: 2}
   badStuffSfx: {fileID: 11400000, guid: 2d94491249efff74f907741cc602624b, type: 2}
@@ -31184,7 +31227,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -225, y: 215}
+  m_AnchoredPosition: {x: -250, y: 215}
   m_SizeDelta: {x: 150, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &873138781
@@ -47935,7 +47978,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 225, y: 215}
+  m_AnchoredPosition: {x: 250, y: 215}
   m_SizeDelta: {x: 150, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1451574314
@@ -53158,7 +53201,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1644028713}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.25, y: -0.1, z: 0}
+  m_LocalPosition: {x: -2.5, y: -0.1, z: 0}
   m_LocalScale: {x: 3, y: 3, z: 1}
   m_Children: []
   m_Father: {fileID: 2025273338}
@@ -53410,7 +53453,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1.75
+      scalar: 3
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -53526,7 +53569,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.05
+      scalar: 0.1
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -53905,7 +53948,7 @@ ParticleSystem:
     angle: 25
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
-    radiusThickness: 1
+    radiusThickness: 0.2
     donutRadius: 0.2
     m_Position: {x: 0, y: 0, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
@@ -53988,7 +54031,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 0.01
+      value: 0.3
       mode: 0
       spread: 0
       speed:
@@ -69632,6 +69675,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2025273338}
+  - component: {fileID: 2025273339}
   m_Layer: 0
   m_Name: BattleObject
   m_TagString: Untagged
@@ -69659,6 +69703,78 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2025273339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2025273337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b6fc76d6a18ec84e969a9bcf275badc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftTransform: {fileID: 1644028714}
+  leftDamageObject: {fileID: 873138779}
+  leftDamageText: {fileID: 1221829487}
+  rightTransform: {fileID: 55131487}
+  rightDamageObject: {fileID: 1451574312}
+  rightDamageText: {fileID: 1784597212}
+  sfxQueue: {fileID: 11400000, guid: 20c2a8af0750fd24b9b1e5c73c95005d, type: 2}
+  genericAttackSfx: {fileID: 11400000, guid: 7460251cbc0f8b448b4cea487b3bbf38, type: 2}
+  hitSfx: {fileID: 11400000, guid: 7460251cbc0f8b448b4cea487b3bbf38, type: 2}
+  missSfx: {fileID: 11400000, guid: e71555a45ad0e884595085760babe61f, type: 2}
+  critSfx: {fileID: 11400000, guid: 06e685fd1295984448e1fce7d5354f32, type: 2}
+  deathSfx: {fileID: 11400000, guid: 270e2ddbd8e448c4cb09a052a45524d2, type: 2}
+  attackSfx:
+  - {fileID: 11400000, guid: e09042fb18a73f949a5107b3c33bb05f, type: 2}
+  - {fileID: 0}
+  - {fileID: 11400000, guid: 354ae469a0a8ef44eabbc0af5cd382c5, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 11400000, guid: 8718a1dd5f5c1fb4fb1e4c88d46d2ade, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  BattleAnimationEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: c194fcf750423c9498aae35727c2464a, type: 2}
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  playSfxEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 14dc020d1fae2d84e976c5dc7c0bdde7, type: 2}
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!1 &2026557335
 GameObject:
   m_ObjectHideFlags: 0
