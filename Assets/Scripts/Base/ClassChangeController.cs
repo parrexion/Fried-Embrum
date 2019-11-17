@@ -41,8 +41,7 @@ public class ClassChangeController : MonoBehaviour {
 	public LevelupScript levelupScript;
 	public AudioQueueVariable sfxQueue;
 	public SfxEntry levelupFanfare;
-	public IntVariable slowGameSpeed;
-	public IntVariable currentGameSpeed;
+	public FloatVariable currentGameSpeed;
 	public UnityEvent playSfxEvent;
 	public UnityEvent stopSfxEvent;
 	public BoolVariable lockControls;
@@ -244,7 +243,7 @@ public class ClassChangeController : MonoBehaviour {
 		lockControls.value = true;
 		LevelGain level = gains[classList.GetPosition()];
 
-		yield return new WaitForSeconds(1f * slowGameSpeed.value / currentGameSpeed.value);
+		yield return new WaitForSeconds(1f * currentGameSpeed.value);
 
 		StatsContainer stats = playerData.stats[entryList.GetPosition()];
 		InventoryContainer inventory = playerData.inventory[entryList.GetPosition()];

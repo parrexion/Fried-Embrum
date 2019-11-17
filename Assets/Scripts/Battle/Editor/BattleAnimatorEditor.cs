@@ -7,24 +7,19 @@ using UnityEditor;
 public class BattleAnimatorEditor : Editor {
 
 	//Debug
-	private bool debugIsLeft = true;
-	private WeaponType debugWeaponType;
-	private BattleAnimator.HitType debugHitType;
-	private bool debugIsLeathal;
-	private int debugDamage = 4;
-
+	private BattleAnimator.AnimationInfo debugInfo = new BattleAnimator.AnimationInfo();
 
 	public override void OnInspectorGUI() {
 		
-		debugIsLeft = EditorGUILayout.Toggle("Is Left", debugIsLeft);
-		debugWeaponType = (WeaponType)EditorGUILayout.EnumPopup("Weapon Type", debugWeaponType);
-		debugHitType = (BattleAnimator.HitType)EditorGUILayout.EnumPopup("Hit Type", debugHitType);
-		debugIsLeathal = EditorGUILayout.Toggle("Is Leathal", debugIsLeathal);
-		debugDamage = EditorGUILayout.IntField("Damage", debugDamage);
+		debugInfo.side = (AttackSide)EditorGUILayout.EnumPopup("Attack Side", debugInfo.side);
+		debugInfo.weaponType = (WeaponType)EditorGUILayout.EnumPopup("Weapon Type", debugInfo.weaponType);
+		debugInfo.hitType = (BattleAnimator.HitType)EditorGUILayout.EnumPopup("Hit Type", debugInfo.hitType);
+		debugInfo.leathal = EditorGUILayout.Toggle("Is Leathal", debugInfo.leathal);
+		debugInfo.damage = EditorGUILayout.IntField("Damage", debugInfo.damage);
 
 		if (GUILayout.Button("Play animation")) {
 			BattleAnimator ba = (BattleAnimator)target;
-			ba.PlayAttack(debugIsLeft, debugWeaponType, debugHitType, debugIsLeathal, debugDamage);
+			ba.PlayAttack(debugInfo);
 		}
 
 		GUILayout.Space(20);

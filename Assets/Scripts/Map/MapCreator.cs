@@ -19,8 +19,7 @@ public class MapCreator : MonoBehaviour {
 	public IntVariable currentTurn;
 	public FactionVariable currentFaction;
 	public float reinforcementDelay = 0.75f;
-	public IntVariable slowGameSpeed;
-	public IntVariable currentGameSpeed;
+	public FloatVariable currentGameSpeed;
 
 	[Header("Prefabs")]
 	public Transform playerPrefab;
@@ -450,7 +449,7 @@ public class MapCreator : MonoBehaviour {
 				cursorY.value = pos.y;
 				cursorMoveEvent.Invoke();
 				// Debug.Log("Hello there!     " + (reinforcementDelay * slowGameSpeed.value / currentGameSpeed.value));
-				yield return new WaitForSeconds(reinforcementDelay * slowGameSpeed.value / currentGameSpeed.value);
+				yield return new WaitForSeconds(reinforcementDelay * currentGameSpeed.value);
 			}
 		}
 		nextTurnStateEvent.Invoke();

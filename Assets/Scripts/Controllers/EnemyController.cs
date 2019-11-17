@@ -18,8 +18,7 @@ public class EnemyController : MonoBehaviour {
 	public IntVariable cursorY;
 
 	[Header("Settings")]
-	public IntVariable slowGameSpeed;
-	public IntVariable currentGameSpeed;
+	public FloatVariable currentGameSpeed;
 
 	[Header("Spinner")]
 	public MySpinner spinner;
@@ -58,12 +57,12 @@ public class EnemyController : MonoBehaviour {
 	/// <returns></returns>
 	private IEnumerator RunNPCTurn(CharacterListVariable list, float startDelay) {
 		isRunning = true;
-		yield return new WaitForSeconds(startDelay * slowGameSpeed.value / currentGameSpeed.value);
+		yield return new WaitForSeconds(startDelay * currentGameSpeed.value);
 
 		battleWeaponIndex.value = 0;
 		currentPage.value = 0;
 
-		yield return new WaitForSeconds(2f * slowGameSpeed.value / currentGameSpeed.value);
+		yield return new WaitForSeconds(2f * currentGameSpeed.value);
 
 		for (int i = 0; i < list.Count; i++) {
 			if (!list.values[i].IsAlive() || list.values[i].hasEscaped)
@@ -91,7 +90,7 @@ public class EnemyController : MonoBehaviour {
 			}
 
 			if (waitForNextAction) {
-				yield return new WaitForSeconds(1.5f * slowGameSpeed.value / currentGameSpeed.value);
+				yield return new WaitForSeconds(1.5f * currentGameSpeed.value);
 				tactics.StartMove();
 			}
 			while (waitForNextAction)
@@ -104,7 +103,7 @@ public class EnemyController : MonoBehaviour {
 				yield return null;
 
 			if (res) {
-				yield return new WaitForSeconds(1f * slowGameSpeed.value / currentGameSpeed.value);
+				yield return new WaitForSeconds(1f * currentGameSpeed.value);
 			}
 			// Finish the turn
 			// Debug.Log("End turn");
@@ -114,7 +113,7 @@ public class EnemyController : MonoBehaviour {
 			cursorMovedEvent.Invoke();
 		}
 
-		yield return new WaitForSeconds(3f * slowGameSpeed.value / currentGameSpeed.value);
+		yield return new WaitForSeconds(3f * currentGameSpeed.value);
 
 		isRunning = false;
 		nextStateEvent.Invoke();

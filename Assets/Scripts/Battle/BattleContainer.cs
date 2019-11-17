@@ -24,8 +24,7 @@ public class BattleContainer : InputReceiverDelegate {
 	private DialogueEntry dialogue;
 
 	[Header("Settings")]
-	public IntVariable slowGameSpeed;
-	public IntVariable currentGameSpeed;
+	public FloatVariable currentGameSpeed;
 	public BoolVariable useTrueHit;
 	public IntVariable doublingSpeed;
 
@@ -35,7 +34,6 @@ public class BattleContainer : InputReceiverDelegate {
 
 	[Header("Battle Actions")]
 	public List<BattleAction> actions = new List<BattleAction>();
-	public float speed = 1.5f;
 	public BoolVariable useBattleAnimations;
 	private bool showBattleAnim;
 
@@ -44,26 +42,12 @@ public class BattleContainer : InputReceiverDelegate {
 	public GameObject battleAnimationObject;
 	public GameObject uiCanvas;
 	public ForecastUI forecastUI;
-	[Space(5)]
-	public Transform leftTransform;
-	public GameObject leftDamageObject;
-	public Text leftDamageText;
-	[Space(5)]
-	public Transform rightTransform;
-	public GameObject rightDamageObject;
-	public Text rightDamageText;
 
 	[Header("Sound")]
 	public AudioVariable subMusic;
 	public AudioQueueVariable sfxQueue;
 	public SfxEntry levelupFanfare;
 	public SfxEntry levelupFill;
-	public SfxEntry missedAttackSfx;
-	//public SfxEntry hitAttackSfx;
-	public SfxEntry leathalAttackSfx;
-	//public SfxEntry critAttackSfx;
-	public SfxEntry enemyDiedSfx;
-	public SfxEntry healSfx;
 	public SfxEntry badStuffSfx;
 	public SfxEntry rewardSfx;
 
@@ -193,12 +177,7 @@ public class BattleContainer : InputReceiverDelegate {
 	}
 
 	private void SetupBattle() {
-		leftDamageObject.SetActive(false);
-		rightDamageObject.SetActive(false);
-		leftTransform.GetComponent<SpriteRenderer>().sprite = actions[0].attacker.GetComponent<SpriteRenderer>().sprite;
-		rightTransform.GetComponent<SpriteRenderer>().sprite = actions[0].defender.GetComponent<SpriteRenderer>().sprite;
-		leftTransform.GetComponent<SpriteRenderer>().color = Color.white;
-		rightTransform.GetComponent<SpriteRenderer>().color = Color.white;
+		battleAnimator.SetupScene(actions[0].attacker.GetComponent<SpriteRenderer>().sprite, actions[0].defender.GetComponent<SpriteRenderer>().sprite);
 		_attackerDealtDamage = false;
 		_defenderDealtDamage = false;
 
@@ -224,7 +203,7 @@ public class BattleContainer : InputReceiverDelegate {
 
 	private IEnumerator ActionLoop() {
 		state = State.ACTION;
-		yield return new WaitForSeconds(2f * slowGameSpeed.value / currentGameSpeed.value);
+		yield return new WaitForSeconds(2f * currentGameSpeed.value);
 
 		for (int i = 0; i < actions.Count; i++) {
 			BattleAction act = actions[i];
@@ -235,23 +214,10 @@ public class BattleContainer : InputReceiverDelegate {
 				continue; //Broken staff
 			}
 
-			Transform attackTransform = (!showBattleAnim) ? act.attacker.transform : (act.leftSide) ? leftTransform : rightTransform;
-			Transform defenseTransform = (!showBattleAnim) ? act.defender.transform : (act.leftSide) ? rightTransform : leftTransform;
-			Vector3 startPos = attackTransform.position;
-			Vector3 enemyPos = defenseTransform.position;
-			enemyPos = startPos + (enemyPos - startPos).normalized;
 			forecastUI.UpdateUI(true);
 
-			yield return new WaitForSeconds(2f * slowGameSpeed.value / currentGameSpeed.value);
+			yield return new WaitForSeconds(2f * currentGameSpeed.value);
 
-			//Move forward
-			float f = 0;
-			// Debug.Log("Start moving");
-			while (f < 0.5f) {
-				f += Time.deltaTime * speed * currentGameSpeed.value / slowGameSpeed.value;
-				attackTransform.position = Vector3.Lerp(startPos, enemyPos, f);
-				yield return null;
-			}
 			// Deal damage
 			bool isCrit = false;
 			if (act.type == BattleAction.Type.DAMAGE) {
@@ -262,8 +228,14 @@ public class BattleContainer : InputReceiverDelegate {
 				}
 				act.defender.TakeDamage(damage, isCrit);
 				BattleAnimator.HitType hitType = (damage < 0) ? BattleAnimator.HitType.MISS : (isCrit) ? BattleAnimator.HitType.CRIT : BattleAnimator.HitType.NORMAL;
-				battleAnimator.PlayAttack(act.leftSide, act.weaponAtk.weaponType, hitType, !act.defender.IsAlive(), damage);
-				//StartCoroutine(DamageDisplay(act.leftSide, damage, true, isCrit));
+				BattleAnimator.AnimationInfo animationInfo = new BattleAnimator.AnimationInfo() {
+					side = (act.leftSide) ? AttackSide.LEFT : AttackSide.RIGHT,
+					weaponType = act.weaponAtk.weaponType,
+					hitType = hitType,
+					leathal = !act.defender.IsAlive(),
+					damage = damage
+				};
+				battleAnimator.PlayAttack(animationInfo);
 
 				if (damage > 0) {
 					if (act.leftSide)
@@ -271,13 +243,7 @@ public class BattleContainer : InputReceiverDelegate {
 					else
 						_defenderDealtDamage = true;
 				}
-
-				if (!act.defender.IsAlive()) {
-					if (act.leftSide)
-						rightTransform.GetComponent<SpriteRenderer>().color = new Color(0.4f, 0.4f, 0.4f);
-					else
-						leftTransform.GetComponent<SpriteRenderer>().color = new Color(0.4f, 0.4f, 0.4f);
-				}
+				
 				act.attacker.inventory.ReduceItemCharge(ItemCategory.WEAPON);
 			}
 			else {
@@ -285,7 +251,7 @@ public class BattleContainer : InputReceiverDelegate {
 				if (act.staffAtk.weaponType == WeaponType.MEDKIT) {
 					int health = act.GetHeals();
 					act.defender.TakeHeals(health);
-					StartCoroutine(DamageDisplay(act.leftSide, health, false, false));
+					//StartCoroutine(DamageDisplay(act.leftSide, health, false, false));
 				}
 				else if (act.staffAtk.weaponType == WeaponType.BARRIER) {
 					act.defender.ReceiveBuff(act.attacker.GetEquippedWeapon(ItemCategory.SUPPORT).boost, true, true);
@@ -293,24 +259,18 @@ public class BattleContainer : InputReceiverDelegate {
 				act.attacker.inventory.ReduceItemCharge(ItemCategory.SUPPORT);
 				_attackerDealtDamage = true;
 			}
+
+			//Animate!!
+
+
 			//Update health
 			forecastUI.UpdateHealthUI();
 			updateHealthEvent.Invoke();
-
-
-			// Move back
-			// Debug.Log("Moving back");
-			yield return new WaitForSeconds(1f * slowGameSpeed.value / currentGameSpeed.value);
-			while (f > 0f) {
-				f -= Time.deltaTime * speed;
-				attackTransform.position = Vector3.Lerp(startPos, enemyPos, f);
-				yield return null;
-			}
-
+			
 			//Check Death
 			// Debug.Log("Check death");
 			if (!act.defender.IsAlive()) {
-				yield return new WaitForSeconds(1f * slowGameSpeed.value / currentGameSpeed.value);
+				yield return new WaitForSeconds(1f * currentGameSpeed.value);
 				if (act.defender.stats.charData.deathQuote != null) {
 					Debug.Log("Death quote");
 					state = State.DEATH;
@@ -351,10 +311,9 @@ public class BattleContainer : InputReceiverDelegate {
 		//Clean up
 		state = State.INIT;
 		currentAction.value = ActionMode.NONE;
+		battleAnimator.CleanupScene();
 		battleAnimationObject.SetActive(false);
 		uiCanvas.SetActive(true);
-		leftDamageObject.SetActive(false);
-		rightDamageObject.SetActive(false);
 		actions[0].attacker.EndSkills(SkillActivation.INITCOMBAT, actions[0].defender);
 		actions[0].attacker.EndSkills(SkillActivation.PRECOMBAT, actions[0].defender);
 		actions[0].defender.EndSkills(SkillActivation.PRECOMBAT, actions[0].attacker);
@@ -364,25 +323,13 @@ public class BattleContainer : InputReceiverDelegate {
 		_currentCharacter.End();
 		_currentCharacter = null;
 
-		yield return new WaitForSeconds(0.5f * slowGameSpeed.value / currentGameSpeed.value);
+		yield return new WaitForSeconds(0.5f * currentGameSpeed.value);
 
 		//Music
 		stopTransitionMusicEvent.Invoke();
 
 		//Send game finished
 		battleFinishedEvent.Invoke();
-	}
-
-	private IEnumerator DamageDisplay(bool leftSide, int damage, bool isDamage, bool isCrit) {
-		GameObject damageObject = (leftSide) ? rightDamageObject : leftDamageObject;
-		Text damageText = (leftSide) ? rightDamageText : leftDamageText;
-		damageText.color = (isDamage) ? Color.black : new Color(0, 0.5f, 0);
-		damageText.text = (damage != -1) ? damage.ToString() : "Miss";
-		damageObject.transform.localScale = (isCrit) ? new Vector3(2, 2, 2) : new Vector3(1, 1, 1);
-		damageObject.gameObject.SetActive(true);
-
-		yield return new WaitForSeconds(1f);
-		damageObject.gameObject.SetActive(false);
 	}
 
 	private IEnumerator ShowExpGain() {
@@ -398,7 +345,7 @@ public class BattleContainer : InputReceiverDelegate {
 
 		if (player == null) {
 			//Debug.Log("Nothing to give exp for");
-			yield return new WaitForSeconds(0.5f * slowGameSpeed.value / currentGameSpeed.value);
+			yield return new WaitForSeconds(0.5f * currentGameSpeed.value);
 			yield break;
 		}
 
@@ -407,7 +354,7 @@ public class BattleContainer : InputReceiverDelegate {
 		if (exp > 0) {
 			expMeter.gameObject.SetActive(true);
 			expMeter.currentExp = player.stats.currentExp;
-			yield return new WaitForSeconds(0.5f * slowGameSpeed.value / currentGameSpeed.value);
+			yield return new WaitForSeconds(0.5f * currentGameSpeed.value);
 			sfxQueue.Enqueue(levelupFill);
 			playSfxEvent.Invoke();
 			while (exp > 0) {
@@ -416,7 +363,7 @@ public class BattleContainer : InputReceiverDelegate {
 				if (expMeter.currentExp == 100) {
 					expMeter.currentExp = 0;
 					stopSfxEvent.Invoke();
-					yield return new WaitForSeconds(1f * slowGameSpeed.value / currentGameSpeed.value);
+					yield return new WaitForSeconds(1f * currentGameSpeed.value);
 					expMeter.gameObject.SetActive(false);
 					levelupScript.SetupStats(player.stats, true);
 					player.stats.GainLevel();
@@ -430,7 +377,7 @@ public class BattleContainer : InputReceiverDelegate {
 				yield return null;
 			}
 			stopSfxEvent.Invoke();
-			yield return new WaitForSeconds(0.5f * slowGameSpeed.value / currentGameSpeed.value);
+			yield return new WaitForSeconds(0.5f * currentGameSpeed.value);
 			expMeter.gameObject.SetActive(false);
 			player.stats.currentExp = expMeter.currentExp;
 		}
