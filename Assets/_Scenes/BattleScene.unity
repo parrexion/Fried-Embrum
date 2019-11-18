@@ -1217,7 +1217,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 55131486}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.5, y: -0.1, z: 0}
+  m_LocalPosition: {x: 2.5, y: 0, z: 0}
   m_LocalScale: {x: 3, y: 3, z: 1}
   m_Children: []
   m_Father: {fileID: 2025273338}
@@ -16945,6 +16945,7 @@ GameObject:
   m_Component:
   - component: {fileID: 380835677}
   - component: {fileID: 380835676}
+  - component: {fileID: 380835678}
   m_Layer: 0
   m_Name: BattleController
   m_TagString: Untagged
@@ -17046,7 +17047,6 @@ MonoBehaviour:
   expMeter: {fileID: 87511002}
   levelupScript: {fileID: 2138244165}
   actions: []
-  speed: 1.5
   useBattleAnimations: {fileID: 11400000, guid: baa24d385cc1cb547a8642b2c53065b6,
     type: 2}
   battleAnimator: {fileID: 2025273339}
@@ -17057,10 +17057,6 @@ MonoBehaviour:
   sfxQueue: {fileID: 11400000, guid: 20c2a8af0750fd24b9b1e5c73c95005d, type: 2}
   levelupFanfare: {fileID: 11400000, guid: 4fc14e47bebe94649bc49c826ed56e8f, type: 2}
   levelupFill: {fileID: 11400000, guid: 7ce17b4f6a58d814c946e3502586971d, type: 2}
-  missedAttackSfx: {fileID: 11400000, guid: e71555a45ad0e884595085760babe61f, type: 2}
-  leathalAttackSfx: {fileID: 11400000, guid: d999e697503aebb49b74fb05709844d5, type: 2}
-  enemyDiedSfx: {fileID: 11400000, guid: 270e2ddbd8e448c4cb09a052a45524d2, type: 2}
-  healSfx: {fileID: 11400000, guid: 0a726caaa3430b44aa7abb21f6b4605a, type: 2}
   badStuffSfx: {fileID: 11400000, guid: 2d94491249efff74f907741cc602624b, type: 2}
   rewardSfx: {fileID: 11400000, guid: ba2be5c664667f24c9f51d6aae11d798, type: 2}
   updateHealthEvent:
@@ -17189,6 +17185,35 @@ Transform:
   m_Father: {fileID: 1803605348}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &380835678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 380835675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14602ab6441821f43883d0b13d4f57c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  evnt: {fileID: 11400000, guid: c194fcf750423c9498aae35727c2464a, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 380835676}
+        m_MethodName: AnimationFinished
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!1 &386456901
 GameObject:
   m_ObjectHideFlags: 0
@@ -31202,7 +31227,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &873138780
 RectTransform:
   m_ObjectHideFlags: 0
@@ -40946,7 +40971,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.6226415, g: 0.038180865, b: 0.038180865, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -40966,7 +40991,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 60
+  m_Text: 0
 --- !u!222 &1221829488
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -53194,7 +53219,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1644028713}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.5, y: -0.1, z: 0}
+  m_LocalPosition: {x: -2.5, y: 0, z: 0}
   m_LocalScale: {x: 3, y: 3, z: 1}
   m_Children: []
   m_Father: {fileID: 2025273338}
@@ -61846,7 +61871,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.6226415, g: 0.038180865, b: 0.038180865, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -61866,7 +61891,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 60
+  m_Text: 0
 --- !u!222 &1784597213
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -69707,8 +69732,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b6fc76d6a18ec84e969a9bcf275badc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentGameSpeed: {fileID: 0}
-  battleMoveSpeed: {fileID: 0}
+  currentGameSpeed: {fileID: 11400000, guid: e88115b5853954b41a57794164b40561, type: 2}
+  battleMoveSpeed: {fileID: 11400000, guid: 27f456c3b9016c1498656414f792ffc3, type: 2}
+  battleMoveDistance: {fileID: 11400000, guid: e80d05ea6df75f0408dca09cabbb9f45, type: 2}
   leftTransform: {fileID: 1644028714}
   leftDamageObject: {fileID: 873138779}
   leftDamageText: {fileID: 1221829487}

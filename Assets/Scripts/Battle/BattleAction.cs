@@ -7,7 +7,7 @@ public class BattleAction {
 
 	public enum Type { DAMAGE, HEAL, BUFF }
 
-	public bool leftSide;
+	public AttackSide side;
 	public Type type;
 	public TacticsMove attacker;
 	public TacticsMove defender;
@@ -17,8 +17,8 @@ public class BattleAction {
 	public TerrainTile terrainDef;
 
 
-	public BattleAction(bool leftSide, Type type, TacticsMove atk, TacticsMove def) {
-		this.leftSide = leftSide;
+	public BattleAction(AttackSide side, Type type, TacticsMove atk, TacticsMove def) {
+		this.side = side;
 		this.type = type;
 		attacker = atk;
 		defender = def;

@@ -99,7 +99,7 @@ public class ForecastUI : MonoBehaviour {
 			// BLOCK FIGHT
 			TacticsMove defender = target.blockMove;
 			BattleAction.Type battleMode = (currentMode.value == ActionMode.ATTACK) ? BattleAction.Type.DAMAGE : BattleAction.Type.HEAL;
-			BattleAction act1 = new BattleAction(true, battleMode, attacker, defender);
+			BattleAction act1 = new BattleAction(AttackSide.LEFT, battleMode, attacker, defender);
 			_attackerTactics = attacker;
 			_defenderTactics = defender;
 			act1.weaponAtk = attacker.inventory.GetTuple(battleWeaponIndex.value);
@@ -127,7 +127,7 @@ public class ForecastUI : MonoBehaviour {
 		else {
 			TacticsMove defender = target.currentCharacter;
 			BattleAction.Type battlemode = (currentMode.value == ActionMode.ATTACK) ? BattleAction.Type.DAMAGE : BattleAction.Type.HEAL;
-			BattleAction act1 = new BattleAction(true, battlemode, attacker, defender);
+			BattleAction act1 = new BattleAction(AttackSide.LEFT, battlemode, attacker, defender);
 			_attackerTactics = attacker;
 			_defenderTactics = defender;
 			act1.weaponAtk = attacker.inventory.GetTuple(battleWeaponIndex.value);
@@ -146,7 +146,7 @@ public class ForecastUI : MonoBehaviour {
 			}
 
 			if (battlemode == BattleAction.Type.DAMAGE) {
-				BattleAction act2 = new BattleAction(false, BattleAction.Type.DAMAGE, defender, attacker);
+				BattleAction act2 = new BattleAction(AttackSide.RIGHT, BattleAction.Type.DAMAGE, defender, attacker);
 				act2.weaponDef = attacker.inventory.GetTuple(battleWeaponIndex.value);
 				int distance = BattleMap.DistanceTo(defender, walkTile.value);
 				int atk = (act1.weaponAtk.InRange(distance)) ? act1.GetDamage() : -1;

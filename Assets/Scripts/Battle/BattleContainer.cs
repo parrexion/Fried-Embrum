@@ -64,6 +64,7 @@ public class BattleContainer : InputReceiverDelegate {
 	private TacticsMove _currentCharacter;
 	private bool _attackerDealtDamage;
 	private bool _defenderDealtDamage;
+	private bool waitForAnimation;
 
 
 	public override void OnMenuModeChanged() {
@@ -95,7 +96,7 @@ public class BattleContainer : InputReceiverDelegate {
 			showBattleAnim = false;
 			_currentCharacter = attacker;
 			actions.Clear();
-			actions.Add(new BattleAction(true, BattleAction.Type.DAMAGE, attacker, defenderTile.value.blockMove));
+			actions.Add(new BattleAction(AttackSide.LEFT, BattleAction.Type.DAMAGE, attacker, defenderTile.value.blockMove));
 			Debug.Log("BLOCK FIGHT!!");
 		}
 		else {
@@ -110,20 +111,20 @@ public class BattleContainer : InputReceiverDelegate {
 			InventoryTuple atkTup = attacker.GetEquippedWeapon(ItemCategory.WEAPON);
 			InventoryTuple defTup = defender.GetEquippedWeapon(ItemCategory.WEAPON);
 			actions.Clear();
-			actions.Add(new BattleAction(true, BattleAction.Type.DAMAGE, attacker, defender));
+			actions.Add(new BattleAction(AttackSide.LEFT, BattleAction.Type.DAMAGE, attacker, defender));
 			int range = Mathf.Abs(attacker.posx - defender.posx) + Mathf.Abs(attacker.posy - defender.posy);
 			if (!string.IsNullOrEmpty(defTup.uuid) && defTup.currentCharges > 0 && defender.GetEquippedWeapon(ItemCategory.WEAPON).InRange(range)) {
-				actions.Add(new BattleAction(false, BattleAction.Type.DAMAGE, defender, attacker));
+				actions.Add(new BattleAction(AttackSide.RIGHT, BattleAction.Type.DAMAGE, defender, attacker));
 			}
 			//Compare speeds
 			int spdDiff = actions[0].GetSpeedDifference();
 			if (spdDiff >= doublingSpeed.value) {
 				if (atkTup.currentCharges > 1)
-					actions.Add(new BattleAction(true, BattleAction.Type.DAMAGE, attacker, defender));
+					actions.Add(new BattleAction(AttackSide.LEFT, BattleAction.Type.DAMAGE, attacker, defender));
 			}
 			else if (spdDiff <= -doublingSpeed.value) {
 				if (!string.IsNullOrEmpty(defTup.uuid) && defTup.currentCharges > 0 && defender.GetEquippedWeapon(ItemCategory.WEAPON).InRange(range)) {
-					actions.Add(new BattleAction(false, BattleAction.Type.DAMAGE, defender, attacker));
+					actions.Add(new BattleAction(AttackSide.RIGHT, BattleAction.Type.DAMAGE, defender, attacker));
 				}
 			}
 
@@ -157,7 +158,7 @@ public class BattleContainer : InputReceiverDelegate {
 			_currentCharacter = attacker;
 			showBattleAnim = useBattleAnimations.value;
 			actions.Clear();
-			actions.Add(new BattleAction(true, BattleAction.Type.HEAL, attacker, defender));
+			actions.Add(new BattleAction(AttackSide.LEFT, BattleAction.Type.HEAL, attacker, defender));
 		}
 	}
 
@@ -203,7 +204,6 @@ public class BattleContainer : InputReceiverDelegate {
 
 	private IEnumerator ActionLoop() {
 		state = State.ACTION;
-		yield return new WaitForSeconds(2f * currentGameSpeed.value);
 
 		for (int i = 0; i < actions.Count; i++) {
 			BattleAction act = actions[i];
@@ -216,7 +216,9 @@ public class BattleContainer : InputReceiverDelegate {
 
 			forecastUI.UpdateUI(true);
 
-			yield return new WaitForSeconds(2f * currentGameSpeed.value);
+			yield return new WaitForSeconds(1f * currentGameSpeed.value);
+
+			BattleAnimator.AnimationInfo animationInfo = new BattleAnimator.AnimationInfo();
 
 			// Deal damage
 			bool isCrit = false;
@@ -228,17 +230,14 @@ public class BattleContainer : InputReceiverDelegate {
 				}
 				act.defender.TakeDamage(damage, isCrit);
 				BattleAnimator.HitType hitType = (damage < 0) ? BattleAnimator.HitType.MISS : (isCrit) ? BattleAnimator.HitType.CRIT : BattleAnimator.HitType.NORMAL;
-				BattleAnimator.AnimationInfo animationInfo = new BattleAnimator.AnimationInfo() {
-					side = (act.leftSide) ? AttackSide.LEFT : AttackSide.RIGHT,
-					weaponType = act.weaponAtk.weaponType,
-					hitType = hitType,
-					leathal = !act.defender.IsAlive(),
-					damage = damage
-				};
-				battleAnimator.PlayAttack(animationInfo);
+				animationInfo.side = act.side;
+				animationInfo.weaponType = act.weaponAtk.weaponType;
+				animationInfo.hitType = hitType;
+				animationInfo.leathal = !act.defender.IsAlive();
+				animationInfo.damage = damage;
 
 				if (damage > 0) {
-					if (act.leftSide)
+					if (act.side == AttackSide.LEFT)
 						_attackerDealtDamage = true;
 					else
 						_defenderDealtDamage = true;
@@ -261,7 +260,11 @@ public class BattleContainer : InputReceiverDelegate {
 			}
 
 			//Animate!!
-
+			waitForAnimation = true;
+			battleAnimator.PlayAttack(animationInfo);
+			while (waitForAnimation) {
+				yield return null;
+			}
 
 			//Update health
 			forecastUI.UpdateHealthUI();
@@ -336,7 +339,7 @@ public class BattleContainer : InputReceiverDelegate {
 		TacticsMove player = null;
 		for (int i = 0; i < actions.Count; i++) {
 			if (actions[i].attacker.faction == Faction.PLAYER && actions[i].defender.faction != Faction.WORLD) {
-				if ((actions[i].leftSide && _attackerDealtDamage) || (!actions[i].leftSide && _defenderDealtDamage)) {
+				if ((actions[i].side == AttackSide.LEFT && _attackerDealtDamage) || (actions[i].side == AttackSide.RIGHT && _defenderDealtDamage)) {
 					player = actions[i].attacker;
 					break;
 				}
@@ -419,6 +422,10 @@ public class BattleContainer : InputReceiverDelegate {
 			yield return StartCoroutine(spinner.ShowSpinner(itemTup.icon, "Gained " + itemTup.entryName, rewardSfx));
 		}
 		yield break;
+	}
+
+	public void AnimationFinished() {
+		waitForAnimation = false;
 	}
 
 	public override void OnOkButton() {

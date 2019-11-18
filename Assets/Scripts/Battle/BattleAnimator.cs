@@ -26,6 +26,7 @@ public class BattleAnimator : MonoBehaviour {
 
 	public FloatVariable currentGameSpeed;
 	public FloatVariable battleMoveSpeed;
+	public FloatVariable battleMoveDistance;
 
 	public Transform leftTransform;
 	public GameObject leftDamageObject;
@@ -64,8 +65,8 @@ public class BattleAnimator : MonoBehaviour {
 		defenseRenderer.sprite = defenseSprite;
 		attackRenderer.color = Color.white;
 		defenseRenderer.color = Color.white;
-		leftPos = leftTransform.position;
-		rightPos = rightTransform.position;
+		leftPos = leftTransform.localPosition;
+		rightPos = rightTransform.localPosition;
 	}
 
 	public void CleanupScene() {
@@ -82,8 +83,8 @@ public class BattleAnimator : MonoBehaviour {
 		leftDamageObject.SetActive(false);
 		rightDamageObject.SetActive(false);
 
-		GenerateAnimation(info);
-
+		GenerateAttackDelays(info);
+		Debug.Log("Show animation");
 		StartCoroutine(Animating(info));
 	}
 
@@ -115,43 +116,44 @@ public class BattleAnimator : MonoBehaviour {
 		if (info.leathal)
 			PlayDeath(FightSide.DEFENSE);
 
-		yield return StartCoroutine(DamageDisplay(info.damage, true, info.hitType == HitType.CRIT));
+		StartCoroutine(DamageDisplay(info.damage, true, info.hitType == HitType.CRIT));
 
-
-		if (info.postHit > 0) {
-			yield return new WaitForSeconds(info.postHit);
-		}
+		if(info.side == AttackSide.LEFT)
+			yield return StartCoroutine(MoveBack(info.postHit, leftPos, rightPos));
+		else
+			yield return StartCoroutine(MoveBack(info.postHit, rightPos, leftPos));
 
 		//DONE
 		BattleAnimationEvent.Invoke();
+		Debug.Log("Animation done");
 		yield break;
 	}
 
 	private IEnumerator MoveForward(float duration, Vector3 startPos, Vector3 targetPos) {
 		//Move forward
 		float f = 0;
-		// Debug.Log("Start moving");
-		while (f < 0.5f) {
+		Debug.Log("Start moving  " + startPos.ToString());
+		while (f < battleMoveDistance.value) {
 			f += Time.deltaTime * battleMoveSpeed.value / currentGameSpeed.value;
-			attackTransform.position = Vector3.Lerp(startPos, targetPos, f);
+			attackTransform.localPosition = Vector3.Lerp(startPos, targetPos, f);
 			yield return null;
 		}
-		if (duration > 0.5f) {
-			yield return new WaitForSeconds(duration - 0.5f);
+		if (duration > battleMoveDistance.value) {
+			yield return new WaitForSeconds(duration - battleMoveDistance.value);
 		}
 	}
 
 	private IEnumerator MoveBack(float duration, Vector3 startPos, Vector3 targetPos) {
 		//Move forward
-		float f = 0.5f;
+		float f = battleMoveDistance.value;
 		// Debug.Log("Start moving");
 		while (f > 0f) {
 			f -= Time.deltaTime * battleMoveSpeed.value / currentGameSpeed.value;
-			attackTransform.position = Vector3.Lerp(startPos, targetPos, f);
+			attackTransform.localPosition = Vector3.Lerp(startPos, targetPos, f);
 			yield return null;
 		}
 		if (duration > 0.5f) {
-			yield return new WaitForSeconds(duration - 0.5f);
+			yield return new WaitForSeconds(duration - battleMoveDistance.value);
 		}
 	}
 
@@ -161,7 +163,7 @@ public class BattleAnimator : MonoBehaviour {
 		defendDamageObject.transform.localScale = (isCrit) ? new Vector3(2, 2, 2) : new Vector3(1, 1, 1);
 		defendDamageObject.gameObject.SetActive(true);
 
-		yield return new WaitForSeconds(1f);
+		yield return new WaitForSeconds(1f * currentGameSpeed.value);
 		defendDamageObject.gameObject.SetActive(false);
 	}
 
@@ -172,7 +174,7 @@ public class BattleAnimator : MonoBehaviour {
 			defenseRenderer.color = new Color(0.4f, 0.4f, 0.4f);
 	}
 
-	private void GenerateAnimation(AnimationInfo info) {
+	private void GenerateAttackDelays(AnimationInfo info) {
 		switch (info.weaponType) {
 			case WeaponType.SHOTGUN:
 				sfxQueue.Enqueue(attackSfx[0]);

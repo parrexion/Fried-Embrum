@@ -10,7 +10,7 @@ public class BattleAnimatorEditor : Editor {
 	private BattleAnimator.AnimationInfo debugInfo = new BattleAnimator.AnimationInfo();
 
 	public override void OnInspectorGUI() {
-		
+		/*
 		debugInfo.side = (AttackSide)EditorGUILayout.EnumPopup("Attack Side", debugInfo.side);
 		debugInfo.weaponType = (WeaponType)EditorGUILayout.EnumPopup("Weapon Type", debugInfo.weaponType);
 		debugInfo.hitType = (BattleAnimator.HitType)EditorGUILayout.EnumPopup("Hit Type", debugInfo.hitType);
@@ -23,6 +23,7 @@ public class BattleAnimatorEditor : Editor {
 		}
 
 		GUILayout.Space(20);
+		*/
 
 		DrawDefaultInspector();
 	}
