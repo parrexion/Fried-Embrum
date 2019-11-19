@@ -71263,6 +71263,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2074500937}
   - component: {fileID: 2074500936}
+  - component: {fileID: 2074500944}
   - component: {fileID: 2074500938}
   - component: {fileID: 2074500939}
   - component: {fileID: 2074500940}
@@ -71298,8 +71299,6 @@ MonoBehaviour:
   mapClicker: {fileID: 1546354684}
   cursorX: {fileID: 11400000, guid: c2b3aa3e1e995d545b1165460053d109, type: 2}
   cursorY: {fileID: 11400000, guid: bc83df26fa1b9664593c316923606033, type: 2}
-  currentTurn: {fileID: 11400000, guid: 2ce1ea33e4d27044db0a8b97d2dcf10f, type: 2}
-  currentFaction: {fileID: 11400000, guid: 03872b965811b8f4eb110ecb93bea4ca, type: 2}
   reinforcementDelay: 0.75
   currentGameSpeed: {fileID: 11400000, guid: e88115b5853954b41a57794164b40561, type: 2}
   playerPrefab: {fileID: 4786313984571464, guid: d76e923e576c9c047bee40ee567e8a9d,
@@ -71309,46 +71308,10 @@ MonoBehaviour:
   tilePrefab: {fileID: 4495043604141880, guid: e4e5cb21d1f455842b2012648d6a43b4, type: 3}
   blockTilePrefab: {fileID: 4495043604141880, guid: b128413b6ac2841468216f1dc73ea581,
     type: 3}
-  lockControls: {fileID: 11400000, guid: b8d06aee0ad3bce4daa463a8433439f4, type: 2}
-  currentDialogueMode: {fileID: 11400000, guid: 9ebc847de791cc24bbd938f1f28012e7,
-    type: 2}
-  currentDialogue: {fileID: 11400000, guid: 4aca8b6ac3dbaa943963a062568cc6b4, type: 2}
   cursorMoveEvent:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11400000, guid: 2d602ae12a5de354395e1c957b158428, type: 2}
-        m_MethodName: Raise
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  nextTurnStateEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11400000, guid: 69c3f8f0ba50da54f85f11632f92f61e, type: 2}
-        m_MethodName: Raise
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  startDialogueEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11400000, guid: 6f15e75a555993c48a97e8b2c7be0718, type: 2}
         m_MethodName: Raise
         m_Mode: 1
         m_Arguments:
@@ -71462,7 +71425,7 @@ MonoBehaviour:
   response:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2074500936}
+      - m_Target: {fileID: 2074500944}
         m_MethodName: SpawnReinforcements
         m_Mode: 1
         m_Arguments:
@@ -71491,7 +71454,7 @@ MonoBehaviour:
   response:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2074500936}
+      - m_Target: {fileID: 2074500944}
         m_MethodName: CheckDialogueEvents
         m_Mode: 1
         m_Arguments:
@@ -71520,7 +71483,7 @@ MonoBehaviour:
   response:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2074500936}
+      - m_Target: {fileID: 2074500944}
         m_MethodName: CheckOtherEvents
         m_Mode: 1
         m_Arguments:
@@ -71551,6 +71514,58 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2074500936}
         m_MethodName: RespawnPlayers
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+--- !u!114 &2074500944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2074500935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 467101377c5638a45a6ec5ded89c2c11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mapCreator: {fileID: 2074500936}
+  battleMap: {fileID: 526369253}
+  currentTurn: {fileID: 11400000, guid: 2ce1ea33e4d27044db0a8b97d2dcf10f, type: 2}
+  currentFaction: {fileID: 11400000, guid: 03872b965811b8f4eb110ecb93bea4ca, type: 2}
+  lockControls: {fileID: 11400000, guid: b8d06aee0ad3bce4daa463a8433439f4, type: 2}
+  currentDialogueMode: {fileID: 11400000, guid: 9ebc847de791cc24bbd938f1f28012e7,
+    type: 2}
+  currentDialogue: {fileID: 11400000, guid: 4aca8b6ac3dbaa943963a062568cc6b4, type: 2}
+  nextTurnStateEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 69c3f8f0ba50da54f85f11632f92f61e, type: 2}
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  startDialogueEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 6f15e75a555993c48a97e8b2c7be0718, type: 2}
+        m_MethodName: Raise
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

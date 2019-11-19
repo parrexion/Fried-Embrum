@@ -13,11 +13,10 @@ public class MapCreator : MonoBehaviour {
 	public PrepListVariable prepList2;
 	public BattleMap battleMap;
 	public MapCursor mapClicker;
+	public MapSpawner mapSpawner;
 
 	public IntVariable cursorX;
 	public IntVariable cursorY;
-	public IntVariable currentTurn;
-	public FactionVariable currentFaction;
 	public float reinforcementDelay = 0.75f;
 	public FloatVariable currentGameSpeed;
 
@@ -27,15 +26,8 @@ public class MapCreator : MonoBehaviour {
 	public Transform tilePrefab;
 	public Transform blockTilePrefab;
 
-	[Header("Dialogues")]
-	public BoolVariable lockControls;
-	public IntVariable currentDialogueMode;
-	public ScrObjEntryReference currentDialogue;
-
 	[Header("Events")]
 	public UnityEvent cursorMoveEvent;
-	public UnityEvent nextTurnStateEvent;
-	public UnityEvent startDialogueEvent;
 
 	[Header("Terrain Tiles")]
 	public TerrainTile tileNormal;
@@ -76,8 +68,7 @@ public class MapCreator : MonoBehaviour {
 		TacticsCamera.boxCollider.size = new Vector2(_sizeX + 1, _sizeY + 1);
 		TacticsCamera.boxCollider.center = new Vector3((_sizeX - 1) / 2.0f, (_sizeY - 1) / 2.0f, 0);
 		TacticsCamera.boxActive = true;
-
-
+		
 		GenerateMap(map.mapSprite);
 		if (map.spawnPoints1.Count > 0) {
 			cursorX.value = map.spawnPoints1[0].x;
@@ -140,7 +131,7 @@ public class MapCreator : MonoBehaviour {
 						StatsContainer stats = new StatsContainer(interPos.ally);
 						InventoryContainer inventory = new InventoryContainer(playerClassWheel.GetWpnSkillFromLevel(interPos.ally.charData.startClassLevels), interPos.ally.inventory);
 						SkillsContainer skills = new SkillsContainer(playerClassWheel.GetSkillsFromLevel(interPos.ally.charData.startClassLevels, interPos.ally.charData.startClass, interPos.ally.level));
-						tempTile.ally = SpawnPlayerCharacter(interPos.x, interPos.y, stats, inventory, skills, 0, false);
+						tempTile.ally = mapSpawner.SpawnPlayerCharacter(interPos.x, interPos.y, stats, inventory, skills, 0, false);
 						Debug.Log("Spawned ally:  " + tempTile.ally.name);
 					}
 					TerrainTile terrain = (interPos.gift == null && interPos.ally == null) ? tileHouse : tileHouseReward;
@@ -225,7 +216,7 @@ public class MapCreator : MonoBehaviour {
 			SkillsContainer skills = playerData.skills[index];
 			prepPos++;
 
-			SpawnPlayerCharacter(pos.x, pos.y, stats, inventory, skills, 1, true);
+			mapSpawner.SpawnPlayerCharacter(pos.x, pos.y, stats, inventory, skills, 1, true);
 		}
 
 		prepPos = 0;
@@ -243,7 +234,7 @@ public class MapCreator : MonoBehaviour {
 			SkillsContainer skills = playerData.skills[index];
 			prepPos++;
 
-			SpawnPlayerCharacter(pos.x, pos.y, stats, inventory, skills, 2, true);
+			mapSpawner.SpawnPlayerCharacter(pos.x, pos.y, stats, inventory, skills, 2, true);
 		}
 	}
 
@@ -269,7 +260,7 @@ public class MapCreator : MonoBehaviour {
 				quotes.Add(fight);
 			}
 
-			SpawnEnemyCharacter(pos, stats, inventory, skills);
+			mapSpawner.SpawnEnemyCharacter(pos, stats, inventory, skills);
 		}
 	}
 
@@ -295,7 +286,7 @@ public class MapCreator : MonoBehaviour {
 				quotes.Add(fight);
 			}
 
-			SpawnAllyCharacter(pos, stats, inventory, skills);
+			mapSpawner.SpawnAllyCharacter(pos, stats, inventory, skills);
 		}
 	}
 
@@ -306,241 +297,6 @@ public class MapCreator : MonoBehaviour {
 		battleMap.playerList.values.Clear();
 
 		SpawnPlayers();
-	}
-
-	/// <summary>
-	/// Spawns a player character on the map.
-	/// </summary>
-	/// <param name="x"></param>
-	/// <param name="y"></param>
-	/// <param name="stats"></param>
-	/// <param name="inventory"></param>
-	/// <param name="skills"></param>
-	public TacticsMove SpawnPlayerCharacter(int x, int y, StatsContainer stats, InventoryContainer inventory, SkillsContainer skills, int squad, bool active) {
-		Transform playerTransform = Instantiate(playerPrefab, battleMap.playerParent);
-		PlayerMove tactics = playerTransform.GetComponent<PlayerMove>();
-		tactics.battleMap = battleMap;
-		tactics.posx = x;
-		tactics.posy = y;
-		tactics.stats = stats;
-		tactics.inventory = inventory;
-		tactics.skills = skills;
-		tactics.squad = squad;
-		if (active)
-			tactics.Setup();
-		else
-			playerTransform.gameObject.SetActive(false);
-
-		return tactics;
-	}
-
-	/// <summary>
-	/// Spawns an enemy character on the map.
-	/// </summary>
-	/// <param name="pos"></param>
-	/// <param name="stats"></param>
-	/// <param name="inventory"></param>
-	/// <param name="skills"></param>
-	private void SpawnEnemyCharacter(ReinforcementPosition pos, StatsContainer stats, InventoryContainer inventory, SkillsContainer skills) {
-		Transform enemyTransform = Instantiate(enemyPrefab, battleMap.enemyParent);
-		NPCMove tactics = enemyTransform.GetComponent<NPCMove>();
-		tactics.battleMap = battleMap;
-		tactics.posx = pos.x;
-		tactics.posy = pos.y;
-		tactics.stats = stats;
-		tactics.faction = Faction.ENEMY;
-		tactics.inventory = inventory;
-		tactics.skills = skills;
-		tactics.fightQuotes = pos.quotes;
-		tactics.talkQuotes = pos.talks;
-		tactics.aggroType = pos.aggroType;
-		tactics.huntTile = battleMap.GetTile(pos.huntX, pos.huntY);
-		tactics.patrolTiles.Clear();
-		for (int i = 0; i < pos.patrolPositions.Count; i++) {
-			tactics.patrolTiles.Add(battleMap.GetTile(pos.patrolPositions[i]));
-		}
-		tactics.Setup();
-	}
-
-	/// <summary>
-	/// Spawns an enemy character on the map.
-	/// </summary>
-	/// <param name="pos"></param>
-	/// <param name="stats"></param>
-	/// <param name="inventory"></param>
-	/// <param name="skills"></param>
-	private void SpawnAllyCharacter(ReinforcementPosition pos, StatsContainer stats, InventoryContainer inventory, SkillsContainer skills) {
-		Transform allyTransform = Instantiate(enemyPrefab, battleMap.enemyParent);
-		NPCMove tactics = allyTransform.GetComponent<NPCMove>();
-		tactics.battleMap = battleMap;
-		tactics.posx = pos.x;
-		tactics.posy = pos.y;
-		tactics.stats = stats;
-		tactics.faction = Faction.ALLY;
-		tactics.inventory = inventory;
-		tactics.skills = skills;
-		tactics.fightQuotes = pos.quotes;
-		tactics.talkQuotes = pos.talks;
-		tactics.aggroType = pos.aggroType;
-		tactics.huntTile = battleMap.GetTile(pos.huntX, pos.huntY);
-		tactics.patrolTiles.Clear();
-		for (int i = 0; i < pos.patrolPositions.Count; i++) {
-			tactics.patrolTiles.Add(battleMap.GetTile(pos.patrolPositions[i]));
-		}
-		tactics.Setup();
-	}
-
-	/// <summary>
-	/// Is triggered by event and checks the map to see if any reinforcements should be spawned.
-	/// </summary>
-	public void SpawnReinforcements() {
-		StartCoroutine(SpawnReinforcementsLoop());
-	}
-
-	/// <summary>
-	/// Loop which goes through each reinforcement event and spawns the ones which are available.
-	/// </summary>
-	/// <returns></returns>
-	private IEnumerator SpawnReinforcementsLoop() {
-		for (int i = 0; i < battleMap.reinforcementEvents.Count; i++) {
-			ReinforcementPosition pos = battleMap.reinforcementEvents.GetEvent(i);
-			if (battleMap.reinforcementEvents.IsActivated(i) || currentFaction.value != pos.faction)
-				continue;
-
-			bool activate = false;
-			if (pos.triggerType == TriggerType.TURN)
-				activate = (currentTurn.value >= pos.spawnTurn);
-			else if (pos.triggerType == TriggerType.TRIGGER) {
-				activate = battleMap.triggerList.IsTriggered(pos.triggerIndex);
-			}
-			else if (pos.triggerType == TriggerType.PLAYER_COUNT) {
-				activate = battleMap.playerList.Count <= pos.spawnTurn;
-			}
-
-			if (!activate) {
-				continue;
-			}
-
-			MapTile tile = battleMap.GetTile(pos.x, pos.y);
-			if (tile.currentCharacter == null) {
-				battleMap.reinforcementEvents.Activate(i);
-				StatsContainer stats = new StatsContainer(pos);
-				ClassWheel wheel = (stats.charData.faction == Faction.PLAYER) ? playerClassWheel : enemyClassWheel;
-				InventoryContainer inventory = new InventoryContainer(wheel.GetWpnSkillFromLevel(pos.charData.startClassLevels), pos.inventory);
-				SkillsContainer skills = new SkillsContainer(wheel.GetSkillsFromLevel(pos.charData.startClassLevels, pos.charData.startClass, pos.level));
-				if (pos.charData.faction == Faction.PLAYER) {
-					TacticsMove tm = SpawnPlayerCharacter(pos.x, pos.y, stats, inventory, skills, pos.joiningSquad, true);
-					playerData.AddNewPlayer(tm);
-					PrepCharacter prep = new PrepCharacter(playerData.stats.Count - 1);
-					if (pos.joiningSquad == 2) {
-						prepList2.values.Add(prep);
-					}
-					else {
-						prepList1.values.Add(prep);
-					}
-				}
-				else if (pos.charData.faction == Faction.ENEMY) {
-					SpawnEnemyCharacter(pos, stats, inventory, skills);
-				}
-				else {
-					Debug.LogError("Unimplemented faction  " + pos.faction);
-				}
-				cursorX.value = pos.x;
-				cursorY.value = pos.y;
-				cursorMoveEvent.Invoke();
-				// Debug.Log("Hello there!     " + (reinforcementDelay * slowGameSpeed.value / currentGameSpeed.value));
-				yield return new WaitForSeconds(reinforcementDelay * currentGameSpeed.value);
-			}
-		}
-		nextTurnStateEvent.Invoke();
-		yield break;
-	}
-
-	/// <summary>
-	/// Checks if there are any dialogues that should be shown.
-	/// </summary>
-	public void CheckDialogueEvents() {
-		for (int i = 0; i < battleMap.dialogueEvents.Count; i++) {
-			TurnEvent pos = battleMap.dialogueEvents.GetEvent(i);
-			if (battleMap.dialogueEvents.IsActivated(i) || currentFaction.value != pos.factionTurn)
-				continue;
-
-			bool activate = false;
-			switch (pos.triggerType) {
-				case TriggerType.TURN:
-					activate = (currentTurn.value == pos.turn);
-					break;
-				case TriggerType.TRIGGER:
-					activate = battleMap.triggerList.IsTriggered(pos.triggerIndex);
-					break;
-				case TriggerType.PLAYER_COUNT:
-					activate = (battleMap.playerList.values.Count <= pos.turn);
-					break;
-				case TriggerType.ALLY_COUNT:
-					activate = (battleMap.allyList.values.Count <= pos.turn);
-					break;
-				case TriggerType.ENEMY_COUNT:
-					activate = (battleMap.enemyList.AliveCount() <= pos.turn);
-					break;
-			}
-
-			if (activate) {
-				battleMap.dialogueEvents.Activate(i);
-				currentDialogue.value = pos.dialogue;
-				currentDialogueMode.value = (int)DialogueMode.EVENT;
-				startDialogueEvent.Invoke();
-				return;
-			}
-		}
-		//If no dialogues were triggered
-		nextTurnStateEvent.Invoke();
-	}
-
-	/// <summary>
-	/// Checks if there are any events that should be triggered.
-	/// </summary>
-	public void CheckOtherEvents() {
-		for (int i = 0; i < battleMap.otherEvents.Count; i++) {
-			TurnEvent pos = battleMap.otherEvents.GetEvent(i);
-			if (battleMap.otherEvents.IsActivated(i) || currentFaction.value != pos.factionTurn)
-				continue;
-
-			bool activate = false;
-			switch (pos.triggerType) {
-				case TriggerType.TURN:
-					activate = (currentTurn.value == pos.turn);
-					break;
-				case TriggerType.TRIGGER:
-					activate = battleMap.triggerList.IsTriggered(pos.triggerIndex);
-					break;
-				case TriggerType.PLAYER_COUNT:
-					activate = (battleMap.playerList.values.Count <= pos.turn);
-					break;
-				case TriggerType.ALLY_COUNT:
-					activate = (battleMap.allyList.values.Count <= pos.turn);
-					break;
-				case TriggerType.ENEMY_COUNT:
-					activate = (battleMap.enemyList.AliveCount() <= pos.turn);
-					break;
-			}
-
-			if (activate) {
-				battleMap.otherEvents.Activate(i);
-				switch (pos.type) {
-					case TurnEventType.MAPCHANGE:
-						MapTile tile = battleMap.GetTile(pos.x, pos.y);
-						tile.SetTerrain(pos.changeTerrain);
-						break;
-					case TurnEventType.MONEY:
-						Debug.Log("Gained money:  " + pos.value);
-						break;
-					case TurnEventType.SCRAP:
-						Debug.Log("Gained scrap:  " + pos.value);
-						break;
-				}
-			}
-		}
-		nextTurnStateEvent.Invoke();
 	}
 
 	private TerrainTile GetTerrainFromPixel(Color32 pixelColor) {

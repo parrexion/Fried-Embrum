@@ -24,7 +24,7 @@ public class ActionInputController : MonoBehaviour {
 	public PrepListVariable squad2;
 
 	[Header("Joining characters")]
-	public MapCreator mapCreator;
+	public MapSpawner mapSpawner;
 	private PlayerMove joiningCharacter;
 	private bool willJoin;
 
@@ -163,7 +163,7 @@ public class ActionInputController : MonoBehaviour {
 		startDialogue.Invoke();
 
 		if (willJoin) {
-			joiningCharacter = (PlayerMove)mapCreator.SpawnPlayerCharacter(other.posx, other.posy, other.stats, other.inventory, other.skills, player.squad, false);
+			joiningCharacter = (PlayerMove)mapSpawner.SpawnPlayerCharacter(other.posx, other.posy, other.stats, other.inventory, other.skills, player.squad, false);
 			joiningCharacter.currentTile = targetTile;
 			other.RemoveFromList();
 			Destroy(other.gameObject);
