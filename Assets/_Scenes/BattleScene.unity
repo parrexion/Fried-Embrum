@@ -7927,8 +7927,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1803605348}
-  m_RootOrder: 6
+  m_Father: {fileID: 649918204}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &102152792
 MonoBehaviour:
@@ -8039,7 +8039,18 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   menuFailEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 5b882ed488044f74d92c3818ac29c97b, type: 2}
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   currentMap: {fileID: 11400000, guid: 188cfd11b445e1244a89510ca126c756, type: 2}
@@ -9971,7 +9982,18 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   menuFailEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 5b882ed488044f74d92c3818ac29c97b, type: 2}
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   forecast: {fileID: 171313977}
@@ -17052,29 +17074,12 @@ MonoBehaviour:
   battleAnimator: {fileID: 2025273339}
   battleAnimationObject: {fileID: 2025273337}
   uiCanvas: {fileID: 1411092479}
-  forecastUI: {fileID: 1000288200}
   subMusic: {fileID: 11400000, guid: a0a5dc1f59ad1aa42af7dd1c0b2ede36, type: 2}
   sfxQueue: {fileID: 11400000, guid: 20c2a8af0750fd24b9b1e5c73c95005d, type: 2}
   levelupFanfare: {fileID: 11400000, guid: 4fc14e47bebe94649bc49c826ed56e8f, type: 2}
   levelupFill: {fileID: 11400000, guid: 7ce17b4f6a58d814c946e3502586971d, type: 2}
   badStuffSfx: {fileID: 11400000, guid: 2d94491249efff74f907741cc602624b, type: 2}
   rewardSfx: {fileID: 11400000, guid: ba2be5c664667f24c9f51d6aae11d798, type: 2}
-  updateHealthEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11400000, guid: 858dca6a8b90297459d4452bbc99228d, type: 2}
-        m_MethodName: Raise
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   battleFinishedEvent:
     m_PersistentCalls:
       m_Calls:
@@ -17183,7 +17188,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1803605348}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &380835678
 MonoBehaviour:
@@ -24293,6 +24298,39 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 648465363}
   m_CullTransparentMesh: 0
+--- !u!1 &649918203
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 649918204}
+  m_Layer: 0
+  m_Name: MapControllers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &649918204
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 649918203}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 2074500937}
+  - {fileID: 2017766458}
+  - {fileID: 102152791}
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &654765981
 GameObject:
   m_ObjectHideFlags: 0
@@ -27179,11 +27217,11 @@ MonoBehaviour:
   currentDialogueMode: {fileID: 11400000, guid: 9ebc847de791cc24bbd938f1f28012e7,
     type: 2}
   currentDialogue: {fileID: 11400000, guid: 4aca8b6ac3dbaa943963a062568cc6b4, type: 2}
+  cursorX: {fileID: 11400000, guid: c2b3aa3e1e995d545b1165460053d109, type: 2}
+  cursorY: {fileID: 11400000, guid: bc83df26fa1b9664593c316923606033, type: 2}
   selectMainCharacter: {fileID: 11400000, guid: 2fcbe5e77d621cf44b185b8fc56c1a32,
     type: 2}
   autoEndTurn: {fileID: 11400000, guid: 27e8cb1b44794c44da7921a16f5d1041, type: 2}
-  cursorX: {fileID: 11400000, guid: c2b3aa3e1e995d545b1165460053d109, type: 2}
-  cursorY: {fileID: 11400000, guid: bc83df26fa1b9664593c316923606033, type: 2}
   gatheredScrap: {fileID: 11400000, guid: 76aefc5bc24fbcf43af852ab47bbcb5c, type: 2}
   totalKills: {fileID: 11400000, guid: 5fda396df96fa5c4ba83681015466596, type: 2}
   totalDeaths: {fileID: 11400000, guid: 040b0e0c05697cf4b90758e31bfbc97a, type: 2}
@@ -35200,7 +35238,6 @@ GameObject:
   - component: {fileID: 1000288197}
   - component: {fileID: 1000288200}
   - component: {fileID: 1000288199}
-  - component: {fileID: 1000288198}
   m_Layer: 5
   m_Name: ForecastUI
   m_TagString: Untagged
@@ -35227,35 +35264,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1000288198
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000288196}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14602ab6441821f43883d0b13d4f57c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  evnt: {fileID: 11400000, guid: 858dca6a8b90297459d4452bbc99228d, type: 2}
-  response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1000288200}
-        m_MethodName: UpdateHealthUI
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!114 &1000288199
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36491,6 +36499,181 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1017577294}
   m_CullTransparentMesh: 0
+--- !u!1 &1020177683
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1020177684}
+  - component: {fileID: 1020177688}
+  - component: {fileID: 1020177687}
+  - component: {fileID: 1020177686}
+  - component: {fileID: 1020177685}
+  m_Layer: 0
+  m_Name: TurnEventController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1020177684
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1020177683}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1803605348}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1020177685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1020177683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14602ab6441821f43883d0b13d4f57c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  evnt: {fileID: 11400000, guid: 08e148840a52a88499ec4cb2dd2b0924, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1020177688}
+        m_MethodName: CheckMapEvents
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+--- !u!114 &1020177686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1020177683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14602ab6441821f43883d0b13d4f57c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  evnt: {fileID: 11400000, guid: 51f157df6dbb76541ae371e38871fb36, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1020177688}
+        m_MethodName: CheckDialogueEvents
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+--- !u!114 &1020177687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1020177683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14602ab6441821f43883d0b13d4f57c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  evnt: {fileID: 11400000, guid: ad80159700757904f8da497fdbc92d0b, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1020177688}
+        m_MethodName: SpawnReinforcements
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+--- !u!114 &1020177688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1020177683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 467101377c5638a45a6ec5ded89c2c11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mapSpawner: {fileID: 2017766457}
+  battleMap: {fileID: 526369253}
+  currentTurn: {fileID: 11400000, guid: 2ce1ea33e4d27044db0a8b97d2dcf10f, type: 2}
+  currentFaction: {fileID: 11400000, guid: 03872b965811b8f4eb110ecb93bea4ca, type: 2}
+  reinforcementDelay: 0.75
+  currentGameSpeed: {fileID: 11400000, guid: e88115b5853954b41a57794164b40561, type: 2}
+  lockControls: {fileID: 11400000, guid: b8d06aee0ad3bce4daa463a8433439f4, type: 2}
+  currentDialogueMode: {fileID: 11400000, guid: 9ebc847de791cc24bbd938f1f28012e7,
+    type: 2}
+  currentDialogue: {fileID: 11400000, guid: 4aca8b6ac3dbaa943963a062568cc6b4, type: 2}
+  nextTurnStateEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 69c3f8f0ba50da54f85f11632f92f61e, type: 2}
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  startDialogueEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 6f15e75a555993c48a97e8b2c7be0718, type: 2}
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!1 &1023934852
 GameObject:
   m_ObjectHideFlags: 0
@@ -38651,7 +38834,7 @@ MonoBehaviour:
   triggeredWin: {fileID: 11400000, guid: 30dc8495c44a15c46aa899d7647cd160, type: 2}
   squad1: {fileID: 11400000, guid: 8918db7c8316b2048968883d5e79479a, type: 2}
   squad2: {fileID: 11400000, guid: df66b25f4fd355241bdd1e0139be1eaf, type: 2}
-  mapCreator: {fileID: 2074500936}
+  mapSpawner: {fileID: 0}
   actionMenu: {fileID: 80507727}
   actionButtons: {fileID: 80507730}
   dialogueMode: {fileID: 11400000, guid: 9ebc847de791cc24bbd938f1f28012e7, type: 2}
@@ -58125,7 +58308,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 1803605348}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -62640,10 +62823,10 @@ Transform:
   - {fileID: 378268981}
   - {fileID: 217209802}
   - {fileID: 760330657}
+  - {fileID: 1020177684}
   - {fileID: 1931585851}
   - {fileID: 380835677}
   - {fileID: 1647619197}
-  - {fileID: 102152791}
   - {fileID: 1110140013}
   - {fileID: 1006307170}
   - {fileID: 409008936}
@@ -66168,7 +66351,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1803605348}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1931585852
 MonoBehaviour:
@@ -69335,6 +69518,77 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   style: 11
+--- !u!1 &2017766456
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2017766458}
+  - component: {fileID: 2017766457}
+  m_Layer: 0
+  m_Name: MapSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2017766457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2017766456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9935456fbf929634fbd6f490dc047262, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  battleMap: {fileID: 526369253}
+  playerClassWheel: {fileID: 11400000, guid: d29c1242cf6052c43bfa5c9fb5fdb98b, type: 2}
+  enemyClassWheel: {fileID: 11400000, guid: ce101e55e6b99d44da71f2d3c306a316, type: 2}
+  playerPrefab: {fileID: 4786313984571464, guid: d76e923e576c9c047bee40ee567e8a9d,
+    type: 3}
+  enemyPrefab: {fileID: 4715137784424608, guid: 250a9f64a737fb84a991637371c79678,
+    type: 3}
+  playerData: {fileID: 11400000, guid: cf29fce9ee9388e4290741fe2d10bab5, type: 2}
+  prepList1: {fileID: 11400000, guid: 8918db7c8316b2048968883d5e79479a, type: 2}
+  prepList2: {fileID: 11400000, guid: df66b25f4fd355241bdd1e0139be1eaf, type: 2}
+  cursorX: {fileID: 11400000, guid: c2b3aa3e1e995d545b1165460053d109, type: 2}
+  cursorY: {fileID: 11400000, guid: bc83df26fa1b9664593c316923606033, type: 2}
+  cursorMoveEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 2d602ae12a5de354395e1c957b158428, type: 2}
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+--- !u!4 &2017766458
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2017766456}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 649918204}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2020709085
 GameObject:
   m_ObjectHideFlags: 0
@@ -69732,9 +69986,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b6fc76d6a18ec84e969a9bcf275badc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  forecastUI: {fileID: 1000288200}
   currentGameSpeed: {fileID: 11400000, guid: e88115b5853954b41a57794164b40561, type: 2}
   battleMoveSpeed: {fileID: 11400000, guid: 27f456c3b9016c1498656414f792ffc3, type: 2}
-  battleMoveDistance: {fileID: 11400000, guid: e80d05ea6df75f0408dca09cabbb9f45, type: 2}
+  battleMoveDistance: 0.4
   leftTransform: {fileID: 1644028714}
   leftDamageObject: {fileID: 873138779}
   leftDamageText: {fileID: 1221829487}
@@ -71263,12 +71518,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2074500937}
   - component: {fileID: 2074500936}
-  - component: {fileID: 2074500944}
   - component: {fileID: 2074500938}
   - component: {fileID: 2074500939}
-  - component: {fileID: 2074500940}
-  - component: {fileID: 2074500941}
-  - component: {fileID: 2074500942}
   - component: {fileID: 2074500943}
   m_Layer: 0
   m_Name: MapCreator
@@ -71291,20 +71542,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentMap: {fileID: 11400000, guid: 188cfd11b445e1244a89510ca126c756, type: 2}
   playerData: {fileID: 11400000, guid: cf29fce9ee9388e4290741fe2d10bab5, type: 2}
-  playerClassWheel: {fileID: 11400000, guid: d29c1242cf6052c43bfa5c9fb5fdb98b, type: 2}
-  enemyClassWheel: {fileID: 11400000, guid: ce101e55e6b99d44da71f2d3c306a316, type: 2}
   prepList1: {fileID: 11400000, guid: 8918db7c8316b2048968883d5e79479a, type: 2}
   prepList2: {fileID: 11400000, guid: df66b25f4fd355241bdd1e0139be1eaf, type: 2}
   battleMap: {fileID: 526369253}
-  mapClicker: {fileID: 1546354684}
+  mapSpawner: {fileID: 2017766457}
   cursorX: {fileID: 11400000, guid: c2b3aa3e1e995d545b1165460053d109, type: 2}
   cursorY: {fileID: 11400000, guid: bc83df26fa1b9664593c316923606033, type: 2}
-  reinforcementDelay: 0.75
-  currentGameSpeed: {fileID: 11400000, guid: e88115b5853954b41a57794164b40561, type: 2}
-  playerPrefab: {fileID: 4786313984571464, guid: d76e923e576c9c047bee40ee567e8a9d,
-    type: 3}
-  enemyPrefab: {fileID: 4715137784424608, guid: 250a9f64a737fb84a991637371c79678,
-    type: 3}
   tilePrefab: {fileID: 4495043604141880, guid: e4e5cb21d1f455842b2012648d6a43b4, type: 3}
   blockTilePrefab: {fileID: 4495043604141880, guid: b128413b6ac2841468216f1dc73ea581,
     type: 3}
@@ -71347,12 +71590,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2074500935}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_Father: {fileID: 649918204}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &2074500938
 BoxCollider2D:
@@ -71409,93 +71652,6 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
---- !u!114 &2074500940
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2074500935}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14602ab6441821f43883d0b13d4f57c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  evnt: {fileID: 11400000, guid: ad80159700757904f8da497fdbc92d0b, type: 2}
-  response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2074500944}
-        m_MethodName: SpawnReinforcements
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
---- !u!114 &2074500941
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2074500935}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14602ab6441821f43883d0b13d4f57c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  evnt: {fileID: 11400000, guid: 51f157df6dbb76541ae371e38871fb36, type: 2}
-  response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2074500944}
-        m_MethodName: CheckDialogueEvents
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
---- !u!114 &2074500942
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2074500935}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14602ab6441821f43883d0b13d4f57c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  evnt: {fileID: 11400000, guid: 08e148840a52a88499ec4cb2dd2b0924, type: 2}
-  response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2074500944}
-        m_MethodName: CheckOtherEvents
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!114 &2074500943
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71514,58 +71670,6 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2074500936}
         m_MethodName: RespawnPlayers
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
---- !u!114 &2074500944
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2074500935}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 467101377c5638a45a6ec5ded89c2c11, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mapCreator: {fileID: 2074500936}
-  battleMap: {fileID: 526369253}
-  currentTurn: {fileID: 11400000, guid: 2ce1ea33e4d27044db0a8b97d2dcf10f, type: 2}
-  currentFaction: {fileID: 11400000, guid: 03872b965811b8f4eb110ecb93bea4ca, type: 2}
-  lockControls: {fileID: 11400000, guid: b8d06aee0ad3bce4daa463a8433439f4, type: 2}
-  currentDialogueMode: {fileID: 11400000, guid: 9ebc847de791cc24bbd938f1f28012e7,
-    type: 2}
-  currentDialogue: {fileID: 11400000, guid: 4aca8b6ac3dbaa943963a062568cc6b4, type: 2}
-  nextTurnStateEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11400000, guid: 69c3f8f0ba50da54f85f11632f92f61e, type: 2}
-        m_MethodName: Raise
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  startDialogueEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11400000, guid: 6f15e75a555993c48a97e8b2c7be0718, type: 2}
-        m_MethodName: Raise
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -44,7 +44,7 @@ public class StatsContainer {
 		SetupValues(saveData, cStats, charClass);
 	}
 
-	public StatsContainer(PlayerPosition pos) {
+	public StatsContainer(CharacterSpawnData pos) {
 		level = pos.level;
 		charData = pos.charData;
 		currentClass = pos.charData.startClass;
@@ -52,15 +52,7 @@ public class StatsContainer {
 		GenerateStartingStats();
 	}
 
-	public StatsContainer(EnemyPosition pos) {
-		level = pos.level;
-		charData = pos.charData;
-		currentClass = pos.charData.startClass;
-		classLevels = pos.charData.startClassLevels;
-		GenerateStartingStats();
-	}
-
-	public StatsContainer(ReinforcementPosition pos) {
+	public StatsContainer(SpawnData pos) {
 		level = pos.level;
 		charData = pos.charData;
 		currentClass = pos.charData.startClass;

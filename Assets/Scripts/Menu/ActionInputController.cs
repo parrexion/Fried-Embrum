@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
 
 public enum ActionInputType { CAPTURE, ESCAPE, TALK, ATTACK, HEAL, VISIT, HACK, TRADE, ITEM, WAIT }
 
@@ -163,7 +162,8 @@ public class ActionInputController : MonoBehaviour {
 		startDialogue.Invoke();
 
 		if (willJoin) {
-			joiningCharacter = (PlayerMove)mapSpawner.SpawnPlayerCharacter(other.posx, other.posy, other.stats, other.inventory, other.skills, player.squad, false);
+			SpawnData joinData = new SpawnData(other){ joiningSquad = player.squad};
+			joiningCharacter = mapSpawner.SpawnPlayerCharacter(joinData, false, false, false);
 			joiningCharacter.currentTile = targetTile;
 			other.RemoveFromList();
 			Destroy(other.gameObject);

@@ -21,13 +21,16 @@ public class BattleAnimator : MonoBehaviour {
 		public SfxEntry attackSfx;
 	}
 
-
 	public enum HitType { NORMAL, MISS, CRIT }
 
+	public ForecastUI forecastUI;
+
+	[Header("Animation settings")]
 	public FloatVariable currentGameSpeed;
 	public FloatVariable battleMoveSpeed;
-	public FloatVariable battleMoveDistance;
+	public float battleMoveDistance = 0.4f;
 
+	[Header("Battlers")]
 	public Transform leftTransform;
 	public GameObject leftDamageObject;
 	public Text leftDamageText;
@@ -67,6 +70,7 @@ public class BattleAnimator : MonoBehaviour {
 		defenseRenderer.color = Color.white;
 		leftPos = leftTransform.localPosition;
 		rightPos = rightTransform.localPosition;
+		forecastUI.UpdateUI(true);
 	}
 
 	public void CleanupScene() {
@@ -124,6 +128,7 @@ public class BattleAnimator : MonoBehaviour {
 			yield return StartCoroutine(MoveBack(info.postHit, rightPos, leftPos));
 
 		//DONE
+		forecastUI.UpdateUI(true);
 		BattleAnimationEvent.Invoke();
 		Debug.Log("Animation done");
 		yield break;
@@ -133,19 +138,19 @@ public class BattleAnimator : MonoBehaviour {
 		//Move forward
 		float f = 0;
 		Debug.Log("Start moving  " + startPos.ToString());
-		while (f < battleMoveDistance.value) {
+		while (f < battleMoveDistance) {
 			f += Time.deltaTime * battleMoveSpeed.value / currentGameSpeed.value;
 			attackTransform.localPosition = Vector3.Lerp(startPos, targetPos, f);
 			yield return null;
 		}
-		if (duration > battleMoveDistance.value) {
-			yield return new WaitForSeconds(duration - battleMoveDistance.value);
+		if (duration > battleMoveDistance) {
+			yield return new WaitForSeconds(duration - battleMoveDistance);
 		}
 	}
 
 	private IEnumerator MoveBack(float duration, Vector3 startPos, Vector3 targetPos) {
 		//Move forward
-		float f = battleMoveDistance.value;
+		float f = battleMoveDistance;
 		// Debug.Log("Start moving");
 		while (f > 0f) {
 			f -= Time.deltaTime * battleMoveSpeed.value / currentGameSpeed.value;
@@ -153,11 +158,12 @@ public class BattleAnimator : MonoBehaviour {
 			yield return null;
 		}
 		if (duration > 0.5f) {
-			yield return new WaitForSeconds(duration - battleMoveDistance.value);
+			yield return new WaitForSeconds(duration - battleMoveDistance);
 		}
 	}
 
 	private IEnumerator DamageDisplay(int damage, bool isDamage, bool isCrit) {
+		forecastUI.UpdateHealthUI();
 		defendText.color = (isDamage) ? Color.black : new Color(0, 0.5f, 0);
 		defendText.text = (damage != -1) ? damage.ToString() : "Miss";
 		defendDamageObject.transform.localScale = (isCrit) ? new Vector3(2, 2, 2) : new Vector3(1, 1, 1);

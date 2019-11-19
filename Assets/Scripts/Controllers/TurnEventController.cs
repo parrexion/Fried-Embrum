@@ -5,12 +5,16 @@ using UnityEngine.Events;
 
 public class TurnEventController : MonoBehaviour {
 
-	public MapCreator mapCreator;
+	public MapSpawner mapSpawner;
 
 	[Header("Game state")]
 	public BattleMap battleMap;
 	public IntVariable currentTurn;
 	public FactionVariable currentFaction;
+
+	[Header("Spawning")]
+	public float reinforcementDelay = 0.75f;
+	public FloatVariable currentGameSpeed;
 
 	[Header("Dialogues")]
 	public BoolVariable lockControls;
@@ -35,7 +39,7 @@ public class TurnEventController : MonoBehaviour {
 	/// <returns></returns>
 	private IEnumerator SpawnReinforcementsLoop() {
 		for(int i = 0; i < battleMap.reinforcementEvents.Count; i++) {
-			ReinforcementPosition pos = battleMap.reinforcementEvents.GetEvent(i);
+			SpawnData pos = battleMap.reinforcementEvents.GetEvent(i);
 			if(battleMap.reinforcementEvents.IsActivated(i) || currentFaction.value != pos.faction)
 				continue;
 
@@ -54,32 +58,9 @@ public class TurnEventController : MonoBehaviour {
 
 			MapTile tile = battleMap.GetTile(pos.x, pos.y);
 			if(tile.currentCharacter == null) {
-				//mapCreator.SpawnPlayerCharacter
-
-				//battleMap.reinforcementEvents.Activate(i);
-				//StatsContainer stats = new StatsContainer(pos);
-				//ClassWheel wheel = (stats.charData.faction == Faction.PLAYER) ? playerClassWheel : enemyClassWheel;
-				//InventoryContainer inventory = new InventoryContainer(wheel.GetWpnSkillFromLevel(pos.charData.startClassLevels), pos.inventory);
-				//SkillsContainer skills = new SkillsContainer(wheel.GetSkillsFromLevel(pos.charData.startClassLevels, pos.charData.startClass, pos.level));
-				//if(pos.charData.faction == Faction.PLAYER) {
-				//	TacticsMove tm = SpawnPlayerCharacter(pos.x, pos.y, stats, inventory, skills, pos.joiningSquad, true);
-				//	playerData.AddNewPlayer(tm);
-				//	PrepCharacter prep = new PrepCharacter(playerData.stats.Count - 1);
-				//	if(pos.joiningSquad == 2) {
-				//		prepList2.values.Add(prep);
-				//	} else {
-				//		prepList1.values.Add(prep);
-				//	}
-				//} else if(pos.charData.faction == Faction.ENEMY) {
-				//	SpawnEnemyCharacter(pos, stats, inventory, skills);
-				//} else {
-				//	Debug.LogError("Unimplemented faction  " + pos.faction);
-				//}
-				//cursorX.value = pos.x;
-				//cursorY.value = pos.y;
-				//cursorMoveEvent.Invoke();
-				//// Debug.Log("Hello there!     " + (reinforcementDelay * slowGameSpeed.value / currentGameSpeed.value));
-				//yield return new WaitForSeconds(reinforcementDelay * currentGameSpeed.value);
+				mapSpawner.SpawnPlayerCharacter(pos, true, true, true);
+				battleMap.reinforcementEvents.Activate(i);
+				yield return new WaitForSeconds(reinforcementDelay * currentGameSpeed.value);
 			}
 		}
 		nextTurnStateEvent.Invoke();
@@ -130,10 +111,10 @@ public class TurnEventController : MonoBehaviour {
 	/// <summary>
 	/// Checks if there are any events that should be triggered.
 	/// </summary>
-	public void CheckOtherEvents() {
-		for(int i = 0; i < battleMap.otherEvents.Count; i++) {
-			TurnEvent pos = battleMap.otherEvents.GetEvent(i);
-			if(battleMap.otherEvents.IsActivated(i) || currentFaction.value != pos.factionTurn)
+	public void CheckMapEvents() {
+		for(int i = 0; i < battleMap.mapEvents.Count; i++) {
+			TurnEvent pos = battleMap.mapEvents.GetEvent(i);
+			if(battleMap.mapEvents.IsActivated(i) || currentFaction.value != pos.factionTurn)
 				continue;
 
 			bool activate = false;
@@ -156,7 +137,7 @@ public class TurnEventController : MonoBehaviour {
 			}
 
 			if(activate) {
-				battleMap.otherEvents.Activate(i);
+				battleMap.mapEvents.Activate(i);
 				switch(pos.type) {
 					case TurnEventType.MAPCHANGE:
 						MapTile tile = battleMap.GetTile(pos.x, pos.y);

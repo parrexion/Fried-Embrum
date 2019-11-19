@@ -280,7 +280,7 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 			//  = (ClassType)EditorGUILayout.EnumPopup("",entryValues.advantageType[i]);
 			if (GUILayout.Button("Dup", GUILayout.Width(50))) {
 				GUI.FocusControl(null);
-				ReinforcementPosition epos = new ReinforcementPosition();
+				SpawnData epos = new SpawnData();
 				epos.Copy(mapValues.enemies[i]);
 				mapValues.enemies.Insert(i + 1, epos);
 			}
@@ -407,7 +407,7 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 			LibraryEditorWindow.HorizontalLine(Color.black);
 		}
 		if (GUILayout.Button("+")) {
-			mapValues.enemies.Add(new ReinforcementPosition());
+			mapValues.enemies.Add(new SpawnData());
 		}
 	}
 
@@ -423,7 +423,7 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 			//  = (ClassType)EditorGUILayout.EnumPopup("",entryValues.advantageType[i]);
 			if (GUILayout.Button("Dup", GUILayout.Width(50))) {
 				GUI.FocusControl(null);
-				ReinforcementPosition epos = new ReinforcementPosition();
+				SpawnData epos = new SpawnData();
 				epos.Copy(mapValues.allies[i]);
 				mapValues.allies.Insert(i + 1, epos);
 			}
@@ -550,7 +550,7 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 			LibraryEditorWindow.HorizontalLine(Color.black);
 		}
 		if (GUILayout.Button("+")) {
-			mapValues.allies.Add(new ReinforcementPosition());
+			mapValues.allies.Add(new SpawnData());
 		}
 	}
 
@@ -558,7 +558,7 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 		MapEntry mapValues = (MapEntry)entryValues;
 		GUILayout.Space(5);
 		for (int i = 0; i < mapValues.reinforcements.Count; i++) {
-			ReinforcementPosition pos = mapValues.reinforcements[i];
+			SpawnData pos = mapValues.reinforcements[i];
 			GUILayout.BeginHorizontal();
 			pos.triggerType = (TriggerType)EditorGUILayout.EnumPopup("Trigger Type", pos.triggerType);
 			if (pos.triggerType == TriggerType.TURN) {
@@ -583,7 +583,7 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 			}
 			if (GUILayout.Button("Dup", GUILayout.Width(50))) {
 				GUI.FocusControl(null);
-				ReinforcementPosition rpos = new ReinforcementPosition();
+				SpawnData rpos = new SpawnData();
 				rpos.Copy(mapValues.reinforcements[i]);
 				mapValues.reinforcements.Insert(i + 1, rpos);
 			}
@@ -670,7 +670,7 @@ public class MapEditorWindow : GenericEntryEditorWindow {
 			LibraryEditorWindow.HorizontalLine(Color.black);
 		}
 		if (GUILayout.Button("+")) {
-			mapValues.reinforcements.Add(new ReinforcementPosition());
+			mapValues.reinforcements.Add(new SpawnData());
 		}
 	}
 

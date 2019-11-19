@@ -41,7 +41,7 @@ public class MainMenuController : InputReceiverDelegate {
 	public PlayerData playerData;
 	public ClassWheel classWheel;
 	public MissionEntry startMission;
-	public PlayerPosition[] startingCharacters;
+	public CharacterSpawnData[] startingCharacters;
 	public ItemEntry[] startItems;
 	public UpgradeEntry[] startUpgrade;
 	public MissionEntry[] otherMissions;

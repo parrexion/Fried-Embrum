@@ -28,14 +28,16 @@ public class TurnController : MonoBehaviour {
 	public BoolVariable triggeredWin;
 	public IntVariable currentDialogueMode;
 	public ScrObjEntryReference currentDialogue;
+	public IntVariable cursorX, cursorY;
+
+	[Header("Settings")]
 	public BoolVariable selectMainCharacter;
 	public BoolVariable autoEndTurn;
-	public IntVariable cursorX, cursorY;
-	public IntVariable gatheredScrap;
 
 	private TurnState currentState;
 
 	[Header("Rewards")]
+	public IntVariable gatheredScrap;
 	public IntVariable totalKills;
 	public IntVariable totalDeaths;
 	public PlayerData playerData;

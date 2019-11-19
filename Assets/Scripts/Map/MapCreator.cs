@@ -7,22 +7,15 @@ public class MapCreator : MonoBehaviour {
 
 	public ScrObjEntryReference currentMap;
 	public PlayerData playerData;
-	public ClassWheel playerClassWheel;
-	public ClassWheel enemyClassWheel;
 	public PrepListVariable prepList1;
 	public PrepListVariable prepList2;
 	public BattleMap battleMap;
-	public MapCursor mapClicker;
 	public MapSpawner mapSpawner;
 
 	public IntVariable cursorX;
 	public IntVariable cursorY;
-	public float reinforcementDelay = 0.75f;
-	public FloatVariable currentGameSpeed;
 
 	[Header("Prefabs")]
-	public Transform playerPrefab;
-	public Transform enemyPrefab;
 	public Transform tilePrefab;
 	public Transform blockTilePrefab;
 
@@ -68,7 +61,7 @@ public class MapCreator : MonoBehaviour {
 		TacticsCamera.boxCollider.size = new Vector2(_sizeX + 1, _sizeY + 1);
 		TacticsCamera.boxCollider.center = new Vector3((_sizeX - 1) / 2.0f, (_sizeY - 1) / 2.0f, 0);
 		TacticsCamera.boxActive = true;
-		
+
 		GenerateMap(map.mapSprite);
 		if (map.spawnPoints1.Count > 0) {
 			cursorX.value = map.spawnPoints1[0].x;
@@ -128,10 +121,7 @@ public class MapCreator : MonoBehaviour {
 					tempTile.dialogue = interPos.dialogue;
 					tempTile.gift = interPos.gift;
 					if (interPos.ally.charData != null) {
-						StatsContainer stats = new StatsContainer(interPos.ally);
-						InventoryContainer inventory = new InventoryContainer(playerClassWheel.GetWpnSkillFromLevel(interPos.ally.charData.startClassLevels), interPos.ally.inventory);
-						SkillsContainer skills = new SkillsContainer(playerClassWheel.GetSkillsFromLevel(interPos.ally.charData.startClassLevels, interPos.ally.charData.startClass, interPos.ally.level));
-						tempTile.ally = mapSpawner.SpawnPlayerCharacter(interPos.x, interPos.y, stats, inventory, skills, 0, false);
+						tempTile.ally = mapSpawner.SpawnVillageCharacter(interPos);
 						Debug.Log("Spawned ally:  " + tempTile.ally.name);
 					}
 					TerrainTile terrain = (interPos.gift == null && interPos.ally == null) ? tileHouse : tileHouseReward;
@@ -211,12 +201,17 @@ public class MapCreator : MonoBehaviour {
 			}
 
 			int index = prepList1.values[prepPos].index;
-			StatsContainer stats = playerData.stats[index];
-			InventoryContainer inventory = playerData.inventory[index];
-			SkillsContainer skills = playerData.skills[index];
+			SpawnData spawn = new SpawnData() {
+				x = pos.x,
+				y = pos.y,
+				stats = playerData.stats[index],
+				inventoryContainer = playerData.inventory[index],
+				skills = playerData.skills[index],
+				joiningSquad = 1
+			};
 			prepPos++;
 
-			mapSpawner.SpawnPlayerCharacter(pos.x, pos.y, stats, inventory, skills, 1, true);
+			mapSpawner.SpawnPlayerCharacter(spawn, false, true, false);
 		}
 
 		prepPos = 0;
@@ -229,12 +224,17 @@ public class MapCreator : MonoBehaviour {
 			}
 
 			int index = prepList2.values[prepPos].index;
-			StatsContainer stats = playerData.stats[index];
-			InventoryContainer inventory = playerData.inventory[index];
-			SkillsContainer skills = playerData.skills[index];
+			SpawnData spawn = new SpawnData() {
+				x = pos.x,
+				y = pos.y,
+				stats = playerData.stats[index],
+				inventoryContainer = playerData.inventory[index],
+				skills = playerData.skills[index],
+				joiningSquad = 2
+			};
 			prepPos++;
 
-			mapSpawner.SpawnPlayerCharacter(pos.x, pos.y, stats, inventory, skills, 2, true);
+			mapSpawner.SpawnPlayerCharacter(spawn, false, true, false);
 		}
 	}
 
@@ -246,21 +246,7 @@ public class MapCreator : MonoBehaviour {
 
 		//Enemies
 		for (int i = 0; i < map.enemies.Count; i++) {
-			ReinforcementPosition pos = map.enemies[i];
-
-			StatsContainer stats = new StatsContainer(pos);
-			InventoryContainer inventory = new InventoryContainer(enemyClassWheel.GetWpnSkillFromLevel(pos.charData.startClassLevels), pos.inventory);
-			SkillsContainer skills = new SkillsContainer(enemyClassWheel.GetSkillsFromLevel(pos.charData.startClassLevels, pos.charData.startClass, pos.level));
-			List<FightQuote> quotes = new List<FightQuote>();
-			for (int q = 0; q < pos.quotes.Count; q++) {
-				FightQuote fight = new FightQuote();
-				fight.triggerer = pos.quotes[q].triggerer;
-				fight.quote = pos.quotes[q].quote;
-				fight.activated = false;
-				quotes.Add(fight);
-			}
-
-			mapSpawner.SpawnEnemyCharacter(pos, stats, inventory, skills);
+			mapSpawner.SpawnEnemyCharacter(map.enemies[i]);
 		}
 	}
 
@@ -272,21 +258,7 @@ public class MapCreator : MonoBehaviour {
 
 		//Allies
 		for (int i = 0; i < map.allies.Count; i++) {
-			ReinforcementPosition pos = map.allies[i];
-
-			StatsContainer stats = new StatsContainer(pos);
-			InventoryContainer inventory = new InventoryContainer(playerClassWheel.GetWpnSkillFromLevel(pos.charData.startClassLevels), pos.inventory);
-			SkillsContainer skills = new SkillsContainer(playerClassWheel.GetSkillsFromLevel(pos.charData.startClassLevels, pos.charData.startClass, pos.level));
-			List<FightQuote> quotes = new List<FightQuote>();
-			for (int q = 0; q < pos.quotes.Count; q++) {
-				FightQuote fight = new FightQuote();
-				fight.triggerer = pos.quotes[q].triggerer;
-				fight.quote = pos.quotes[q].quote;
-				fight.activated = false;
-				quotes.Add(fight);
-			}
-
-			mapSpawner.SpawnAllyCharacter(pos, stats, inventory, skills);
+			mapSpawner.SpawnAllyCharacter(map.allies[i]);
 		}
 	}
 

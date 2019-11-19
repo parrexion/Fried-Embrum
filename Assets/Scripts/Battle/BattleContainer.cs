@@ -41,7 +41,6 @@ public class BattleContainer : InputReceiverDelegate {
 	public BattleAnimator battleAnimator;
 	public GameObject battleAnimationObject;
 	public GameObject uiCanvas;
-	public ForecastUI forecastUI;
 
 	[Header("Sound")]
 	public AudioVariable subMusic;
@@ -52,7 +51,6 @@ public class BattleContainer : InputReceiverDelegate {
 	public SfxEntry rewardSfx;
 
 	[Header("Events")]
-	public UnityEvent updateHealthEvent;
 	public UnityEvent battleFinishedEvent;
 	public UnityEvent showDialogueEvent;
 	public UnityEvent playTransitionMusicEvent;
@@ -182,8 +180,6 @@ public class BattleContainer : InputReceiverDelegate {
 		_attackerDealtDamage = false;
 		_defenderDealtDamage = false;
 
-		forecastUI.UpdateUI(true);
-
 		//battleAnimationObject.transform.localPosition = new Vector3(
 		//	cameraPosX.value,
 		//	cameraPosY.value,
@@ -213,8 +209,6 @@ public class BattleContainer : InputReceiverDelegate {
 			if (act.type != BattleAction.Type.DAMAGE && act.attacker.inventory.GetFirstUsableItemTuple(ItemCategory.SUPPORT).currentCharges <= 0) {
 				continue; //Broken staff
 			}
-
-			forecastUI.UpdateUI(true);
 
 			yield return new WaitForSeconds(1f * currentGameSpeed.value);
 
@@ -265,10 +259,6 @@ public class BattleContainer : InputReceiverDelegate {
 			while (waitForAnimation) {
 				yield return null;
 			}
-
-			//Update health
-			forecastUI.UpdateHealthUI();
-			updateHealthEvent.Invoke();
 			
 			//Check Death
 			// Debug.Log("Check death");

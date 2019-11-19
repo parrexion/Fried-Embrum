@@ -37,9 +37,9 @@ public class MapEntry : ScrObjLibraryEntry {
 	public List<CharEntry> lockedCharacters = new List<CharEntry>();
 	
 	[Header("Other characters")]
-	public List<ReinforcementPosition> enemies = new List<ReinforcementPosition>();
-	public List<ReinforcementPosition> allies = new List<ReinforcementPosition>();
-	public List<ReinforcementPosition> reinforcements = new List<ReinforcementPosition>();
+	public List<SpawnData> enemies = new List<SpawnData>();
+	public List<SpawnData> allies = new List<SpawnData>();
+	public List<SpawnData> reinforcements = new List<SpawnData>();
 	
 	[Header("Interactions")]
 	public List<InteractPosition> interactions = new List<InteractPosition>();
@@ -74,9 +74,9 @@ public class MapEntry : ScrObjLibraryEntry {
 		forcedCharacters = new List<CharEntry>();
 		lockedCharacters = new List<CharEntry>();
 
-		enemies = new List<ReinforcementPosition>();
-		allies = new List<ReinforcementPosition>();
-		reinforcements = new List<ReinforcementPosition>();
+		enemies = new List<SpawnData>();
+		allies = new List<SpawnData>();
+		reinforcements = new List<SpawnData>();
 
 		interactions = new List<InteractPosition>();
 
@@ -123,15 +123,15 @@ public class MapEntry : ScrObjLibraryEntry {
 			lockedCharacters.Add(map.lockedCharacters[i]);
 		}
 
-		enemies = new List<ReinforcementPosition>();
+		enemies = new List<SpawnData>();
 		for (int i = 0; i < map.enemies.Count; i++) {
 			enemies.Add(map.enemies[i]);
 		}
-		allies = new List<ReinforcementPosition>();
+		allies = new List<SpawnData>();
 		for (int i = 0; i < map.allies.Count; i++) {
 			allies.Add(map.allies[i]);
 		}
-		reinforcements = new List<ReinforcementPosition>();
+		reinforcements = new List<SpawnData>();
 		for (int i = 0; i < map.reinforcements.Count; i++) {
 			reinforcements.Add(map.reinforcements[i]);
 		}
@@ -189,7 +189,7 @@ public class Position {
 }
 
 [System.Serializable]
-public class PlayerPosition {
+public class CharacterSpawnData {
 	public int x;
 	public int y;
 	public int level = 1;
@@ -203,121 +203,6 @@ public class WeaponTuple {
 	public bool droppable;
 }
 
-[System.Serializable]
-public class EnemyPosition {
-	public int spawnTurn;
-	public int x;
-	public int y;
-	public int level;
-	public CharEntry charData;
-	public List<WeaponTuple> inventory = new List<WeaponTuple>();
-	public AggroType aggroType;
-	public bool hasQuotes;
-	public List<FightQuote> quotes = new List<FightQuote>();
-	public List<FightQuote> talks = new List<FightQuote>();
-	public int huntX, huntY;
-	public List<Position> patrolPositions = new List<Position>();
-
-
-	public void Copy(EnemyPosition other) {
-		spawnTurn = other.spawnTurn;
-		x = other.x;
-		y = other.y;
-		level = other.level;
-		charData = other.charData;
-		for (int i = 0; i < other.inventory.Count; i++) {
-			inventory.Add(new WeaponTuple(){
-				item = other.inventory[i].item, droppable = other.inventory[i].droppable
-			});
-		}
-		aggroType = other.aggroType;
-		hasQuotes = other.hasQuotes;
-		quotes.Clear();
-		for (int i = 0; i < other.quotes.Count; i++) {
-			quotes.Add(new FightQuote(){
-				triggerer = other.quotes[i].triggerer, quote = other.quotes[i].quote, activated = other.quotes[i].activated
-			});
-		}
-		talks.Clear();
-		for (int i = 0; i < other.talks.Count; i++) {
-			talks.Add(new FightQuote(){
-				triggerer = other.talks[i].triggerer, quote = other.talks[i].quote, willJoin = other.talks[i].willJoin, activated = other.talks[i].activated
-			});
-		}
-		huntX = other.huntX;
-		huntY = other.huntY;
-		patrolPositions = new List<Position>();
-		for(int i = 0; i < other.patrolPositions.Count; i++) {
-			patrolPositions.Add(new Position() { x = other.patrolPositions[i].x, y = other.patrolPositions[i].y });
-		}
-	}
-}
-
-[System.Serializable]
-public class ReinforcementPosition {
-	public TriggerType triggerType;
-	public int spawnTurn;
-	public int triggerIndex;
-	public Faction faction;
-	public int x;
-	public int y;
-	public int level;
-	public CharEntry charData;
-	public List<WeaponTuple> inventory = new List<WeaponTuple>();
-	//Player only
-	public int joiningSquad;
-	// Enemy only
-	public AggroType aggroType;
-	public bool hasQuotes;
-	public List<FightQuote> quotes = new List<FightQuote>();
-	public List<FightQuote> talks = new List<FightQuote>();
-	public int huntX, huntY;
-	public List<Position> patrolPositions = new List<Position>();
-
-
-	public ReinforcementPosition(){}
-
-	public void Copy(ReinforcementPosition other) {
-		triggerType = other.triggerType;
-		spawnTurn = other.spawnTurn;
-		triggerIndex = other.triggerIndex;
-		faction = other.faction;
-		x = other.x;
-		y = other.y;
-		level = other.level;
-		charData = other.charData;
-		for (int i = 0; i < other.inventory.Count; i++) {
-			inventory.Add(new WeaponTuple(){
-				item = other.inventory[i].item, droppable = other.inventory[i].droppable
-			});
-		}
-		joiningSquad = other.joiningSquad;
-		aggroType = other.aggroType;
-		hasQuotes = other.hasQuotes;
-		quotes.Clear();
-		for (int i = 0; i < other.quotes.Count; i++) {
-			quotes.Add(new FightQuote(){
-				triggerer = other.quotes[i].triggerer, quote = other.quotes[i].quote, activated = other.quotes[i].activated
-			});
-		}
-		talks.Clear();
-		for(int i = 0; i < other.talks.Count; i++) {
-			talks.Add(new FightQuote() {
-				triggerer = other.talks[i].triggerer,
-				quote = other.talks[i].quote,
-				willJoin = other.talks[i].willJoin,
-				activated = other.talks[i].activated
-			});
-		}
-		huntX = other.huntX;
-		huntY = other.huntY;
-		patrolPositions = new List<Position>();
-		for (int i = 0; i < other.patrolPositions.Count; i++) {
-			patrolPositions.Add(new Position() { x = other.patrolPositions[i].x, y = other.patrolPositions[i].y });
-		}
-	}
-}
-
 public enum InteractType { NONE, BLOCK, DIALOGUE, VILLAGE, CAPTURE, DATABASE, ESCAPE }
 
 [System.Serializable]
@@ -328,7 +213,7 @@ public class InteractPosition {
 	public int health;
 	public DialogueEntry dialogue;
 	public Reward gift = new Reward();
-	public PlayerPosition ally = new PlayerPosition();
+	public CharacterSpawnData ally = new CharacterSpawnData();
 }
 
 public enum TurnEventType { NONE, DIALOGUE, MAPCHANGE, MONEY, SCRAP }

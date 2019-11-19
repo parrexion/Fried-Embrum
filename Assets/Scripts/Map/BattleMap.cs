@@ -8,8 +8,8 @@ public class BattleMap : MonoBehaviour {
 	[Header("Map state")]
 	public TriggerListVariable triggerList;
 	public EventFlags<TurnEvent> dialogueEvents = new EventFlags<TurnEvent>();
-	public EventFlags<ReinforcementPosition> reinforcementEvents = new EventFlags<ReinforcementPosition>();
-	public EventFlags<TurnEvent> otherEvents = new EventFlags<TurnEvent>();
+	public EventFlags<SpawnData> reinforcementEvents = new EventFlags<SpawnData>();
+	public EventFlags<TurnEvent> mapEvents = new EventFlags<TurnEvent>();
 
 	[Header("Characters")]
 	public CharacterListVariable playerList;
@@ -39,7 +39,7 @@ public class BattleMap : MonoBehaviour {
 				dialogueEvents.AddFlag(map.turnEvents[i]);
 			}
 			else {
-				otherEvents.AddFlag(map.turnEvents[i]);
+				mapEvents.AddFlag(map.turnEvents[i]);
 			}
 		}
 		for (int i = 0; i < map.reinforcements.Count; i++) {
