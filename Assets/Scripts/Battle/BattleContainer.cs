@@ -180,11 +180,11 @@ public class BattleContainer : InputReceiverDelegate {
 		_attackerDealtDamage = false;
 		_defenderDealtDamage = false;
 
-		//battleAnimationObject.transform.localPosition = new Vector3(
-		//	cameraPosX.value,
-		//	cameraPosY.value,
-		//	battleAnimationObject.transform.localPosition.z
-		//);
+		battleAnimationObject.transform.localPosition = new Vector3(
+			cameraPosX.value,
+			cameraPosY.value,
+			battleAnimationObject.transform.localPosition.z
+		);
 		TacticsCamera tacticsCamera = GameObject.FindObjectOfType<TacticsCamera>();
 		battleAnimationObject.transform.SetParent(tacticsCamera.transform);
 		battleAnimationObject.transform.localPosition = new Vector3(0, 0, 5);

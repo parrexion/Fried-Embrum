@@ -94,7 +94,7 @@ public class BattleAnimator : MonoBehaviour {
 
 	IEnumerator Animating(AnimationInfo info) {
 
-		playSfxEvent.Invoke();
+		//playSfxEvent.Invoke();
 		
 		if (info.side == AttackSide.LEFT)
 			yield return StartCoroutine(MoveForward(info.preHit, leftPos, rightPos));
@@ -137,7 +137,6 @@ public class BattleAnimator : MonoBehaviour {
 	private IEnumerator MoveForward(float duration, Vector3 startPos, Vector3 targetPos) {
 		//Move forward
 		float f = 0;
-		Debug.Log("Start moving  " + startPos.ToString());
 		while (f < battleMoveDistance) {
 			f += Time.deltaTime * battleMoveSpeed.value / currentGameSpeed.value;
 			attackTransform.localPosition = Vector3.Lerp(startPos, targetPos, f);
