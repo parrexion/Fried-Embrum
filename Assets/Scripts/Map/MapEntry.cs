@@ -203,7 +203,7 @@ public class WeaponTuple {
 	public bool droppable;
 }
 
-public enum InteractType { NONE, BLOCK, DIALOGUE, VILLAGE, CAPTURE, DATABASE, ESCAPE }
+public enum InteractType { NONE, BLOCK, DIALOGUE, VILLAGE, CAPTURE, DATABASE, ESCAPE, DOOR }
 
 [System.Serializable]
 public class InteractPosition {

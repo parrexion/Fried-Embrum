@@ -39,6 +39,7 @@ public class MapCreator : MonoBehaviour {
 	public TerrainTile tileThrone;
 	public TerrainTile tilePillar;
 	public TerrainTile tileChest;
+	public TerrainTile tileDoor;
 
 	//Map size
 	private int _sizeX;
@@ -139,6 +140,12 @@ public class MapCreator : MonoBehaviour {
 					tempTile.SetTerrain(tileChest);
 					tempTile.alternativeTerrain = tileChest.substitueTile;
 					tempTile.interactType = InteractType.DATABASE;
+					tempTile.gift = interPos.gift;
+				}
+				else if (interPos.interactType == InteractType.DOOR) {
+					tempTile.SetTerrain(tileDoor);
+					tempTile.alternativeTerrain = tileDoor.substitueTile;
+					tempTile.interactType = InteractType.DOOR;
 					tempTile.gift = interPos.gift;
 				}
 				else {
@@ -315,6 +322,9 @@ public class MapCreator : MonoBehaviour {
 		}
 		else if (pixelColor.r == 128 && pixelColor.g == 0 && pixelColor.b == 255) {
 			terrain = tilePillar;
+		}
+		else if (pixelColor.r == 255 && pixelColor.g == 0 && pixelColor.b == 128) {
+			terrain = tileDoor;
 		}
 
 		return terrain;
