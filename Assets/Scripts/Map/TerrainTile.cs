@@ -11,6 +11,7 @@ public class RoughnessTuple {
 [CreateAssetMenu(menuName = "LibraryEntries/TerrainTile")]
 public class TerrainTile : ScriptableObject {
 
+	public string tileName;
 	public Sprite sprite;
 	public Color tint = Color.white;
 
