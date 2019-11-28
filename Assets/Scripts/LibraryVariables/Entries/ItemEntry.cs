@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum ItemCategory { WEAPON, SUPPORT, CONSUME }
-public enum AttackType { PHYSICAL, MENTAL, HEAL, STATS }
+public enum AttackType { PHYSICAL, MENTAL, HEAL, STATS, KEY }
+public enum KeyType { STAR, MOON, SUN, PLANET }
 
 [CreateAssetMenu(menuName = "LibraryEntries/Item")]
 public class ItemEntry : ScrObjLibraryEntry {
@@ -14,6 +15,7 @@ public class ItemEntry : ScrObjLibraryEntry {
     public ItemCategory itemCategory = ItemCategory.WEAPON;
     public WeaponType weaponType = WeaponType.NONE;
 	public AttackType attackType = AttackType.PHYSICAL;
+	public KeyType keyType = KeyType.STAR;
 
     public int cost;
     public int maxCharge;
@@ -43,6 +45,7 @@ public class ItemEntry : ScrObjLibraryEntry {
         itemCategory = ItemCategory.WEAPON;
 		weaponType = WeaponType.NONE;
 		attackType = AttackType.PHYSICAL;
+		keyType = KeyType.STAR;
 
 		cost = 0;
         maxCharge = 0;
@@ -72,6 +75,7 @@ public class ItemEntry : ScrObjLibraryEntry {
         itemCategory = item.itemCategory;
         weaponType = item.weaponType;
         attackType = item.attackType;
+		keyType = item.keyType;
 
 		cost = item.cost;
         maxCharge = item.maxCharge;

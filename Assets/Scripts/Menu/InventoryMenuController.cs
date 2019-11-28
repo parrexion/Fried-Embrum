@@ -50,7 +50,7 @@ public class InventoryMenuController : InputReceiverDelegate {
 		if (tuple.itemCategory == ItemCategory.WEAPON && tuple.CanUse(skill)) {
 			inventoryButtons.AddButton("EQUIP", 0);
 		}
-		else if (tuple.itemCategory == ItemCategory.CONSUME) {
+		else if (tuple.itemCategory == ItemCategory.CONSUME && tuple.attackType != AttackType.KEY) {
 			inventoryButtons.AddButton("USE", 1);
 		}
 		inventoryButtons.AddButton("DROP", 2);

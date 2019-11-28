@@ -83,7 +83,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 		MapTile tile = selectedTile.value;
 
 		//Set selected character to the targeted tile instead of the selected character
-		if (actionMode.value == ActionMode.ATTACK || actionMode.value == ActionMode.HEAL || actionMode.value == ActionMode.TRADE) {
+		if (actionMode.IsTargetMode()) {
 			tile = targetTile.value;
 			if (tile)
 				tactics = tile.currentCharacter;
@@ -164,7 +164,7 @@ public class SimpleCharacterUI : MonoBehaviour {
 		weakIcon1.enabled = (weakIcon1.sprite != null);
 
 		InventoryTuple weapon = tactics.GetEquippedWeapon(ItemCategory.WEAPON);
-		wpnIcon.sprite = (weapon != null) ? weapon.icon : null;
+		wpnIcon.sprite = weapon?.icon;
 		wpnIcon.enabled = (weapon != null);
 		wpnName.text = (weapon != null) ? weapon.entryName : "---";
 
@@ -323,6 +323,14 @@ public class SimpleCharacterUI : MonoBehaviour {
 			portrait.enabled = true;
 			portrait.sprite = tile.terrain.sprite;
 			string text = (tile.interacted) ? "Empty" : "Available";
+			float fill = (tile.interacted) ? 1 : 0;
+			healthBar.SetCustomText(fill, text);
+		}
+		else if (tile.interactType == InteractType.DOOR) {
+			characterName.text = tile.doorKeyType.ToString() + " Door";
+			portrait.enabled = true;
+			portrait.sprite = tile.terrain.sprite;
+			string text = (tile.interacted) ? "Open" : "Locked";
 			float fill = (tile.interacted) ? 0 : 1;
 			healthBar.SetCustomText(fill, text);
 		}

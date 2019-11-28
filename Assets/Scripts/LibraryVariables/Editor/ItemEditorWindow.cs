@@ -25,11 +25,11 @@ public class ItemEditorWindow : GenericEntryEditorWindow {
 
 		GUILayout.BeginHorizontal();
 		GUILayout.BeginVertical();
-		itemValues.entryName = EditorGUILayout.TextField("Name", itemValues.entryName);
 		itemValues.itemCategory = (ItemCategory)EditorGUILayout.EnumPopup("Item Category", itemValues.itemCategory);
 		itemValues.weaponType = (WeaponType)EditorGUILayout.EnumPopup("Weapon Type", itemValues.weaponType);
 		itemValues.attackType = (AttackType)EditorGUILayout.EnumPopup("Attack Type", itemValues.attackType);
-		itemValues.repColor = EditorGUILayout.ColorField("Rep Color", itemValues.repColor);
+		if (itemValues.attackType == AttackType.KEY)
+			itemValues.keyType = (KeyType)EditorGUILayout.EnumPopup("Key Type", itemValues.keyType);
 		GUILayout.EndVertical();
 		itemValues.icon = (Sprite)EditorGUILayout.ObjectField("Icon", itemValues.icon, typeof(Sprite), false);
 		GUILayout.EndHorizontal();

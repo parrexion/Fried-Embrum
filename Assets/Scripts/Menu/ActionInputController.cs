@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public enum ActionInputType { CAPTURE, ESCAPE, TALK, ATTACK, HEAL, VISIT, HACK, TRADE, ITEM, WAIT }
+public enum ActionInputType { CAPTURE, ESCAPE, TALK, DOOR, ATTACK, HEAL, VISIT, HACK, TRADE, ITEM, WAIT }
 
 public class ActionInputController : MonoBehaviour {
 
@@ -81,6 +81,11 @@ public class ActionInputController : MonoBehaviour {
 				currentActionMode.value = ActionMode.TALK;
 				InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
 				break;
+			case ActionInputType.DOOR:
+				FindDoors();
+				currentActionMode.value = ActionMode.DOOR;
+				InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
+				break;
 			case ActionInputType.ATTACK:
 				targetList.values = player.GetAttackablesInRange();
 				currentActionMode.value = ActionMode.ATTACK;
@@ -122,6 +127,16 @@ public class ActionInputController : MonoBehaviour {
 				InputDelegateController.instance.TriggerMenuChange(MenuMode.MAP);
 				player.End();
 				break;
+		}
+	}
+
+	private void FindDoors() {
+		targetList.values.Clear();
+		PlayerMove player = (PlayerMove)selectedCharacter.value;
+		List<MapTile> tiles = player.GetAdjacentTiles();
+		for(int i = 0; i < tiles.Count; i++) {
+			if (tiles[i].interactType == InteractType.DOOR && !tiles[i].interacted && player.inventory.HasKey(tiles[i].doorKeyType))
+				targetList.values.Add(tiles[i]);
 		}
 	}
 
@@ -167,6 +182,20 @@ public class ActionInputController : MonoBehaviour {
 			joiningCharacter.currentTile = targetTile;
 			other.RemoveFromList();
 			Destroy(other.gameObject);
+		}
+	}
+
+	public void UnlockDoor(MapTile targetTile) {
+		PlayerMove player = (PlayerMove)selectedCharacter.value;
+		for(int i = 0; i < InventoryContainer.INVENTORY_SIZE; i++) {
+			InventoryTuple tuple = player.inventory.GetItem(i);
+			if (tuple.attackType == AttackType.KEY && tuple.keyType == targetTile.doorKeyType) {
+				currentActionMode.value = ActionMode.NONE;
+				player.inventory.UseItem(i, player);
+				targetTile.interacted = true;
+				targetTile.SetTerrain(targetTile.alternativeTerrain);
+				break;
+			}
 		}
 	}
 
@@ -254,6 +283,8 @@ public class ActionInputController : MonoBehaviour {
 			actionButtons.AddButton("ESCAPE", (int)ActionInputType.ESCAPE);
 		if (player.CanTalk())
 			actionButtons.AddButton("TALK", (int)ActionInputType.TALK);
+		if (player.CanOpenDoor())
+			actionButtons.AddButton("DOOR", (int)ActionInputType.DOOR);
 		if (player.CanAttack())
 			actionButtons.AddButton("ATTACK", (int)ActionInputType.ATTACK);
 		if (player.CanSupport())

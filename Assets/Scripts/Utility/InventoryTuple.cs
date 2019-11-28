@@ -28,6 +28,7 @@ public class InventoryTuple {
 	public ItemCategory itemCategory = ItemCategory.CONSUME;
 	public WeaponType weaponType = WeaponType.NONE;
 	public AttackType attackType = AttackType.PHYSICAL;
+	public KeyType keyType = KeyType.STAR;
 	public List<MovementType> advantageType = new List<MovementType>();
 	public WeaponRank skillReq;
 	public Boost boost = new Boost();
@@ -66,14 +67,11 @@ public class InventoryTuple {
 		itemCategory = item.itemCategory;
 		weaponType = item.weaponType;
 		attackType = item.attackType;
+		keyType = item.keyType;
 		advantageType = new List<MovementType>();
 		for (int i = 0; i < item.advantageType.Count; i++) {
 			advantageType.Add(item.advantageType[i]);
 		}
-	}
-
-	public void Copy() {
-
 	}
 
 	public void UpdateUpgrades(UpgradeCalculator calculator) {

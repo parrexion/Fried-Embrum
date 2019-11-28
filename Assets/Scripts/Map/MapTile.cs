@@ -45,6 +45,7 @@ public class MapTile : MonoBehaviour {
 	public DialogueEntry dialogue;
 	public Reward gift;
 	public TacticsMove ally;
+	public KeyType doorKeyType;
 	private List<TriggerID> triggers = new List<TriggerID>();
 
 	private SpriteRenderer _rendHighlight;

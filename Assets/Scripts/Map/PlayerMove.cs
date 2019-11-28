@@ -18,12 +18,12 @@ public class PlayerMove : TacticsMove {
 	protected override void ExtraSetup() {
 		playerList.values.Add(this);
 		GetComponent<SpriteRenderer>().sprite = stats.currentClass.playerSprite;
-		if (stats.currentClass.playerSprite == null) {
+		if(stats.currentClass.playerSprite == null) {
 			Debug.LogError("Battle sprite is null!", this);
 		}
 		//Debug.Log("Spawned " + stats.charData.entryName);
 	}
-	
+
 	/// <summary>
 	/// Additional functions which run when the player ends their turn.
 	/// </summary>
@@ -31,7 +31,7 @@ public class PlayerMove : TacticsMove {
 		//Debug.Log("Finished move");
 		isMoving = false;
 		lockControls.value = false;
-		if (currentMenuMode.value == (int)MenuMode.FORMATION) {
+		if(currentMenuMode.value == (int)MenuMode.FORMATION) {
 			prepMoveEndEvent.Invoke();
 		}
 		else {
@@ -55,24 +55,24 @@ public class PlayerMove : TacticsMove {
 	/// <returns></returns>
 	public List<MapTile> FindSupportablesInRange() {
 		InventoryTuple staff = inventory.GetFirstUsableItemTuple(ItemCategory.SUPPORT);
-		if (string.IsNullOrEmpty(staff.uuid))
+		if(string.IsNullOrEmpty(staff.uuid))
 			return new List<MapTile>();
 
 		List<MapTile> supportables = new List<MapTile>();
-		for (int i = 0; i < playerList.values.Count; i++) {
-			if (this == playerList.values[i] || !playerList.values[i].IsInjured() || !playerList.values[i].IsAlive())
+		for(int i = 0; i < playerList.values.Count; i++) {
+			if(this == playerList.values[i] || !playerList.values[i].IsInjured() || !playerList.values[i].IsAlive())
 				continue;
 
 			int tempDist = BattleMap.DistanceTo(this, playerList.values[i]);
-			if (staff.InRange(tempDist))
+			if(staff.InRange(tempDist))
 				supportables.Add(playerList.values[i].currentTile);
 		}
-		for (int i = 0; i < allyList.values.Count; i++) {
-			if (this == allyList.values[i] || !allyList.values[i].IsInjured() || !allyList.values[i].IsAlive())
+		for(int i = 0; i < allyList.values.Count; i++) {
+			if(this == allyList.values[i] || !allyList.values[i].IsInjured() || !allyList.values[i].IsAlive())
 				continue;
 
 			int tempDist = BattleMap.DistanceTo(this, allyList.values[i]);
-			if (staff.InRange(tempDist))
+			if(staff.InRange(tempDist))
 				supportables.Add(allyList.values[i].currentTile);
 		}
 		return supportables;
@@ -88,21 +88,21 @@ public class PlayerMove : TacticsMove {
 	/// <returns></returns>
 	public bool CanAttack() {
 		WeaponRange range = inventory.GetReach(ItemCategory.WEAPON);
-		if (range.max == 0)
+		if(range.max == 0)
 			return false;
-		for (int i = 0; i < enemyList.values.Count; i++) {
-			if (!enemyList.values[i].IsAlive() || enemyList.values[i].hasEscaped)
+		for(int i = 0; i < enemyList.values.Count; i++) {
+			if(!enemyList.values[i].IsAlive() || enemyList.values[i].hasEscaped)
 				continue;
 			int distance = BattleMap.DistanceTo(this, enemyList.values[i]);
-			if (range.InRange(distance)) {
+			if(range.InRange(distance)) {
 				return true;
 			}
 		}
-		for (int i = 0; i < battleMap.breakables.Count; i++) {
-			if (!battleMap.breakables[i].blockMove.IsAlive())
+		for(int i = 0; i < battleMap.breakables.Count; i++) {
+			if(!battleMap.breakables[i].blockMove.IsAlive())
 				continue;
 			int distance = BattleMap.DistanceTo(this, battleMap.breakables[i]);
-			if (range.InRange(distance)) {
+			if(range.InRange(distance)) {
 				return true;
 			}
 		}
@@ -115,24 +115,24 @@ public class PlayerMove : TacticsMove {
 	/// <returns></returns>
 	public bool CanSupport() {
 		WeaponRange range = inventory.GetReach(ItemCategory.SUPPORT);
-		if (range.max == 0)
+		if(range.max == 0)
 			return false;
 
 		List<InventoryTuple> staffs = inventory.GetAllUsableItemTuple(ItemCategory.SUPPORT);
 		bool isBuff = false;
-		for (int i = 0; i < staffs.Count; i++) {
-			if (staffs[i].weaponType == WeaponType.BARRIER) {
+		for(int i = 0; i < staffs.Count; i++) {
+			if(staffs[i].weaponType == WeaponType.BARRIER) {
 				isBuff = true;
 				break;
 			}
 		}
 
-		for (int i = 0; i < playerList.values.Count; i++) {
+		for(int i = 0; i < playerList.values.Count; i++) {
 			bool usable = (playerList.values[i].IsAlive() && playerList.values[i].IsInjured() || isBuff);
-			if (!usable || playerList.values[i] == this)
+			if(!usable || playerList.values[i] == this)
 				continue;
 			int distance = BattleMap.DistanceTo(this, playerList.values[i]);
-			if (range.InRange(distance)) {
+			if(range.InRange(distance)) {
 				return true;
 			}
 		}
@@ -168,7 +168,7 @@ public class PlayerMove : TacticsMove {
 	/// </summary>
 	/// <returns></returns>
 	public bool CanTrade() {
-		if (!canUndoMove)
+		if(!canUndoMove)
 			return false;
 		List<MapTile> traders = FindAdjacentCharacters(true, false, false);
 		return (traders.Count > 0);
@@ -181,11 +181,28 @@ public class PlayerMove : TacticsMove {
 	public bool CanTalk() {
 		List<MapTile> talkers = FindAdjacentCharacters(false, true, true);
 		for(int i = 0; i < talkers.Count; i++) {
-			for (int talk = 0; talk < talkers[i].currentCharacter.talkQuotes.Count; talk++) {
+			for(int talk = 0; talk < talkers[i].currentCharacter.talkQuotes.Count; talk++) {
 				FightQuote fq = talkers[i].currentCharacter.talkQuotes[talk];
-				if (!fq.activated && (fq.triggerer == null || fq.triggerer.uuid == stats.charData.uuid)) {
+				if(!fq.activated && (fq.triggerer == null || fq.triggerer.uuid == stats.charData.uuid)) {
 					return true;
 				}
+			}
+		}
+		return false;
+	}
+
+	/// <summary>
+	/// Checks if the character can open a door.
+	/// </summary>
+	/// <returns></returns>
+	public bool CanOpenDoor() {
+		List<MapTile> tiles = GetAdjacentTiles();
+		for(int i = 0; i < tiles.Count; i++) {
+			if(tiles[i] == null)
+				continue;
+
+			if(tiles[i].interactType == InteractType.DOOR && !tiles[i].interacted && inventory.HasKey(tiles[i].doorKeyType)) {
+				return true;
 			}
 		}
 		return false;

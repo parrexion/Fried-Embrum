@@ -268,6 +268,14 @@ public class InventoryContainer {
 		return inventory[index];
 	}
 
+	public bool HasKey(KeyType keyType) {
+		for (int i = 0; i < INVENTORY_SIZE; i++) {
+			if (inventory[i].itemCategory == ItemCategory.CONSUME && inventory[i].attackType == AttackType.KEY && inventory[i].keyType == keyType)
+				return true;
+		}
+		return false;
+	}
+
 	/// <summary>
 	/// Equips the item at the given index and moves it to the top.
 	/// </summary>
@@ -296,6 +304,9 @@ public class InventoryContainer {
 		if (useItem.itemCategory == ItemCategory.CONSUME) {
 			if (useItem.weaponType == WeaponType.C_HEAL) {
 				player.TakeHeals(useItem.power);
+			}
+			else if(useItem.attackType == AttackType.KEY) {
+				//Door is done in another place
 			}
 			else {
 				Boost boost = useItem.boost;

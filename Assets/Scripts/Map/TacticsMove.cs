@@ -336,6 +336,18 @@ public abstract class TacticsMove : MonoBehaviour {
 		return enemies;
 	}
 
+	public List<MapTile> GetAdjacentTiles() {
+		List<MapTile> tiles = new List<MapTile>() {
+			battleMap.GetTile(posx+1, posy),
+			battleMap.GetTile(posx, posy+1),
+			battleMap.GetTile(posx-1, posy),
+			battleMap.GetTile(posx, posy-1)
+		};
+		tiles.RemoveAll(x => x == null);
+
+		return tiles;
+	}
+
 	/// <summary>
 	/// Finds all the allies around the character which can be supported with the staff.
 	/// </summary>

@@ -19,17 +19,13 @@ public class MapInputController : InputReceiverDelegate {
 	public UnityEvent changeStatsEvent;
 
 
-	private bool IsTargetMode() {
-		return (currentAction.value == ActionMode.ATTACK || currentAction.value == ActionMode.HEAL || currentAction.value == ActionMode.TRADE || currentAction.value == ActionMode.TALK);
-	}
-
     public override void OnMenuModeChanged() {
 		bool active = UpdateState(MenuMode.MAP);
 		actionController.ShowMenu(currentMenuMode.value == (int)MenuMode.MAP && currentAction.value == ActionMode.ACTION, false);
 		if (!active)
 			return;
 		
-		if (IsTargetMode())
+		if (currentAction.IsTargetMode())
 			targetController.UpdateSelection();
 
 		if (dialogueMode.value == (int)DialogueMode.VISIT || dialogueMode.value == (int)DialogueMode.TALK)
@@ -39,7 +35,7 @@ public class MapInputController : InputReceiverDelegate {
     }
 
 	public override void OnUpArrow() {
-		if (IsTargetMode()) {
+		if (currentAction.IsTargetMode()) {
 			targetController.Move(-1);
 			menuMoveEvent.Invoke();
 		}
@@ -54,7 +50,7 @@ public class MapInputController : InputReceiverDelegate {
 	}
 
 	public override void OnDownArrow() {
-		if (IsTargetMode()) {
+		if (currentAction.IsTargetMode()) {
 			targetController.Move(1);
 			menuMoveEvent.Invoke();
 		}
@@ -69,7 +65,7 @@ public class MapInputController : InputReceiverDelegate {
 	}
 
 	public override void OnLeftArrow() {
-		if (IsTargetMode()) {
+		if (currentAction.IsTargetMode()) {
 			targetController.Move(-1);
 			menuMoveEvent.Invoke();
 		}
@@ -83,7 +79,7 @@ public class MapInputController : InputReceiverDelegate {
 	}
 
 	public override void OnRightArrow() {
-		if (IsTargetMode()) {
+		if (currentAction.IsTargetMode()) {
 			targetController.Move(1);
 			menuMoveEvent.Invoke();
 		}
@@ -109,6 +105,10 @@ public class MapInputController : InputReceiverDelegate {
 			actionController.TalkToCharacter(targetController.target.value);
 			menuAcceptEvent.Invoke();
 		}
+		else if (currentAction.value == ActionMode.DOOR) {
+			actionController.UnlockDoor(targetController.target.value);
+			menuAcceptEvent.Invoke();
+		}
 		else if (currentAction.value == ActionMode.ACTION) {
 			actionController.OkButton();
 			menuAcceptEvent.Invoke();
@@ -120,7 +120,7 @@ public class MapInputController : InputReceiverDelegate {
 	}
 
 	public override void OnBackButton() {
-		if (IsTargetMode()) {
+		if (currentAction.IsTargetMode()) {
 			targetController.Clear();
 			currentAction.value = ActionMode.ACTION;
 			actionController.ShowMenu(true, false);
@@ -152,7 +152,7 @@ public class MapInputController : InputReceiverDelegate {
 	}
 
     public override void OnRButton() {
-		if (IsTargetMode())
+		if (currentAction.IsTargetMode())
 			return;
 
 		cursor.JumpCursor();

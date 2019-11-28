@@ -120,7 +120,7 @@ public class MapCursor : MonoBehaviour {
 			SelectHover();
 		else if (currentActionMode.value == ActionMode.MOVE || currentActionMode.value == ActionMode.ACTION)
 			MoveHover();
-		else if (currentActionMode.value == ActionMode.ATTACK || currentActionMode.value == ActionMode.HEAL || currentActionMode.value == ActionMode.TRADE || currentActionMode.value == ActionMode.TALK) {
+		else if (currentActionMode.IsTargetMode()) {
 			updateCharacterUI.Invoke();
 		}
 	}
@@ -260,7 +260,7 @@ public class MapCursor : MonoBehaviour {
 		if (currentFaction.value == Faction.ENEMY) {
 			transform.position = new Vector3(cursorX.value, cursorY.value, zHeight);
 		}
-		else if (currentActionMode.value == ActionMode.ATTACK || currentActionMode.value == ActionMode.HEAL || currentActionMode.value == ActionMode.TRADE || currentActionMode.value == ActionMode.TALK) {
+		else if (currentActionMode.IsTargetMode()) {
 			transform.position = new Vector3(target.value.posx, target.value.posy, zHeight);
 		}
 		else {
